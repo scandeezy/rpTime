@@ -18,21 +18,27 @@ public class LandingServlet extends HttpServlet {
 	public static final String JSP_LOCATION = "/jsp/rptime.jsp";
 	public static final String LOCATION = "/rptime";
 	public static final String PAGE_REDIRECT = "page";
+	public static final String IS_ADMIN = "admin";
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws IOException, ServletException {
-        UserService userService = UserServiceFactory.getUserService();
-        User user = userService.getCurrentUser();
-        
+
         request.setAttribute(PAGE_REDIRECT, LOCATION);
-        request.setAttribute(USER_FIELD_NAME, user);
-		
-        if(user != null)
+        UserService userService = UserServiceFactory.getUserService();
+        if(userService.isUserLoggedIn())
         {
-			Entity userEntity = UserServlet.getUser(user.getEmail());
-			request.setAttribute(USER_ENTITY_NAME, userEntity);
+	        Boolean admin = userService.isUserAdmin();
+	        User user = userService.getCurrentUser();
+	        
+	        request.setAttribute(IS_ADMIN, admin);
+	        request.setAttribute(USER_FIELD_NAME, user);
+			
+	        if(user != null)
+	        {
+				Entity userEntity = UserServlet.getUser(user.getEmail());
+				request.setAttribute(USER_ENTITY_NAME, userEntity);
+	        }
         }
-        
         request.getRequestDispatcher(JSP_LOCATION).forward(request, response);
 	}
 }

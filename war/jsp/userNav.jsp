@@ -11,7 +11,7 @@
     if (user != null) {
       pageContext.setAttribute("user", user);
 %>
-<p>Hello, ${fn:escapeXml(user.nickname)}! (You can
+<p>Hello, ${fn:escapeXml(user.nickname)}! Admin ${fn:escapeXml(admin)} (You can
 <a href="<%= userService.createLogoutURL((String)request.getAttribute("page")) %>">sign out</a>.)</p>
 	<a href="/rptime/sheet">Current Time Sheet</a></br>
 	<a href="/rptime/history">History</a></br>
