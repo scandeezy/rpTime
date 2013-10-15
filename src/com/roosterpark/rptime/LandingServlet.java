@@ -13,6 +13,7 @@ import com.google.appengine.api.users.UserServiceFactory;
 @SuppressWarnings("serial")
 public class LandingServlet extends HttpServlet {
 	public static final String USER_FIELD_NAME = "user";
+	public static final String USER_ENTITY_NAME = "userEntity";
 	public static final String USER_BUCKET_NAME = "user";
 	public static final String JSP_LOCATION = "/jsp/rptime.jsp";
 	public static final String LOCATION = "/rptime";
@@ -29,7 +30,7 @@ public class LandingServlet extends HttpServlet {
         if(user != null)
         {
 			Entity userEntity = UserServlet.getUser(user.getEmail());
-			request.setAttribute(USER_FIELD_NAME, userEntity);
+			request.setAttribute(USER_ENTITY_NAME, userEntity);
         }
         
         request.getRequestDispatcher(JSP_LOCATION).forward(request, response);
