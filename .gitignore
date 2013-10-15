@@ -1,0 +1,13 @@
+/.externalToolBuilders
+/.settings
+/target
+classes
+logs
+bin
+.DS_Store
+.classpath
+.project
+tomcat*
+*log*
+/src/main/resources/git.properties
+/src/main/webapp/WEB-INF/classes
