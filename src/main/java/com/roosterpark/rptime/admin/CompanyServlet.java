@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +14,8 @@ import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.roosterpark.rptime.model.Company;
 import com.roosterpark.rptime.service.CompanyService;
 
+@Singleton
+@SuppressWarnings("serial")
 public class CompanyServlet extends HttpServlet {
 	public static final String COMPANY_KEY = "company";
 	public static final String COMPANIES_KEY = "companies";
@@ -26,10 +29,6 @@ public class CompanyServlet extends HttpServlet {
 
 	@Inject
 	CompanyService companyService;
-
-	public CompanyServlet() {
-		// companyService = new CompanyService();
-	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String key = (String) request.getAttribute(COMPANY_KEY);

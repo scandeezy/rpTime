@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.Entity;
@@ -14,6 +15,7 @@ import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.datastore.Query;
 import com.roosterpark.rptime.model.Company;
 
+@Singleton
 public class CompanyService implements Service<Company> {
 	public static final String COMPANY_BUCKET_KEY = "companies";
 	public static final String COMPANY_NAME_KEY = "companyName";
@@ -21,12 +23,8 @@ public class CompanyService implements Service<Company> {
 	public static final String COMPANY_PHONE_KEY = "companyPhone";
 	public static final String COMPANY_START_DAY_OF_WEEK_KEY = "companyStartDay";
 
-	private DatastoreService datastore;
-
 	@Inject
-	public CompanyService(DatastoreService datastore) {
-		this.datastore = datastore;
-	};
+	DatastoreService datastore;
 
 	@Override
 	public Company get(String sKey) throws EntityNotFoundException {
@@ -34,7 +32,6 @@ public class CompanyService implements Service<Company> {
 		Entity entity;
 		entity = datastore.get(key);
 		Company company = toCompany(entity);
-
 		return company;
 	}
 
