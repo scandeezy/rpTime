@@ -11,3 +11,4 @@ tomcat*
 *log*
 /src/main/resources/git.properties
 /src/main/webapp/WEB-INF/classes
+/appengine-generated
