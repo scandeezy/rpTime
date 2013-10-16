@@ -3,8 +3,9 @@ package com.roosterpark.rptime.service;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.FetchOptions;
@@ -20,9 +21,15 @@ public class CompanyService implements Service<Company> {
 	public static final String COMPANY_PHONE_KEY = "companyPhone";
 	public static final String COMPANY_START_DAY_OF_WEEK_KEY = "companyStartDay";
 
+	private DatastoreService datastore;
+
+	@Inject
+	public CompanyService(DatastoreService datastore) {
+		this.datastore = datastore;
+	};
+
 	@Override
 	public Company get(String sKey) throws EntityNotFoundException {
-		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		Key key = KeyFactory.createKey(COMPANY_BUCKET_KEY, sKey);
 		Entity entity;
 		entity = datastore.get(key);
@@ -33,7 +40,6 @@ public class CompanyService implements Service<Company> {
 
 	@Override
 	public List<Company> getPage(int count, int offset) {
-		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		Query query = new Query(COMPANY_BUCKET_KEY);
 		List<Entity> entities = datastore.prepare(query).asList(FetchOptions.Builder.withLimit(count).offset(offset));
 
@@ -48,8 +54,6 @@ public class CompanyService implements Service<Company> {
 	@Override
 	public void set(Company item) {
 		Entity company = toEntity(item);
-
-		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		datastore.put(company);
 	}
 
