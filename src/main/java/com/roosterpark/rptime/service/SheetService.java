@@ -47,7 +47,7 @@ public class SheetService {
 		List<Sheet> result = ofy()//
 				.load()//
 				.type(Sheet.class)//
-				.filter(SheetServlet.USER_FIELD_NAME, user.getUserId())//
+				.filter("userId", user.getUserId())//
 				.filter(SheetServlet.WEEK_ATTRIBUTE_KEY + " <=", week)//
 				.limit(limit)//
 				// .order("-date")//Descending date sort

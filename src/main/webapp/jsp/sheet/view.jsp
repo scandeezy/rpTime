@@ -20,7 +20,7 @@
 				for(Sheet sheet : entities)
 				{
 			%>
-				<li>Time sheet id: <%= sheet.getUserId() %></li>
+				<li>Time sheet id: <%= sheet.getId() %> -- Week: <%= sheet.getWeek() %></li>
 			<%
 				}
 			%>
