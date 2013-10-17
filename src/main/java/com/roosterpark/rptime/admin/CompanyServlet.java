@@ -31,7 +31,7 @@ public class CompanyServlet extends HttpServlet {
 	CompanyService companyService;
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		String key = (String) request.getAttribute(COMPANY_KEY);
+		String key = request.getParameter(COMPANY_KEY);
 		if (key != null) {
 			Company company;
 			try {
@@ -47,8 +47,8 @@ public class CompanyServlet extends HttpServlet {
 
 			request.getRequestDispatcher("/jsp/company").forward(request, response);
 		} else {
-			Integer count = (Integer) request.getAttribute(COUNT_KEY);
-			Integer offset = (Integer) request.getAttribute(OFFSET_KEY);
+			Integer count = request.getParameter(COUNT_KEY) == null ? null : Integer.valueOf(request.getParameter(COUNT_KEY));
+			Integer offset = request.getParameter(OFFSET_KEY) == null ? null : Integer.valueOf(request.getParameter(OFFSET_KEY));
 			count = count == null ? 5 : count;
 			offset = offset == null ? 0 : count;
 
@@ -61,10 +61,10 @@ public class CompanyServlet extends HttpServlet {
 
 	// Create a user
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		String companyName = (String) request.getAttribute(COMPANY_NAME_KEY);
-		String companyHeader = (String) request.getAttribute(COMPANY_HEADER_KEY);
-		String companyPhone = (String) request.getAttribute(COMPANY_PHONE_KEY);
-		Integer startDayOfWeek = (Integer) request.getAttribute(COMPANY_START_KEY);
+		String companyName = request.getParameter(COMPANY_NAME_KEY);
+		String companyHeader = request.getParameter(COMPANY_HEADER_KEY);
+		String companyPhone = request.getParameter(COMPANY_PHONE_KEY);
+		Integer startDayOfWeek = Integer.valueOf(request.getParameter(COMPANY_START_KEY));
 		Company company = new Company();
 		company.setName(companyName);
 		company.setHeader(companyHeader);

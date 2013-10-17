@@ -10,10 +10,10 @@
 	{
 %>
 			<li>
-				<div id="companyName">${company.name}</div>
-				<div id="companyHeader">${company.header}</div>
-				<div id="companyPhone">${company.phone}</div>
-				<div id="companyStart">${company.startDayOfWeek}</div>
+				<div id="companyName"><%= company.getName() %></div>
+				<div id="companyHeader"><%= company.getHeader() %></div>
+				<div id="companyPhone"><%= company.getPhone() %></div>
+				<div id="companyStart"><%= company.getStartDayOfWeek() %></div>
 			</li>
 <%
 	}

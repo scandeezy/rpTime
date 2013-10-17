@@ -2,6 +2,7 @@ package com.roosterpark.rptime.service;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -17,6 +18,8 @@ import com.roosterpark.rptime.model.Company;
 
 @Singleton
 public class CompanyService implements Service<Company> {
+	private static final Logger LOG = Logger.getLogger(CompanyService.class.getName());
+	
 	public static final String COMPANY_BUCKET_KEY = "companies";
 	public static final String COMPANY_NAME_KEY = "companyName";
 	public static final String COMPANY_HEADER_KEY = "companyHeader";
@@ -31,7 +34,9 @@ public class CompanyService implements Service<Company> {
 		Key key = KeyFactory.createKey(COMPANY_BUCKET_KEY, sKey);
 		Entity entity;
 		entity = datastore.get(key);
+		LOG.warning("Entity extracted: " + entity);
 		Company company = toCompany(entity);
+		LOG.warning("Turned into company: " + company);
 		return company;
 	}
 
@@ -42,7 +47,10 @@ public class CompanyService implements Service<Company> {
 
 		List<Company> companies = new LinkedList<Company>();
 		for (Entity entity : entities) {
-			companies.add(toCompany(entity));
+			LOG.warning("Entity extracted: " + entity);
+			Company company = toCompany(entity);
+			companies.add(company);
+			LOG.warning("Turned into company: " + company);
 		}
 
 		return companies;
@@ -50,7 +58,9 @@ public class CompanyService implements Service<Company> {
 
 	@Override
 	public void set(Company item) {
+		LOG.warning("Translating company to entity: " + item);
 		Entity company = toEntity(item);
+		LOG.warning("Setting entity: " + company);
 		datastore.put(company);
 	}
 
@@ -76,11 +86,12 @@ public class CompanyService implements Service<Company> {
 
 	public Company toCompany(Entity entity) {
 		Company company = new Company();
+		
 		company.setName((String) entity.getProperty(COMPANY_NAME_KEY));
 		company.setHeader((String) entity.getProperty(COMPANY_HEADER_KEY));
 		company.setPhone((String) entity.getProperty(COMPANY_PHONE_KEY));
-		company.setStartDayOfWeek((Integer) entity.getProperty(COMPANY_START_DAY_OF_WEEK_KEY));
-
+		company.setStartDayOfWeek(Integer.valueOf(entity.getProperty(COMPANY_START_DAY_OF_WEEK_KEY).toString()));
+		
 		return company;
 	}
 }
