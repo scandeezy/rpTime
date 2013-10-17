@@ -88,6 +88,11 @@
 		<!-- end Test Dependencies -->
 
 		<!-- begin module-specific dependencies -->
+		<!-- <dependency>
+			<groupId>com.fasterxml.jackson.jaxrs</groupId>
+			<artifactId>jackson-jaxrs-json-provider</artifactId>
+			<version>${jackson2.version}</version>
+		</dependency> -->
 		<dependency>
 			<groupId>com.google.appengine</groupId>
 			<artifactId>appengine-api-1.0-sdk</artifactId>
@@ -118,6 +123,11 @@
 			<groupId>com.google.inject.extensions</groupId>
 			<artifactId>guice-servlet</artifactId>
 			<version>4.0-beta</version>
+		</dependency>
+		<dependency>
+			<groupId>com.googlecode.objectify</groupId>
+			<artifactId>objectify</artifactId>
+			<version>4.0b3</version>
 		</dependency>
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -165,7 +175,7 @@
 	</dependencies>
 
 	<build>
-		<outputDirectory>target/${project.artifactId}-${project.version}/WEB-INF/classes</outputDirectory>
+		<!-- <outputDirectory>target/${project.artifactId}-${project.version}/WEB-INF/classes</outputDirectory> -->
 		<!-- Lexicographically ordered pluginManagement! -->
 		<plugins>
 			<plugin>
@@ -186,6 +196,16 @@
 				</configuration>
 			</plugin>
 			<plugin>
+				<!-- Adds eclipse support (What does this do)? -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-eclipse-plugin</artifactId>
+				<version>2.9</version>
+				<configuration>
+					<downloadSources>true</downloadSources>
+					<downloadJavadocs>true</downloadJavadocs>
+				</configuration>
+			</plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<version>2.15</version>
@@ -194,17 +214,8 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.3</version>
-				<configuration>
-					<archiveClasses>true</archiveClasses>
-					<webResources>
-						<!-- in order to interpolate version from pom into appengine-web.xml -->
-						<resource>
-							<directory>${basedir}/src/main/webapp/WEB-INF</directory>
-							<filtering>true</filtering>
-							<targetPath>WEB-INF</targetPath>
-						</resource>
-					</webResources>
-				</configuration>
+				<!-- <configuration> <archiveClasses>true</archiveClasses> <webResources> <resource> <directory>${basedir}/src/main/webapp/WEB-INF</directory> 
+					<filtering>true</filtering> <targetPath>WEB-INF</targetPath> </resource> </webResources> </configuration> -->
 			</plugin>
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
