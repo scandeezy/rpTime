@@ -74,6 +74,6 @@ public class CompanyServlet extends HttpServlet {
 		companyService.set(company);
 
 		// Redirect back to the view page for this company
-		response.sendRedirect("/rptime/companies");
+		response.sendRedirect("/rptime/company");
 	}
 }
