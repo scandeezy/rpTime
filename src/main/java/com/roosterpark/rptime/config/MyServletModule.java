@@ -9,7 +9,7 @@ import com.google.inject.servlet.ServletModule;
 import com.roosterpark.rptime.HistoryServlet;
 import com.roosterpark.rptime.LandingServlet;
 import com.roosterpark.rptime.SheetServlet;
-import com.roosterpark.rptime.UserServlet;
+import com.roosterpark.rptime.admin.UserServlet;
 import com.roosterpark.rptime.admin.CompanyServlet;
 
 /**
