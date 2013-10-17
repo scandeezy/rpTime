@@ -25,9 +25,6 @@ public class LandingServlet extends HttpServlet {
 	public static final String PAGE_REDIRECT = "page";
 	public static final String IS_ADMIN = "admin";
 
-	@Inject
-	UserServlet userServlet;
-
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
 		request.setAttribute(PAGE_REDIRECT, LOCATION);
@@ -38,11 +35,6 @@ public class LandingServlet extends HttpServlet {
 
 			request.setAttribute(IS_ADMIN, admin);
 			request.setAttribute(USER_FIELD_NAME, user);
-
-			if (user != null) {
-				Entity userEntity = userServlet.getUser(user.getEmail());
-				request.setAttribute(USER_ENTITY_NAME, userEntity);
-			}
 		}
 		request.getRequestDispatcher(JSP_LOCATION).forward(request, response);
 	}

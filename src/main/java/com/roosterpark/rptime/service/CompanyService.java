@@ -74,7 +74,7 @@ public class CompanyService implements Service<Company> {
 	public Entity toEntity(Company input) {
 		if (input == null)
 			throw new IllegalArgumentException("No arguments may be null.");
-		Entity company = new Entity(COMPANY_BUCKET_KEY);
+		Entity company = new Entity(COMPANY_BUCKET_KEY, input.getName());
 
 		company.setProperty(COMPANY_NAME_KEY, input.getName());
 		company.setProperty(COMPANY_HEADER_KEY, input.getHeader());

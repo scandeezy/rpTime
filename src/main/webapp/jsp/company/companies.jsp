@@ -8,13 +8,9 @@
 	List<Company> companies = (List<Company>)request.getAttribute("companies");
 	for(Company company : companies)
 	{
+		request.setAttribute("company", company);
 %>
-			<li>
-				<div id="companyName"><%= company.getName() %></div>
-				<div id="companyHeader"><%= company.getHeader() %></div>
-				<div id="companyPhone"><%= company.getPhone() %></div>
-				<div id="companyStart"><%= company.getStartDayOfWeek() %></div>
-			</li>
+<jsp:include page="/jsp/company/company.jsp" />
 <%
 	}
 %>

@@ -80,7 +80,7 @@ public class UserService implements Service<User> {
 		if (user == null)
 			throw new IllegalArgumentException("No arguments may be null.");
 		
-		Entity entity = new Entity(USER_BUCKET_KEY);
+		Entity entity = new Entity(USER_BUCKET_KEY, user.getEmail());
 
 		entity.setProperty(FIRST_NAME_KEY, user.getFirstName());
 		entity.setProperty(LAST_NAME_KEY, user.getLastName());

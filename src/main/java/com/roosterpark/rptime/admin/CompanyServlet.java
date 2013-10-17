@@ -2,6 +2,7 @@ package com.roosterpark.rptime.admin;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -17,15 +18,27 @@ import com.roosterpark.rptime.service.CompanyService;
 @Singleton
 @SuppressWarnings("serial")
 public class CompanyServlet extends HttpServlet {
+	private static final Logger LOG = Logger.getLogger(CompanyServlet.class.getName());
 	public static final String COMPANY_KEY = "company";
 	public static final String COMPANIES_KEY = "companies";
 	public static final String COUNT_KEY = "count";
 	public static final String OFFSET_KEY = "offset";
+	public static final String EDIT_PARAM = "edit";
 	public static final String ERROR_STRING = "error";
+	
+	// Post Field Names
 	public static final String COMPANY_NAME_KEY = "companyName";
 	public static final String COMPANY_HEADER_KEY = "companyHeader";
 	public static final String COMPANY_PHONE_KEY = "companyPhone";
 	public static final String COMPANY_START_KEY = "companyStartDay";
+	
+	// JSP Paths
+	public static final String COMPANIES_JSP = "/jsp/company/companies.jsp";
+	public static final String COMPANY_JSP = "/jsp/company/company.jsp";
+	public static final String COMPANY_EDIT_JSP = "/jsp/company/companyEdit.jsp";
+	
+	// Servlet Path
+	public static final String ROUTE_PATH = "/rptime/company";
 
 	@Inject
 	CompanyService companyService;
@@ -37,15 +50,19 @@ public class CompanyServlet extends HttpServlet {
 			try {
 				company = companyService.get(key);
 			} catch (EntityNotFoundException e) {
+				LOG.warning("Unable to retrieve record for company " + key);
 				// TODO log something here
 				request.setAttribute(ERROR_STRING, e.getMessage());
-				request.getRequestDispatcher("/jsp/companies").forward(request, response);
+				request.getRequestDispatcher(COMPANIES_JSP).forward(request, response);
 				return;
 			}
 
 			request.setAttribute(COMPANY_KEY, company);
-
-			request.getRequestDispatcher("/jsp/company").forward(request, response);
+			String edit = request.getParameter(EDIT_PARAM);
+			if(edit != null)
+				request.getRequestDispatcher(COMPANY_EDIT_JSP).forward(request, response);
+			else
+				request.getRequestDispatcher(COMPANY_JSP).forward(request, response);
 		} else {
 			Integer count = request.getParameter(COUNT_KEY) == null ? null : Integer.valueOf(request.getParameter(COUNT_KEY));
 			Integer offset = request.getParameter(OFFSET_KEY) == null ? null : Integer.valueOf(request.getParameter(OFFSET_KEY));
@@ -55,7 +72,7 @@ public class CompanyServlet extends HttpServlet {
 			List<Company> companies = companyService.getPage(count, offset);
 			request.setAttribute(COMPANIES_KEY, companies);
 
-			request.getRequestDispatcher("/jsp/companies.jsp").forward(request, response);
+			request.getRequestDispatcher(COMPANIES_JSP).forward(request, response);
 		}
 	}
 
@@ -74,6 +91,6 @@ public class CompanyServlet extends HttpServlet {
 		companyService.set(company);
 
 		// Redirect back to the view page for this company
-		response.sendRedirect("/rptime/company");
+		response.sendRedirect(ROUTE_PATH);
 	}
 }
