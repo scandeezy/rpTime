@@ -13,16 +13,9 @@
 <jsp:include page="/jsp/company/company.jsp" />
 <%
 	}
+	request.setAttribute("company", null);
 %>
 		</ul>
 	</div>
-	<div id="createCompany">
-		<form method="post" action="/rptime/company">
-			Name: <input type="text" name="companyName"><br>
-			Header: <input type="text" name="companyHeader"><br>
-			Phone: <input type="text" name="companyPhone"><br>
-			Start: <input type="text" name="companyStartDay"><br>
-			<input type="submit" value="Submit">
-		</form>
-	</div>
+<jsp:include page="/jsp/company/companyEdit.jsp" />
 </html>

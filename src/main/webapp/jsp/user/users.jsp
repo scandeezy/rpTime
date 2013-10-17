@@ -2,31 +2,20 @@
 <%@ page import="com.roosterpark.rptime.model.User" %>
 <%@ page import="java.util.List" %>
 <html>
-	<div id="companies">
+	<div id="users">
 		<ul>
 <%
 	List<User> users = (List<User>)request.getAttribute("users");
 	for(User user : users)
 	{
+		request.setAttribute("user", user);
 %>
-			<li>
-				<div id="firstName"><%= user.getFirstName() %></div>
-				<div id="lastName"><%= user.getLastName() %></div>
-				<div id="email"><%= user.getEmail() %></div>
-				<div id="startDate"><%= user.getStart() %></div>
-			</li>
+<jsp:include page="/jsp/user/user.jsp" />
 <%
 	}
+	request.setAttribute("user", null);
 %>
 		</ul>
 	</div>
-	<div id="createUser">
-		<form method="post" action="/rptime/user">
-			First Name: <input type="text" name="firstName"><br>
-			Last Name: <input type="text" name="lastName"><br>
-			Email: <input type="text" name="email"><br>
-			Start Date: <input type="text" name="startDate"><br>
-			<input type="submit" value="Submit">
-		</form>
-	</div>
+<jsp:include page="/jsp/user/userEdit.jsp" />
 </html>

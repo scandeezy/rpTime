@@ -18,16 +18,28 @@ import com.roosterpark.rptime.service.UserService;
 @Singleton
 @SuppressWarnings("serial")
 public class UserServlet extends HttpServlet {
-	public static final String USER_KEY = "user";
 	public static final String USERS_KEY = "users";
+
+	public static final String USER_KEY = "user";
+	public static final String ERROR_STRING = "error";
+	public static final String COUNT_KEY = "count";
+	public static final String OFFSET_KEY = "offset";
+	public static final String EDIT_PARAM = "edit";
+
+	// Post Field Names
 	public static final String FIRST_NAME_KEY = "firstName";
 	public static final String LAST_NAME_KEY = "lastName";
 	public static final String EMAIL_KEY = "email";
 	public static final String START_DATE_KEY = "startDate";
-	public static final String ERROR_STRING = "error";
-	public static final String COUNT_KEY = "count";
-	public static final String OFFSET_KEY = "offset";
-
+	
+	// JSP Paths
+	public static final String USERS_JSP = "/jsp/user/users.jsp";
+	public static final String USER_JSP = "/jsp/user/user.jsp";
+	public static final String USER_EDIT_JSP = "/jsp/user/userEdit.jsp";
+	
+	// Servlet Path
+	public static final String ROUTE_PATH = "/rptime/user";
+	
 	@Inject
 	UserService userService;
 
@@ -40,13 +52,17 @@ public class UserServlet extends HttpServlet {
 			} catch (EntityNotFoundException e) {
 				// TODO log something here
 				request.setAttribute(ERROR_STRING, e.getMessage());
-				request.getRequestDispatcher("/jsp/users.jsp").forward(request, response);
+				request.getRequestDispatcher(USERS_JSP).forward(request, response);
 				return;
 			}
 
 			request.setAttribute(USER_KEY, user);
+			String edit = request.getParameter(EDIT_PARAM);
 
-			request.getRequestDispatcher("/jsp/user.jsp").forward(request, response);
+			if(edit != null)
+				request.getRequestDispatcher(USER_EDIT_JSP).forward(request, response);
+			else
+				request.getRequestDispatcher(USER_JSP).forward(request, response);
 		} else {
 			Integer count = request.getParameter(COUNT_KEY) == null ? null : Integer.valueOf(request.getParameter(COUNT_KEY));
 			Integer offset = request.getParameter(OFFSET_KEY) == null ? null : Integer.valueOf(request.getParameter(OFFSET_KEY));
@@ -56,7 +72,7 @@ public class UserServlet extends HttpServlet {
 			List<User> companies = userService.getPage(count, offset);
 			request.setAttribute(USERS_KEY, companies);
 
-			request.getRequestDispatcher("/jsp/users.jsp").forward(request, response);
+			request.getRequestDispatcher(USERS_JSP).forward(request, response);
 		}
 	}
 
@@ -74,7 +90,7 @@ public class UserServlet extends HttpServlet {
 
 		userService.set(user);
 
-		// Redirect back to the view page for this company
-		response.sendRedirect("/rptime/user");
+		// Redirect back to the view page for this user
+		response.sendRedirect(ROUTE_PATH);
 	}
 }

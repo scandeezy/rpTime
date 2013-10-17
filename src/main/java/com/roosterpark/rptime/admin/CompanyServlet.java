@@ -19,8 +19,9 @@ import com.roosterpark.rptime.service.CompanyService;
 @SuppressWarnings("serial")
 public class CompanyServlet extends HttpServlet {
 	private static final Logger LOG = Logger.getLogger(CompanyServlet.class.getName());
-	public static final String COMPANY_KEY = "company";
 	public static final String COMPANIES_KEY = "companies";
+
+	public static final String COMPANY_KEY = "company";
 	public static final String COUNT_KEY = "count";
 	public static final String OFFSET_KEY = "offset";
 	public static final String EDIT_PARAM = "edit";
