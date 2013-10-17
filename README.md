@@ -22,7 +22,12 @@ rpTime
 ### Run Via Command Line (Java+Jetty)
 
     java $JAVA_OPTS -jar ./target/dependency/jetty-runner.jar --port $PORT ./target/*.war
+    
+    
+### Run Via Google App Engine    
 
+    mvn appengine:devserver
+    
 
 ### Run Via Eclipse Google App Engine Plugin
 
