@@ -49,4 +49,17 @@ public class Company
 	public void setStartDayOfWeek(Integer startDayOfWeek) {
 		this.startDayOfWeek = startDayOfWeek;
 	}
+	
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("Company : {");
+		sb.append("  name : " + name + ",");
+		sb.append("  header : " + header + ",");
+		sb.append("  phone : " + phone + ",");
+		sb.append("  startDayOfWeek : " + startDayOfWeek + ",");
+		sb.append("}");
+		
+		return sb.toString();
+	}
 }
