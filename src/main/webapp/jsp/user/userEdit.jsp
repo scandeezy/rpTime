@@ -16,6 +16,7 @@
 		Last Name: <input type="text" name="lastName" value="<%= user.getLastName() %>"><br>
 		Email: <input type="text" name="email" value="<%= user.getEmail() %>"><br>
 		Start Date: <input type="text" name="startDate" value="<%= user.getStart().getTime() %>"><br>
+		<input type="hidden" name="id" value="<%= user.getId() %>">
 <%		}				%>
 		<input type="submit" value="Submit">
 	</form>

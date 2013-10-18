@@ -9,6 +9,8 @@ import com.googlecode.objectify.annotation.Index;
 @Entity
 public class User {
 	@Id
+	private Long id;
+	@Index
 	private String email;
 	@Index
 	private String firstName;
@@ -20,6 +22,14 @@ public class User {
 	private Date start;
 	
 	public User() {}
+	
+	public Long getId() {
+		return this.id;
+	}
+	
+	public void setId(Long id) {
+		this.id = id;
+	}
 
 	public String getFirstName() {
 		return firstName;

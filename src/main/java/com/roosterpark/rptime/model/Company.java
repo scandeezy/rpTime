@@ -1,10 +1,21 @@
 package com.roosterpark.rptime.model;
 
+import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
+
+@Entity
 public class Company 
 {
+	@Id
+	private Long id;
+	@Index
 	private String name;
+	@Index
 	private String header;
+	@Index
 	private String phone;
+	@Index
 	private Integer startDayOfWeek;
 	
 	public Company()
@@ -16,6 +27,14 @@ public class Company
 		this.header = header;
 		this.phone = phone;
 		this.startDayOfWeek = startDayOfWeek;
+	}
+	
+	public Long getId() {
+		return this.id;
+	}
+	
+	public void setId(Long id) {
+		this.id = id;
 	}
 	
 	public String getName() {

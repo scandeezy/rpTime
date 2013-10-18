@@ -3,34 +3,35 @@ package com.roosterpark.rptime.service;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.inject.Singleton;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.roosterpark.rptime.model.User;
 
 @Singleton
 public class UserService implements Service<User> {
-	private static final Logger LOGGER = Logger.getLogger(UserService.class.getName());
-
-	public static final String EMAIL_KEY = "email";
+	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 	
 	@Override
 	public User get(String sKey) throws EntityNotFoundException {
-		LOGGER.warning("Getting entity with key " + sKey);
-		return ofy().load().type(User.class).filter(EMAIL_KEY, sKey).first().now();
+		LOGGER.warn("Getting user with key " + sKey);
+		Long key = Long.valueOf(sKey);
+		return ofy().load().type(User.class).id(key).now();
 	}
 
 	@Override
 	public List<User> getPage(int count, int offset) {
-		LOGGER.warning("Getting user page with count " + count + " and offset " + offset);
+		LOGGER.warn("Getting user page with count " + count + " and offset " + offset);
 		return ofy().load().type(User.class).limit(count).offset(offset).list();
 	}
 
 	@Override
 	public void set(User item) {
-		LOGGER.warning("Saving user " + item);
+		LOGGER.warn("Saving user " + item);
 		ofy().save().entity(item).now();
 	}
 }

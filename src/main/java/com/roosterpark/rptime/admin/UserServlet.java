@@ -34,6 +34,7 @@ public class UserServlet extends HttpServlet {
 	public static final String EDIT_PARAM = "edit";
 
 	// Post Field Names
+	public static final String ID_KEY = "id";
 	public static final String FIRST_NAME_KEY = "firstName";
 	public static final String LAST_NAME_KEY = "lastName";
 	public static final String EMAIL_KEY = "email";
@@ -92,11 +93,16 @@ public class UserServlet extends HttpServlet {
 
 	// Create a user
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String idString = request.getParameter(ID_KEY);
 		String firstName = request.getParameter(FIRST_NAME_KEY);
 		String lastName = request.getParameter(LAST_NAME_KEY);
 		String email = request.getParameter(EMAIL_KEY);
 		Date startDate = new Date(Long.valueOf(request.getParameter(START_DATE_KEY)));
 		User user = new User();
+		if(idString != null && idString.length() > 0)
+		{
+			user.setId(Long.valueOf(idString));
+		}
 		user.setFirstName(firstName);
 		user.setLastName(lastName);
 		user.setEmail(email);
