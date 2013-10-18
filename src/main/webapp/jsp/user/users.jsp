@@ -2,6 +2,7 @@
 <%@ page import="com.roosterpark.rptime.model.User" %>
 <%@ page import="java.util.List" %>
 <html>
+<%@ include file="/jsp/headers.jsp"%>
 	<div id="users">
 		<ul>
 <%
@@ -18,4 +19,5 @@
 		</ul>
 	</div>
 <jsp:include page="/jsp/user/userEdit.jsp" />
+<%@ include file="/jsp/scripts.jsp"%>
 </html>

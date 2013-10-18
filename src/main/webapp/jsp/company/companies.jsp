@@ -2,6 +2,7 @@
 <%@ page import="com.roosterpark.rptime.model.Company" %>
 <%@ page import="java.util.List" %>
 <html>
+<%@ include file="/jsp/headers.jsp"%>
 	<div id="companies">
 		<ul>
 <%
@@ -18,4 +19,5 @@
 		</ul>
 	</div>
 <jsp:include page="/jsp/company/companyEdit.jsp" />
+<%@ include file="/jsp/scripts.jsp"%>
 </html>

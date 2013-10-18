@@ -10,6 +10,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <html>
+<%@ include file="/jsp/headers.jsp" %>
   <body>
   	<div>
   		Time sheets for user <b><%= request.getAttribute(SheetServlet.USER_FIELD_NAME) %></b>
@@ -27,5 +28,7 @@
 		</ul>
 	
   	</div>
+
+	<%@ include file="/jsp/scripts.jsp" %>
   </body>
 </html>

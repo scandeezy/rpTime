@@ -1,0 +1,1 @@
+Use CDNs for included libraries until GAE allows Servlet 3.0 (enabling <a href="http://www.webjars.org">Webjars</a> usage). 
