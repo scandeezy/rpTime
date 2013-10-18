@@ -13,3 +13,5 @@ tomcat*
 /src/main/webapp/WEB-INF/classes
 /appengine-generated
 /war
+*.iml
+*.idea
