@@ -4,8 +4,8 @@
 <meta name="description" content="rpTime">
 <meta name="author" content="Roster Park">
 <title>rpTime</title>
-<link rel="shortcut icon" href="favicon.ico" />
-<link rel="stylesheet" href="resources/css/app.css" />
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="stylesheet" href="/resources/css/app.css" />
 <!-- begin CSS resources managed by WebJars -->
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
 <%-- <link rel='stylesheet' href='<%=org.webjars.AssetLocator.getWebJarPath("css/bootstrap.min.css")%>'> --%>

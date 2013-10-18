@@ -16,6 +16,8 @@
 	<a href="/rptime/sheet">Current Time Sheet</a></br>
 	<a href="/rptime/history">History</a></br>
 	<a href="/rptime/reports">Reports</a></br>
+	<a href="/rptime/user">Users</a></br>
+	<a href="/rptime/company">Companies</a></br>
 <%
     } else {
 %>
