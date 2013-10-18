@@ -11,13 +11,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.googlecode.objectify.ObjectifyService;
+import com.roosterpark.rptime.model.Sheet;
 import com.roosterpark.rptime.model.User;
 import com.roosterpark.rptime.service.UserService;
 
 @Singleton
 @SuppressWarnings("serial")
 public class UserServlet extends HttpServlet {
+	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
+	
 	public static final String USERS_KEY = "users";
 
 	public static final String USER_KEY = "user";
@@ -43,6 +50,13 @@ public class UserServlet extends HttpServlet {
 	@Inject
 	UserService userService;
 
+	public UserServlet() {
+		LOGGER.debug("init UserServlet");
+		LOGGER.trace("registering User class with ObjectifyService");
+		ObjectifyService.register(User.class);
+		LOGGER.trace("registered User");
+	}
+	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String key = request.getParameter(USER_KEY);
 		if (key != null) {
