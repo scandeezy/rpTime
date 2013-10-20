@@ -24,9 +24,10 @@ rpTime
 
 ### Run Via Eclipse Google App Engine Plugin
 
-1. Create a 'Google App Engine' server via Servers Tab::Right-Click::New Server::Google::Google App Engine
-2. Add the project to the newly created Google App Engine container
-3. Click 'Start' (play button)
+1. Install the <a href="https://developers.google.com/appengine/docs/java/tools/eclipse">Eclipse Google App Engine Plugin</a>
+2. Create a 'Google App Engine' server via Servers Tab::Right-Click::New Server::Google::Google App Engine
+3. Add the project to the newly created Google App Engine container
+4. Click 'Start' (play button)
 
 
 ## Verify
