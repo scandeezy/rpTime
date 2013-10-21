@@ -168,6 +168,11 @@
 			<version>3.2.7</version>
 		</dependency>
 		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jaxrs</artifactId>
+			<version>3.0.4.Final</version>
+		</dependency>
+		<dependency>
 			<groupId>org.ow2.asm</groupId>
 			<artifactId>asm-all</artifactId>
 		</dependency>
@@ -182,7 +187,7 @@
 			<plugin>
 				<groupId>com.google.appengine</groupId>
 				<artifactId>appengine-maven-plugin</artifactId>
-				<version>1.8.6</version>
+				<version>${appengine.target.version}</version>
 				<configuration>
 					<fullScanSeconds>1</fullScanSeconds>
 					<enableJarClasses>false</enableJarClasses>
@@ -196,9 +201,6 @@
 					</execution>
 				</executions>
 			</plugin>
-
-
-
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.1</version>
@@ -274,35 +276,29 @@
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<version>2.15</version>
 			</plugin>
-
-
-			
 			<plugin>
-	<groupId>org.apache.maven.plugins</groupId>
-	<artifactId>maven-resources-plugin</artifactId>
-	<version>2.6</version>
-	<executions>
-		<execution>
-			<id>copy-resources-gae-war</id>
-			<phase>process-classes</phase>
-			<goals>
-				<goal>copy-resources</goal>
-			</goals>
-			<configuration>
-				<outputDirectory>${basedir}/war</outputDirectory>
-				<resources>
-					<resource>
-						<directory>${project.build.directory}/${project.artifactId}-${project.version}</directory>
-						<filtering>true</filtering>
-					</resource>
-				</resources>
-			</configuration>
-		</execution>
-	</executions>
-</plugin>
-
-
-			
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.6</version>
+				<executions>
+					<execution>
+						<id>copy-resources-gae-war</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/war</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${project.build.directory}/${project.artifactId}-${project.version}</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
