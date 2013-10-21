@@ -10,6 +10,14 @@
 			controller : 'LandingPageCtrl',
 			templateUrl : 'resources/partials/landing.html'
 		});
+		$routeProvider.when('/clients', {
+			controller : 'ClientsPageCtrl',
+			templateUrl : 'resources/partials/clients.html'
+		});
+		$routeProvider.when('/history', {
+			controller : 'HistoryPageCtrl',
+			templateUrl : 'resources/partials/history.html'
+		});
 		$routeProvider.when('/landing', {
 			controller : 'LandingPageCtrl',
 			templateUrl : 'resources/partials/landing.html'
@@ -18,14 +26,10 @@
 			controller : 'TimesheetPageCtrl',
 			templateUrl : 'resources/partials/timesheet.html'
 		});
-		// $routeProvider.when('/worker', {
-		// controller : 'AdminPageCtrl',
-		// templateUrl : 'resources/partials/admin-landing.html'
-		// });
-		// $routeProvider.when('/worker', {
-		// controller : 'WorkerPageCtrl',
-		// templateUrl : 'resources/partials/worker-landing.html'
-		// });
+		$routeProvider.when('/workers', {
+			controller : 'WorkersPageCtrl',
+			templateUrl : 'resources/partials/workers.html'
+		});
 		$routeProvider.otherwise({
 			redirectTo : '/'
 		});

@@ -43,11 +43,23 @@
   <!-- Collect the nav links, forms, and other content for toggling -->
   <div class="collapse navbar-collapse navbar-ex1-collapse">
     <ul class="nav navbar-nav">
-   	  <li ng-class="{active : page == 'landing'}"><a href="#/landing">home</a></li>
-	  <li ng-class="{active : page == 'timesheet'}"><a href="#/timesheet">timesheet</a></li>
+   	  	<li ng-class="{active : page == 'landing'}"><a href="#/landing">Home</a></li>
+	 	<li ng-class="{active : page == 'timesheet'}" ng-hide="isAdmin"><a href="#/timesheet">Timesheet</a></li>
+	 	<% if(userService.isUserAdmin()){ %>
+	 	<li ng-class="{active : page == 'workers'}"><a href="#/workers">Workers</a></li>
+		<li ng-class="{active : page == 'clients'}"><a href="#/clients">Clients</a></li>
+		<li ng-class="{active : page == 'reports'}" class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown">Reports <b class="caret"></b></a>
+			<ul class="dropdown-menu">
+				<li><a href="#/reports/1">Report1</a></li>
+				<li><a href="#/reports/2">Report2</a></li>
+				<li><a href="#/reports/3">Report3</a></li>
+			</ul>
+		<li ng-class="{active : page == 'clients'}"><a href="#/history">History</a></li>
+		<% } %>
     </ul>
     
     <ul class="nav navbar-nav navbar-right">
+    <!-- 
 		<li class="dropdown" ng-show="isAdmin"><a class="dropdown-toggle" data-toggle="dropdown">Admin <b class="caret"></b></a>
 			<ul class="dropdown-menu">
 				<li><a href="#">Action</a></li>
@@ -57,8 +69,8 @@
 				<li><a href="#">One more separated link</a></li>
 			</ul>
 		</li>
-
-		<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown">${fn:escapeXml(user.nickname)} <b
+ 	-->
+ 		<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown">${fn:escapeXml(user.nickname)} <b
 				class="caret"></b></a>
 			<ul class="dropdown-menu">
 				<li><a href="<%=userService.createLogoutURL((String) request.getAttribute("page"))%>">Sign out</a></li>

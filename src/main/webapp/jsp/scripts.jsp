@@ -22,6 +22,7 @@
 <script src="resources/js/directives.js"></script>
 
  <!-- pre-load the partials into angular's $templateCache (see: http://stackoverflow.com/a/12346901/237225) -->
+ <!-- 
 <script type="text/ng-template" src="resources/partials/admin-landing.html"></script>
 <script type="text/ng-template" src="resources/partials/worker-landing.html"></script>
- 
+ -->

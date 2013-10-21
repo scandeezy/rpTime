@@ -1,5 +1,7 @@
 'use strict';
 (function() {
+	
+	console.log('loading controllers')
 
 	var module = angular.module('myApp.controllers', []);
 
@@ -15,8 +17,18 @@
 		$scope.setPage('landing');
 	} ]);
 	
+	module.controller('ClientsPageCtrl', [ '$log', '$scope', 'ClientService', //
+ 	function ClientsPageCtrlFn($log, $scope, ClientService) {
+ 		$log.info('ClientsPageCtrl init', $scope);
+ 		$scope.clients = ClientService.get();
+  	} ]);
 	
-		module.controller('TimesheetPageCtrl', [ '$log', '$scope', //
+	module.controller('HistoryPageCtrl', [ '$log', '$scope', //
+	function HistoryPageCtrlFn($log, $scope) {
+		$log.info('HistoryPageCtrl init', $scope);
+ 	} ]);
+
+	module.controller('TimesheetPageCtrl', [ '$log', '$scope', //
 	function TimesheetPageCtrlPageCtrlFn($log, $scope) {
 		$scope.edit = false;	
 		$log.info('TimesheetPageCtrl init', $scope);
@@ -45,7 +57,7 @@
 	module.controller('MainCtrl', [ '$log', '$scope', '$location',//
 	function MainCtrlFn($log, $scope, $location) {
 		$log.info('MainCtrl init', $location);
-		$scope.isAdmin = null;
+		$scope.isAdmin = false;
 		$scope.setAdmin = function(bool) {
 			$scope.isAdmin = bool;
 		};
@@ -54,10 +66,9 @@
 		};
 	} ]);
 
-	module.controller('WorkerPageCtrl', [ '$log', '$scope', //
-	function WorkerPageCtrlFn($log, $scope) {
-		$log.info('WorkerPageCtrl init', $scope);
-		$scope.setAdmin(false); // inherited fn from UserNavCtrl
+	module.controller('WorkersPageCtrl', [ '$log', '$scope', //
+	function WorkersPageCtrlFn($log, $scope) {
+		$log.info('WorkersPageCtrl init', $scope);
 	} ]);
 
 })();
