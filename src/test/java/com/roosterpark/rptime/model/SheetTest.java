@@ -1,5 +1,6 @@
 package com.roosterpark.rptime.model;
 
+import com.roosterpark.rptime.BasicRptimeUnitTest;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -10,9 +11,8 @@ import static org.junit.Assert.assertEquals;
  * Date: 10/21/13
  * Time: 11:11 AM
  */
-public class SheetTest {
+public class SheetTest extends BasicRptimeUnitTest {
 
-    private static final Long ID = 1L;
     private static final String USER_ID = "Ima User";
     private static final Integer WEEK = 1;
 

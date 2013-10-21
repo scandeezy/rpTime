@@ -74,7 +74,7 @@ public class Worker {
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("User : {");
+		sb.append("Worker : {");
 		sb.append("  First : " + firstName + ",");
 		sb.append("  Last : " + lastName + ",");
 		sb.append("  Email : " + email + ",");
