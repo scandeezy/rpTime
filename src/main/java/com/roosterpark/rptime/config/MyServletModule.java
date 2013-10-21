@@ -9,6 +9,7 @@ import com.google.inject.servlet.ServletModule;
 import com.roosterpark.rptime.HistoryServlet;
 import com.roosterpark.rptime.LandingServlet;
 import com.roosterpark.rptime.SheetServlet;
+import com.roosterpark.rptime.admin.ContractServlet;
 import com.roosterpark.rptime.admin.UserServlet;
 import com.roosterpark.rptime.admin.CompanyServlet;
 
@@ -24,6 +25,7 @@ public class MyServletModule extends ServletModule {
 		serve("/rptime/history").with(HistoryServlet.class);
 		serve("/rptime/sheet").with(SheetServlet.class);
 		serve("/rptime/user").with(UserServlet.class);
+		serve("/rptime/contract").with(ContractServlet.class);
 	}
 
 	// @Provides
