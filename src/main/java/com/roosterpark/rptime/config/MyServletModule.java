@@ -21,10 +21,10 @@ public class MyServletModule extends ServletModule {
 	@Override
 	protected void configureServlets() {
 		serve("/rptime").with(LandingServlet.class);
-		serve("/rptime/company").with(ClientServlet.class);
+		serve("/rptime/client").with(ClientServlet.class);
 		serve("/rptime/history").with(HistoryServlet.class);
 		serve("/rptime/sheet").with(SheetServlet.class);
-		serve("/rptime/user").with(WorkerServlet.class);
+		serve("/rptime/worker").with(WorkerServlet.class);
 		serve("/rptime/contract").with(ContractServlet.class);
 	}
 
