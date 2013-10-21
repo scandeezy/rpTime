@@ -1,9 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.google.appengine.api.datastore.Entity" %>
-<%@ page import="com.roosterpark.rptime.TimeSheetServlet" %>
 <%@ page import="com.roosterpark.rptime.model.TimeSheet" %>
-<%@ page import="javax.time.calendar.DayOfWeek" %>
 
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
@@ -12,7 +9,8 @@
   	<div>
 		<ul>
 			<%
-				List<TimeSheet> entities = (List<TimeSheet>)request.getAttribute(TimeSheetServlet.SHEET_DATA_NAME);
+				List<TimeSheet> entities = (List<TimeSheet>)request.getAttribute("sheetData");
+				String[] days = new String[]{"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
 				for(TimeSheet sheet : entities)
 				{
 			%>
@@ -20,15 +18,16 @@
 					<ol>
 					<%
 						Integer dayStart = sheet.getStartDay();
-						Integer day = 0;
-						for(Double hours : sheet.getHours)
+						Integer dayOffset = 0;
+						for(Double hours : sheet.getHours())
 						{
-							DayOfWeek day = DayOfWeek.of(dayStart + day);
+							String day = days[(dayStart + dayOffset) % 7];
 							%>
-							<li name="<%= day.name() %>"><%= hours %></li>
+							<li name="<%= day %>"><%= hours %></li>
 							<%
-							day++;
+							dayOffset++;
 						}
+					%>
 					</ol>
 				</li>
 			<%

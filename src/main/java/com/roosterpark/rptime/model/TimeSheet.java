@@ -35,7 +35,7 @@ public class TimeSheet {
 		this.clientId = clientId;
 		this.week = week;
 		this.startDay = startDay;
-		this.hours = new Double[7];
+		this.hours = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0};
 	}
 
 	public Long getId() {
@@ -84,7 +84,7 @@ public class TimeSheet {
 
 	public void setHours(Double[] hours) {
 		if(hours == null || hours.length != 7)
-			this.hours = new Double[7];
+			this.hours = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0};
 		else
 			this.hours = hours;
 	}

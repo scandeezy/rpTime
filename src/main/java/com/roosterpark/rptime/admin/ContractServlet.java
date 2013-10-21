@@ -107,15 +107,17 @@ public class ContractServlet extends HttpServlet {
 	// Create a user
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String idString = request.getParameter(ID_KEY);
-		Long worker = Long.valueOf(request.getParameter(WORKER_KEY));
-		Long client = Long.valueOf(request.getParameter(CLIENT_KEY));
+		Long workerId = Long.valueOf(request.getParameter(WORKER_KEY));
+		Long clientId = Long.valueOf(request.getParameter(CLIENT_KEY));
+		Client client = clientService.getById(clientId);
 		Date start = new Date(Long.valueOf(request.getParameter(START_KEY)));
 		Date end = new Date(Long.valueOf(request.getParameter(END_KEY)));
 		Contract contract = new Contract();
 		if(idString != null && idString.length() > 0)
 			contract.setId(Long.valueOf(idString));
-		contract.setWorker(worker);;
-		contract.setClient(client);
+		contract.setWorker(workerId);
+		contract.setClient(clientId);
+		contract.setStartDayOfWeek(client.getStartDayOfWeek());
 		contract.setStart(start);
 		contract.setEnd(end);
 
