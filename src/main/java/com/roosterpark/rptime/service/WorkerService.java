@@ -10,27 +10,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.appengine.api.datastore.EntityNotFoundException;
-import com.roosterpark.rptime.model.User;
+import com.roosterpark.rptime.model.Worker;
 
 @Singleton
-public class UserService implements Service<User> {
+public class WorkerService implements Service<Worker> {
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 	
 	@Override
-	public User get(String sKey) throws EntityNotFoundException {
+	public Worker get(String sKey) throws EntityNotFoundException {
 		LOGGER.warn("Getting user with key " + sKey);
 		Long key = Long.valueOf(sKey);
-		return ofy().load().type(User.class).id(key).now();
+		return ofy().load().type(Worker.class).id(key).now();
 	}
 
 	@Override
-	public List<User> getPage(int count, int offset) {
+	public List<Worker> getPage(int count, int offset) {
 		LOGGER.warn("Getting user page with count " + count + " and offset " + offset);
-		return ofy().load().type(User.class).limit(count).offset(offset).list();
+		return ofy().load().type(Worker.class).limit(count).offset(offset).list();
 	}
 
 	@Override
-	public void set(User item) {
+	public void set(Worker item) {
 		LOGGER.warn("Saving user " + item);
 		ofy().save().entity(item).now();
 	}

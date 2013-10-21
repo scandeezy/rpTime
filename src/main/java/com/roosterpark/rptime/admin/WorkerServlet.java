@@ -16,18 +16,17 @@ import org.slf4j.LoggerFactory;
 
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.googlecode.objectify.ObjectifyService;
-import com.roosterpark.rptime.model.Sheet;
-import com.roosterpark.rptime.model.User;
-import com.roosterpark.rptime.service.UserService;
+import com.roosterpark.rptime.model.Worker;
+import com.roosterpark.rptime.service.WorkerService;
 
 @Singleton
 @SuppressWarnings("serial")
-public class UserServlet extends HttpServlet {
+public class WorkerServlet extends HttpServlet {
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 	
-	public static final String USERS_KEY = "users";
+	public static final String WORKERS_KEY = "workers";
 
-	public static final String USER_KEY = "user";
+	public static final String WORKER_KEY = "worker";
 	public static final String ERROR_STRING = "error";
 	public static final String COUNT_KEY = "count";
 	public static final String OFFSET_KEY = "offset";
@@ -41,76 +40,76 @@ public class UserServlet extends HttpServlet {
 	public static final String START_DATE_KEY = "startDate";
 	
 	// JSP Paths
-	public static final String USERS_JSP = "/jsp/user/users.jsp";
-	public static final String USER_JSP = "/jsp/user/user.jsp";
-	public static final String USER_EDIT_JSP = "/jsp/user/userEdit.jsp";
+	public static final String WORKERS_JSP = "/jsp/worker/workers.jsp";
+	public static final String WORKER_JSP = "/jsp/worker/worker.jsp";
+	public static final String WORKER_EDIT_JSP = "/jsp/worker/workerEdit.jsp";
 	
 	// Servlet Path
-	public static final String ROUTE_PATH = "/rptime/user";
+	public static final String ROUTE_PATH = "/rptime/worker";
 	
 	@Inject
-	UserService userService;
+	WorkerService workerService;
 
-	public UserServlet() {
+	public WorkerServlet() {
 		LOGGER.debug("init UserServlet");
 		LOGGER.trace("registering User class with ObjectifyService");
-		ObjectifyService.register(User.class);
+		ObjectifyService.register(Worker.class);
 		LOGGER.trace("registered User");
 	}
 	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		String key = request.getParameter(USER_KEY);
+		String key = request.getParameter(WORKER_KEY);
 		if (key != null) {
-			User user;
+			Worker worker;
 			try {
-				user = userService.get(key);
+				worker = workerService.get(key);
 			} catch (EntityNotFoundException e) {
 				// TODO log something here
 				request.setAttribute(ERROR_STRING, e.getMessage());
-				request.getRequestDispatcher(USERS_JSP).forward(request, response);
+				request.getRequestDispatcher(WORKERS_JSP).forward(request, response);
 				return;
 			}
 
-			request.setAttribute(USER_KEY, user);
+			request.setAttribute(WORKER_KEY, worker);
 			String edit = request.getParameter(EDIT_PARAM);
 
 			if(edit != null)
-				request.getRequestDispatcher(USER_EDIT_JSP).forward(request, response);
+				request.getRequestDispatcher(WORKER_EDIT_JSP).forward(request, response);
 			else
-				request.getRequestDispatcher(USER_JSP).forward(request, response);
+				request.getRequestDispatcher(WORKER_JSP).forward(request, response);
 		} else {
 			Integer count = request.getParameter(COUNT_KEY) == null ? null : Integer.valueOf(request.getParameter(COUNT_KEY));
 			Integer offset = request.getParameter(OFFSET_KEY) == null ? null : Integer.valueOf(request.getParameter(OFFSET_KEY));
 			count = count == null ? 5 : count;
 			offset = offset == null ? 0 : count;
 
-			List<User> companies = userService.getPage(count, offset);
-			request.setAttribute(USERS_KEY, companies);
+			List<Worker> companies = workerService.getPage(count, offset);
+			request.setAttribute(WORKERS_KEY, companies);
 
-			request.getRequestDispatcher(USERS_JSP).forward(request, response);
+			request.getRequestDispatcher(WORKERS_JSP).forward(request, response);
 		}
 	}
 
-	// Create a user
+	// Create a worker
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String idString = request.getParameter(ID_KEY);
 		String firstName = request.getParameter(FIRST_NAME_KEY);
 		String lastName = request.getParameter(LAST_NAME_KEY);
 		String email = request.getParameter(EMAIL_KEY);
 		Date startDate = new Date(Long.valueOf(request.getParameter(START_DATE_KEY)));
-		User user = new User();
+		Worker worker = new Worker();
 		if(idString != null && idString.length() > 0)
 		{
-			user.setId(Long.valueOf(idString));
+			worker.setId(Long.valueOf(idString));
 		}
-		user.setFirstName(firstName);
-		user.setLastName(lastName);
-		user.setEmail(email);
-		user.setStart(startDate);
+		worker.setFirstName(firstName);
+		worker.setLastName(lastName);
+		worker.setEmail(email);
+		worker.setStart(startDate);
 
-		userService.set(user);
+		workerService.set(worker);
 
-		// Redirect back to the view page for this user
+		// Redirect back to the view page for this worker
 		response.sendRedirect(ROUTE_PATH);
 	}
 }

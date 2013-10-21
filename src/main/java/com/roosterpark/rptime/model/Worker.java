@@ -7,7 +7,7 @@ import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 
 @Entity
-public class User {
+public class Worker {
 	@Id
 	private Long id;
 	@Index
@@ -21,7 +21,7 @@ public class User {
 	@Index
 	private Date start;
 	
-	public User() {}
+	public Worker() {}
 	
 	public Long getId() {
 		return this.id;

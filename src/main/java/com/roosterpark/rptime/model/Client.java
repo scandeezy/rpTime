@@ -5,7 +5,7 @@ import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 
 @Entity
-public class Company 
+public class Client 
 {
 	@Id
 	private Long id;
@@ -18,10 +18,10 @@ public class Company
 	@Index
 	private Integer startDayOfWeek;
 	
-	public Company()
+	public Client()
 	{}
 	
-	public Company(String name, String header, String phone, Integer startDayOfWeek)
+	public Client(String name, String header, String phone, Integer startDayOfWeek)
 	{
 		this.name = name;
 		this.header = header;
