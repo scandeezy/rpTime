@@ -36,7 +36,7 @@
       <span class="icon-bar"></span>
     </button>
 	<a class="navbar-brand" href="//roosterpark.com">
-		<img src="/resources/img/rooster-park-logo.png" alt="Rooster Park" height="18" width="40">
+		<img src="/resources/img/roosterpark-logo.png" alt="Rooster Park" height="18" width="40">
 	</a>
 	</div>
 
