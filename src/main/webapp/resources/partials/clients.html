@@ -1,0 +1,14 @@
+<div>
+	<h4>clients.html</h4>
+	<p>This is the (Admin) clients page.</p>
+	
+	<ul>
+		<li ng-repeat="client in clients">
+			Client:
+			<div ng-include="" src="/resources/partials/client.html"></div>
+		</li>
+	</ul>	
+	
+	<div class="well"><pre>clients={{clients | json}} </pre></div>
+
+</div>

@@ -168,6 +168,11 @@
 			<version>3.2.7</version>
 		</dependency>
 		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jaxrs</artifactId>
+			<version>3.0.4.Final</version>
+		</dependency>
+		<dependency>
 			<groupId>org.ow2.asm</groupId>
 			<artifactId>asm-all</artifactId>
 		</dependency>
@@ -176,17 +181,25 @@
 	</dependencies>
 
 	<build>
-		<!-- <outputDirectory>target/${project.artifactId}-${project.version}/WEB-INF/classes</outputDirectory> -->
+		<outputDirectory>target/${project.artifactId}-${project.version}/WEB-INF/classes</outputDirectory>
 		<!-- Lexicographically ordered pluginManagement! -->
 		<plugins>
 			<plugin>
 				<groupId>com.google.appengine</groupId>
 				<artifactId>appengine-maven-plugin</artifactId>
-				<version>1.8.5-maven3.0</version>
+				<version>${appengine.target.version}</version>
 				<configuration>
 					<fullScanSeconds>1</fullScanSeconds>
-					<server>preview.appengine.google.com</server>
+					<enableJarClasses>false</enableJarClasses>
+					<!-- <server>preview.appengine.google.com</server> -->
 				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>endpoints_get_discovery_doc</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -207,16 +220,101 @@
 				</configuration>
 			</plugin>
 			<plugin>
+				<!-- https://maven.apache.org/enforcer/ -->
+				<!-- mvn enforcer:enforce -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-enforcer-plugin</artifactId>
+				<version>1.2</version>
+				<configuration>
+					<fail>true</fail>
+					<ignoreCache>true</ignoreCache>
+					<rules>
+						<bannedDependencies>
+							<excludes>
+								<exclude>javassist:javassist</exclude>
+								<exclude>commons-logging</exclude>
+								<exclude>hsqldb:hsqldb</exclude>
+								<exclude>log4j:log4j</exclude>
+								<exclude>org.codehaus.jackson:jackson*:1.*</exclude>
+								<exclude>org.slf4j:1.5*</exclude>
+								<exclude>org.springframework:2.*</exclude>
+								<exclude>org.springframework:3.0.*</exclude>
+							</excludes>
+						</bannedDependencies>
+						<!-- <banTransitiveDependencies /> -->
+						<!-- <DependencyConvergence /> -->
+						<requireMavenVersion>
+							<version>${maven.version.range}</version>
+						</requireMavenVersion>
+						<requireJavaVersion>
+							<version>${java.version}</version>
+						</requireJavaVersion>
+						<requireReleaseDeps>
+							<failWhenParentIsSnapshot>false</failWhenParentIsSnapshot>
+							<message>No Snapshots Allowed!</message>
+							<excludes>
+								<exclude>com.roosterpark.rptime:**</exclude>
+							</excludes>
+						</requireReleaseDeps>
+						<requireUpperBoundDeps />
+					</rules>
+				</configuration>
+				<inherited>false</inherited>
+				<executions>
+					<execution>
+						<id>enforce-this</id>
+						<goals>
+							<goal>enforce</goal>
+						</goals>
+						<!-- <phase>verify</phase> -->
+						<phase>install</phase>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<version>2.15</version>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.6</version>
+				<executions>
+					<execution>
+						<id>copy-resources-gae-war</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/war</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${project.build.directory}/${project.artifactId}-${project.version}</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>
 				<version>2.3</version>
-				<!-- <configuration> <archiveClasses>true</archiveClasses> <webResources> <resource> <directory>${basedir}/src/main/webapp/WEB-INF</directory> 
-					<filtering>true</filtering> <targetPath>WEB-INF</targetPath> </resource> </webResources> </configuration> -->
+				<configuration>
+					<webXml>${project.build.directory}/generated-sources/appengine-endpoints/WEB-INF/web.xml</webXml>
+					<webResources>
+						<resource>
+							<directory>${project.build.directory}/generated-sources/appengine-endpoints</directory>
+							<includes>
+								<include>WEB-INF/*.discovery</include>
+								<include>WEB-INF/*.api</include>
+							</includes>
+						</resource>
+					</webResources>
+				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.tomcat.maven</groupId>
@@ -827,7 +925,7 @@
 		<!-- -->
 		<!-- project properties -->
 		<!-- -->
-		<java.version>1.6</java.version>
+		<java.version>1.7</java.version>
 		<logging.dir>./logs</logging.dir>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -836,7 +934,7 @@
 		<!-- -->
 		<aalto-xml.version>0.9.8</aalto-xml.version>
 		<appengine.app.version>1</appengine.app.version>
-		<appengine.target.version>1.8.5</appengine.target.version>
+		<appengine.target.version>1.8.6</appengine.target.version>
 		<asm.version>4.1</asm.version>
 		<aspectj.version>1.7.3</aspectj.version>
 		<cglib-version>2.2</cglib-version>
@@ -900,7 +998,7 @@
 		<jetty-runner.version>7.4.5.v20110725</jetty-runner.version>
 		<maven-compiler-plugin.source.version>1.6</maven-compiler-plugin.source.version>
 		<maven-compiler-plugin.target.version>1.6</maven-compiler-plugin.target.version>
-		<maven.version.range>[3.0.0,3.1.0)</maven.version.range>
+		<maven.version.range>[3.1,)</maven.version.range>
 		<tomcat-maven-plugin.version>2.1</tomcat-maven-plugin.version>
 
 	</properties>

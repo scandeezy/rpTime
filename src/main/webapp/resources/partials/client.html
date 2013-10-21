@@ -1,0 +1,19 @@
+<div>
+			<div id="{{$id}}-id">{{client.id}}</div>
+			<div id="{{$id}}-companyName">{{client.name}}</div>
+			<div id="{{$id}}-companyHeader">{{client.header}}</div>
+			<div id="{{$id}}-companyPhone">{{client.phone}}</div>
+			<div id="{{$id}}-companyStart">{{client.startDayOfWeek}}</div>
+			<a type="button" class="btn btn-default">View</a>
+			<a type="button" class="btn btn-default">Edit</a>
+</div>
+
+<div id="createClient">
+		Name: <input type="text" ng-model="client.name"><br>
+		Header: <input type="text" ng-model="client.header"><br>
+		Phone: <input type="text" ng-model="client.phone"><br>
+		Start: <input type="text" ng-model="client.startDayOfWeek"><br>
+		<a type="button" class="btn btn-default">Save</a>
+</div>	
+			
+			
