@@ -13,14 +13,15 @@ import static org.junit.Assert.assertEquals;
  */
 public class SheetTest extends BasicRptimeUnitTest {
 
-    private static final String USER_ID = "Ima User";
+    private static final Long ID = 1L;
+    private static final Long WORKER_ID = 123L;
     private static final Integer WEEK = 1;
 
-    private Sheet sheet;
+    private TimeSheet sheet;
 
     @Before
     public void setup() {
-        sheet = new Sheet();
+        sheet = new TimeSheet();
     }
 
     @Test
@@ -31,8 +32,8 @@ public class SheetTest extends BasicRptimeUnitTest {
 
     @Test
     public void userIdTest() {
-        sheet.setUserId(USER_ID);
-        assertEquals("User ID doesn't match!", USER_ID, sheet.getUserId());
+        sheet.setWorkerId(WORKER_ID);
+        assertEquals("User ID doesn't match!", WORKER_ID, sheet.getWorkerId());
     }
 
     @Test

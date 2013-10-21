@@ -2,6 +2,7 @@ package com.roosterpark.rptime;
 
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -14,15 +15,18 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.googlecode.objectify.ObjectifyService;
-import com.roosterpark.rptime.model.Sheet;
-import com.roosterpark.rptime.service.SheetService;
+import com.roosterpark.rptime.model.TimeSheet;
+import com.roosterpark.rptime.model.Worker;
+import com.roosterpark.rptime.service.TimeSheetService;
+import com.roosterpark.rptime.service.WorkerService;
 
 @Singleton
 @SuppressWarnings("serial")
-public class SheetServlet extends HttpServlet {
+public class TimeSheetServlet extends HttpServlet {
 	public static final String TIMESHEET_BUCKET_NAME = "timesheets";
 	public static final String WEEK_ATTRIBUTE_KEY = "week";
 	public static final String SHEET_DATA_NAME = "sheetData";
@@ -33,21 +37,25 @@ public class SheetServlet extends HttpServlet {
 
 	@Inject
 	UserService userService;
+	
+	@Inject
+	WorkerService workerService;
 
 	@Inject
-	SheetService sheetService;
+	TimeSheetService sheetService;
 
-	public SheetServlet() {
+	public TimeSheetServlet() {
 		LOGGER.debug("init SheetServlet");
 		LOGGER.trace("registering Sheet class with ObjectifyService");
-		ObjectifyService.register(Sheet.class);
+		ObjectifyService.register(TimeSheet.class);
 		LOGGER.trace("registered Sheet");
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		User user = userService.getCurrentUser();
+		Worker worker = workerService.getByEmail(user.getEmail());
 		// TODO externalize into filter
-		if (user != null) {
+		if (user != null && worker != null) {
 			request.setAttribute(USER_FIELD_NAME, user);
 		} else {
 			response.sendRedirect(userService.createLoginURL(request.getRequestURI()));
@@ -59,8 +67,8 @@ public class SheetServlet extends HttpServlet {
 			week = Integer.valueOf((String) request.getAttribute(WEEK_ATTRIBUTE_KEY));
 		}
 
-		List<Sheet> sheets = sheetService.getRecent(user, week, 5);
-
+		List<TimeSheet> sheets = sheetService.getRecentForWorker(worker.getId(), new Date(), 5);
+		LOGGER.warn("Just looked up timesheets by user and date: " + sheets);
 		request.setAttribute(SHEET_DATA_NAME, sheets);
 		request.setAttribute(USER_FIELD_NAME, user);
 
@@ -75,12 +83,4 @@ public class SheetServlet extends HttpServlet {
 		}
 
 	}
-
-	// private List<Entity> createTimeSheet(User user, Integer week) {
-	// List<Entity> entities = new LinkedList<Entity>();
-	// // Figure out the companies currently active in the user's profile
-	// datastore.put(entities);
-	//
-	// return entities;
-	// }
 }

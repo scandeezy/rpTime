@@ -9,29 +9,33 @@ import javax.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.roosterpark.rptime.model.Worker;
 
 @Singleton
-public class WorkerService implements Service<Worker> {
+public class WorkerService {
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 	
-	@Override
-	public Worker get(String sKey) throws EntityNotFoundException {
-		LOGGER.warn("Getting user with key " + sKey);
-		Long key = Long.valueOf(sKey);
-		return ofy().load().type(Worker.class).id(key).now();
+	public Worker getById(Long id) {
+		LOGGER.warn("Getting worker with key " + id);
+		return ofy().load().type(Worker.class).id(id).now();
+	}
+	
+	public Worker getByEmail(String email) {
+		LOGGER.warn("Getting worker with email " + email);
+		return ofy().load().type(Worker.class).filter(Worker.EMAIL_KEY, email).first().now();
 	}
 
-	@Override
 	public List<Worker> getPage(int count, int offset) {
-		LOGGER.warn("Getting user page with count " + count + " and offset " + offset);
+		LOGGER.warn("Getting worker page with count " + count + " and offset " + offset);
 		return ofy().load().type(Worker.class).limit(count).offset(offset).list();
 	}
+	
+	public List<Worker> getAll() {
+		return ofy().load().type(Worker.class).list();
+	}
 
-	@Override
 	public void set(Worker item) {
-		LOGGER.warn("Saving user " + item);
+		LOGGER.warn("Saving worker " + item);
 		ofy().save().entity(item).now();
 	}
 }

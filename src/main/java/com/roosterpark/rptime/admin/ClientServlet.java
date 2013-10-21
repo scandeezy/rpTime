@@ -58,13 +58,12 @@ public class ClientServlet extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String key = request.getParameter(CLIENT_KEY);
 		if (key != null) {
-			Client client;
-			try {
-				client = clientService.get(key);
-			} catch (EntityNotFoundException e) {
+			Long lKey = Long.valueOf(key);
+			Client client = clientService.getById(lKey);
+			if(client == null) {
 				LOGGER.warn("Unable to retrieve record for client " + key);
 				// TODO log something here
-				request.setAttribute(ERROR_STRING, e.getMessage());
+				request.setAttribute(ERROR_STRING, "Client not found.");
 				request.getRequestDispatcher(CLIENTS_JSP).forward(request, response);
 				return;
 			}
