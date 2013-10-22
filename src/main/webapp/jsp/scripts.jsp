@@ -15,11 +15,11 @@
 <script src="resources/webjars/angularjs/1.2.0-rc.3/angular-route.min.js"></script>
 --%>
 <!-- end JS resources managed by WebJars -->
-<script src="resources/js/app.js"></script>
-<script src="resources/js/services.js"></script>
-<script src="resources/js/controllers.js"></script>
-<script src="resources/js/filters.js"></script>
-<script src="resources/js/directives.js"></script>
+<script src="/resources/js/app.js"></script>
+<script src="/resources/js/services.js"></script>
+<script src="/resources/js/controllers.js"></script>
+<script src="/resources/js/filters.js"></script>
+<script src="/resources/js/directives.js"></script>
 
  <!-- pre-load the partials into angular's $templateCache (see: http://stackoverflow.com/a/12346901/237225) -->
  <!-- 
