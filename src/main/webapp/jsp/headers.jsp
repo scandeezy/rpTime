@@ -2,7 +2,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="rpTime">
-<meta name="author" content="Roster Park">
+<meta name="author" content="Rooster Park">
 <title>rpTime</title>
 <link rel="shortcut icon" href="/favicon.ico" />
 <link rel="stylesheet" href="/resources/css/app.css" />
