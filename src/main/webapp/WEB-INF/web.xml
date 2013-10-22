@@ -19,7 +19,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 		<url-pattern>/*</url-pattern>
 	</filter-mapping> -->
 
-	per https://code.google.com/p/objectify-appengine/wiki/Setup
+	<!-- per https://code.google.com/p/objectify-appengine/wiki/Setup -->
 	<filter>
 		<filter-name>objectifyFilter</filter-name>
 		<filter-class>com.googlecode.objectify.ObjectifyFilter</filter-class>

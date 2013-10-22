@@ -14,7 +14,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
-import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -41,7 +40,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 		// .setCachePeriod(0); // to disable caching
 		registry.addResourceHandler("/favicon.ico").addResourceLocations(rootResourceLocation);
 		registry.addResourceHandler("/index.jsp").addResourceLocations(rootResourceLocation);
-		registry.addResourceHandler("/").addResourceLocations(rootResourceLocation);
+		// registry.addResourceHandler("/").addResourceLocations(rootResourceLocation);
 	}
 
 	/**
@@ -61,7 +60,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
-		registry.addViewController("/").setViewName("index");
+		registry.addViewController("/").setViewName("index.jsp");
 		// registry.addViewController("/login"); //TODO
 		// registry.addViewController("/error"); //TODO
 	}
@@ -69,14 +68,6 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 	//
 	// @Bean definitions
 	//
-
-	@Bean
-	public InternalResourceViewResolver internalResourceViewResolver() {
-		InternalResourceViewResolver result = new InternalResourceViewResolver();
-		// result.setPrefix("jsp");
-		result.setSuffix(".jsp");
-		return result;
-	}
 
 	@Bean
 	public ObjectMapper objectMapper() {
