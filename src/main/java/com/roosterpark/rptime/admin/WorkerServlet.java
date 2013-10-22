@@ -52,12 +52,12 @@ public class WorkerServlet extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String key = request.getParameter(WORKER_KEY);
 		if (key != null) {
-			Worker worker;
-			try {
-				worker = workerService.get(key);
-			} catch (EntityNotFoundException e) {
+			Long lKey = Long.valueOf(key);
+			Worker worker = workerService.getById(lKey);
+			
+			if(worker == null) {
 				// TODO log something here
-				request.setAttribute(ERROR_STRING, e.getMessage());
+				request.setAttribute(ERROR_STRING, "Worker not found.");
 				request.getRequestDispatcher(WORKERS_JSP).forward(request, response);
 				return;
 			}

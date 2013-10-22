@@ -1,34 +1,40 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.google.appengine.api.datastore.Entity" %>
-<%@ page import="com.google.appengine.api.users.User" %>
-<%@ page import="com.google.appengine.api.users.UserService" %>
-<%@ page import="com.google.appengine.api.users.UserServiceFactory" %>
-<%@ page import="com.roosterpark.rptime.SheetServlet" %>
-<%@ page import="com.roosterpark.rptime.model.Sheet" %>
+<%@ page import="com.roosterpark.rptime.model.TimeSheet" %>
 
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 
 <html>
-<%@ include file="/jsp/headers.jsp" %>
   <body>
   	<div>
-  		Time sheets for user <b><%= request.getAttribute(SheetServlet.USER_FIELD_NAME) %></b>
-
 		<ul>
 			<%
-				List<Sheet> entities = (List<Sheet>)request.getAttribute(SheetServlet.SHEET_DATA_NAME);
-				for(Sheet sheet : entities)
+				List<TimeSheet> entities = (List<TimeSheet>)request.getAttribute("sheetData");
+				String[] days = new String[]{"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"};
+				for(TimeSheet sheet : entities)
 				{
 			%>
-				<li>Time sheet id: <%= sheet.getId() %> -- Week: <%= sheet.getWeek() %></li>
+				<li>Time sheet id: <%= sheet.getId() %> -- Week: <%= sheet.getWeek() %>
+					<ol>
+					<%
+						Integer dayStart = sheet.getStartDay();
+						Integer dayOffset = 0;
+						for(Double hours : sheet.getHours())
+						{
+							String day = days[(dayStart + dayOffset) % 7];
+							%>
+							<li name="<%= day %>"><%= hours %></li>
+							<%
+							dayOffset++;
+						}
+					%>
+					</ol>
+				</li>
 			<%
 				}
 			%>
 		</ul>
 	
   	</div>
-
-	<%@ include file="/jsp/scripts.jsp" %>
   </body>
 </html>

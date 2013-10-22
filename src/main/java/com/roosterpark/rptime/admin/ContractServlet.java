@@ -16,8 +16,12 @@ import org.slf4j.LoggerFactory;
 
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.googlecode.objectify.ObjectifyService;
+import com.roosterpark.rptime.model.Client;
 import com.roosterpark.rptime.model.Contract;
+import com.roosterpark.rptime.model.Worker;
+import com.roosterpark.rptime.service.ClientService;
 import com.roosterpark.rptime.service.ContractService;
+import com.roosterpark.rptime.service.WorkerService;
 
 @Singleton
 @SuppressWarnings("serial")
@@ -33,8 +37,10 @@ public class ContractServlet extends HttpServlet {
 
 	// Post Field Names
 	public static final String ID_KEY = "id";
+	public static final String WORKERS_KEY = "workers";
 	public static final String WORKER_KEY = "worker";
 	public static final String CLIENT_KEY = "client";
+	public static final String CLIENTS_KEY = "clients";
 	public static final String START_KEY = "start";
 	public static final String END_KEY = "end";
 	
@@ -48,6 +54,10 @@ public class ContractServlet extends HttpServlet {
 
 	@Inject
 	ContractService contractService;
+	@Inject
+	WorkerService workerService;
+	@Inject
+	ClientService clientService;
 
 	public ContractServlet() {
 		LOGGER.debug("init ContractServlet");
@@ -57,6 +67,11 @@ public class ContractServlet extends HttpServlet {
 	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		List<Worker> workers = workerService.getAll();
+		request.setAttribute(WORKERS_KEY, workers);
+		List<Client> clients = clientService.getAll();
+		request.setAttribute(CLIENTS_KEY, clients);
+		
 		String key = request.getParameter(CONTRACT_KEY);
 		if (key != null) {
 			Contract contract;
@@ -92,15 +107,17 @@ public class ContractServlet extends HttpServlet {
 	// Create a user
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String idString = request.getParameter(ID_KEY);
-		Long worker = Long.valueOf(request.getParameter(WORKER_KEY));
-		Long client = Long.valueOf(request.getParameter(CLIENT_KEY));
+		Long workerId = Long.valueOf(request.getParameter(WORKER_KEY));
+		Long clientId = Long.valueOf(request.getParameter(CLIENT_KEY));
+		Client client = clientService.getById(clientId);
 		Date start = new Date(Long.valueOf(request.getParameter(START_KEY)));
 		Date end = new Date(Long.valueOf(request.getParameter(END_KEY)));
 		Contract contract = new Contract();
 		if(idString != null && idString.length() > 0)
 			contract.setId(Long.valueOf(idString));
-		contract.setWorker(worker);;
-		contract.setClient(client);
+		contract.setWorker(workerId);
+		contract.setClient(clientId);
+		contract.setStartDayOfWeek(client.getStartDayOfWeek());
 		contract.setStart(start);
 		contract.setEnd(end);
 
