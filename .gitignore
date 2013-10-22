@@ -7,7 +7,7 @@ bin
 .DS_Store
 .classpath
 tomcat*
-*log*
+*.log*
 /src/main/resources/git.properties
 /src/main/webapp/WEB-INF/classes
 /src/main/webapp/WEB-INF/lib
