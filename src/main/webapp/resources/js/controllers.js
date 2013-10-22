@@ -66,9 +66,15 @@
 		};
 	} ]);
 
+	module.controller('WorkerPageCtrl', [ '$log', '$scope', //
+   	function WorkerPageCtrlFn($log, $scope) {
+   		$log.info('WorkerPageCtrl init', $scope);
+   	} ]);
+
 	module.controller('WorkersPageCtrl', [ '$log', '$scope', //
 	function WorkersPageCtrlFn($log, $scope) {
 		$log.info('WorkersPageCtrl init', $scope);
+ 		$scope.setAdmin(false); // inherited fn from UserNavCtrl
 	} ]);
 
 })();
