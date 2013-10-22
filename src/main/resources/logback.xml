@@ -20,9 +20,7 @@
 	<logger name="org.eclipse.jetty" level="WARN" />
 	<logger name="org.datanucleus" level="WARN" />
 	<logger name="org.jboss" level="TRACE" />
-	<logger name="org.springframework" level="TRACE" />
-	<logger name="resteasy" level="TRACE" />
-	
+	<logger name="org.springframework" level="DEBUG" />
 
 	<root level="DEBUG">
 		<appender-ref ref="STDOUT" />

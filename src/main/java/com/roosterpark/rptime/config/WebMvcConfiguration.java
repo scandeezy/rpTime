@@ -24,7 +24,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
  * Spring MVC {@link Configuration}. Extends {@link WebMvcConfigurationSupport}, which provides convenient callbacks.
  */
 @Configuration
-@Import(DatastoreConfiguration.class)
+@Import(AppEngineConfiguration.class)
 @ComponentScan(basePackages = { "com.roosterpark.rptime" }, includeFilters = @ComponentScan.Filter({ Controller.class }), excludeFilters = @ComponentScan.Filter({ Configuration.class }))
 public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 	Logger LOGGER = LoggerFactory.getLogger(getClass());

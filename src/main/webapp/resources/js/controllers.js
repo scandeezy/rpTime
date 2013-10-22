@@ -56,7 +56,9 @@
 
 	module.controller('MainCtrl', [ '$log', '$scope', '$location',//
 	function MainCtrlFn($log, $scope, $location) {
-		$log.info('MainCtrl init', $location);
+		$scope.debug = (($.cookie('debug') == 'true') ? true : false);
+		$log.info('MainCtrl init', $location,$scope.debug);
+		
 		$scope.isAdmin = false;
 		$scope.setAdmin = function(bool) {
 			$scope.isAdmin = bool;
