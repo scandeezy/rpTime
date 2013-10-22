@@ -8,6 +8,11 @@ import com.googlecode.objectify.annotation.Index;
 
 @Entity
 public class Contract {
+	public static final String WORKER_KEY = "worker";
+	public static final String CLIENT_KEY = "client";
+	public static final String START_KEY = "start";
+	public static final String END_KEY = "end";
+	
 	@Id
 	private Long id;
 	@Index
@@ -18,6 +23,8 @@ public class Contract {
 	private Date start;
 	@Index
 	private Date end;
+	@Index
+	private Integer startDayOfWeek;
 
 	public Long getId() {
 		return id;
@@ -50,6 +57,14 @@ public class Contract {
 	}
 	public void setEnd(Date end) {
 		this.end = end;
+	}
+
+	public Integer getStartDayOfWeek() {
+		return startDayOfWeek;
+	}
+
+	public void setStartDayOfWeek(Integer startDayOfWeek) {
+		this.startDayOfWeek = startDayOfWeek;
 	}
 	
 	@Override

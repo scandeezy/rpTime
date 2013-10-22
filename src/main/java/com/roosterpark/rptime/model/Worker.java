@@ -8,6 +8,8 @@ import com.googlecode.objectify.annotation.Index;
 
 @Entity
 public class Worker {
+	public static final String EMAIL_KEY = "email";
+	
 	@Id
 	private Long id;
 	@Index
