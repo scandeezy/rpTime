@@ -91,7 +91,7 @@ public class TimeSheet {
 
 	@Override
 	public String toString() {
-		return "Sheet [id=" + id + ", workerId=" + workerId + ", clientId="
+		return "TimeSheet [id=" + id + ", workerId=" + workerId + ", clientId="
 				+ clientId + ", week=" + week + ", startDay=" + startDay
 				+ ", hours=" + Arrays.toString(hours) + "]";
 	}
