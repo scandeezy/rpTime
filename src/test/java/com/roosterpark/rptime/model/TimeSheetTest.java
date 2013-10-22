@@ -11,7 +11,7 @@ import static org.junit.Assert.assertEquals;
  * Date: 10/21/13
  * Time: 11:11 AM
  */
-public class SheetTest extends BasicRptimeUnitTest {
+public class TimeSheetTest extends BasicRptimeUnitTest {
 
     private static final Long ID = 1L;
     private static final Long WORKER_ID = 123L;
