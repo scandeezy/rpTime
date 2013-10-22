@@ -1,0 +1,30 @@
+<div>
+	<h4>workers.html</h4>
+	<p>This is the (Admin) workers page.</p>
+	
+	<ul>
+		<li ng-repeat="worker in workers">
+			worker!
+			<div id="{{$id}}-worker">
+				<div id="{{$id}}-id">{{worker.id}}</div>
+				<div id="{{$id}}-firstName">{{worker.firstName}}</div>
+				<div id="{{$id}}-lastName">{{worker.lastName}}</div>
+				<div id="{{$id}}-email">{{worker.email}}</div>
+				<div id="{{$id}}-start">{{worker.start}}</div>
+				<a type="button" class="btn btn-default">View</a>
+				<a type="button" class="btn btn-default">Edit</a>
+			</div>
+		</li>
+	</ul>
+	
+	<div id="createWorker">
+		First Name: <input type="text" ng-model="newworker.firstName"><br>
+		Last Name: <input type="text" ng-model="newworker.lastName"><br>
+		Email: <input type="text" ng-model="newworker.email"><br>
+		Start Date: <input type="text" ng-model="newworker.start"><br>
+		<a type="button" class="btn btn-default" ng-click="save(newworker)">Save</a>
+	</div>
+
+	<div ng-cloak ng-show="debug" class="well"><pre>workers={{workers | json}} </pre><br/><pre>newworker={{newworker | json}}</pre></div>
+
+</div>

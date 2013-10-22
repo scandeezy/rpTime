@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.appengine.api.datastore.EntityNotFoundException;
-import com.googlecode.objectify.ObjectifyService;
 import com.roosterpark.rptime.model.Worker;
 import com.roosterpark.rptime.service.WorkerService;
 
@@ -23,7 +22,7 @@ import com.roosterpark.rptime.service.WorkerService;
 @SuppressWarnings("serial")
 public class WorkerServlet extends HttpServlet {
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
-	
+
 	public static final String WORKERS_KEY = "workers";
 
 	public static final String WORKER_KEY = "worker";
@@ -38,25 +37,18 @@ public class WorkerServlet extends HttpServlet {
 	public static final String LAST_NAME_KEY = "lastName";
 	public static final String EMAIL_KEY = "email";
 	public static final String START_DATE_KEY = "startDate";
-	
+
 	// JSP Paths
 	public static final String WORKERS_JSP = "/jsp/worker/workers.jsp";
 	public static final String WORKER_JSP = "/jsp/worker/worker.jsp";
 	public static final String WORKER_EDIT_JSP = "/jsp/worker/workerEdit.jsp";
-	
+
 	// Servlet Path
 	public static final String ROUTE_PATH = "/rptime/worker";
-	
+
 	@Inject
 	WorkerService workerService;
 
-	public WorkerServlet() {
-		LOGGER.debug("init UserServlet");
-		LOGGER.trace("registering User class with ObjectifyService");
-		ObjectifyService.register(Worker.class);
-		LOGGER.trace("registered User");
-	}
-	
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String key = request.getParameter(WORKER_KEY);
 		if (key != null) {
@@ -73,7 +65,7 @@ public class WorkerServlet extends HttpServlet {
 			request.setAttribute(WORKER_KEY, worker);
 			String edit = request.getParameter(EDIT_PARAM);
 
-			if(edit != null)
+			if (edit != null)
 				request.getRequestDispatcher(WORKER_EDIT_JSP).forward(request, response);
 			else
 				request.getRequestDispatcher(WORKER_JSP).forward(request, response);
@@ -98,8 +90,7 @@ public class WorkerServlet extends HttpServlet {
 		String email = request.getParameter(EMAIL_KEY);
 		Date startDate = new Date(Long.valueOf(request.getParameter(START_DATE_KEY)));
 		Worker worker = new Worker();
-		if(idString != null && idString.length() > 0)
-		{
+		if (idString != null && idString.length() > 0) {
 			worker.setId(Long.valueOf(idString));
 		}
 		worker.setFirstName(firstName);

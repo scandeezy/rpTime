@@ -13,8 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.appengine.api.datastore.EntityNotFoundException;
-import com.googlecode.objectify.ObjectifyService;
 import com.roosterpark.rptime.model.Client;
 import com.roosterpark.rptime.service.ClientService;
 
@@ -29,38 +27,31 @@ public class ClientServlet extends HttpServlet {
 	public static final String OFFSET_KEY = "offset";
 	public static final String EDIT_PARAM = "edit";
 	public static final String ERROR_STRING = "error";
-	
+
 	// Post Field Names
 	public static final String ID_KEY = "id";
 	public static final String CLIENT_NAME_KEY = "clientName";
 	public static final String CLIENT_HEADER_KEY = "clientHeader";
 	public static final String CLIENT_PHONE_KEY = "clientPhone";
 	public static final String CLIENT_START_KEY = "clientStartDay";
-	
+
 	// JSP Paths
 	public static final String CLIENTS_JSP = "/jsp/client/clients.jsp";
 	public static final String CLIENT_JSP = "/jsp/client/client.jsp";
 	public static final String CLIENT_EDIT_JSP = "/jsp/client/clientEdit.jsp";
-	
+
 	// Servlet Path
 	public static final String ROUTE_PATH = "/rptime/client";
 
 	@Inject
 	ClientService clientService;
 
-	public ClientServlet() {
-		LOGGER.debug("init CompanyServlet");
-		LOGGER.trace("registering Company class with ObjectifyService");
-		ObjectifyService.register(Client.class);
-		LOGGER.trace("registered Company");
-	}
-
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String key = request.getParameter(CLIENT_KEY);
 		if (key != null) {
 			Long lKey = Long.valueOf(key);
 			Client client = clientService.getById(lKey);
-			if(client == null) {
+			if (client == null) {
 				LOGGER.warn("Unable to retrieve record for client " + key);
 				// TODO log something here
 				request.setAttribute(ERROR_STRING, "Client not found.");
@@ -70,7 +61,7 @@ public class ClientServlet extends HttpServlet {
 
 			request.setAttribute(CLIENT_KEY, client);
 			String edit = request.getParameter(EDIT_PARAM);
-			if(edit != null)
+			if (edit != null)
 				request.getRequestDispatcher(CLIENT_EDIT_JSP).forward(request, response);
 			else
 				request.getRequestDispatcher(CLIENT_JSP).forward(request, response);
@@ -95,7 +86,7 @@ public class ClientServlet extends HttpServlet {
 		String clientPhone = request.getParameter(CLIENT_PHONE_KEY);
 		Integer startDayOfWeek = Integer.valueOf(request.getParameter(CLIENT_START_KEY));
 		Client client = new Client();
-		if(idString != null && idString.length() > 0)
+		if (idString != null && idString.length() > 0)
 			client.setId(Long.valueOf(idString));
 		client.setName(clientName);
 		client.setHeader(clientHeader);

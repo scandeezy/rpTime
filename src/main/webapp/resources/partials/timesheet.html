@@ -1,0 +1,35 @@
+<!-- $scope is on TimesheetPageCtrl -->
+<div>
+	<h4>timesheet.html</h4>
+	<div>
+		<p>This is the timesheet page.</p>
+		<div class="pull-right btn-group">
+			<a type="button" class="btn btn-default" ng-class="{'btn-primary': !edit}" ng-click="edit=!edit">Edit</a>
+			<a type="button" class="btn btn-default" ng-class="{'btn-primary': edit}" ng-disabled="!edit">Save</a>
+		</div>
+	</div>
+	<form>
+		<table class="table">
+			<thead>
+				<tr class="row">
+					<th ng-repeat="dow in dows">{{dow}}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="days in dates" class="row">
+					<td ng-repeat="day in days">
+						<label for="input-hours-{{$id}}" class="">{{ day.date }} 
+							
+							<input ng-show="edit" type="text" class="form-control input col-lg-2" id="input-hours-{{$id}}" ng-model="day.hours">
+							<span ng-hide="edit">/ {{day.hours}}</span> 
+							/ {{day.type}}
+						</label>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		<!-- TODO: Mobile version of table (vertical, 2-3 column layout)-->
+	</form>
+
+</div>

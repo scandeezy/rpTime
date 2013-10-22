@@ -1,0 +1,30 @@
+<div>
+	<h4>clients.html</h4>
+	<p>This is the (Admin) client.html page.</p>
+	
+	<ul>
+		<li ng-repeat="client in clients">
+			Client:
+			<div id="{{$id}}-client">
+				<div id="{{$id}}-id">{{client.id}}</div>
+				<div id="{{$id}}-companyName">{{client.name}}</div>
+				<div id="{{$id}}-companyHeader">{{client.header}}</div>
+				<div id="{{$id}}-companyPhone">{{client.phone}}</div>
+				<div id="{{$id}}-companyStart">{{client.startDayOfWeek}}</div>
+				<a type="button" class="btn btn-default">View</a>
+				<a type="button" class="btn btn-default">Edit</a>
+			</div>
+		</li>
+	</ul>	
+	
+	<div id="createClient">
+			Name: <input type="text" ng-model="newclient.name"><br>
+			Header: <input type="text" ng-model="newclient.header"><br>
+			Phone: <input type="text" ng-model="newclient.phone"><br>
+			Start: <input type="text" ng-model="newclient.startDayOfWeek"><br>
+			<a type="button" class="btn btn-default" ng-click="save(newclient)">Save</a>
+	</div>	
+	
+	<div ng-cloak ng-show="debug" class="well"><pre>clients={{clients | json}} </pre><br/><pre>newclient={{newclient | json}}</pre></div>
+
+</div>

@@ -1,24 +1,48 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<!-- The HTML 4.01 Transitional DOCTYPE declaration-->
-<!-- above set at the top of the file will set     -->
-<!-- the browser's rendering engine into           -->
-<!-- "Quirks Mode". Replacing this declaration     -->
-<!-- with a "Standards Mode" doctype is supported, -->
-<!-- but may lead to some differences in layout.   -->
+<%@ page contentType="text/html;charset=UTF-8" language="java"%>
+<%@ page import="com.google.appengine.api.users.User"%>
+<%@ page import="com.google.appengine.api.users.UserService"%>
+<%@ page import="com.google.appengine.api.users.UserServiceFactory"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
-<html>
+<html ng-app="myApp">
+
 <%@ include file="/jsp/headers.jsp"%>
-<body>
-	<h1>Hello App Engine!</h1>
 
-	<table>
-		<tr>
-			<td colspan="2" style="font-weight: bold;">Available Servlets:</td>
-		</tr>
-		<tr>
-			<td><a href="rptime">Rptime</a></td>
-		</tr>
-	</table>
-	<%@ include file="/jsp/scripts.jsp"%>
+<body>
+	<div id="mainDiv" ng-controller="MainCtrl as main">
+		<%
+			UserService userService = UserServiceFactory.getUserService();
+			User user = userService.getCurrentUser();
+			String loginUrl = userService.createLoginURL(request.getRequestURI());
+			String logoutUrl = userService.createLogoutURL(request.getRequestURI());
+						
+			if (userService.isUserLoggedIn()) {
+				String nickname = user.getNickname();
+		%>
+		<%@ include file="/jsp/rptime.jsp"%>
+		<%
+			} else {
+		%>
+		<div class="container">
+			<form class="form-signin">
+				<h2 class="form-signin-heading">Please sign in</h2>
+				<a class="btn btn-primary" href="<%=loginUrl%>">Sign in</a>
+			</form>
+		</div>
+		<%
+			}
+		%>
+
+		<div ng-cloak ng-show="debug">
+			<pre>user = <%=user%>
+userService = <%=userService%>
+userService.isUserLoggedIn = <%=userService.isUserLoggedIn()%>
+pageContext = <%=pageContext%>
+request = <%=request%></pre>
+		</div>
+
+		<%@ include file="/jsp/scripts.jsp"%>
+
+	</div>
 </body>
 </html>

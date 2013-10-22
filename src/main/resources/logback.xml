@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+	<!-- http://logback.qos.ch/manual/appenders.html#ConsoleAppender -->
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<!-- %rEx... prints exception causes in REVERSE order: http://nurkiewicz.blogspot.com/2011/09/logging-exceptions-root-cause-first.html -->
+			<pattern><![CDATA[%-32(%date [%.8thread]) %-5level  %-128(%-32(%replace(%logger{1}){'^com\.jjz.*\.',''}) %M - %msg) %n%rEx]]></pattern>
+		</encoder>
+	</appender>
+
+	<!-- my loggers first -->
+
+	<logger name="com.roosterpark.rptime" level="DEBUG" />
+
+	<!-- third party loggers last, lexicographically -->
+
+	<logger name="com.google" level="TRACE" />
+	<logger name="org.apache" level="WARN" />
+	<logger name="org.eclipse.jetty" level="WARN" />
+	<logger name="org.datanucleus" level="WARN" />
+	<logger name="org.jboss" level="TRACE" />
+	<logger name="org.springframework" level="DEBUG" />
+
+	<root level="DEBUG">
+		<appender-ref ref="STDOUT" />
+		<!-- <appender-ref ref="LOG" /> -->
+	</root>
+</configuration>
