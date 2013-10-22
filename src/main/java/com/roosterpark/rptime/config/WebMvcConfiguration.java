@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
+import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,20 +44,6 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 		registry.addResourceHandler("/").addResourceLocations(rootResourceLocation);
 	}
 
-	@Bean
-	public ObjectMapper objectMapper() {
-		ObjectMapper mapper = new ObjectMapper();
-
-		mapper.getSerializationConfig()//
-				.with(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)//
-				.with(SerializationFeature.INDENT_OUTPUT)//
-				.shouldSortPropertiesAlphabetically();
-
-		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-
-		return mapper;
-	}
-
 	/**
 	 * Configure Spring to use the a common {@link ObjectMapper} for HTTP message conversion.
 	 * <p>
@@ -74,9 +61,35 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
-		registry.addViewController("/").setViewName("index.jsp");
+		registry.addViewController("/").setViewName("index");
 		// registry.addViewController("/login"); //TODO
 		// registry.addViewController("/error"); //TODO
+	}
+
+	//
+	// @Bean definitions
+	//
+
+	@Bean
+	public InternalResourceViewResolver internalResourceViewResolver() {
+		InternalResourceViewResolver result = new InternalResourceViewResolver();
+		// result.setPrefix("jsp");
+		result.setSuffix(".jsp");
+		return result;
+	}
+
+	@Bean
+	public ObjectMapper objectMapper() {
+		ObjectMapper mapper = new ObjectMapper();
+
+		mapper.getSerializationConfig()//
+				.with(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)//
+				.with(SerializationFeature.INDENT_OUTPUT)//
+				.shouldSortPropertiesAlphabetically();
+
+		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+		return mapper;
 	}
 
 }
