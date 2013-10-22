@@ -15,20 +15,21 @@ import com.roosterpark.rptime.model.Worker;
 import com.roosterpark.rptime.service.WorkerService;
 
 @Controller
+@RequestMapping(value = "/worker")
 public class WorkerController {
 
 	@Inject
-	WorkerService workerService;
+	WorkerService service;
 
-	@RequestMapping(value = "/worker", method = GET)
+	@RequestMapping(method = GET)
 	@ResponseBody
 	public List<Worker> getAll() {
-		return workerService.getAll();
+		return service.getAll();
 	}
 
-	@RequestMapping(value = "/worker/{id}", method = GET)
+	@RequestMapping(value = "/{id}", method = GET)
 	@ResponseBody
 	public Worker getById(@PathVariable Long id) {
-		return workerService.getById(id);
+		return service.getById(id);
 	}
 }

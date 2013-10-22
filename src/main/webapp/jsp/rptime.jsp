@@ -17,16 +17,16 @@
 			<%
 				if (userService.isUserAdmin()) {
 			%>
-			<li ng-class="{active : page == 'workers'}"><a href="#/workers">Workers</a></li>
-			<li ng-class="{active : page == 'clients'}"><a href="#/clients">Clients</a></li>
-			<li ng-class="{active : page == 'reports'}" class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown">Reports <b
+			<li ng-class="{active : page == 'worker'}"><a href="#/worker">Workers</a></li>
+			<li ng-class="{active : page == 'client'}"><a href="#/client">Clients</a></li>
+			<li ng-class="{active : page == 'report'}" class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown">Reports <b
 					class="caret"></b></a>
 				<ul class="dropdown-menu">
-					<li><a href="#/reports/1">Report1</a></li>
-					<li><a href="#/reports/2">Report2</a></li>
-					<li><a href="#/reports/3">Report3</a></li>
+					<li><a href="#/report/1">Report1</a></li>
+					<li><a href="#/report/2">Report2</a></li>
+					<li><a href="#/report/3">Report3</a></li>
 				</ul>
-			<li ng-class="{active : page == 'clients'}"><a href="#/history">History</a></li>
+			<li ng-class="{active : page == 'history'}"><a href="#/history">History</a></li>
 			<%
 				}
 			%>
@@ -43,27 +43,27 @@
 	<!-- /.navbar-collapse -->
 </nav>
 
+<div 
 <%
-	if (userService.isUserAdmin()) {
+if (userService.isUserAdmin()) {
 %>
-<div ng-controller="AdminPageCtrl">
-	<%
-		} else { // (admin == false)
-	%>
-	<div ng-controller="WorkerPageCtrl">
-		<%
-			} // (admin == false)
-		%>
-
-		<div class="rptime-animate-container">
-			<div ng-view class="view-rptime">
-				<!--  -->
-			</div>
+ng-controller="AdminPageCtrl"
+<%
+} else { // (admin == false)
+%>
+ng-controller="UserPageCtrl"
+<%
+} // (admin == false)
+%>
+>
+	<div class="rptime-animate-container">
+		<div ng-view class="view-rptime">
+			<!--  -->
 		</div>
-
-		<p class="text-warning" ng-show="isAdmin">
-			<span class="label label-warning">Warning</span> You are signed in as an administrator.
-		</p>
-
 	</div>
-	<!-- DIV opened by ngcontroller -->
+
+	<p class="text-warning" ng-show="isAdmin">
+		<span class="label label-warning">Warning</span> You are signed in as an administrator.
+	</p>
+
+</div>

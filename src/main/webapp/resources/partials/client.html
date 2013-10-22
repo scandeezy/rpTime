@@ -1,6 +1,6 @@
 <div>
 	<h4>clients.html</h4>
-	<p>This is the (Admin) clients page.</p>
+	<p>This is the (Admin) client.html page.</p>
 	
 	<ul>
 		<li ng-repeat="client in clients">
@@ -18,13 +18,13 @@
 	</ul>	
 	
 	<div id="createClient">
-			Name: <input type="text" ng-model="client.name"><br>
-			Header: <input type="text" ng-model="client.header"><br>
-			Phone: <input type="text" ng-model="client.phone"><br>
-			Start: <input type="text" ng-model="client.startDayOfWeek"><br>
-			<a type="button" class="btn btn-default">Save</a>
+			Name: <input type="text" ng-model="newclient.name"><br>
+			Header: <input type="text" ng-model="newclient.header"><br>
+			Phone: <input type="text" ng-model="newclient.phone"><br>
+			Start: <input type="text" ng-model="newclient.startDayOfWeek"><br>
+			<a type="button" class="btn btn-default" ng-click="save(newclient)">Save</a>
 	</div>	
 	
-	<div ng-cloak ng-show="debug" class="well"><pre>clients={{clients | json}} </pre></div>
+	<div ng-cloak ng-show="debug" class="well"><pre>clients={{clients | json}} </pre><br/><pre>newclient={{newclient | json}}</pre></div>
 
 </div>

@@ -24,9 +24,9 @@
 
  <!-- pre-load the partials into angular's $templateCache (see: http://stackoverflow.com/a/12346901/237225) -->
  
-<script type="text/ng-template" src="/resources/partials/clients.html"></script>
+<script type="text/ng-template" src="/resources/partials/client.html"></script>
 <script type="text/ng-template" src="/resources/partials/history.html"></script>
 <script type="text/ng-template" src="/resources/partials/landing.html"></script>
 <script type="text/ng-template" src="/resources/partials/timesheet.html"></script>
-<script type="text/ng-template" src="/resources/partials/workers.html"></script>
+<script type="text/ng-template" src="/resources/partials/worker.html"></script>
  

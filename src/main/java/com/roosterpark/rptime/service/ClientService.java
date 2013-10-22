@@ -17,19 +17,19 @@ public class ClientService {
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
 	public ClientService() {
-		LOGGER.trace("registering Company class with ObjectifyService");
+		LOGGER.trace("registering Client class with ObjectifyService");
 		ObjectifyService.register(Client.class);
-		LOGGER.trace("registered Company");
+		LOGGER.trace("registered Client");
 	}
 
 	public Client getById(Long id) {
-		LOGGER.warn("Getting company with key " + id);
+		LOGGER.warn("Getting Client with key {}", id);
 		return ofy().load().type(Client.class).id(id).now();
 	}
 
-	public List<Client> getPage(int count, int offset) {
-		LOGGER.warn("Getting company page with count " + count + " and offset " + offset);
-		return ofy().load().type(Client.class).limit(count).offset(offset).list();
+	public List<Client> getPage(int limit, int offset) {
+		LOGGER.warn("Getting Client page with limit {} and offset {}", limit, offset);
+		return ofy().load().type(Client.class).limit(limit).offset(offset).list();
 	}
 
 	public List<Client> getAll() {
@@ -37,7 +37,7 @@ public class ClientService {
 	}
 
 	public void set(Client item) {
-		LOGGER.warn("Saving company " + item);
+		LOGGER.warn("Saving Client {}", item);
 		ofy().save().entity(item).now();
 	}
 }

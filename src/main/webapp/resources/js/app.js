@@ -10,9 +10,9 @@
 			controller : 'LandingPageCtrl',
 			templateUrl : 'resources/partials/landing.html'
 		});
-		$routeProvider.when('/clients', {
-			controller : 'ClientsPageCtrl',
-			templateUrl : 'resources/partials/clients.html'
+		$routeProvider.when('/client', {
+			controller : 'AdminClientCtrl',
+			templateUrl : 'resources/partials/client.html'
 		});
 		$routeProvider.when('/history', {
 			controller : 'HistoryPageCtrl',
@@ -26,9 +26,9 @@
 			controller : 'TimesheetPageCtrl',
 			templateUrl : 'resources/partials/timesheet.html'
 		});
-		$routeProvider.when('/workers', {
-			controller : 'WorkersPageCtrl',
-			templateUrl : 'resources/partials/workers.html'
+		$routeProvider.when('/worker', {
+			controller : 'AdminWorkerCtrl',
+			templateUrl : 'resources/partials/worker.html'
 		});
 		$routeProvider.otherwise({
 			redirectTo : '/'
