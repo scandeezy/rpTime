@@ -9,6 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 
 /**
  * Spring MVC {@link Configuration}. Extends {@link WebMvcConfigurationSupport}, which provides convenient callbacks.
@@ -71,14 +73,21 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 
 	@Bean
 	public ObjectMapper objectMapper() {
-		ObjectMapper mapper = new ObjectMapper();
+		Jackson2ObjectMapperFactoryBean bean = new Jackson2ObjectMapperFactoryBean();
+		bean.setIndentOutput(true);
+		bean.setSimpleDateFormat("yyyy-MM-dd");
+		bean.afterPropertiesSet();
+		ObjectMapper mapper = bean.getObject();
 
 		mapper.getSerializationConfig()//
 				.with(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)//
 				.with(SerializationFeature.INDENT_OUTPUT)//
+				.without(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)//
 				.shouldSortPropertiesAlphabetically();
 
 		mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+
+		mapper.registerModule(new JodaModule());
 
 		return mapper;
 	}
