@@ -5,8 +5,8 @@
 <%
 UserService userService2 = UserServiceFactory.getUserService();
 User user2 = userService2.getCurrentUser();
-String loginUrl2 = userService.createLoginURL(request.getRequestURI());
-String logoutUrl2 = userService.createLogoutURL(request.getRequestURI());
+String loginUrl2 = userService2.createLoginURL(request.getRequestURI());
+String logoutUrl2 = userService2.createLogoutURL(request.getRequestURI());
 %>
 	<nav class="navbar navbar-default" role="navigation">
 		<!-- Brand and toggle get grouped for better mobile display -->
