@@ -1,3 +1,13 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java"%>
+<%@ page import="com.google.appengine.api.users.User"%>
+<%@ page import="com.google.appengine.api.users.UserService"%>
+<%@ page import="com.google.appengine.api.users.UserServiceFactory"%>
+<%
+UserService userService2 = UserServiceFactory.getUserService();
+User user2 = userService2.getCurrentUser();
+String loginUrl2 = userService.createLoginURL(request.getRequestURI());
+String logoutUrl2 = userService.createLogoutURL(request.getRequestURI());
+%>
 	<nav class="navbar navbar-default" role="navigation">
 		<!-- Brand and toggle get grouped for better mobile display -->
 		<div class="navbar-header">
@@ -15,7 +25,7 @@
 				<li ng-class="{active : page == 'landing'}"><a href="#/landing">Home</a></li>
 				<li ng-class="{active : page == 'timesheet'}" ng-hide="isAdmin && !debug"><a href="#/timesheet">Timesheets</a></li>
 				<%
-					if (userService.isUserAdmin()) {
+					if (userService2.isUserAdmin()) {
 				%>
 				<li ng-class="{active : page == 'worker'}"><a href="#/worker">Workers <span ng-cloak ng-show="workers.length>0" class="badge">{{workers.length}}</span></a></li>
 				<li ng-class="{active : page == 'client'}"><a href="#/client">Clients<span ng-cloak ng-show="clients.length>0" class="badge">{{clients.length}}</span></a></li>
@@ -33,9 +43,9 @@
 			</ul>
 	
 			<ul class="nav navbar-nav navbar-right">
-				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown"><%=user.getNickname()%><b class="caret"></b></a>
+				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown"><%=user2.getNickname()%><b class="caret"></b></a>
 					<ul class="dropdown-menu">
-						<li><a href="<%=logoutUrl%>">Sign out</a></li>
+						<li><a href="<%=logoutUrl2%>">Sign out</a></li>
 					</ul></li>
 			</ul>
 	
