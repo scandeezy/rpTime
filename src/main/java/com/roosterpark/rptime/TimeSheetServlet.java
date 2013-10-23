@@ -15,10 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
-import com.googlecode.objectify.ObjectifyService;
 import com.roosterpark.rptime.model.TimeSheet;
 import com.roosterpark.rptime.model.Worker;
 import com.roosterpark.rptime.service.TimeSheetService;
@@ -37,19 +35,12 @@ public class TimeSheetServlet extends HttpServlet {
 
 	@Inject
 	UserService userService;
-	
+
 	@Inject
 	WorkerService workerService;
 
 	@Inject
 	TimeSheetService sheetService;
-
-	public TimeSheetServlet() {
-		LOGGER.debug("init SheetServlet");
-		LOGGER.trace("registering Sheet class with ObjectifyService");
-		ObjectifyService.register(TimeSheet.class);
-		LOGGER.trace("registered Sheet");
-	}
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		User user = userService.getCurrentUser();

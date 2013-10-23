@@ -13,7 +13,7 @@
 		<div class="collapse navbar-collapse navbar-ex1-collapse">
 			<ul class="nav navbar-nav">
 				<li ng-class="{active : page == 'landing'}"><a href="#/landing">Home</a></li>
-				<li ng-class="{active : page == 'timesheet'}" ng-hide="isAdmin && !debug"><a href="#/timesheet">Timesheet</a></li>
+				<li ng-class="{active : page == 'timesheet'}" ng-hide="isAdmin && !debug"><a href="#/timesheet">Timesheets</a></li>
 				<%
 					if (userService.isUserAdmin()) {
 				%>

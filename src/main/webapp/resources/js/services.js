@@ -22,6 +22,24 @@
 		});
 	} ]);
 
+	module.factory('TimeSheetService', [ '$resource',//
+	function TimeSheetService($resource) {
+		return $resource('timesheet/:id', {}, {
+			get : {
+				method : 'GET',
+				params : {
+					id : '@_id'
+				}
+			},
+			getAll : {
+				method : 'GET',
+			},
+			save : {
+				method : 'POST',
+			}
+		});
+	} ]);
+
 	module.factory('AdminWorkerService', [ '$resource',//
 	function AdminWorkerServiceFn($resource) {
 		return $resource('worker/:id', {}, {

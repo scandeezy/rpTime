@@ -1,6 +1,33 @@
 <!-- $scope is on TimesheetPageCtrl -->
 <div>
 	<h4>timesheet.html</h4>
+	
+	<div id="createTimeSheet">
+		<form role="form" name="createTimeSheetForm">
+			<table class="table">
+				<thead>
+					<tr class="row">
+						<th ng-repeat="dow in dows">{{dow}}</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+					
+						<td ng-repeat="dow in dows">cTS[{{$index}}]='{{currentTimeSheet[$index]}}'
+						
+						<input type="text" class="form-control input-sm" ng-model="currentTimeSheet[{{$index].hours">
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+		
+		<div class="well">
+			<pre>currentTimeSheet={{currentTimeSheet | json}}</pre>
+		</div>
+	</div>
+	
+	<!-- 
 	<div>
 		<p>This is the timesheet page.</p>
 		<div class="pull-right btn-group">
@@ -28,8 +55,7 @@
 				</tr>
 			</tbody>
 		</table>
-		
-		<!-- TODO: Mobile version of table (vertical, 2-3 column layout)-->
 	</form>
+	-->
 
 </div>

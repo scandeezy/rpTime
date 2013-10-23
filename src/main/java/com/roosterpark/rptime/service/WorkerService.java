@@ -9,6 +9,7 @@ import javax.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.appengine.api.users.User;
 import com.googlecode.objectify.ObjectifyService;
 import com.roosterpark.rptime.model.Worker;
 
@@ -44,5 +45,12 @@ public class WorkerService {
 	public void set(Worker item) {
 		LOGGER.warn("Saving worker " + item);
 		ofy().save().entity(item).now();
+	}
+
+	public Worker getByUser(User user) {
+		if (user != null) {
+			return getByEmail(user.getEmail());
+		}
+		return null;
 	}
 }

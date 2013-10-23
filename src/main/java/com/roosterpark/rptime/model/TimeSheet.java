@@ -26,16 +26,25 @@ public class TimeSheet {
 	@Index
 	private Double[] hours;
 
+	/**
+	 * required for Objectify.
+	 * 
+	 * @deprecated use {@code TimeSheet(Long)} instead
+	 * */
+	@Deprecated
 	public TimeSheet() {
-		hours = new Double[7];
+	}
+
+	public TimeSheet(Long workerId) {
+		this.workerId = workerId;
+		this.hours = new Double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 	}
 
 	public TimeSheet(Long workerId, Long clientId, Integer week, Integer startDay) {
-		this.workerId = workerId;
+		this(workerId);
 		this.clientId = clientId;
 		this.week = week;
 		this.startDay = startDay;
-		this.hours = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0};
 	}
 
 	public Long getId() {
@@ -83,17 +92,16 @@ public class TimeSheet {
 	}
 
 	public void setHours(Double[] hours) {
-		if(hours == null || hours.length != 7)
-			this.hours = new Double[]{0.0,0.0,0.0,0.0,0.0,0.0,0.0};
+		if (hours == null || hours.length != 7)
+			this.hours = new Double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 		else
 			this.hours = hours;
 	}
 
 	@Override
 	public String toString() {
-		return "TimeSheet [id=" + id + ", workerId=" + workerId + ", clientId="
-				+ clientId + ", week=" + week + ", startDay=" + startDay
+		return "TimeSheet [id=" + id + ", workerId=" + workerId + ", clientId=" + clientId + ", week=" + week + ", startDay=" + startDay
 				+ ", hours=" + Arrays.toString(hours) + "]";
 	}
-	
+
 }

@@ -23,7 +23,7 @@
 			templateUrl : 'resources/partials/landing.html'
 		});
 		$routeProvider.when('/timesheet', {
-			controller : 'TimesheetPageCtrl',
+			controller : 'TimeSheetPageCtrl',
 			templateUrl : 'resources/partials/timesheet.html'
 		});
 		$routeProvider.when('/worker', {
