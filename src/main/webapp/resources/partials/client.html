@@ -1,30 +1,59 @@
 <div>
 	<h4>clients.html</h4>
 	<p>This is the (Admin) client.html page.</p>
-	
-	<ul>
-		<li ng-repeat="client in clients">
-			Client:
-			<div id="{{$id}}-client">
-				<div id="{{$id}}-id">{{client.id}}</div>
-				<div id="{{$id}}-companyName">{{client.name}}</div>
-				<div id="{{$id}}-companyHeader">{{client.header}}</div>
-				<div id="{{$id}}-companyPhone">{{client.phone}}</div>
-				<div id="{{$id}}-companyStart">{{client.startDayOfWeek}}</div>
-				<a type="button" class="btn btn-default">View</a>
-				<a type="button" class="btn btn-default">Edit</a>
-			</div>
-		</li>
-	</ul>	
-	
-	<div id="createClient">
-			Name: <input type="text" ng-model="newclient.name"><br>
-			Header: <input type="text" ng-model="newclient.header"><br>
-			Phone: <input type="text" ng-model="newclient.phone"><br>
-			Start: <input type="text" ng-model="newclient.startDayOfWeek"><br>
-			<a type="button" class="btn btn-default" ng-click="save(newclient)">Save</a>
-	</div>	
-	
-	<div ng-cloak ng-show="debug" class="well"><pre>clients={{clients | json}} </pre><br/><pre>newclient={{newclient | json}}</pre></div>
+
+	<div id="clients" class="panel panel-default">
+		<div class="panel-heading">Clients</div>
+		<div class="panel-body">
+			<ul>
+				<li ng-repeat="client in clients">
+					<span class="btn-group">
+						<a type="button" class="btn btn-sm btn-default" ng-href="#">View</a>
+						<a type="button" class="btn btn-sm btn-default" ng-click="edit=!edit">Edit</a>
+						<a type="button" class="btn btn-sm btn-default" ng-class="{'btn-primary': edit}" ng-disabled="!edit" ng-hide="true">Save</a>
+					</span>
+					{{client.name}} <span ng-show="client.phone">/ <i>({{client.phone}})</i></span>
+					<!-- 
+					<div id="{{$id}}-id">{{client.id}}</div>
+					<div id="{{$id}}-companyName">{{client.name}}</div>
+					<div id="{{$id}}-companyHeader">{{client.header}}</div>
+					<div id="{{$id}}-companyPhone">{{client.phone}}</div>
+					<div id="{{$id}}-companyStart">{{client.startDayOfWeek}}</div>
+	 -->
+				</li>
+			</ul>
+		</div>
+	</div>
+
+	<div id="createClient" class="panel panel-default">
+		<div class="panel-heading">Create new client</div>
+		<div class="panel-body">
+			<form role="form" name="createClientForm">
+				<div class="form-group">
+				
+					<label for="name">Name</label>
+					<input type="text" class="form-control" id="name" ng-model="newclient.name" placeholder="Enter Name">
+					
+					<label for="header">Header</label>
+					<input type="text" class="form-control" id="header" ng-model="newclient.header" placeholder="Enter Header">
+					
+					<label for="phone">Phone</label>
+					<input type="text" class="form-control" id="phone" ng-model="newclient.phone" placeholder="123-456-7890">
+			
+					<label for="startDayOfWeek">Start Day of Week</label>
+					<input type="text" class="form-control" id="startDayOfWeek" ng-model="newclient.startDayOfWeek" placeholder="1=Sun, 2=Mon, etc.">
+
+					<div>
+						<a type="button" class="btn btn-primary" ng-click="save(newclient)">Save</a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<div ng-cloak ng-show="debug" class="well">
+		<pre>clients={{clients | json}} </pre>
+		<br />
+		<pre>newclient={{newclient | json}}</pre>
+	</div>
 
 </div>
