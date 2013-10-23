@@ -5,24 +5,43 @@
 
 	var module = angular.module('myApp.controllers', []);
 
-	module.controller('AdminPageCtrl', [ '$log', '$scope', //
-	function AdminPageCtrlFn($log, $scope) {
+	module.controller('AdminPageCtrl', [ '$log', '$scope', 'AdminClientService', 'AdminWorkerService', //
+	function AdminPageCtrlFn($log, $scope, AdminClientService, AdminWorkerService) {
 		$log.info('AdminPageCtrl init', $scope);
 		$scope.setAdmin(true); // inherited fn from UserNavCtrl
+		$scope.clients = [];
+		$scope.workers = [];
+		
+		function updateClientsFn(){
+			$log.info("updating collection");
+			AdminClientService.getAll(function successCGetAllFn(data){
+				$scope.clients = data;
+				$log.info("success",data.length);
+			});
+		};
+		
+		function updateWorkersFn(){
+			$log.info("updating collection");
+			AdminWorkerService.getAll(function successWGetAllFn(data){
+				$scope.workers = data;
+				$log.info("success",data.length);
+			});
+		};
+		
+		$scope.$on('updateClients',updateClientsFn);
+		$scope.$on('updateWorkers',updateWorkersFn);
+		
+		updateClientsFn(); 
+		updateWorkersFn();
 	} ]);
 
 	module.controller('AdminClientCtrl', [ '$log', '$scope', 'AdminClientService', //
 	function AdminClientCtrlFn($log, $scope, AdminClientService) {
 		$scope.setPage('client');
 		$log.info('AdminClientCtrl init', $scope);
-		$scope.clients = [];//AdminClientService.getAll() || [];
-		$scope.updateArr = function updateArrFn(){
-			AdminClientService.getAll(function successGetAllFn(data){
-				$scope.clients = data;
-			});
-		}();
+
 		$scope.save = function(obj){
-			$scope.doSave(AdminClientService, obj, $scope.updateArr);
+			$scope.doSave(AdminClientService, obj, 'updateClients');
 		};
  	} ]);                              	
 	
@@ -30,14 +49,9 @@
   	function AdminWorkerCtrlFn($log, $scope, AdminWorkerService) {
 		$scope.setPage('worker');
   		$log.info('AdminWorkerCtrl init', $scope);
-		$scope.workers = [];//AdminWorkerService.getAll() || [];
-		$scope.updateArr = function updateArrFn(){
-			AdminWorkerService.getAll(function successGetAllFn(data){
-				$scope.workers = data;
-			});
-		}();
+
 		$scope.save= function(obj){
-			$scope.doSave(AdminWorkerService, obj, $scope.updateArr);
+			$scope.doSave(AdminWorkerService, obj, 'updateWorkers');
 		};
   	} ]);
 
@@ -82,22 +96,34 @@
 	module.controller('MainCtrl', [ '$log', '$scope', '$location',//
 	function MainCtrlFn($log, $scope, $location) {
 		$scope.debug = (($.cookie('debug') == 'true') ? true : false);
-		$log.info('MainCtrl init', $location,$scope.debug);
+		$log.info('MainCtrl init', $location, $scope.debug);
+		
+
+		// $scope.$on('$locationChangeStart', function (event, newLoc, oldLoc){
+		// console.log('changing to: ' + newLoc);
+		// });
+		//
+		// $scope.$on('$locationChangeSuccess', function (event, newLoc, oldLoc){
+		// console.log('changed to: ' + newLoc);
+		// });
 		
 		$scope.isAdmin = false;
+		
 		$scope.setAdmin = function(bool) {
 			$scope.isAdmin = bool;  // true if Admin, false if User
 		};
+		
 		$scope.setPage = function(page) {
 			$scope.page = page;
 		};
+		
 		$scope.doSave = function doSaveFn(svc, obj, updateFn){
 			var objJson = angular.toJson(obj);
 			svc.save(objJson,function saveSuccessFn(data){
 				$log.info("saved data:", data);
 			});
-			$log.info("do update");
-			updateFn();
+			$log.info("do ($broadcast) update '"+updateFn+"'");
+			$scope.$broadcast(updateFn);
 		};
 	} ]);
 

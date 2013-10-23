@@ -1,25 +1,15 @@
 <div>
-	<h4>clients.html</h4>
-	<p>This is the (Admin) client.html page.</p>
-
 	<div id="clients" class="panel panel-default">
 		<div class="panel-heading">Clients</div>
 		<div class="panel-body">
 			<ul>
-				<li ng-repeat="client in clients">
+				<li ng-repeat="client in clients | orderBy:'name'">
 					<span class="btn-group">
 						<a type="button" class="btn btn-sm btn-default" ng-href="#">View</a>
 						<a type="button" class="btn btn-sm btn-default" ng-click="edit=!edit">Edit</a>
 						<a type="button" class="btn btn-sm btn-default" ng-class="{'btn-primary': edit}" ng-disabled="!edit" ng-hide="true">Save</a>
 					</span>
 					{{client.name}} <span ng-show="client.phone">/ <i>({{client.phone}})</i></span>
-					<!-- 
-					<div id="{{$id}}-id">{{client.id}}</div>
-					<div id="{{$id}}-companyName">{{client.name}}</div>
-					<div id="{{$id}}-companyHeader">{{client.header}}</div>
-					<div id="{{$id}}-companyPhone">{{client.phone}}</div>
-					<div id="{{$id}}-companyStart">{{client.startDayOfWeek}}</div>
-	 -->
 				</li>
 			</ul>
 		</div>
@@ -50,6 +40,7 @@
 			</form>
 		</div>
 	</div>
+
 	<div ng-cloak ng-show="debug" class="well">
 		<pre>clients={{clients | json}} </pre>
 		<br />

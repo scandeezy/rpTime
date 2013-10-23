@@ -19,7 +19,24 @@
 			if (userService.isUserLoggedIn()) {
 				String nickname = user.getNickname();
 		%>
+		
+	<div id="rpTimeWrapperDiv"  
+<%
+if (userService.isUserAdmin()) {
+%>
+ng-controller="AdminPageCtrl"
+<%
+} else { // (admin == false)
+%>
+ng-controller="UserPageCtrl"
+<%
+} // (admin == false)
+%>
+>
+		
 		<%@ include file="/jsp/rptime.jsp"%>
+		
+	</div>
 		<%
 			} else {
 		%>

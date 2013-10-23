@@ -1,29 +1,47 @@
 <div>
-	<h4>workers.html</h4>
-	<p>This is the (Admin) workers page.</p>
-	
-	<ul>
-		<li ng-repeat="worker in workers">
-			worker!
-			<div id="{{$id}}-worker">
-				<div id="{{$id}}-id">{{worker.id}}</div>
-				<div id="{{$id}}-firstName">{{worker.firstName}}</div>
-				<div id="{{$id}}-lastName">{{worker.lastName}}</div>
-				<div id="{{$id}}-email">{{worker.email}}</div>
-				<div id="{{$id}}-start">{{worker.start}}</div>
-				<a type="button" class="btn btn-default">View</a>
-				<a type="button" class="btn btn-default">Edit</a>
-			</div>
-		</li>
-	</ul>
-	
-	<div id="createWorker">
-		First Name: <input type="text" ng-model="newworker.firstName"><br>
-		Last Name: <input type="text" ng-model="newworker.lastName"><br>
-		Email: <input type="text" ng-model="newworker.email"><br>
-		Start Date: <input type="text" ng-model="newworker.start"><br>
-		<a type="button" class="btn btn-default" ng-click="save(newworker)">Save</a>
+	<div id="workers" class="panel panel-default">
+		<div class="panel-heading">Workers</div>
+		<div class="panel-body">
+			<ul>
+				<li ng-repeat="worker in workers | orderBy:'lastName'">
+					<span class="btn-group">
+						<a type="button" class="btn btn-sm btn-default" ng-href="#">View</a>
+						<a type="button" class="btn btn-sm btn-default" ng-click="edit=!edit">Edit</a>
+						<a type="button" class="btn btn-sm btn-default" ng-class="{'btn-primary': edit}" ng-disabled="!edit" ng-hide="true">Save</a>
+					</span>
+					{{worker.lastName}}, {{worker.firstName}} 
+					<span ng-show="worker.email">- {{worker.email}}</span>
+				</li>
+			</ul>
+		</div>
 	</div>
+	
+	<div id="createWorker" class="panel panel-default">
+		<div class="panel-heading">Create new worker</div>
+		<div class="panel-body">
+			<form role="form" name="createWorkerForm">
+				<div class="form-group">
+				
+					<label for="firstName">First Name</label>
+					<input type="text" class="form-control" id="firstName" ng-model="newworker.firstName" placeholder="First Name (i.e., John)">
+	
+					<label for="lastName">Last Name</label>
+					<input type="text" class="form-control" id="lastName" ng-model="newworker.lastName" placeholder="Last Name (i.e., Smith)">
+	
+					<label for="email">Email</label>
+					<input type="text" class="form-control" id="email" ng-model="newworker.email" placeholder="john@smith.com">
+
+					<label for="start">Start Date</label>
+					<input type="text" class="form-control" id="start" ng-model="newworker.start" placeholder="1">
+			
+					<div>
+						<a type="button" class="btn btn-default" ng-click="save(newworker)">Save</a>
+					</div>
+					
+				</div>
+			</form>
+		</div>
+	</div>	
 
 	<div ng-cloak ng-show="debug" class="well"><pre>workers={{workers | json}} </pre><br/><pre>newworker={{newworker | json}}</pre></div>
 
