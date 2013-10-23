@@ -13,7 +13,7 @@
 		<div class="collapse navbar-collapse navbar-ex1-collapse">
 			<ul class="nav navbar-nav">
 				<li ng-class="{active : page == 'landing'}"><a href="#/landing">Home</a></li>
-				<li ng-class="{active : page == 'timesheet'}" ng-hide="isAdmin"><a href="#/timesheet">Timesheet</a></li>
+				<li ng-class="{active : page == 'timesheet'}" ng-hide="isAdmin && !debug"><a href="#/timesheet">Timesheet</a></li>
 				<%
 					if (userService.isUserAdmin()) {
 				%>
@@ -26,10 +26,10 @@
 						<li><a href="#/report/2">Report2</a></li>
 						<li><a href="#/report/3">Report3</a></li>
 					</ul>
-				<li ng-class="{active : page == 'history'}"><a href="#/history">History</a></li>
 				<%
 					}
 				%>
+				<li ng-class="{active : page == 'history'}"><a href="#/history">History</a></li>
 			</ul>
 	
 			<ul class="nav navbar-nav navbar-right">
