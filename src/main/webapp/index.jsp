@@ -5,9 +5,18 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <html ng-app="myApp">
-
-<%@ include file="/jsp/headers.jsp"%>
-
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="rpTime">
+<meta name="author" content="Rooster Park">
+<title>rpTime</title>
+<link rel="shortcut icon" href="/favicon.ico" />
+<link rel="stylesheet" href="/resources/css/app.css" />
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+<!-- Optional theme -->
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
+</head>
 <body>
 	<div id="mainDiv" ng-controller="MainCtrl as main">
 		<%
@@ -58,7 +67,29 @@ pageContext = <%=pageContext%>
 request = <%=request%></pre>
 		</div>
 
-		<%@ include file="/jsp/scripts.jsp"%>
+		<div id="jsScripts">
+			<!-- begin JS resources manageable by WebJars -->
+			<script src="//code.jquery.com/jquery-2.0.3.min.js"></script>
+			<script src="/resources/lib/jquery.cookie.js"></script>
+			<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+			<script src="//code.angularjs.org/1.2.0-rc.3/angular.js"></script>
+			<script src="//code.angularjs.org/1.2.0-rc.3/angular-animate.min.js"></script>
+			<script src="//code.angularjs.org/1.2.0-rc.3/angular-route.min.js"></script>
+			<script src="//code.angularjs.org/1.2.0-rc.3/angular-resource.min.js"></script>
+			<!-- end JS resources manageable by WebJars -->
+			<script src="/resources/js/app.js"></script>
+			<script src="/resources/js/services.js"></script>
+			<script src="/resources/js/controllers.js"></script>
+			<script src="/resources/js/filters.js"></script>
+			<script src="/resources/js/directives.js"></script>
+			<!-- pre-load templates into angular's $templateCache (see: http://stackoverflow.com/a/12346901/237225) -->
+			<script type="text/ng-template" src="/resources/partials/client.html"></script>
+			<script type="text/ng-template" src="/resources/partials/history.html"></script>
+			<script type="text/ng-template" src="/resources/partials/landing.html"></script>
+			<script type="text/ng-template" src="/resources/partials/timesheet.html"></script>
+			<script type="text/ng-template" src="/resources/partials/worker.html"></script>
+			<!-- end pre-load templates --> 
+		</div>
 
 	</div>
 </body>
