@@ -1,7 +1,8 @@
 package com.roosterpark.rptime.model;
 
-import java.util.Arrays;
+import org.joda.time.LocalDate;
 
+import com.google.common.base.Objects;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
@@ -22,7 +23,7 @@ public class TimeSheet {
 	@Index
 	private Integer week;
 	@Index
-	private Integer startDay;
+	private LocalDate startDate;
 	@Index
 	private Double[] hours;
 
@@ -40,11 +41,11 @@ public class TimeSheet {
 		this.hours = new Double[] { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
 	}
 
-	public TimeSheet(Long workerId, Long clientId, Integer week, Integer startDay) {
+	public TimeSheet(Long workerId, Long clientId, Integer week, LocalDate startDate) {
 		this(workerId);
 		this.clientId = clientId;
 		this.week = week;
-		this.startDay = startDay;
+		this.startDate = startDate;
 	}
 
 	public Long getId() {
@@ -79,12 +80,12 @@ public class TimeSheet {
 		this.week = week;
 	}
 
-	public Integer getStartDay() {
-		return startDay;
+	public LocalDate getStartDate() {
+		return startDate;
 	}
 
-	public void setStartDay(Integer startDay) {
-		this.startDay = startDay;
+	public void setStartDate(LocalDate startDate) {
+		this.startDate = startDate;
 	}
 
 	public Double[] getHours() {
@@ -100,8 +101,14 @@ public class TimeSheet {
 
 	@Override
 	public String toString() {
-		return "TimeSheet [id=" + id + ", workerId=" + workerId + ", clientId=" + clientId + ", week=" + week + ", startDay=" + startDay
-				+ ", hours=" + Arrays.toString(hours) + "]";
+		return Objects.toStringHelper(this)//
+				.add("id", this.id)//
+				.add("workerId", this.workerId)//
+				.add("clientId", this.clientId)//
+				.add("week", this.week)//
+				.add("startDate", this.startDate)//
+				.add("hours", this.hours)//
+				.toString();
 	}
 
 }
