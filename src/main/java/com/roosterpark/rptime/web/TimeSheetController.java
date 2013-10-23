@@ -26,7 +26,7 @@ public class TimeSheetController {
 	@Inject
 	TimeSheetService service;
 
-	@RequestMapping(value = "/new", method = POST)
+	@RequestMapping(value = "/new", method = GET)
 	@ResponseBody
 	public TimeSheet create() {
 		return service.create();

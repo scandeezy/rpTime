@@ -22,14 +22,14 @@ String logoutUrl2 = userService2.createLogoutURL(request.getRequestURI());
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse navbar-ex1-collapse">
 			<ul class="nav navbar-nav">
-				<li ng-class="{active : page == 'landing'}"><a href="#/landing">Home</a></li>
-				<li ng-class="{active : page == 'timesheet'}" ng-hide="isAdmin && !debug"><a href="#/timesheet">Timesheets</a></li>
+				<li ng-class="{active : page == '/landing'}"><a href="#/landing">Home</a></li>
+				<li ng-class="{active : page == '/timesheet'}" ng-hide="isAdmin && !debug"><a href="#/timesheet">Timesheets</a></li>
 				<%
 					if (userService2.isUserAdmin()) {
 				%>
-				<li ng-class="{active : page == 'worker'}"><a href="#/worker">Workers <span ng-cloak ng-show="workers.length>0" class="badge">{{workers.length}}</span></a></li>
-				<li ng-class="{active : page == 'client'}"><a href="#/client">Clients<span ng-cloak ng-show="clients.length>0" class="badge">{{clients.length}}</span></a></li>
-				<li ng-class="{active : page == 'report'}" class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown">Reports <b
+				<li ng-class="{active : page == '/worker'}"><a href="#/worker">Workers <span ng-cloak ng-show="workers.length>0" class="badge">{{workers.length}}</span></a></li>
+				<li ng-class="{active : page == '/client'}"><a href="#/client">Clients<span ng-cloak ng-show="clients.length>0" class="badge">{{clients.length}}</span></a></li>
+				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown">Reports <b
 						class="caret"></b></a>
 					<ul class="dropdown-menu">
 						<li><a href="#/report/1">Report1</a></li>
@@ -39,7 +39,7 @@ String logoutUrl2 = userService2.createLogoutURL(request.getRequestURI());
 				<%
 					}
 				%>
-				<li ng-class="{active : page == 'history'}"><a href="#/history">History</a></li>
+				<li ng-class="{active : page == '/history'}"><a href="#/history">History</a></li>
 			</ul>
 	
 			<ul class="nav navbar-nav navbar-right">

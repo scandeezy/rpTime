@@ -2,25 +2,40 @@
 <div>
 	<h4>timesheet.html</h4>
 	
+	<ul>
+		<li ng-repeat="timesheet in timesheets">
+			timesheet: <a ng-click="selectTimeSheet(timesheet);">{{timesheet.id}}</a>
+		</li>
+	
+	</ul>
+	
 	<div id="createTimeSheet">
 		<form role="form" name="createTimeSheetForm">
 			<table class="table">
 				<thead>
-					<tr class="row">
+					<tr>
 						<th ng-repeat="dow in dows">{{dow}}</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-					
-						<td ng-repeat="dow in dows">cTS[{{$index}}]='{{currentTimeSheet[$index]}}'
-						
-						<input type="text" class="form-control input-sm" ng-model="currentTimeSheet[{{$index].hours">
+						<td><input type="text" class="form-control input-sm col-lg-1" ng-model="currentTimeSheet.hours[0]"></td>
+						<td><input type="text" class="form-control input-sm col-lg-1" ng-model="currentTimeSheet.hours[1]"></td>
+						<td><input type="text" class="form-control input-sm col-lg-1" ng-model="currentTimeSheet.hours[2]"></td>
+						<td><input type="text" class="form-control input-sm col-lg-1" ng-model="currentTimeSheet.hours[3]"></td>
+						<td><input type="text" class="form-control input-sm col-lg-1" ng-model="currentTimeSheet.hours[4]"></td>
+						<td><input type="text" class="form-control input-sm col-lg-1" ng-model="currentTimeSheet.hours[5]"></td>
+						<td><input type="text" class="form-control input-sm col-lg-1" ng-model="currentTimeSheet.hours[6]"></td>
 						</td>
 					</tr>
 				</tbody>
 			</table>
 		</form>
+		
+		<div class="btn-group">
+			<a type="button" class="btn btn-default" ng-click="create();">New</a>
+			<a type="button" class="btn btn-default" ng-click="save(currentTimeSheet);">Save</a>
+		</div>
 		
 		<div class="well">
 			<pre>currentTimeSheet={{currentTimeSheet | json}}</pre>

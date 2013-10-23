@@ -11,17 +11,13 @@
 		$log.info('MainCtrl init', $location, $scope.debug);
 		
 		$scope.$watch(function() { return $location.path(); }, function(newLoc, oldLoc){
-		   console.log('location changed', newLoc, oldLoc);
+		   $scope.page = newLoc;
 		});		
 		
 		$scope.isAdmin = false;
 		
 		$scope.setAdmin = function(bool) {
 			$scope.isAdmin = bool;  // true if Admin, false if User
-		};
-		
-		$scope.setPage = function(page) {
-			$scope.page = page;
 		};
 		
 		$scope.doSave = function doSaveFn(svc, obj, updateFn){
@@ -63,7 +59,6 @@
 
 	module.controller('AdminClientCtrl', [ '$log', '$scope', 'AdminClientService', //
 	function AdminClientCtrlFn($log, $scope, AdminClientService) {
-		$scope.setPage('client');
 		$log.info('AdminClientCtrl init', $scope);
 
 		$scope.save = function(obj){
@@ -73,7 +68,6 @@
 	
 	module.controller('AdminWorkerCtrl', [ '$log', '$scope', 'AdminWorkerService', //
   	function AdminWorkerCtrlFn($log, $scope, AdminWorkerService) {
-		$scope.setPage('worker');
   		$log.info('AdminWorkerCtrl init', $scope);
 
 		$scope.save= function(obj){
@@ -84,23 +78,41 @@
 	module.controller('LandingPageCtrl', [ '$log', '$scope', //
 	function LandingPageCtrlFn($log, $scope) {
 		$log.info('LandingPageCtrl init', $scope);
-		$scope.setPage('landing');
 	} ]);
 	
 	module.controller('HistoryPageCtrl', [ '$log', '$scope', //
 	function HistoryPageCtrlFn($log, $scope) {
-		$scope.setPage('history');
 		$log.info('HistoryPageCtrl init', $scope);
  	} ]);
 
 	module.controller('TimeSheetPageCtrl', [ '$log', '$scope',  'TimeSheetService', //
 	function TimeSheetPageCtrlPageCtrlFn($log, $scope, TimeSheetService) {
 		$scope.edit = false;	
-		$scope.currentTimeSheet = ['abc',123];
+		$scope.currentTimeSheet = {};
 		$log.info('TimeSheetPageCtrl init', $scope);
 		$scope.dows=['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
-		$scope.timesheets = TimeSheetService.getAll() ||  [];
-		$scope.setPage('timesheet');
+		
+		function updateTimeSheetsFn(){
+			TimeSheetService.getAll(function successFn(data){
+				$scope.timesheets = data;
+			});
+		};
+		
+		$scope.create = function(){
+			TimeSheetService.create(function successFn(data){
+				$scope.currentTimeSheet = data;
+			});
+		}
+		$scope.selectTimeSheet = function(ts){
+			$scope.currentTimeSheet = ts;
+		};
+		$scope.save= function(ts){
+			$scope.doSave(TimeSheetService, ts, 'updateTimeSheets');
+		};
+		
+		$scope.$on('updateTimeSheets',this.updateTimeSheetsFn);
+
+		updateTimeSheetsFn();
 
 	} ]);
 

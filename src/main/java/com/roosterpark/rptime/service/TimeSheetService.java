@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,12 +46,11 @@ public class TimeSheetService {
 		Worker w = workerService.getByUser(userService.getCurrentUser());
 		if (w != null) {
 			TimeSheet result = new TimeSheet(w.getId());
-			LOGGER.debug("creating new TimeSheet for worker={}", w);
-			set(result);
+			result.setStartDate(new LocalDate());
+			LOGGER.debug("created new TimeSheet for worker={},timesheet={}", w, result);
 			return result;
 		}
-		// TODO Auto-generated method stub
-		return null;
+		throw new IllegalArgumentException("Worker required for '" + userService.getCurrentUser() + "'");
 	}
 
 	public List<TimeSheet> getAll() {
@@ -92,29 +92,29 @@ public class TimeSheetService {
 		ofy().save().entity(item).now();
 	}
 
-	public List<TimeSheet> getRecentForWorker(Long worker, Date date, int limit) {
+	public List<TimeSheet> getRecentForWorker(Long workerId, Date date, int limit) {
 		GregorianCalendar cal = new GregorianCalendar();
 		cal.setTime(date);
 		Integer week = cal.get(Calendar.WEEK_OF_YEAR);
-		LOGGER.debug("querying Sheets for worker={},date={},week={}", worker, date, week);
+		LOGGER.debug("querying Sheets for worker={},date={},week={}", workerId, date, week);
 		List<TimeSheet> result = ofy()//
 				.load()//
 				.type(TimeSheet.class)//
-				.filter(TimeSheet.WORKER_KEY, worker)//
+				.filter(TimeSheet.WORKER_KEY, workerId)//
 				.filter(TimeSheet.WEEK_KEY + " <=", week)//
 				.limit(limit)//
 				// .order("-date")//Descending date sort
 				.list();
 		if (CollectionUtils.isEmpty(result)) {
-			LOGGER.debug("creating new Sheet for worker={},date={},week={}", worker, date, week);
-			List<Contract> contracts = contractService.getContractsForWorker(worker);
+			LOGGER.debug("creating new Sheet for worker={},date={},week={}", workerId, date, week);
+			List<Contract> contracts = contractService.getContractsForWorker(workerId);
 			result = new LinkedList<TimeSheet>();
-			for (Contract contract : contracts) {
-				TimeSheet s = new TimeSheet(contract.getWorker(), contract.getClient(), week, contract.getStartDayOfWeek());
-				set(s); // persist;
-				LOGGER.debug("adding sheet to list: sheet={}", s);
-				result.add(s);
-			}
+			// for (Contract contract : contracts) {
+			// TimeSheet s = new TimeSheet(workerId, contract., week);
+			// set(s); // persist;
+			// LOGGER.debug("adding sheet to list: sheet={}", s);
+			// result.add(s);
+			// }
 		}
 		LOGGER.debug("returning List<Sheet>={}", result);
 		return result;

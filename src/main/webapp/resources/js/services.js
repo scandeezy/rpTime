@@ -16,6 +16,12 @@
 				method : 'GET',
 				isArray : true
 			},
+			remove : {
+				method : 'DELETE',
+				params : {
+					id : '@_id'
+				}
+			},
 			save : {
 				method : 'POST',
 			}
@@ -25,6 +31,12 @@
 	module.factory('TimeSheetService', [ '$resource',//
 	function TimeSheetService($resource) {
 		return $resource('timesheet/:id', {}, {
+			create : {
+				method : 'GET',
+				params : {
+					id : 'new'
+				}
+			},
 			get : {
 				method : 'GET',
 				params : {
@@ -33,6 +45,13 @@
 			},
 			getAll : {
 				method : 'GET',
+				isArray : true
+			},
+			remove : {
+				method : 'DELETE',
+				params : {
+					id : '@_id'
+				}
 			},
 			save : {
 				method : 'POST',
@@ -52,6 +71,12 @@
 			getAll : {
 				method : 'GET',
 				isArray : true
+			},
+			remove : {
+				method : 'DELETE',
+				params : {
+					id : '@_id'
+				}
 			},
 			save : {
 				method : 'POST',
