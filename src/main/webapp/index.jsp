@@ -69,13 +69,13 @@ request = <%=request%></pre>
 
 		<div id="jsScripts">
 			<!-- begin JS resources manageable by WebJars -->
-			<script src="//code.jquery.com/jquery-2.0.3.min.js"></script>
-			<script src="/resources/lib/jquery.cookie.js"></script>
-			<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-			<script src="//code.angularjs.org/1.2.0-rc.3/angular.js"></script>
-			<script src="//code.angularjs.org/1.2.0-rc.3/angular-animate.min.js"></script>
-			<script src="//code.angularjs.org/1.2.0-rc.3/angular-route.min.js"></script>
-			<script src="//code.angularjs.org/1.2.0-rc.3/angular-resource.min.js"></script>
+			<script src="/resources/webjars/jquery/2.0.3/jquery.min.js"></script>
+			<script src="/resources/webjars/jquery-cookie/1.3.1/jquery.cookie.js"></script>
+			<script src="/resources/webjars/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+			<script src="/resources/webjars/angularjs/1.2.0-rc.3/angular.js"></script>
+			<script src="/resources/webjars/angularjs/1.2.0-rc.3/angular-animate.js"></script>
+			<script src="/resources/webjars/angularjs/1.2.0-rc.3/angular-route.js"></script>
+			<script src="/resources/webjars/angularjs/1.2.0-rc.3/angular-resource.js"></script>
 			<!-- end JS resources manageable by WebJars -->
 			<script src="/resources/js/app.js"></script>
 			<script src="/resources/js/services.js"></script>

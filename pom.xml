@@ -194,6 +194,22 @@
 			<groupId>org.ow2.asm</groupId>
 			<artifactId>asm-all</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>angularjs</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>bootstrap</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>jquery</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.webjars</groupId>
+			<artifactId>jquery-cookie</artifactId>
+		</dependency>
 		<!-- end module-specific dependencies -->
 
 	</dependencies>
@@ -296,9 +312,30 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-resources-plugin</artifactId>
-				<version>2.6</version>
 				<executions>
+					<execution>
+						<id>copy-resources-webjars</id>
+						<phase>compile</phase>
+						<!-- <phase>process-classes</phase> -->
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/src/main/webapp/resources/webjars/</outputDirectory>
+							<!-- <outputDirectory>${project.build.directory}/${project.artifactId}-${project.version}/resources/webjars/</outputDirectory> -->
+							<resources>
+								<resource>
+									<directory>${project.build.directory}/maven-dependency-plugin-unpacked-dependencies/META-INF/resources/webjars/</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
 					<execution>
 						<id>copy-resources-gae-war</id>
 						<phase>process-classes</phase>
@@ -347,6 +384,55 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
+
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>2.8</version>
+					<configuration>
+						<includeGroupIds>org.webjars</includeGroupIds>
+						<overWriteReleases>false</overWriteReleases>
+						<overWriteSnapshots>true</overWriteSnapshots>
+						<outputDirectory>${project.build.directory}/maven-dependency-plugin-unpacked-dependencies/</outputDirectory>
+					</configuration>
+					<executions>
+						<execution>
+							<id>unpack-dependencies</id>
+							<!-- Note: must be same phase as maven-resource-plugin's (copy-resources-webjars) execution -->
+							<phase>compile</phase>
+							<!-- <phase>process-classes</phase> -->
+							<goals>
+								<goal>unpack-dependencies</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.6</version>
+					<executions>
+						<execution>
+							<id>copy-resources</id>
+							<!-- here the phase you need -->
+							<phase>validate</phase>
+							<goals>
+								<goal>copy-resources</goal>
+							</goals>
+							<configuration>
+								<outputDirectory>${basedir}/target/extra-resources</outputDirectory>
+								<resources>
+									<resource>
+										<directory>src/non-packaged-resources</directory>
+										<filtering>true</filtering>
+									</resource>
+								</resources>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+
+
 				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
@@ -362,6 +448,19 @@
 										<versionRange>[1.8.6,)</versionRange>
 										<goals>
 											<goal>endpoints_get_discovery_doc</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-dependency-plugin</artifactId>
+										<versionRange>[2.8,)</versionRange>
+										<goals>
+											<goal>unpack-dependencies</goal>
 										</goals>
 									</pluginExecutionFilter>
 									<action>
@@ -976,7 +1075,6 @@
 				<artifactId>jquery-cookie</artifactId>
 				<version>${org.webjars-jquery-cookie.version}</version>
 			</dependency>
-
 		</dependencies>
 	</dependencyManagement>
 
@@ -1044,7 +1142,7 @@
 		<tika-core.version>1.4</tika-core.version>
 		<metrics.version>3.0.1</metrics.version>
 		<tomcat.version>7.0.39</tomcat.version>
-		<org.webjars-angularjs.version>1.2.0rc1</org.webjars-angularjs.version>
+		<org.webjars-angularjs.version>1.2.0-rc.3</org.webjars-angularjs.version>
 		<org.webjars-bootstrap.version>3.0.0</org.webjars-bootstrap.version>
 		<org.webjars-jquery.version>2.0.3-1</org.webjars-jquery.version>
 		<org.webjars-jquery-cookie.version>1.3.1</org.webjars-jquery-cookie.version>
