@@ -23,7 +23,7 @@
 				}
 			},
 			save : {
-				method : 'POST',
+				method : 'POST'
 			}
 		});
 	} ]);
@@ -54,7 +54,7 @@
 				}
 			},
 			save : {
-				method : 'POST',
+				method : 'POST'
 			}
 		});
 	} ]);
@@ -79,7 +79,32 @@
 				}
 			},
 			save : {
-				method : 'POST',
+				method : 'POST'
+			}
+		});
+	} ]);
+
+	module.factory('AdminContractService', [ '$resource',//
+	function AdminContractServiceFn($resource) {
+		return $resource('contract/:id', {}, {
+			get : {
+				method : 'GET',
+				params : {
+					id : '@_id'
+				}
+			},
+			getAll : {
+				method : 'GET',
+				isArray : true
+			},
+			remove : {
+				method : 'DELETE',
+				params : {
+					id : '@_id'
+				}
+			},
+			save : {
+				method : 'POST'
 			}
 		});
 	} ]);

@@ -30,6 +30,10 @@
 			controller : 'AdminWorkerCtrl',
 			templateUrl : 'resources/partials/worker.html'
 		});
+		$routeProvider.when('/contract', {
+			controller : 'AdminContractCtrl',
+			templateUrl : 'resources/partials/contract.html'
+		});
 		$routeProvider.otherwise({
 			redirectTo : '/'
 		});

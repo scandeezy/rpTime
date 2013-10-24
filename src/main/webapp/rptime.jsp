@@ -29,6 +29,7 @@ String logoutUrl2 = userService2.createLogoutURL(request.getRequestURI());
 				%>
 				<li ng-class="{active : page == '/worker'}"><a href="#/worker">Workers <span ng-cloak ng-show="workers.length>0" class="badge">{{workers.length}}</span></a></li>
 				<li ng-class="{active : page == '/client'}"><a href="#/client">Clients<span ng-cloak ng-show="clients.length>0" class="badge">{{clients.length}}</span></a></li>
+                                <li ng-class="{active : page == '/contract'}"><a href="#/contract">Contracts<span ng-cloak ng-show="contracts.length>0" class="badge">{{contracts.length}}</span></a></li>
 				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown">Reports <b
 						class="caret"></b></a>
 					<ul class="dropdown-menu">

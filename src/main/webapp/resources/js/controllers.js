@@ -30,17 +30,21 @@
 			$log.info("do ($broadcast) update '" + updateFn + "'");
 			$scope.$broadcast(updateFn);
 		};
+                
+		$log.info('MainCtrl init complete');
 	} ]);
 
-	module.controller('AdminPageCtrl', [ '$log', '$scope', 'AdminClientService', 'AdminWorkerService', //
-	function AdminPageCtrlFn($log, $scope, AdminClientService, AdminWorkerService) {
+	module.controller('AdminPageCtrl', [ '$log', '$scope', 'AdminClientService', 'AdminWorkerService',  'AdminContractService',//
+	function AdminPageCtrlFn($log, $scope, AdminClientService, AdminWorkerService, AdminContractService) {
 		$log.info('AdminPageCtrl init', $scope);
 		$scope.setAdmin(true); // inherited fn from UserNavCtrl
 		$scope.clients = [];
 		$scope.workers = [];
-
-		function updateClientsFn() {
-			AdminClientService.getAll(function successCGetAllFn(data) {
+                
+                $scope.contracts = [];
+		
+		function updateClientsFn(){
+			AdminClientService.getAll(function successCGetAllFn(data){
 				$scope.clients = data;
 			});
 		}
@@ -50,14 +54,23 @@
 			AdminWorkerService.getAll(function successWGetAllFn(data) {
 				$scope.workers = data;
 			});
-		}
-		;
-
-		$scope.$on('updateClients', updateClientsFn);
-		$scope.$on('updateWorkers', updateWorkersFn);
-
+		};
+                
+                function updateContractsFn() {
+                        AdminContractService.getAll(function successConGetAllFn(data){
+                                $scope.contracts = data;
+                        });
+                };
+		
+		$scope.$on('updateClients',updateClientsFn);
+		$scope.$on('updateWorkers',updateWorkersFn);
+                $scope.$on('updateContracts', updateContractsFn);
+		
 		updateClientsFn();
 		updateWorkersFn();
+                updateContractsFn();
+                
+		$log.info('AdminPageCtrl init complete');
 	} ]);
 
 	module.controller('AdminClientCtrl', [ '$log', '$scope', 'AdminClientService', //
@@ -86,7 +99,25 @@
 		$scope.yo = function(obj) {
 			console.log(obj);
 		};
-	} ]);
+  	} ]);
+	
+	module.controller('AdminContractCtrl', [ '$log', '$scope', 'AdminContractService', //
+  	function AdminContractCtrlFn($log, $scope, AdminContractService) {
+  		$log.info('AdminContractCtrl init', $scope);
+
+		$scope.save= function(obj){
+			$scope.doSave(AdminContractService, obj, 'updateContracts');
+		};
+  	} ]);
+    
+        module.controller('AdminContractDetailCtrl', [ '$log', '$scope', 'AdminContractService', //
+        function AdminContractDetailCtrlFn($log, $scope, AdminWorkerService) {
+                $log.info('AdminContractDetailCtrl init', $scope);
+                $scope.edit = false;
+                $scope.yo = function(obj) {
+                console.log(obj);
+                };
+        } ]);
 
 	module.controller('LandingPageCtrl', [ '$log', '$scope', //
 	function LandingPageCtrlFn($log, $scope) {

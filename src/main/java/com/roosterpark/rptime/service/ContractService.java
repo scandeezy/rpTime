@@ -12,7 +12,7 @@ import javax.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.appengine.api.datastore.EntityNotFoundException;
+import com.googlecode.objectify.ObjectifyService;
 import com.roosterpark.rptime.model.Client;
 import com.roosterpark.rptime.model.Contract;
 import com.roosterpark.rptime.model.Worker;
@@ -25,20 +25,15 @@ public class ContractService {
 	WorkerService workerService;
 	@Inject
 	ClientService clientService;
-//	@Inject
-//	DatastoreService datastore;
 
+        public ContractService() {
+            LOGGER.trace("registering Contract class with ObjectifyService");
+            ObjectifyService.register(Contract.class);
+            LOGGER.trace("registered Contract");
+        }
+        
 	public List<Contract> getContractsForWorker(Long worker)
 	{
-//		Filter workerFilter = new FilterPredicate(Contract.WORKER_KEY, FilterOperator.EQUAL, worker);
-//		Filter dateMinFilter = new FilterPredicate(Contract.START_KEY, FilterOperator.LESS_THAN_OR_EQUAL, date);
-//		Filter dateMaxFilter = new FilterPredicate(Contract.END_KEY, FilterOperator.GREATER_THAN_OR_EQUAL, date);
-//		Filter compositeFilter = CompositeFilterOperator.and(workerFilter, dateMinFilter, dateMaxFilter);
-//		
-//		Query q = new Query(Contract.class.getSimpleName()).setFilter(compositeFilter);
-//		
-//		Iterable<Entity> items = datastore.prepare(q).asIterable();
-		
 		return ofy().load().type(Contract.class)
 			.filter(Contract.WORKER_KEY, worker)
 			.list();
@@ -57,12 +52,36 @@ public class ContractService {
 		
 		return active;
 	}
-	
-	public Contract get(String sKey) throws EntityNotFoundException {
-		LOGGER.warn("Getting Contract with key " + sKey);
-		Long key = Long.valueOf(sKey);
-		return ofy().load().type(Contract.class).id(key).now();
+
+	public List<Contract> getContractsForClient(Long client)
+	{
+		return ofy().load().type(Contract.class)
+			.filter(Contract.CLIENT_KEY, client)
+			.list();
 	}
+	
+	public List<Contract> getActiveContractsForClient(Long client)
+	{
+		List<Contract> contracts = getContractsForClient(client);
+		List<Contract> active = new LinkedList<Contract>();
+		Date now = new Date();
+		for(Contract contract : contracts)
+		{
+			if(contract.getStart().compareTo(now) < 1 && contract.getEnd().compareTo(now) > -1)
+				active.add(contract);
+		}
+		
+		return active;
+	}
+	
+	public Contract getById(Long id) {
+		LOGGER.warn("Getting Contract with key " + id);
+		return ofy().load().type(Contract.class).id(id).now();
+	}
+        
+        public List<Contract> getAll() {
+            return ofy().load().type(Contract.class).list();
+        }
 
 	public List<Contract> getPage(int count, int offset) {
 		LOGGER.warn("Getting contract page with count " + count + " and offset " + offset);
