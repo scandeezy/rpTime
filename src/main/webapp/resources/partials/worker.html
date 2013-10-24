@@ -6,9 +6,9 @@
 			<ul>
 				<li ng-repeat="worker in workers | orderBy:'lastName'" ng-controller="AdminWorkerDetailCtrl">
 					<span class="btn-group">
-						<a type="button" class="btn btn-sm btn-default" ng-href="#">View</a>
+						<!-- <a type="button" class="btn btn-sm btn-default" ng-href="#">View</a> -->
 						<a type="button" class="btn btn-sm btn-default" ng-click="edit=!edit">Edit</a>
-						<a type="button" class="btn btn-sm btn-default" ng-class="{'btn-primary': edit}" ng-disabled="!edit" ng-hide="true">Save</a>
+						<a type="button" class="btn btn-sm btn-default btn-primary" ng-show="edit" ng-click="save(worker)">Save</a>
 					</span>
 					<span ng-hide="edit">
 						{{worker.lastName}}, {{worker.firstName}} 
@@ -30,10 +30,6 @@
 								<label for="start">Start Date</label>
 								<input type="text" class="form-control" id="start" ng-model="worker.start" placeholder="1">
 						
-								<div>
-									<a type="button" class="btn btn-default" ng-click="save(newworker)">Save</a>
-								</div>
-								
 							</div>
 						</form>
 					</span>
