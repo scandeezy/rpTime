@@ -42,7 +42,7 @@ ng-controller="UserPageCtrl"
 %>
 >
 		
-		<%@ include file="/jsp/rptime.jsp"%>
+<%@ include file="/rptime.jsp"%>
 		
 	</div>
 		<%
