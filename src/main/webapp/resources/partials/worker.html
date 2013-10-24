@@ -1,16 +1,42 @@
+<!-- current $scope is AdminWorkerCtrl -->
 <div>
 	<div id="workers" class="panel panel-default">
 		<div class="panel-heading">Workers</div>
 		<div class="panel-body">
 			<ul>
-				<li ng-repeat="worker in workers | orderBy:'lastName'">
+				<li ng-repeat="worker in workers | orderBy:'lastName'" ng-controller="AdminWorkerDetailCtrl">
 					<span class="btn-group">
 						<a type="button" class="btn btn-sm btn-default" ng-href="#">View</a>
 						<a type="button" class="btn btn-sm btn-default" ng-click="edit=!edit">Edit</a>
 						<a type="button" class="btn btn-sm btn-default" ng-class="{'btn-primary': edit}" ng-disabled="!edit" ng-hide="true">Save</a>
 					</span>
-					{{worker.lastName}}, {{worker.firstName}} 
-					<span ng-show="worker.email">- {{worker.email}}</span>
+					<span ng-hide="edit">
+						{{worker.lastName}}, {{worker.firstName}} 
+						<span ng-show="worker.email">- {{worker.email}}</span>
+					</span>
+					<span ng-show="edit">
+						<form role="form" name="editWorkerForm">
+							<div class="form-group">
+							
+								<label for="firstName">First Name</label>
+								<input type="text" class="form-control" id="firstName" ng-model="worker.firstName" placeholder="First Name (i.e., John)">
+				
+								<label for="lastName">Last Name</label>
+								<input type="text" class="form-control" id="lastName" ng-model="worker.lastName" placeholder="Last Name (i.e., Smith)">
+				
+								<label for="email">Email</label>
+								<input type="text" class="form-control" id="email" ng-model="worker.email" placeholder="john@smith.com">
+			
+								<label for="start">Start Date</label>
+								<input type="text" class="form-control" id="start" ng-model="worker.start" placeholder="1">
+						
+								<div>
+									<a type="button" class="btn btn-default" ng-click="save(newworker)">Save</a>
+								</div>
+								
+							</div>
+						</form>
+					</span>
 				</li>
 			</ul>
 		</div>
