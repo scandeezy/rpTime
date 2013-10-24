@@ -1,6 +1,8 @@
 package com.roosterpark.rptime.web;
 
 import static org.springframework.http.HttpStatus.ACCEPTED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
@@ -39,6 +41,7 @@ public class ClientController {
 	}
 
 	@RequestMapping(method = POST)
+	// @ResponseStatus(CREATED)
 	@ResponseBody
 	public Client post(@RequestBody Client item) {
 		service.set(item);
@@ -51,6 +54,12 @@ public class ClientController {
 	public Client put(@PathVariable("id") Long id, @RequestBody Client item) {
 		service.set(item);
 		return item;
+	}
+
+	@RequestMapping(value = "/{id}", method = DELETE)
+	@ResponseStatus(NO_CONTENT)
+	public void delete(@PathVariable("id") Long id) {
+		service.delete(id);
 	}
 
 }

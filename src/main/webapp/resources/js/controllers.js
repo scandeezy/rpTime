@@ -8,7 +8,7 @@
 		$scope.debug = (($.cookie('debug') == 'true') ? true : false);
 		$log.info('MainCtrl init', $location, $scope.debug);
 
-		$scope.$watch(function() {
+		$scope.$watch(function locationPathPage$watchFn() {
 			return $location.path();
 		}, function(newLoc, oldLoc) {
 			$scope.page = newLoc;
@@ -24,11 +24,19 @@
 			var objJson = angular.toJson(obj);
 			svc.save(objJson, function saveSuccessFn(data) {
 				$log.info("saved data:", data);
+				$log.info("do ($broadcast) update '" + updateFn + "'");
+				$scope.$broadcast(updateFn);
 			});
-			$log.info("do ($broadcast) update '" + updateFn + "'");
-			$scope.$broadcast(updateFn);
 		};
 
+		$scope.doRemove = function doRemoveFn(svc, obj, updateFn) {
+			$log.info("deleting:", obj);
+			svc.remove(obj, function successFn() {
+				$log.info("do ($broadcast) update '" + updateFn + "'");
+				$scope.$broadcast(updateFn);
+			});
+		};
+		
 		$log.info('MainCtrl init complete');
 	} ]);
 
@@ -42,8 +50,10 @@
 		$scope.contracts = [];
 
 		function updateClientsFn() {
+			$log.info("updateClientsFn before:", $scope.clients.length);
 			AdminClientService.getAll(function successCGetAllFn(data) {
 				$scope.clients = data;
+				$log.info("updateClientsFn after: ", $scope.clients.length);
 			});
 		}
 
@@ -54,8 +64,10 @@
 		}
 
 		function updateWorkersFn() {
+			$log.info("updateWorkersFn before:", $scope.workers.length);
 			AdminWorkerService.getAll(function successWGetAllFn(data) {
 				$scope.workers = data;
+				$log.info("updateWorkersFn after:", $scope.workers.length);
 			});
 		}
 
@@ -77,11 +89,18 @@
 		$scope.save = function(obj) {
 			$scope.doSave(AdminClientService, obj, 'updateClients');
 		};
+
+		$scope.remove = function(obj) {
+			$scope.doRemove(AdminClientService, {
+				id : obj.id
+			}, 'updateClients');
+		};
+
 	} ]);
 
 	module.controller('AdminWorkerCtrl', [ '$log', '$scope', 'AdminWorkerService', //
 	function AdminWorkerCtrlFn($log, $scope, AdminWorkerService) {
-		$log.info('AdminWorkerCtrl init', $scope);
+		// $log.info('AdminWorkerCtrl init', $scope);
 
 		$scope.save = function(obj) {
 			$scope.doSave(AdminWorkerService, obj, 'updateWorkers');

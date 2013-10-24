@@ -5,9 +5,10 @@
 			<ul>
 				<li ng-repeat="client in clients | orderBy:'name'">
 					<span class="btn-group">
-						<a type="button" class="btn btn-sm btn-default" ng-href="#">View</a>
+						<!-- <a type="button" class="btn btn-sm btn-default" ng-href="#">View</a> -->
 						<a type="button" class="btn btn-sm btn-default" ng-click="edit=!edit">Edit</a>
 						<a type="button" class="btn btn-sm btn-default" ng-class="{'btn-primary': edit}" ng-disabled="!edit" ng-hide="true">Save</a>
+						<a type="button" class="btn btn-sm btn-default" ng-click="remove(client);" ng-hide="!debug">Delete</a>
 					</span>
 					{{client.name}} <span ng-show="client.phone">/ <i>({{client.phone}})</i></span>
 				</li>

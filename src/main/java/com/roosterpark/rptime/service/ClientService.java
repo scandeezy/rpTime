@@ -15,19 +15,13 @@ import com.roosterpark.rptime.model.Client;
 public class ClientService {
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
-	// public ClientService() {
-	// LOGGER.trace("registering Client class with ObjectifyService");
-	// ObjectifyService.register(Client.class);
-	// LOGGER.trace("registered Client");
-	// }
-
 	public Client getById(Long id) {
-		LOGGER.warn("Getting Client with key {}", id);
+		LOGGER.debug("Getting Client with key {}", id);
 		return ofy().load().type(Client.class).id(id).now();
 	}
 
 	public List<Client> getPage(int limit, int offset) {
-		LOGGER.warn("Getting Client page with limit {} and offset {}", limit, offset);
+		LOGGER.debug("Getting Client page with limit {} and offset {}", limit, offset);
 		return ofy().load().type(Client.class).limit(limit).offset(offset).list();
 	}
 
@@ -36,7 +30,13 @@ public class ClientService {
 	}
 
 	public void set(Client item) {
-		LOGGER.warn("Saving Client {}", item);
+		LOGGER.debug("Saving Client {}", item);
 		ofy().save().entity(item).now();
+	}
+
+	public void delete(Long id) {
+		LOGGER.debug("Delete Client {}", id);
+		Client c = getById(id);
+		ofy().delete().entity(c).now();
 	}
 }
