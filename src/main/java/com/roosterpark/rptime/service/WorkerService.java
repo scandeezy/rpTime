@@ -10,18 +10,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.appengine.api.users.User;
-import com.googlecode.objectify.ObjectifyService;
 import com.roosterpark.rptime.model.Worker;
 
 @Named
 public class WorkerService {
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
-	public WorkerService() {
-		LOGGER.trace("registering Worker class with ObjectifyService");
-		ObjectifyService.register(Worker.class);
-		LOGGER.trace("registered Worker");
-	}
+	// public WorkerService() {
+	// LOGGER.trace("registering Worker class with ObjectifyService");
+	// ObjectifyService.register(Worker.class);
+	// LOGGER.trace("registered Worker");
+	// }
 
 	public Worker getById(Long id) {
 		LOGGER.warn("Getting worker with id={}", id);

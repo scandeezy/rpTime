@@ -9,18 +9,17 @@ import javax.inject.Named;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.googlecode.objectify.ObjectifyService;
 import com.roosterpark.rptime.model.Client;
 
 @Named
 public class ClientService {
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
-	public ClientService() {
-		LOGGER.trace("registering Client class with ObjectifyService");
-		ObjectifyService.register(Client.class);
-		LOGGER.trace("registered Client");
-	}
+	// public ClientService() {
+	// LOGGER.trace("registering Client class with ObjectifyService");
+	// ObjectifyService.register(Client.class);
+	// LOGGER.trace("registered Client");
+	// }
 
 	public Client getById(Long id) {
 		LOGGER.warn("Getting Client with key {}", id);

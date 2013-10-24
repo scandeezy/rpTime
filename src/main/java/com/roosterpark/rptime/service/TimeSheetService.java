@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
-import com.googlecode.objectify.ObjectifyService;
 import com.roosterpark.rptime.model.Contract;
 import com.roosterpark.rptime.model.TimeSheet;
 import com.roosterpark.rptime.model.Worker;
@@ -36,11 +35,11 @@ public class TimeSheetService {
 	@Inject
 	ContractService contractService;
 
-	public TimeSheetService() {
-		LOGGER.trace("registering TimeSheet class with ObjectifyService");
-		ObjectifyService.register(TimeSheet.class);
-		LOGGER.trace("registered TimeSheet");
-	}
+	// public TimeSheetService() {
+	// LOGGER.trace("registering TimeSheet class with ObjectifyService");
+	// ObjectifyService.register(TimeSheet.class);
+	// LOGGER.trace("registered TimeSheet");
+	// }
 
 	public TimeSheet create() {
 		Worker w = workerService.getByUser(userService.getCurrentUser());

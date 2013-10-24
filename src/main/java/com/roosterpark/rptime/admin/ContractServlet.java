@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.appengine.api.datastore.EntityNotFoundException;
-import com.googlecode.objectify.ObjectifyService;
 import com.roosterpark.rptime.model.Client;
 import com.roosterpark.rptime.model.Contract;
 import com.roosterpark.rptime.model.Worker;
@@ -27,7 +26,7 @@ import com.roosterpark.rptime.service.WorkerService;
 @SuppressWarnings("serial")
 public class ContractServlet extends HttpServlet {
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
-	
+
 	public static final String CONTRACT_KEY = "contract";
 	public static final String CONTRACTS_KEY = "contracts";
 	public static final String EDIT_PARAM = "edit";
@@ -43,12 +42,12 @@ public class ContractServlet extends HttpServlet {
 	public static final String CLIENTS_KEY = "clients";
 	public static final String START_KEY = "start";
 	public static final String END_KEY = "end";
-	
+
 	// JSP Locations
 	public static final String CONTRACTS_JSP = "/jsp/contract/contracts.jsp";
 	public static final String CONTRACT_JSP = "/jsp/contract/contract.jsp";
 	public static final String CONTRACT_EDIT_JSP = "/jsp/contract/contractEdit.jsp";
-	
+
 	// Servlet Path
 	public static final String ROUTE_PATH = "/rptime/contract";
 
@@ -59,19 +58,12 @@ public class ContractServlet extends HttpServlet {
 	@Inject
 	ClientService clientService;
 
-	public ContractServlet() {
-		LOGGER.debug("init ContractServlet");
-		LOGGER.trace("registering Contract class with ObjectifyService");
-		ObjectifyService.register(Contract.class);
-		LOGGER.trace("registered Contract");
-	}
-
 	public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		List<Worker> workers = workerService.getAll();
 		request.setAttribute(WORKERS_KEY, workers);
 		List<Client> clients = clientService.getAll();
 		request.setAttribute(CLIENTS_KEY, clients);
-		
+
 		String key = request.getParameter(CONTRACT_KEY);
 		if (key != null) {
 			Contract contract;
@@ -87,7 +79,7 @@ public class ContractServlet extends HttpServlet {
 
 			request.setAttribute(CONTRACT_KEY, contract);
 			String edit = request.getParameter(EDIT_PARAM);
-			if(edit != null)
+			if (edit != null)
 				request.getRequestDispatcher(CONTRACT_EDIT_JSP).forward(request, response);
 			else
 				request.getRequestDispatcher(CONTRACT_JSP).forward(request, response);
@@ -113,7 +105,7 @@ public class ContractServlet extends HttpServlet {
 		Date start = new Date(Long.valueOf(request.getParameter(START_KEY)));
 		Date end = new Date(Long.valueOf(request.getParameter(END_KEY)));
 		Contract contract = new Contract();
-		if(idString != null && idString.length() > 0)
+		if (idString != null && idString.length() > 0)
 			contract.setId(Long.valueOf(idString));
 		contract.setWorker(workerId);
 		contract.setClient(clientId);
