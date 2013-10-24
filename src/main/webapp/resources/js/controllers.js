@@ -1,8 +1,6 @@
 'use strict';
 (function() {
 
-	console.log('loading controllers')
-
 	var module = angular.module('myApp.controllers', []);
 
 	module.controller('MainCtrl', [ '$log', '$scope', '$location',//
@@ -30,46 +28,45 @@
 			$log.info("do ($broadcast) update '" + updateFn + "'");
 			$scope.$broadcast(updateFn);
 		};
-                
+
 		$log.info('MainCtrl init complete');
 	} ]);
 
-	module.controller('AdminPageCtrl', [ '$log', '$scope', 'AdminClientService', 'AdminWorkerService',  'AdminContractService',//
+	module.controller('AdminPageCtrl', [ '$log', '$scope', 'AdminClientService', 'AdminWorkerService', 'AdminContractService',//
 	function AdminPageCtrlFn($log, $scope, AdminClientService, AdminWorkerService, AdminContractService) {
 		$log.info('AdminPageCtrl init', $scope);
 		$scope.setAdmin(true); // inherited fn from UserNavCtrl
 		$scope.clients = [];
 		$scope.workers = [];
-                
-                $scope.contracts = [];
-		
-		function updateClientsFn(){
-			AdminClientService.getAll(function successCGetAllFn(data){
+
+		$scope.contracts = [];
+
+		function updateClientsFn() {
+			AdminClientService.getAll(function successCGetAllFn(data) {
 				$scope.clients = data;
 			});
 		}
-		;
+
+		function updateContractsFn() {
+			AdminContractService.getAll(function successConGetAllFn(data) {
+				$scope.contracts = data;
+			});
+		}
 
 		function updateWorkersFn() {
 			AdminWorkerService.getAll(function successWGetAllFn(data) {
 				$scope.workers = data;
 			});
-		};
-                
-                function updateContractsFn() {
-                        AdminContractService.getAll(function successConGetAllFn(data){
-                                $scope.contracts = data;
-                        });
-                };
-		
-		$scope.$on('updateClients',updateClientsFn);
-		$scope.$on('updateWorkers',updateWorkersFn);
-                $scope.$on('updateContracts', updateContractsFn);
-		
+		}
+
+		$scope.$on('updateClients', updateClientsFn);
+		$scope.$on('updateWorkers', updateWorkersFn);
+		$scope.$on('updateContracts', updateContractsFn);
+
 		updateClientsFn();
+		updateContractsFn();
 		updateWorkersFn();
-                updateContractsFn();
-                
+
 		$log.info('AdminPageCtrl init complete');
 	} ]);
 
@@ -93,31 +90,24 @@
 
 	module.controller('AdminWorkerDetailCtrl', [ '$log', '$scope', 'AdminWorkerService', //
 	function AdminWorkerDetailCtrlFn($log, $scope, AdminWorkerService) {
-		$log.info('AdminWorkerDetailCtrl init', $scope);
+		// $log.info('AdminWorkerDetailCtrl init', $scope);
 		$scope.edit = false;
+	} ]);
 
-		$scope.yo = function(obj) {
-			console.log(obj);
-		};
-  	} ]);
-	
 	module.controller('AdminContractCtrl', [ '$log', '$scope', 'AdminContractService', //
-  	function AdminContractCtrlFn($log, $scope, AdminContractService) {
-  		$log.info('AdminContractCtrl init', $scope);
+	function AdminContractCtrlFn($log, $scope, AdminContractService) {
+		$log.info('AdminContractCtrl init', $scope);
 
-		$scope.save= function(obj){
+		$scope.save = function(obj) {
 			$scope.doSave(AdminContractService, obj, 'updateContracts');
 		};
-  	} ]);
-    
-        module.controller('AdminContractDetailCtrl', [ '$log', '$scope', 'AdminContractService', //
-        function AdminContractDetailCtrlFn($log, $scope, AdminWorkerService) {
-                $log.info('AdminContractDetailCtrl init', $scope);
-                $scope.edit = false;
-                $scope.yo = function(obj) {
-                console.log(obj);
-                };
-        } ]);
+	} ]);
+
+	module.controller('AdminContractDetailCtrl', [ '$log', '$scope', 'AdminContractService', //
+	function AdminContractDetailCtrlFn($log, $scope, AdminWorkerService) {
+		// $log.info('AdminContractDetailCtrl init', $scope);
+		$scope.edit = false;
+	} ]);
 
 	module.controller('LandingPageCtrl', [ '$log', '$scope', //
 	function LandingPageCtrlFn($log, $scope) {
@@ -134,23 +124,24 @@
 		$scope.edit = false;
 		$scope.currentTimeSheet = {};
 		$log.info('TimeSheetPageCtrl init', $scope);
-		$scope.dows = [ 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' ]
+		$scope.dows = [ 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' ];
 
 		function updateTimeSheetsFn() {
 			TimeSheetService.getAll(function successFn(data) {
 				$scope.timesheets = data;
 			});
 		}
-		;
 
 		$scope.create = function() {
 			TimeSheetService.create(function successFn(data) {
 				$scope.currentTimeSheet = data;
 			});
 		}
+
 		$scope.selectTimeSheet = function(ts) {
 			$scope.currentTimeSheet = ts;
 		};
+
 		$scope.save = function(ts) {
 			$scope.doSave(TimeSheetService, ts, 'updateTimeSheets');
 		};
