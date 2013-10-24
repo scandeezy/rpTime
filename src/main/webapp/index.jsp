@@ -12,10 +12,9 @@
 <meta name="author" content="Rooster Park">
 <title>rpTime</title>
 <link rel="shortcut icon" href="/favicon.ico" />
+<link rel="stylesheet" href="/resources/webjars/bootstrap/3.0.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="/resources/webjars/bootstrap/3.0.0/css/bootstrap-theme.min.css">
 <link rel="stylesheet" href="/resources/css/app.css" />
-<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
-<!-- Optional theme -->
-<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-theme.min.css">
 </head>
 <body>
 	<div id="mainDiv" ng-controller="MainCtrl as main">
