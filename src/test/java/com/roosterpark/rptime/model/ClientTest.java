@@ -15,8 +15,7 @@ import static org.junit.Assert.assertNotNull;
 public class ClientTest extends BasicRptimeUnitTest {
 
     private static final String NAME = "Some Client";
-    private static final String HEADER = "Some Header";
-    private static final String PHONE = "(206) 867-5309";
+    private static final Boolean LUNCH = true;
     private static final Integer START_DAY_OF_WEEK = 1;
 
     private Client client;
@@ -28,7 +27,7 @@ public class ClientTest extends BasicRptimeUnitTest {
 
     @Test
     public void constructorTest() {
-        client = new Client(NAME, HEADER, PHONE, START_DAY_OF_WEEK);
+        client = new Client(NAME, LUNCH, START_DAY_OF_WEEK);
         assertNotNull("Object null!", client);
     }
 
@@ -45,15 +44,9 @@ public class ClientTest extends BasicRptimeUnitTest {
     }
 
     @Test
-    public void headerTest() {
-        client.setHeader(HEADER);
-        assertEquals("Header doesn't match!", HEADER, client.getHeader());
-    }
-
-    @Test
-    public void phoneTest() {
-        client.setPhone(PHONE);
-        assertEquals("Jenny changed her number!", PHONE, client.getPhone());
+    public void lunchTest() {
+        client.setLunchRequired(LUNCH);
+        assertEquals("Header doesn't match!", LUNCH, client.getLunchRequired());
     }
 
     @Test
@@ -65,10 +58,9 @@ public class ClientTest extends BasicRptimeUnitTest {
     @Test
     public void toStringTest() {
         client.setName(NAME);
-        client.setHeader(HEADER);
-        client.setPhone(PHONE);
+        client.setLunchRequired(LUNCH);
         client.setStartDayOfWeek(START_DAY_OF_WEEK);
-        String output = "Company : {  name : " + NAME + ",  header : " + HEADER + ",  phone : " + PHONE +
+        String output = "Company : {  name : " + NAME + ",  lunchRequired : " + LUNCH + 
                         ",  startDayOfWeek : " + START_DAY_OF_WEEK + ",}";
         assertEquals("toString() doesn't match!", output, client.toString());
     }

@@ -13,7 +13,7 @@
 						<a type="button" class="btn btn-sm btn-default" ng-click="set(client)">Edit</a>
 						<a type="button" class="btn btn-sm btn-default" ng-click="remove(client);" ng-hide="!debug">Delete</a>
 					</span>
-					{{client.name}} <span ng-show="client.phone">/ <i>({{client.phone}})</i></span>
+					{{client.name}}
 				</li>
 			</ul>
 		</div>
@@ -33,14 +33,22 @@
 					<label for="name">Name</label>
 					<input type="text" class="form-control" id="name" ng-model="currentClient.name" placeholder="Enter Name">
 					
-					<label for="header">Header</label>
-					<input type="text" class="form-control" id="header" ng-model="currentClient.header" placeholder="Enter Header">
-					
-					<label for="phone">Phone</label>
-					<input type="text" class="form-control" id="phone" ng-model="currentClient.phone" placeholder="123-456-7890">
+					<label for="lunchRequired">Lunch Required</label>
+                                        <select ng-model="currentClient.lunchRequired">
+                                            <option value="true" {true : "default", false : ""}[currentClient.lunchRequired==true]>Yes</option>
+                                            <option value="false" {true : "default", false : ""}[currentClient.lunchRequired==false]>No</option>
+                                        </select>
 			
 					<label for="startDayOfWeek">Start Day of Week</label>
-					<input type="number" class="form-control" id="startDayOfWeek" ng-model="currentClient.startDayOfWeek" placeholder="1=Sun, 2=Mon, etc.">
+                                        <select ng-model="currentClient.startDayOfWeek">
+                                            <option value="0" {true : "default", false : ""}[currentClient.startDayOfWeek==0]>Sunday</option>
+                                            <option value="1" {true : "default", false : ""}[currentClient.startDayOfWeek==1]>Monday</option>
+                                            <option value="2" {true : "default", false : ""}[currentClient.startDayOfWeek==2]>Tuesday</option>
+                                            <option value="3" {true : "default", false : ""}[currentClient.startDayOfWeek==3]>Wednesday</option>
+                                            <option value="4" {true : "default", false : ""}[currentClient.startDayOfWeek==4]>Thursday</option>
+                                            <option value="5" {true : "default", false : ""}[currentClient.startDayOfWeek==5]>Friday</option>
+                                            <option value="6" {true : "default", false : ""}[currentClient.startDayOfWeek==6]>Saturday</option>
+                                        </select>
 
 					<div>
 						<a type="button" class="btn btn-primary" ng-click="save(currentClient)">Save</a>

@@ -11,21 +11,18 @@ public class Client
 	private Long id;
 	@Index
 	private String name;
-	@Index
-	private String header;
-	@Index
-	private String phone;
+        @Index
+        private boolean lunchRequired;
 	@Index
 	private Integer startDayOfWeek;
 	
 	public Client()
 	{}
 	
-	public Client(String name, String header, String phone, Integer startDayOfWeek)
+	public Client(String name, Boolean lunchRequired, Integer startDayOfWeek)
 	{
 		this.name = name;
-		this.header = header;
-		this.phone = phone;
+                this.lunchRequired = lunchRequired;
 		this.startDayOfWeek = startDayOfWeek;
 	}
 	
@@ -44,22 +41,14 @@ public class Client
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	public String getHeader() {
-		return header;
-	}
-
-	public void setHeader(String header) {
-		this.header = header;
-	}
-
-	public String getPhone() {
-		return phone;
-	}
-
-	public void setPhone(String phone) {
-		this.phone = phone;
-	}
+        
+        public Boolean getLunchRequired() {
+            return this.lunchRequired;
+        }
+        
+        public void setLunchRequired(Boolean lunchRequired) {
+            this.lunchRequired = lunchRequired;
+        }
 
 	public Integer getStartDayOfWeek() {
 		return startDayOfWeek;
@@ -74,8 +63,7 @@ public class Client
 		
 		sb.append("Company : {");
 		sb.append("  name : " + name + ",");
-		sb.append("  header : " + header + ",");
-		sb.append("  phone : " + phone + ",");
+		sb.append("  lunchRequired : " + lunchRequired + ",");
 		sb.append("  startDayOfWeek : " + startDayOfWeek + ",");
 		sb.append("}");
 		
