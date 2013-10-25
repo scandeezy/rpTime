@@ -121,6 +121,7 @@
 
 		$scope.save = function saveFn(obj) {
 			$scope.doSave(AdminClientService, obj, 'updateClients', $scope.clients);
+			$scope.edit = false;
 		};
 
 		$scope.remove = function rempveFn(obj) {
@@ -161,6 +162,7 @@
 		
 		$scope.save = function saveFn(obj) {
 			$scope.doSave(AdminContractService, obj, 'updateContracts', $scope.contracts);
+			$scope.edit = false;
 		};
 		
 		$scope.set = function setFn(obj) {
