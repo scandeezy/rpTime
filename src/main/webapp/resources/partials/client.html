@@ -1,13 +1,16 @@
+<!-- $scope is AdminClientCtrl -->
 <div>
-	<div id="clients" class="panel panel-default">
-		<div class="panel-heading">Clients</div>
+	<div id="clients" class="panel panel-default" ng-hide="edit">
+		<div class="panel-heading">Clients
+			<span class="btn-group"> 
+				<a type="button" class="btn btn-sm btn-default" ng-click="set();">New</a>
+			</span>		
+		</div>
 		<div class="panel-body">
 			<ul>
 				<li ng-repeat="client in clients | orderBy:'name'">
 					<span class="btn-group">
-						<!-- <a type="button" class="btn btn-sm btn-default" ng-href="#">View</a> -->
-						<a type="button" class="btn btn-sm btn-default" ng-click="edit=!edit">Edit</a>
-						<a type="button" class="btn btn-sm btn-default" ng-class="{'btn-primary': edit}" ng-disabled="!edit" ng-hide="true">Save</a>
+						<a type="button" class="btn btn-sm btn-default" ng-click="set(client)">Edit</a>
 						<a type="button" class="btn btn-sm btn-default" ng-click="remove(client);" ng-hide="!debug">Delete</a>
 					</span>
 					{{client.name}} <span ng-show="client.phone">/ <i>({{client.phone}})</i></span>
@@ -16,26 +19,32 @@
 		</div>
 	</div>
 
-	<div id="createClient" class="panel panel-default">
-		<div class="panel-heading">Create new client</div>
+	<div id="createClient" class="panel panel-default" ng-show="edit">
+		<div class="panel-heading">
+			<a ng-click="edit=false;">&lt;</a> 
+			<span ng-show="currentClient.id">Edit Client - {{currentClient.name}}</span>
+			<span ng-hide="currentClient.id">Create Client</span>
+		</div>
+		
 		<div class="panel-body">
 			<form role="form" name="createClientForm">
 				<div class="form-group">
 				
 					<label for="name">Name</label>
-					<input type="text" class="form-control" id="name" ng-model="newclient.name" placeholder="Enter Name">
+					<input type="text" class="form-control" id="name" ng-model="currentClient.name" placeholder="Enter Name">
 					
 					<label for="header">Header</label>
-					<input type="text" class="form-control" id="header" ng-model="newclient.header" placeholder="Enter Header">
+					<input type="text" class="form-control" id="header" ng-model="currentClient.header" placeholder="Enter Header">
 					
 					<label for="phone">Phone</label>
-					<input type="text" class="form-control" id="phone" ng-model="newclient.phone" placeholder="123-456-7890">
+					<input type="text" class="form-control" id="phone" ng-model="currentClient.phone" placeholder="123-456-7890">
 			
 					<label for="startDayOfWeek">Start Day of Week</label>
-					<input type="text" class="form-control" id="startDayOfWeek" ng-model="newclient.startDayOfWeek" placeholder="1=Sun, 2=Mon, etc.">
+					<input type="number" class="form-control" id="startDayOfWeek" ng-model="currentClient.startDayOfWeek" placeholder="1=Sun, 2=Mon, etc.">
 
 					<div>
-						<a type="button" class="btn btn-primary" ng-click="save(newclient)">Save</a>
+						<a type="button" class="btn btn-primary" ng-click="save(currentClient)">Save</a>
+						<a type="button" class="btn btn-default" ng-click="edit=false;">Cancel</a>
 					</div>
 				</div>
 			</form>
@@ -45,7 +54,7 @@
 	<div ng-cloak ng-show="debug" class="well">
 		<pre>clients={{clients | json}} </pre>
 		<br />
-		<pre>newclient={{newclient | json}}</pre>
+		<pre>currentClient={{currentClient | json}}</pre>
 	</div>
 
 </div>

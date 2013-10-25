@@ -119,15 +119,21 @@
 	module.controller('AdminClientCtrl', [ '$log', '$scope', 'AdminClientService', //
 	function AdminClientCtrlFn($log, $scope, AdminClientService) {
 		$log.info('AdminClientCtrl init', $scope);
+		$scope.edit = false;
 
-		$scope.save = function(obj) {
+		$scope.save = function saveFn(obj) {
 			$scope.doSave(AdminClientService, obj, 'updateClients');
 		};
 
-		$scope.remove = function(obj) {
+		$scope.remove = function rempveFn(obj) {
 			$scope.doRemove(AdminClientService, {
 				id : obj.id
 			}, 'updateClients');
+		};
+		
+		$scope.set = function setFn(obj){
+			$scope.currentClient = obj;
+			$scope.edit = true;
 		};
 
 	} ]);
@@ -137,12 +143,12 @@
 		// $log.info('AdminWorkerCtrl init', $scope);
 		$scope.edit = false;
 
-		$scope.save = function(obj) {
+		$scope.save = function saveFn(obj) {
 			$scope.doSave(AdminWorkerService, obj, 'updateWorkers');
 			$scope.edit = false;
 		};
 		
-		$scope.modify = function(obj){
+		$scope.set = function setFn(obj){
 			$scope.edit = true;
 		 	$scope.currentWorker = obj;
 		}
@@ -192,19 +198,18 @@
 			});
 		}
 
-		$scope.create = function() {
-			TimeSheetService.create(function successFn(data) {
-				$scope.currentTimeSheet = data;
-				$scope.edit = true;
-			});
+		$scope.set = function setFn(obj) {
+			if(obj){
+				$scope.currentTimeSheet = obj;
+			}else{
+				TimeSheetService.create(function successFn(data) {
+					$scope.currentTimeSheet = data;
+				});
+			}
+			$scope.edit = true;
 		}
 
-		$scope.selectTimeSheet = function(ts) {
-			$scope.currentTimeSheet = ts;
-			$scope.edit = true;
-		};
-
-		$scope.save = function(ts) {
+		$scope.save = function saveFn(ts) {
 			$scope.doSave(TimeSheetService, ts, 'updateTimeSheets');
 			$scope.edit = false;
 		};

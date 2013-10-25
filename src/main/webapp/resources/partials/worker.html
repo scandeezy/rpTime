@@ -3,14 +3,14 @@
 	<div id="workers" class="panel panel-default" ng-hide="edit">
 		<div class="panel-heading">Workers
  			<span class="btn-group"> 
-				<a type="button" class="btn btn-sm btn-default" ng-click="modify({});">New</a>
+				<a type="button" class="btn btn-sm btn-default" ng-click="set();">New</a>
 			</span>
 		</div>
 		<div class="panel-body">
 			<ul>
 				<li ng-repeat="worker in workers | orderBy:'lastName'" ng-controller="AdminWorkerDetailCtrl">
 					<span class="btn-group">
-						<a type="button" class="btn btn-sm btn-default" ng-click="modify(worker);">Edit</a>
+						<a type="button" class="btn btn-sm btn-default" ng-click="set(worker);">Edit</a>
 					</span>
 					{{worker.lastName}}, {{worker.firstName}} 
 					<span ng-show="worker.email">- {{worker.email}}</span>
@@ -42,7 +42,7 @@
 					<input type="date" class="form-control" id="start" ng-model="currentWorker.start" placeholder="YYYY-MM-DD">
 			
 					<div>
-						<a type="button" class="btn btn-default" ng-click="save(currentWorker)">Save</a>
+						<a type="button" class="btn btn-primary" ng-click="save(currentWorker)">Save</a>
 						<a type="button" class="btn btn-default" ng-click="edit=false;">Cancel</a>
 					</div>
 					
