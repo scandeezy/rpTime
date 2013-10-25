@@ -34,13 +34,13 @@
 					<input type="text" class="form-control" id="name" ng-model="currentClient.name" placeholder="Enter Name">
 					
 					<label for="lunchRequired">Lunch Required</label>
-                                        <select ng-model="currentClient.lunchRequired">
+                                        <select ng-model="currentClient.lunchRequired" class="form-control">
                                             <option value="true" {true : "default", false : ""}[currentClient.lunchRequired==true]>Yes</option>
                                             <option value="false" {true : "default", false : ""}[currentClient.lunchRequired==false]>No</option>
                                         </select>
 			
 					<label for="startDayOfWeek">Start Day of Week</label>
-                                        <select ng-model="currentClient.startDayOfWeek">
+                                        <select ng-model="currentClient.startDayOfWeek" class="form-control">
                                             <option value="0" {true : "default", false : ""}[currentClient.startDayOfWeek==0]>Sunday</option>
                                             <option value="1" {true : "default", false : ""}[currentClient.startDayOfWeek==1]>Monday</option>
                                             <option value="2" {true : "default", false : ""}[currentClient.startDayOfWeek==2]>Tuesday</option>
