@@ -42,6 +42,13 @@ public class WorkerService {
 	}
 
 	public void set(Worker item) {
+                Worker check = getByEmail(item.getEmail());
+                
+                if(check != null && (item.getId() == null || item.getId() != check.getId()))
+                {
+                    throw new IllegalArgumentException("Worker already exists with email " + item.getEmail());
+                }
+                
 		LOGGER.warn("Saving worker " + item);
 		ofy().save().entity(item).now();
 	}
