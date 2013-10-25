@@ -19,9 +19,21 @@
 	<logger name="org.apache" level="WARN" />
 	<logger name="org.eclipse.jetty" level="WARN" />
 	<logger name="org.datanucleus" level="WARN" />
-	<logger name="org.jboss" level="TRACE" />
+	<logger name="org.jboss" level="WARN" />
 	<logger name="org.springframework" level="DEBUG" />
-
+	<logger name="org.springframework.aop" level="WARN" />
+	<logger name="org.springframework.beans" level="WARN" />
+	<logger name="org.springframework.beans.CachedIntrospectionResults" level="WARN" />
+	<logger name="org.springframework.beans.factory" level="WARN" />
+	<logger name="org.springframework.cache" level="WARN" />
+	<logger name="org.springframework.context" level="WARN" />
+	<logger name="org.springframework.core" level="WARN" />
+	<logger name="org.springframework.data.mongodb" level="DEBUG" />
+	<logger name="org.springframework.http" level="DEBUG" />
+	<logger name="org.springframework.jndi" level="WARN" />
+	<logger name="org.springframework.web" level="DEBUG" />
+	<logger name="org.springframework.web.context" level="WARN" />
+	
 	<root level="DEBUG">
 		<appender-ref ref="STDOUT" />
 		<!-- <appender-ref ref="LOG" /> -->
