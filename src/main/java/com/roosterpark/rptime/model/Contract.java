@@ -1,6 +1,6 @@
 package com.roosterpark.rptime.model;
 
-import java.util.Date;
+import org.joda.time.LocalDate;
 
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
@@ -12,7 +12,7 @@ public class Contract {
 	public static final String CLIENT_KEY = "client";
 	public static final String START_KEY = "start";
 	public static final String END_KEY = "end";
-	
+
 	@Id
 	private Long id;
 	@Index
@@ -20,9 +20,9 @@ public class Contract {
 	@Index
 	private Long client;
 	@Index
-	private Date start;
+	private LocalDate start;
 	@Index
-	private Date end;
+	private LocalDate end;
 	@Index
 	private Integer startDayOfWeek;
 
@@ -33,29 +33,36 @@ public class Contract {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
 	public Long getWorker() {
 		return worker;
 	}
+
 	public void setWorker(Long worker) {
 		this.worker = worker;
 	}
+
 	public Long getClient() {
 		return client;
 	}
+
 	public void setClient(Long client) {
 		this.client = client;
 	}
-	public Date getStart() {
+
+	public LocalDate getStart() {
 		return start;
 	}
-	public void setStart(Date start) {
+
+	public void setStart(LocalDate start) {
 		this.start = start;
 	}
-	public Date getEnd() {
+
+	public LocalDate getEnd() {
 		return end;
 	}
-	public void setEnd(Date end) {
+
+	public void setEnd(LocalDate end) {
 		this.end = end;
 	}
 
@@ -66,10 +73,9 @@ public class Contract {
 	public void setStartDayOfWeek(Integer startDayOfWeek) {
 		this.startDayOfWeek = startDayOfWeek;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "Contract [id=" + id + ", worker=" + worker + ", client=" + client + ", start="
-				+ start + ", end=" + end + "]";
+		return "Contract [id=" + id + ", worker=" + worker + ", client=" + client + ", start=" + start + ", end=" + end + "]";
 	}
 }

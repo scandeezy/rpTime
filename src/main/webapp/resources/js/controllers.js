@@ -45,9 +45,21 @@
 		$log.info('AdminPageCtrl init', $scope);
 		$scope.setAdmin(true); // inherited fn from UserNavCtrl
 		$scope.clients = [];
+		$scope.clientsMap = {};
 		$scope.workers = [];
+		$scope.workersMap = {};
 
 		$scope.contracts = [];
+		
+		function mapToList(map){
+			$log.info("map2list",map);
+			var list = [];
+			angular.forEach(map, function (obj,key){
+				$log.info("map2list: pushed obj",obj);
+				list.push[obj];
+			});
+			return list;
+		}
 
 		function updateClientsFn() {
 			$log.info("updateClientsFn before:", $scope.clients.length);
@@ -65,8 +77,12 @@
 
 		function updateWorkersFn() {
 			$log.info("updateWorkersFn before:", $scope.workers.length);
-			AdminWorkerService.getAll(function successWGetAllFn(data) {
-				$scope.workers = data;
+			AdminWorkerService.getAll(function successFn(data){
+				$scope.workers = data; 
+			});
+			AdminWorkerService.getMap({id:'idmap'},function successWGetAllFn(data) {
+				$scope.workersMap = data;
+				//$scope.workers = mapToList(data); //wtf why no worky?
 				$log.info("updateWorkersFn after:", $scope.workers.length);
 			});
 		}

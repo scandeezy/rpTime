@@ -9,25 +9,29 @@
 	
 	</ul>
 	
-	<div id="createTimeSheet">
+	<div id="createTimeSheet" ng-show="currentTimeSheet.id">
+		<h4>Timesheet {{currentTimeSheet.id}}</h4>
 		<form role="form" name="createTimeSheetForm">
-			<input type="text" class="form-control input-sm col-lg-2" placeholder="YYYY-MM-DD" ng-model="currentTimeSheet.startDate">
+			<div class="row">
+				<div class="col-lg-2">
+	 				<input type="date" class="form-control" placeholder="YYYY-MM-DD" ng-model="currentTimeSheet.startDate">
+				</div>
+			</div>
 			<table class="table">
 				<thead>
-					<tr>
+					<tr class="row">
 						<th ng-repeat="dow in dows">{{dow}}</th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td><input type="text" class="form-control input-sm col-lg-1" ng-model="currentTimeSheet.hours[0]"></td>
-						<td><input type="text" class="form-control input-sm col-lg-1" ng-model="currentTimeSheet.hours[1]"></td>
-						<td><input type="text" class="form-control input-sm col-lg-1" ng-model="currentTimeSheet.hours[2]"></td>
-						<td><input type="text" class="form-control input-sm col-lg-1" ng-model="currentTimeSheet.hours[3]"></td>
-						<td><input type="text" class="form-control input-sm col-lg-1" ng-model="currentTimeSheet.hours[4]"></td>
-						<td><input type="text" class="form-control input-sm col-lg-1" ng-model="currentTimeSheet.hours[5]"></td>
-						<td><input type="text" class="form-control input-sm col-lg-1" ng-model="currentTimeSheet.hours[6]"></td>
-						</td>
+					<tr class="row">
+						<td><input type="number" class="form-control input" ng-model="currentTimeSheet.hours[0]"></td>
+						<td><input type="number" class="form-control input" ng-model="currentTimeSheet.hours[1]"></td>
+						<td><input type="number" class="form-control input" ng-model="currentTimeSheet.hours[2]"></td>
+						<td><input type="number" class="form-control input" ng-model="currentTimeSheet.hours[3]"></td>
+						<td><input type="number" class="form-control input" ng-model="currentTimeSheet.hours[4]"></td>
+						<td><input type="number" class="form-control input" ng-model="currentTimeSheet.hours[5]"></td>
+						<td><input type="number" class="form-control input" ng-model="currentTimeSheet.hours[6]"></td>
 					</tr>
 				</tbody>
 			</table>

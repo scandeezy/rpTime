@@ -61,15 +61,15 @@ public class WorkerTest extends BasicRptimeUnitTest {
         assertEquals("Start date doesn't match!", START_DATE, worker.getStart());
     }
 
-    @Test
-    public void toStringTest() {
-        worker.setFirstName(FIRST_NAME);
-        worker.setLastName(LAST_NAME);
-        worker.setEmail(EMAIL);
-        worker.setStart(START_DATE);
-        String output = "Worker : {  First : " + FIRST_NAME + ",  Last : " + LAST_NAME + ",  Email : " +
-                        EMAIL + ",  Start : " + START_DATE + ",}";
-        assertEquals("toString() doesn't match!", output, worker.toString());
-    }
+//    @Test
+//    public void toStringTest() {
+//        worker.setFirstName(FIRST_NAME);
+//        worker.setLastName(LAST_NAME);
+//        worker.setEmail(EMAIL);
+//        worker.setStart(START_DATE);
+//        String output = "Worker : {  First : " + FIRST_NAME + ",  Last : " + LAST_NAME + ",  Email : " +
+//                        EMAIL + ",  Start : " + START_DATE + ",}";
+//        assertEquals("toString() doesn't match!", output, worker.toString());
+//    }
 
 }

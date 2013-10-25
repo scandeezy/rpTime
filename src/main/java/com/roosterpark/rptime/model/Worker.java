@@ -1,7 +1,8 @@
 package com.roosterpark.rptime.model;
 
-import java.util.Date;
+import org.joda.time.LocalDate;
 
+import com.google.common.base.Objects;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
@@ -9,7 +10,7 @@ import com.googlecode.objectify.annotation.Index;
 @Entity
 public class Worker {
 	public static final String EMAIL_KEY = "email";
-	
+
 	@Id
 	private Long id;
 	@Index
@@ -21,14 +22,15 @@ public class Worker {
 	@Index
 	private Boolean active;
 	@Index
-	private Date start;
-	
-	public Worker() {}
-	
+	private LocalDate start;
+
+	public Worker() {
+	}
+
 	public Long getId() {
 		return this.id;
 	}
-	
+
 	public void setId(Long id) {
 		this.id = id;
 	}
@@ -57,11 +59,11 @@ public class Worker {
 		this.email = email;
 	}
 
-	public Date getStart() {
+	public LocalDate getStart() {
 		return start;
 	}
 
-	public void setStart(Date start) {
+	public void setStart(LocalDate start) {
 		this.start = start;
 	}
 
@@ -72,17 +74,14 @@ public class Worker {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-	
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
 
-		sb.append("Worker : {");
-		sb.append("  First : " + firstName + ",");
-		sb.append("  Last : " + lastName + ",");
-		sb.append("  Email : " + email + ",");
-		sb.append("  Start : " + start + ",");
-		sb.append("}");
-		
-		return sb.toString();
+	public String toString() {
+		return Objects.toStringHelper(this)//
+				.add("id", this.id)//
+				.add("firstName", this.firstName)//
+				.add("lastName", this.lastName)//
+				.add("email", this.email)//
+				.add("start", this.start)//
+				.toString();
 	}
 }

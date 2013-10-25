@@ -1,6 +1,6 @@
 <!-- current $scope is AdminWorkerCtrl -->
-<div>
-	<div id="workers" class="panel panel-default">
+<div ng-init="showCreate=false">
+	<div id="workers" class="panel panel-default" ng-hide="showCreate">
 		<div class="panel-heading">Workers</div>
 		<div class="panel-body">
 			<ul>
@@ -37,8 +37,13 @@
 			</ul>
 		</div>
 	</div>
+	<div ng-hide="showCreate">
+		<span class="btn-group">
+			<a type="button" class="btn btn-sm btn-default" ng-click="showCreate=!showCreate">Create</a>
+		</span>
+	</div>
 	
-	<div id="createWorker" class="panel panel-default">
+	<div id="createWorker" class="panel panel-default" ng-show="showCreate">
 		<div class="panel-heading">Create new worker</div>
 		<div class="panel-body">
 			<form role="form" name="createWorkerForm">
@@ -57,7 +62,8 @@
 					<input type="text" class="form-control" id="start" ng-model="newworker.start" placeholder="1">
 			
 					<div>
-						<a type="button" class="btn btn-default" ng-click="save(newworker)">Save</a>
+						<a type="button" class="btn btn-default" ng-click="save(newworker);showCreate=false;">Save</a>
+						<a type="button" class="btn btn-default" ng-click="newworker={};showCreate=false;">Cancel</a>
 					</div>
 					
 				</div>

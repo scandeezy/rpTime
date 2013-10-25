@@ -72,6 +72,12 @@
 				method : 'GET',
 				isArray : true
 			},
+			getMap : {
+				method : 'GET',
+				params : {
+					id : '@_id'
+				}
+			},
 			remove : {
 				method : 'DELETE',
 				params : {
