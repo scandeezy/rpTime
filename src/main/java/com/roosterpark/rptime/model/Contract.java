@@ -11,8 +11,8 @@ import com.googlecode.objectify.annotation.Index;
 public class Contract {
 	public static final String WORKER_KEY = "worker";
 	public static final String CLIENT_KEY = "client";
-	public static final String START_KEY = "start";
-	public static final String END_KEY = "end";
+	public static final String START_KEY = "startDate";
+	public static final String END_KEY = "endDate";
 
 	@Id
 	private Long id;
@@ -21,11 +21,15 @@ public class Contract {
 	@Index
 	private Long client;
 	@Index
-	private LocalDate start;
+	private LocalDate startDate;
 	@Index
-	private LocalDate end;
+	private LocalDate endDate;
 	@Index
 	private Integer startDayOfWeek;
+
+	public Contract() {
+
+	}
 
 	public Long getId() {
 		return id;
@@ -51,20 +55,20 @@ public class Contract {
 		this.client = client;
 	}
 
-	public LocalDate getStart() {
-		return start;
+	public LocalDate getStartDate() {
+		return startDate;
 	}
 
-	public void setStart(LocalDate start) {
-		this.start = start;
+	public void setStartDate(LocalDate startDate) {
+		this.startDate = startDate;
 	}
 
-	public LocalDate getEnd() {
-		return end;
+	public LocalDate getEndDate() {
+		return endDate;
 	}
 
-	public void setEnd(LocalDate end) {
-		this.end = end;
+	public void setEndDate(LocalDate endDate) {
+		this.endDate = endDate;
 	}
 
 	public Integer getStartDayOfWeek() {
@@ -81,8 +85,8 @@ public class Contract {
 				.add("id", this.id)//
 				.add("worker", this.worker)//
 				.add("client", this.client)//
-				.add("start", this.start)//
-				.add("end", this.end)//
+				.add("startDate", this.startDate)//
+				.add("endDate", this.endDate)//
 				.toString();
 	}
 }

@@ -20,8 +20,12 @@
 			$scope.isAdmin = bool; // true if Admin, false if User
 		};
 
-		$scope.doSave = function doSaveFn(svc, obj, updateFn) {
+		$scope.doSave = function doSaveFn(svc, obj, updateFn, arr) {
+			$log.info("dosave:",[svc, obj, updateFn, arr]);
 			var objJson = angular.toJson(obj);
+			if(arr && arr.indexOf(obj) != null ){
+				arr.push[obj];
+			}
 			svc.save(objJson, function saveSuccessFn(data) {
 				$log.info("saved data:", data);
 				$log.info("do ($broadcast) update '" + updateFn + "'");
@@ -36,7 +40,7 @@
 				$scope.$broadcast(updateFn);
 			});
 		};
-		
+
 		$log.info('MainCtrl init complete');
 	} ]);
 
@@ -48,59 +52,53 @@
 		$scope.clientsMap = {};
 		$scope.workers = [];
 		$scope.workersMap = {};
-                $scope.clientMap = {};
+		$scope.clientMap = {};
 		$scope.workers = [];
-                $scope.workerMap = {};
+		$scope.workerMap = {};
 
 		$scope.contracts = [];
-		
-		function mapToList(map){
-			$log.info("map2list",map);
-			var list = [];
-			angular.forEach(map, function (obj,key){
-				$log.info("map2list: pushed obj",obj);
-				list.push[obj];
-			});
-			return list;
-		}
 
 		function updateClientsFn() {
 			$log.info("updateClientsFn before:", $scope.clients.length);
 			AdminClientService.getAll(function successCGetAllFn(data) {
-                                $log.info("inside for updateClientsFn with data size " + data.length);
+				$log.info("inside for updateClientsFn with data size " + data.length);
 				$scope.clients = data;
-                                $scope.clientMap = {};
-                                for(var index = 0; index < data.length; index++) {
-                                    var item = data[index];
-                                    $log.info("pushing reference to client " + item);
-                                    $scope.clientMap[item.id] = item;
-                                }
+				$scope.clientMap = {};
+				for (var index = 0; index < data.length; index++) {
+					var item = data[index];
+					$log.info("pushing reference to client " + item);
+					$scope.clientMap[item.id] = item;
+				}
 				$log.info("updateClientsFn after: ", $scope.clients.length);
 			});
 		}
 
 		function updateContractsFn() {
+			$log.info("updateContractsFn before:", $scope.contracts.length);
 			AdminContractService.getAll(function successConGetAllFn(data) {
 				$scope.contracts = data;
+				$log.info("updateContractsFn after:", $scope.contracts.length);
 			});
 		}
 
 		function updateWorkersFn() {
 			$log.info("updateWorkersFn before:", $scope.workers.length);
-			AdminWorkerService.getMap({id:'idmap'},function successWGetAllFn(data) {
+			AdminWorkerService.getMap({
+				id : 'idmap'
+			}, function successWGetAllFn(data) {
 				$scope.workersMap = data;
-				//$scope.workers = mapToList(data); //wtf why no worky?
-                        });
-                        
+				// $scope.workers = mapToList(data); //wtf why no worky?
+			});
+
 			AdminWorkerService.getAll(function successWGetAllFn(data) {
-                                $log.info("inside for updateWorkersFn with data size " + data.length);
+				$log.info("inside for updateWorkersFn with data size " + data.length);
 				$scope.workers = data;
-                                $scope.workerMap = {};
-                                for(var index = 0; index < data.length; index++) {
-                                    var item = data[index];
-                                    $log.info("pushing reference to worker " + item);
-                                    $scope.workerMap[item.id] = item;
-                                }
+				$scope.workerMap = {};
+				for (var index = 0; index < data.length; index++) {
+					var item = data[index];
+					$log.info("pushing reference to worker " + item);
+					$scope.workerMap[item.id] = item;
+				}
 				$log.info("updateWorkersFn after:", $scope.workers.length);
 			});
 		}
@@ -122,7 +120,7 @@
 		$scope.edit = false;
 
 		$scope.save = function saveFn(obj) {
-			$scope.doSave(AdminClientService, obj, 'updateClients');
+			$scope.doSave(AdminClientService, obj, 'updateClients', $scope.clients);
 		};
 
 		$scope.remove = function rempveFn(obj) {
@@ -130,9 +128,9 @@
 				id : obj.id
 			}, 'updateClients');
 		};
-		
-		$scope.set = function setFn(obj){
-			$scope.currentClient = obj;
+
+		$scope.set = function setFn(obj) {
+			$scope.currentClient =  (obj || {});
 			$scope.edit = true;
 		};
 
@@ -144,35 +142,32 @@
 		$scope.edit = false;
 
 		$scope.save = function saveFn(obj) {
-			$scope.doSave(AdminWorkerService, obj, 'updateWorkers');
+			$scope.doSave(AdminWorkerService, obj, 'updateWorkers', $scope.workers);
 			$scope.edit = false;
 		};
-		
-		$scope.set = function setFn(obj){
+
+		$scope.set = function setFn(obj) {
 			$scope.edit = true;
-		 	$scope.currentWorker = obj;
+			$scope.currentWorker =  (obj || {});
 		}
 
-	} ]);
-
-	module.controller('AdminWorkerDetailCtrl', [ '$log', '$scope', 'AdminWorkerService', //
-	function AdminWorkerDetailCtrlFn($log, $scope, AdminWorkerService) {
-		// $log.info('AdminWorkerDetailCtrl init', $scope);
 	} ]);
 
 	module.controller('AdminContractCtrl', [ '$log', '$scope', 'AdminContractService', //
 	function AdminContractCtrlFn($log, $scope, AdminContractService) {
 		$log.info('AdminContractCtrl init', $scope);
-
-		$scope.save = function(obj) {
-			$scope.doSave(AdminContractService, obj, 'updateContracts');
+		$scope.edit=false;
+		$scope.currentContract ={};
+		
+		$scope.save = function saveFn(obj) {
+			$scope.doSave(AdminContractService, obj, 'updateContracts', $scope.contracts);
 		};
-	} ]);
+		
+		$scope.set = function setFn(obj) {
+			$scope.edit = true;
+			$scope.currentContract = (obj || {});
+		}
 
-	module.controller('AdminContractDetailCtrl', [ '$log', '$scope', 'AdminContractService', //
-	function AdminContractDetailCtrlFn($log, $scope, AdminWorkerService) {
-		// $log.info('AdminContractDetailCtrl init', $scope);
-		$scope.edit = false;
 	} ]);
 
 	module.controller('LandingPageCtrl', [ '$log', '$scope', //
@@ -199,9 +194,9 @@
 		}
 
 		$scope.set = function setFn(obj) {
-			if(obj){
+			if (obj) {
 				$scope.currentTimeSheet = obj;
-			}else{
+			} else {
 				TimeSheetService.create(function successFn(data) {
 					$scope.currentTimeSheet = data;
 				});

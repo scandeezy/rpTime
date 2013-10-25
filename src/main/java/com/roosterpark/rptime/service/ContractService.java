@@ -13,7 +13,6 @@ import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.googlecode.objectify.ObjectifyService;
 import com.roosterpark.rptime.model.Client;
 import com.roosterpark.rptime.model.Contract;
 import com.roosterpark.rptime.model.Worker;
@@ -27,12 +26,6 @@ public class ContractService {
 	@Inject
 	ClientService clientService;
 
-	public ContractService() {
-		LOGGER.trace("registering Contract class with ObjectifyService");
-		ObjectifyService.register(Contract.class);
-		LOGGER.trace("registered Contract");
-	}
-
 	public List<Contract> getContractsForWorker(Long worker) {
 		return ofy().load().type(Contract.class).filter(Contract.WORKER_KEY, worker).list();
 	}
@@ -42,7 +35,7 @@ public class ContractService {
 		List<Contract> active = new LinkedList<Contract>();
 		LocalDate now = new LocalDate();
 		for (Contract contract : contracts) {
-			if (contract.getStart().compareTo(now) < 1 && contract.getEnd().compareTo(now) > -1)
+			if (contract.getStartDate().compareTo(now) < 1 && contract.getEndDate().compareTo(now) > -1)
 				active.add(contract);
 		}
 
@@ -58,7 +51,7 @@ public class ContractService {
 		List<Contract> active = new LinkedList<Contract>();
 		LocalDate now = new LocalDate();
 		for (Contract contract : contracts) {
-			if (contract.getStart().compareTo(now) < 1 && contract.getEnd().compareTo(now) > -1)
+			if (contract.getStartDate().compareTo(now) < 1 && contract.getEndDate().compareTo(now) > -1)
 				active.add(contract);
 		}
 
@@ -88,11 +81,10 @@ public class ContractService {
 			throw new EntityNotFoundException("No worker with id " + item.getWorker());
 		if (client == null)
 			throw new EntityNotFoundException("No client with id " + item.getClient());
+		if (item.getStartDate() != null && item.getEndDate() != null && item.getStartDate().compareTo(item.getEndDate()) > -1)
+			throw new IllegalArgumentException("Start must be before end.");
 
-                if(item.getStart() != null && item.getEnd() != null && item.getStart().compareTo(item.getEnd()) > -1)
-                    throw new IllegalArgumentException("Start must be before end.");
-                
-		LOGGER.warn("Saving contract " + item);
+		LOGGER.warn("Saving contract {}", item);
 		ofy().save().entity(item).now();
 	}
 }

@@ -1,66 +1,46 @@
 <div>
-	<div id="contracts" class="panel panel-default">
-		<div class="panel-heading">Contracts</div>
+	<div id="contracts" class="panel panel-default" ng-hide="edit">
+		<div class="panel-heading">Contracts
+			<span class="btn-group"> 
+				<a type="button" class="btn btn-sm btn-default" ng-click="set();">New</a>
+			</span>
+		</div>
 		<div class="panel-body">
 			<ul>
-				<li ng-repeat="contract in contracts | orderBy:'end'" ng-controller="AdminContractDetailCtrl">
+				<li ng-repeat="contract in contracts | orderBy:'end'">
 					<span class="btn-group">
-						<!--<a type="button" class="btn btn-sm btn-default" ng-href="#">View</a>-->
-						<a type="button" class="btn btn-sm btn-default" ng-click="edit=!edit">Edit</a>
-						<a type="button" class="btn btn-sm btn-default" ng-class="{'btn-primary': edit}" ng-disabled="!edit" ng-hide="true">Save</a>
+						<a type="button" class="btn btn-sm btn-default" ng-click="set(contract);">Edit</a>
 					</span>
-                                        
 					{{clientMap[contract.client].name}}, {{workerMap[contract.worker].firstName}} {{workerMap[contract.worker].lastName}}
 					<span ng-show="contract.start">- {{contract.start}}</span>
 					<span ng-show="contract.end">- {{contract.end}}</span>
-                                        
-                                        <span ng-show="edit">
-                                          <form role="form" name="editContractForm">
-                                            <div class="form-group">
-                                                <label for="worker">Worker ID</label>
-                                                <input type="text" class="form-control" id="firstName" ng-model="contract.worker" placeholder="1">
-
-                                                <label for="client">Client ID</label>
-                                                <input type="text" class="form-control" id="lastName" ng-model="contract.client" placeholder="1">
-
-                                                <label for="start">Start Date</label>
-                                                <input type="date" class="form-control" id="email" ng-model="contract.start" placeholder="01-01-2013">
-
-                                                <label for="end">End Date</label>
-                                                <input type="date" class="form-control" id="start" ng-model="contract.end" placeholder="">
-
-                                                <div>
-                                                        <a type="button" class="btn btn-default" ng-click="save(newcontract)">Save</a>
-                                                </div>
-                                            </div>
-                                          </form>
-                                        </span>
 				</li>
 			</ul>
 		</div>
 	</div>
 	
-	<div id="createContract" class="panel panel-default">
+	<div id="createContract" class="panel panel-default" ng-show="edit">
 		<div class="panel-heading">Create new contract</div>
 		<div class="panel-body">
 			<form role="form" name="createContractForm">
 				<div class="form-group">
 				
 					<label for="worker">Worker ID</label>
-                                        <select class="form-control" id="worker" ng-model="newcontract.worker" ng-options="worker.id as worker.firstName for worker in workers" ></select>
-					<!--<input type="text" class="form-control" id="firstName" ng-model="newcontract.worker" placeholder="1">-->
+                    <select class="form-control" id="worker" ng-model="currentContract.worker" ng-options="worker.id as worker.firstName for worker in workers" ></select>
+					<!--<input type="text" class="form-control" id="firstName" ng-model="currentContract.worker" placeholder="1">-->
 	
 					<label for="client">Client ID</label>
-                                        <select class="form-control" id="client" ng-model="newcontract.client" ng-options="client.id as client.name for client in clients" ></select>
+                    <select class="form-control" id="client" ng-model="currentContract.client" ng-options="client.id as client.name for client in clients" ></select>
 	
-					<label for="start">Start Date</label>
-					<input type="text" class="form-control" id="start" ng-model="newcontract.start" placeholder="01-01-2013">
+					<label for="startDate">Start Date</label>
+					<input type="date" class="form-control" id="startDate" ng-model="currentContract.startDate" placeholder="YYYY-MM-DD">
 
-					<label for="end">End Date</label>
-					<input type="text" class="form-control" id="end" ng-model="newcontract.end" placeholder="">
+					<label for="endDate">End Date</label>
+					<input type="date" class="form-control" id="endDate" ng-model="currentContract.endDate" placeholder="YYYY-MM-DD">
 			
 					<div>
-						<a type="button" class="btn btn-default" ng-click="save(newcontract)">Save</a>
+						<a type="button" class="btn btn-default" ng-click="save(currentContract)">Save</a>
+						<a type="button" class="btn btn-default" ng-click="edit=false;">Cancel</a>
 					</div>
 					
 				</div>
@@ -68,6 +48,7 @@
 		</div>
 	</div>	
 
-	<div ng-cloak ng-show="debug" class="well"><pre>contracts={{contracts | json}} </pre><br/><pre>newcontract={{newcontract | json}}</pre></div>
+	<div ng-cloak ng-show="debug" class="well"><pre>contracts={{contracts | json}}
+currentContract={{currentContract | json}}</pre></div>
 
 </div>
