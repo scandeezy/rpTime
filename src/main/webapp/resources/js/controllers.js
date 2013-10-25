@@ -175,10 +175,12 @@
 
 		$scope.selectTimeSheet = function(ts) {
 			$scope.currentTimeSheet = ts;
+			$scope.edit = true;
 		};
 
 		$scope.save = function(ts) {
 			$scope.doSave(TimeSheetService, ts, 'updateTimeSheets');
+			$scope.edit = false;
 		};
 
 		$scope.$on('updateTimeSheets', this.updateTimeSheetsFn);

@@ -1,16 +1,15 @@
 <!-- $scope is on TimesheetPageCtrl -->
 <div>
-	<h4>timesheet.html</h4>
+	<div ng-hide="edit">
+		<ul>
+			<li ng-repeat="timesheet in timesheets">
+				timesheet: <a ng-click="selectTimeSheet(timesheet)">{{timesheet.id}}</a><span ng-show="timesheet.startDate"> ({{timesheet.startDate}})</span>
+			</li>
+		</ul>
+	</div>
 	
-	<ul>
-		<li ng-repeat="timesheet in timesheets">
-			timesheet: <a ng-click="selectTimeSheet(timesheet);">{{timesheet.id}}</a>
-		</li>
-	
-	</ul>
-	
-	<div id="createTimeSheet" ng-show="currentTimeSheet.id">
-		<h4>Timesheet {{currentTimeSheet.id}}</h4>
+	<div id="createTimeSheet" ng-show="edit">
+		<h4><a ng-click="edit=false">&lt;</a> Timesheet {{currentTimeSheet.id}}</h4>
 		<form role="form" name="createTimeSheetForm">
 			<div class="row">
 				<div class="col-lg-2">
@@ -39,7 +38,8 @@
 		
 		<div class="btn-group">
 			<a type="button" class="btn btn-default" ng-click="create();">New</a>
-			<a type="button" class="btn btn-default" ng-click="save(currentTimeSheet);">Save</a>
+			<a type="button" class="btn btn-default" ng-click="save(currentTimeSheet)">Save</a>
+			<a type="button" class="btn btn-default" ng-click="edit=false;">Cancel</a>
 		</div>
 		
 		<div class="well">
