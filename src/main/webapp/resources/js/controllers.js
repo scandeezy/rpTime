@@ -48,6 +48,9 @@
 		$scope.clientsMap = {};
 		$scope.workers = [];
 		$scope.workersMap = {};
+                $scope.clientMap = {};
+		$scope.workers = [];
+                $scope.workerMap = {};
 
 		$scope.contracts = [];
 		
@@ -64,7 +67,14 @@
 		function updateClientsFn() {
 			$log.info("updateClientsFn before:", $scope.clients.length);
 			AdminClientService.getAll(function successCGetAllFn(data) {
+                                $log.info("inside for updateClientsFn with data size " + data.length);
 				$scope.clients = data;
+                                $scope.clientMap = {};
+                                for(var index = 0; index < data.length; index++) {
+                                    var item = data[index];
+                                    $log.info("pushing reference to client " + item);
+                                    $scope.clientMap[item.id] = item;
+                                }
 				$log.info("updateClientsFn after: ", $scope.clients.length);
 			});
 		}
@@ -77,12 +87,20 @@
 
 		function updateWorkersFn() {
 			$log.info("updateWorkersFn before:", $scope.workers.length);
-			AdminWorkerService.getAll(function successFn(data){
-				$scope.workers = data; 
-			});
 			AdminWorkerService.getMap({id:'idmap'},function successWGetAllFn(data) {
 				$scope.workersMap = data;
 				//$scope.workers = mapToList(data); //wtf why no worky?
+                        });
+                        
+			AdminWorkerService.getAll(function successWGetAllFn(data) {
+                                $log.info("inside for updateWorkersFn with data size " + data.length);
+				$scope.workers = data;
+                                $scope.workerMap = {};
+                                for(var index = 0; index < data.length; index++) {
+                                    var item = data[index];
+                                    $log.info("pushing reference to worker " + item);
+                                    $scope.workerMap[item.id] = item;
+                                }
 				$log.info("updateWorkersFn after:", $scope.workers.length);
 			});
 		}

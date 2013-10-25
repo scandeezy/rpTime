@@ -9,7 +9,8 @@
 						<a type="button" class="btn btn-sm btn-default" ng-click="edit=!edit">Edit</a>
 						<a type="button" class="btn btn-sm btn-default" ng-class="{'btn-primary': edit}" ng-disabled="!edit" ng-hide="true">Save</a>
 					</span>
-					{{contract.client}}, {{contract.worker}} 
+                                        
+					{{clientMap[contract.client].name}}, {{workerMap[contract.worker].firstName}} {{workerMap[contract.worker].lastName}}
 					<span ng-show="contract.start">- {{contract.start}}</span>
 					<span ng-show="contract.end">- {{contract.end}}</span>
                                         
@@ -46,16 +47,17 @@
 				<div class="form-group">
 				
 					<label for="worker">Worker ID</label>
-					<input type="text" class="form-control" id="firstName" ng-model="newcontract.worker" placeholder="1">
+                                        <select class="form-control" id="worker" ng-model="newcontract.worker" ng-options="worker.id as worker.firstName for worker in workers" ></select>
+					<!--<input type="text" class="form-control" id="firstName" ng-model="newcontract.worker" placeholder="1">-->
 	
 					<label for="client">Client ID</label>
-					<input type="text" class="form-control" id="lastName" ng-model="newcontract.client" placeholder="1">
+                                        <select class="form-control" id="client" ng-model="newcontract.client" ng-options="client.id as client.name for client in clients" ></select>
 	
 					<label for="start">Start Date</label>
-					<input type="text" class="form-control" id="email" ng-model="newcontract.start" placeholder="01-01-2013">
+					<input type="text" class="form-control" id="start" ng-model="newcontract.start" placeholder="01-01-2013">
 
 					<label for="end">End Date</label>
-					<input type="text" class="form-control" id="start" ng-model="newcontract.end" placeholder="">
+					<input type="text" class="form-control" id="end" ng-model="newcontract.end" placeholder="">
 			
 					<div>
 						<a type="button" class="btn btn-default" ng-click="save(newcontract)">Save</a>
