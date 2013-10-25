@@ -84,7 +84,13 @@ public class ContractService {
 		if (item.getStartDate() != null && item.getEndDate() != null && item.getStartDate().compareTo(item.getEndDate()) > -1)
 			throw new IllegalArgumentException("Start must be before end.");
 
-		LOGGER.warn("Saving contract {}", item);
+                if (item.getStartDate() == null)
+                    throw new IllegalArgumentException("Start date required for creating a new contract.");
+                
+                if(item.getEndDate() != null && item.getStartDate().compareTo(item.getEndDate()) > -1)
+                    throw new IllegalArgumentException("Start must be before end.");
+                
+		LOGGER.warn("Saving contract " + item);
 		ofy().save().entity(item).now();
 	}
 }
