@@ -2,6 +2,7 @@ package com.roosterpark.rptime.model;
 
 import org.joda.time.LocalDate;
 
+import com.google.common.base.Objects;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
@@ -76,6 +77,12 @@ public class Contract {
 
 	@Override
 	public String toString() {
-		return "Contract [id=" + id + ", worker=" + worker + ", client=" + client + ", start=" + start + ", end=" + end + "]";
+		return Objects.toStringHelper(this)//
+				.add("id", this.id)//
+				.add("worker", this.worker)//
+				.add("client", this.client)//
+				.add("start", this.start)//
+				.add("end", this.end)//
+				.toString();
 	}
 }
