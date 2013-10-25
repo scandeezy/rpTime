@@ -89,6 +89,9 @@ public class ContractService {
 		if (client == null)
 			throw new EntityNotFoundException("No client with id " + item.getClient());
 
+                if(item.getStart() != null && item.getEnd() != null && item.getStart().compareTo(item.getEnd()) < 1)
+                    throw new IllegalArgumentException("Start must be before end.");
+                
 		LOGGER.warn("Saving contract " + item);
 		ofy().save().entity(item).now();
 	}
