@@ -117,16 +117,23 @@
 	module.controller('AdminWorkerCtrl', [ '$log', '$scope', 'AdminWorkerService', //
 	function AdminWorkerCtrlFn($log, $scope, AdminWorkerService) {
 		// $log.info('AdminWorkerCtrl init', $scope);
+		$scope.edit = false;
 
 		$scope.save = function(obj) {
 			$scope.doSave(AdminWorkerService, obj, 'updateWorkers');
+			$scope.edit = false;
 		};
+		
+		$scope.modify = function(obj){
+			$scope.edit = true;
+		 	$scope.currentWorker = obj;
+		}
+
 	} ]);
 
 	module.controller('AdminWorkerDetailCtrl', [ '$log', '$scope', 'AdminWorkerService', //
 	function AdminWorkerDetailCtrlFn($log, $scope, AdminWorkerService) {
 		// $log.info('AdminWorkerDetailCtrl init', $scope);
-		$scope.edit = false;
 	} ]);
 
 	module.controller('AdminContractCtrl', [ '$log', '$scope', 'AdminContractService', //
@@ -170,6 +177,7 @@
 		$scope.create = function() {
 			TimeSheetService.create(function successFn(data) {
 				$scope.currentTimeSheet = data;
+				$scope.edit = true;
 			});
 		}
 

@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.persistence.EntityNotFoundException;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.joda.time.LocalDate;
@@ -35,21 +36,16 @@ public class TimeSheetService {
 	@Inject
 	ContractService contractService;
 
-	// public TimeSheetService() {
-	// LOGGER.trace("registering TimeSheet class with ObjectifyService");
-	// ObjectifyService.register(TimeSheet.class);
-	// LOGGER.trace("registered TimeSheet");
-	// }
-
 	public TimeSheet create() {
-		Worker w = workerService.getByUser(userService.getCurrentUser());
+		final Worker w = workerService.getByUser(userService.getCurrentUser());
 		if (w != null) {
 			TimeSheet result = new TimeSheet(w.getId());
 			result.setStartDate(new LocalDate());
 			LOGGER.debug("created new TimeSheet for worker={},timesheet={}", w, result);
 			return result;
 		}
-		throw new IllegalArgumentException("Worker required for '" + userService.getCurrentUser() + "'");
+		throw new EntityNotFoundException("Required 'Worker' not found for '" + userService.getCurrentUser()
+				+ "'.  Solution: create Worker on the /workers page.");
 	}
 
 	public List<TimeSheet> getAll() {

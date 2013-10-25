@@ -1,69 +1,49 @@
 <!-- current $scope is AdminWorkerCtrl -->
-<div ng-init="showCreate=false">
-	<div id="workers" class="panel panel-default" ng-hide="showCreate">
-		<div class="panel-heading">Workers</div>
+<div>
+	<div id="workers" class="panel panel-default" ng-hide="edit">
+		<div class="panel-heading">Workers
+ 			<span class="btn-group"> 
+				<a type="button" class="btn btn-sm btn-default" ng-click="modify({});">New</a>
+			</span>
+		</div>
 		<div class="panel-body">
 			<ul>
 				<li ng-repeat="worker in workers | orderBy:'lastName'" ng-controller="AdminWorkerDetailCtrl">
 					<span class="btn-group">
-						<!-- <a type="button" class="btn btn-sm btn-default" ng-href="#">View</a> -->
-						<a type="button" class="btn btn-sm btn-default" ng-click="edit=!edit">Edit</a>
-						<a type="button" class="btn btn-sm btn-default btn-primary" ng-show="edit" ng-click="save(worker)">Save</a>
+						<a type="button" class="btn btn-sm btn-default" ng-click="modify(worker);">Edit</a>
 					</span>
-					<span ng-hide="edit">
-						{{worker.lastName}}, {{worker.firstName}} 
-						<span ng-show="worker.email">- {{worker.email}}</span>
-					</span>
-					<span ng-show="edit">
-						<form role="form" name="editWorkerForm">
-							<div class="form-group">
-							
-								<label for="firstName">First Name</label>
-								<input type="text" class="form-control" id="firstName" ng-model="worker.firstName" placeholder="First Name (i.e., John)">
-				
-								<label for="lastName">Last Name</label>
-								<input type="text" class="form-control" id="lastName" ng-model="worker.lastName" placeholder="Last Name (i.e., Smith)">
-				
-								<label for="email">Email</label>
-								<input type="text" class="form-control" id="email" ng-model="worker.email" placeholder="john@smith.com">
-			
-								<label for="start">Start Date</label>
-								<input type="text" class="form-control" id="start" ng-model="worker.start" placeholder="1">
-						
-							</div>
-						</form>
-					</span>
+					{{worker.lastName}}, {{worker.firstName}} 
+					<span ng-show="worker.email">- {{worker.email}}</span>
 				</li>
 			</ul>
 		</div>
 	</div>
-	<div ng-hide="showCreate">
-		<span class="btn-group">
-			<a type="button" class="btn btn-sm btn-default" ng-click="showCreate=!showCreate">Create</a>
-		</span>
-	</div>
 	
-	<div id="createWorker" class="panel panel-default" ng-show="showCreate">
-		<div class="panel-heading">Create new worker</div>
+	<div id="createWorker" class="panel panel-default" ng-show="edit">
+		<div class="panel-heading">
+			<a ng-click="edit=false;">&lt;</a> 
+			<span ng-show="currentWorker.id">Edit Worker ({{currentWorker.lastName}}, {{currentWorker.firstName}})</span>
+			<span ng-hide="currentWorker.id">Create Worker</span>
+		</div>
 		<div class="panel-body">
 			<form role="form" name="createWorkerForm">
 				<div class="form-group">
 				
 					<label for="firstName">First Name</label>
-					<input type="text" class="form-control" id="firstName" ng-model="newworker.firstName" placeholder="First Name (i.e., John)">
+					<input type="text" class="form-control" id="firstName" ng-model="currentWorker.firstName" placeholder="First Name (i.e., John)">
 	
 					<label for="lastName">Last Name</label>
-					<input type="text" class="form-control" id="lastName" ng-model="newworker.lastName" placeholder="Last Name (i.e., Smith)">
+					<input type="text" class="form-control" id="lastName" ng-model="currentWorker.lastName" placeholder="Last Name (i.e., Smith)">
 	
 					<label for="email">Email</label>
-					<input type="text" class="form-control" id="email" ng-model="newworker.email" placeholder="john@smith.com">
+					<input type="text" class="form-control" id="email" ng-model="currentWorker.email" placeholder="john@smith.com">
 
 					<label for="start">Start Date</label>
-					<input type="text" class="form-control" id="start" ng-model="newworker.start" placeholder="1">
+					<input type="date" class="form-control" id="start" ng-model="currentWorker.start" placeholder="YYYY-MM-DD">
 			
 					<div>
-						<a type="button" class="btn btn-default" ng-click="save(newworker);showCreate=false;">Save</a>
-						<a type="button" class="btn btn-default" ng-click="newworker={};showCreate=false;">Cancel</a>
+						<a type="button" class="btn btn-default" ng-click="save(currentWorker)">Save</a>
+						<a type="button" class="btn btn-default" ng-click="edit=false;">Cancel</a>
 					</div>
 					
 				</div>
@@ -71,6 +51,7 @@
 		</div>
 	</div>	
 
-	<div ng-cloak ng-show="debug" class="well"><pre>workers={{workers | json}} </pre><br/><pre>newworker={{newworker | json}}</pre></div>
+	<div ng-cloak ng-show="debug" class="well"><pre>edit={{edit}}
+workers={{workers | json}} </pre><br/><pre>currentWorker={{currentWorker | json}}</pre></div>
 
 </div>
