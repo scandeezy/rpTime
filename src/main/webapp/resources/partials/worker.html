@@ -37,7 +37,13 @@
 	
 					<label for="email">Email</label>
 					<input type="text" class="form-control" id="email" ng-model="currentWorker.email" placeholder="john@smith.com">
-
+                                        
+                                        <label for="onSite">Hourly?</label>
+                                        <select ng-model="currentWorker.hourly" class="form-control">
+                                            <option value="true" {true : "default", false : ""}[currentWorker.hourly==true]>Yes</option>
+                                            <option value="false" {true : "default", false : ""}[currentWorker.hourly==false]>No</option>
+                                        </select>
+                                        
 					<label for="start">Start Date</label>
 					<input type="date" class="form-control" id="start" ng-model="currentWorker.start" placeholder="YYYY-MM-DD">
 			

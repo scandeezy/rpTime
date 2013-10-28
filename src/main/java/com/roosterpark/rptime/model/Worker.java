@@ -23,6 +23,8 @@ public class Worker {
 	private Boolean active;
 	@Index
 	private LocalDate start;
+        @Index
+        private Boolean hourly;
 
 	public Worker() {
 	}
@@ -74,6 +76,14 @@ public class Worker {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
+        
+        public Boolean getHourly() {
+                return this.hourly;
+        }
+        
+        public void setHourly(Boolean hourly) {
+                this.hourly = hourly;
+        }
 
 	public String toString() {
 		return Objects.toStringHelper(this)//
