@@ -90,6 +90,13 @@ public class ContractService {
                 if(item.getEndDate() != null && item.getStartDate().compareTo(item.getEndDate()) > -1)
                     throw new IllegalArgumentException("Start must be before end.");
                 
+                if(item.getOnSite() == null)
+                    item.setOnSite(Boolean.TRUE);
+                
+                // Fill from client
+                item.setStartDayOfWeek(client.getStartDayOfWeek());
+                item.setLunchRequired(client.getLunchRequired());
+                
 		LOGGER.warn("Saving contract " + item);
 		ofy().save().entity(item).now();
 	}

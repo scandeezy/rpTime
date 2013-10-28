@@ -20,12 +20,14 @@ public class Contract {
 	private Long worker;
 	@Index
 	private Long client;
+        @Index
+        private Boolean onSite;
 	@Index
 	private LocalDate startDate;
 	@Index
 	private LocalDate endDate;
-	@Index
 	private Integer startDayOfWeek;
+        private Boolean lunchRequired;
 
 	public Contract() {
 
@@ -54,6 +56,14 @@ public class Contract {
 	public void setClient(Long client) {
 		this.client = client;
 	}
+        
+        public Boolean getOnSite() {
+                return this.onSite;
+        }
+        
+        public void setOnSite(Boolean onSite) {
+                this.onSite = onSite;
+        }
 
 	public LocalDate getStartDate() {
 		return startDate;
@@ -78,6 +88,14 @@ public class Contract {
 	public void setStartDayOfWeek(Integer startDayOfWeek) {
 		this.startDayOfWeek = startDayOfWeek;
 	}
+        
+        public Boolean getLunchRequired() {
+                return this.lunchRequired;
+        }
+        
+        public void setLunchRequired(Boolean lunchRequired) {
+                this.lunchRequired = lunchRequired;
+        }
 
 	@Override
 	public String toString() {
