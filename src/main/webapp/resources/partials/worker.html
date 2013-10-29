@@ -3,14 +3,14 @@
 	<div id="workers" class="panel panel-default" ng-hide="edit">
 		<div class="panel-heading">Workers
  			<span class="btn-group"> 
-				<a type="button" class="btn btn-sm btn-default" ng-click="set();">New</a>
+				<button type="button" class="btn btn-sm btn-default" ng-click="set();">New</a>
 			</span>
 		</div>
 		<div class="panel-body">
 			<ul>
 				<li ng-repeat="worker in workers | orderBy:'lastName'">
 					<span class="btn-group">
-						<a type="button" class="btn btn-sm btn-default" ng-click="set(worker);">Edit</a>
+						<button type="button" class="btn btn-sm btn-default" ng-click="set(worker);">Edit</button>
 					</span>
 					{{worker.lastName}}, {{worker.firstName}} 
 					<span ng-show="worker.email">- {{worker.email}}</span>
@@ -26,32 +26,44 @@
 			<span ng-hide="currentWorker.id">Create Worker</span>
 		</div>
 		<div class="panel-body">
-			<form role="form" name="createWorkerForm">
+			<form class="form-horizontal" role="form" name="createWorkerForm">
 				<div class="form-group">
-				
-					<label for="firstName">First Name</label>
-					<input type="text" class="form-control" id="firstName" ng-model="currentWorker.firstName" placeholder="First Name (i.e., John)">
-	
-					<label for="lastName">Last Name</label>
-					<input type="text" class="form-control" id="lastName" ng-model="currentWorker.lastName" placeholder="Last Name (i.e., Smith)">
-	
-					<label for="email">Email</label>
-					<input type="text" class="form-control" id="email" ng-model="currentWorker.email" placeholder="john@smith.com">
-                                        
-                                        <label for="onSite">Hourly?</label>
-                                        <select ng-model="currentWorker.hourly" class="form-control">
-                                            <option value="true" {true : "default", false : ""}[currentWorker.hourly==true]>Yes</option>
-                                            <option value="false" {true : "default", false : ""}[currentWorker.hourly==false]>No</option>
-                                        </select>
-                                        
-					<label for="start">Start Date</label>
-					<input type="date" class="form-control" id="start" ng-model="currentWorker.start" placeholder="YYYY-MM-DD">
-			
-					<div>
-						<a type="button" class="btn btn-primary" ng-click="save(currentWorker)">Save</a>
-						<a type="button" class="btn btn-default" ng-click="edit=false;">Cancel</a>
+					<label for="firstName" class="col-lg-2 control-label">First Name</label>
+					<div class="col-lg-4">
+						<input type="text" class="form-control" id="firstName" ng-model="currentWorker.firstName" placeholder="First Name (i.e., John)">
 					</div>
-					
+				</div>
+				<div class="form-group">
+					<label for="lastName" class="col-lg-2 control-label">Last Name</label>
+					<div class="col-lg-4">
+						<input type="text" class="form-control" id="lastName" ng-model="currentWorker.lastName" placeholder="Last Name (i.e., Smith)">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="email" class="col-lg-2 control-label">Email</label>
+					<div class="col-lg-4">
+						<input type="email" class="form-control" id="email" ng-model="currentWorker.email" placeholder="john@smith.com">
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="start" class="col-lg-2 control-label">Start Date</label>
+					<div class="col-lg-4">
+						<input type="date" class="form-control" id="start" ng-model="currentWorker.start" placeholder="YYYY-MM-DD">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-lg-offset-2 col-lg-4">
+						<div class="checkbox">
+							<label class="control-label" for="hourly"> <input id="hourly" type="checkbox" ng-model="currentWorker.hourly"> Hourly
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-lg-offset-2 col-lg-4">
+						<button type="button" class="btn btn-primary" ng-click="save(currentWorker)">Save</button>
+						<button type="button" class="btn btn-default" ng-click="edit=false;">Cancel</button>
+					</div>
 				</div>
 			</form>
 		</div>
