@@ -11,9 +11,9 @@
 		</div>
 		<div class="panel-body">
 			<ul>
-				<li ng-repeat="client in clients | orderBy:'name'"><span class="btn-group" ng-class="{disabled:disabled}">
+				<li ng-repeat="client in clients | orderBy:'name'"><span class="btn-group">
 						<button type="button" id="edit-{{$id}}" class="btn btn-sm btn-default" ng-click="set(client);">Edit</button>
-						<button type="button" id="delete-{{$id}}" class="btn btn-sm btn-default" ng-click="disabled=true;remove(client);" ng-hide="!debug">Delete</button>
+						<button type="button" id="delete-{{$id}}" class="btn btn-sm btn-default" ng-click="remove(client);" ng-hide="!debug">Delete</button>
 				</span> {{client.name}}</li>
 			</ul>
 		</div>
@@ -65,22 +65,6 @@
 						<button type="button" id="cancel" class="btn btn-default" ng-click="unset();">Cancel</button>
 					</div>
 				</div>
-
-				<pre ng-cloak ng-show="debug">
-createClientForm.$pristine = {{createClientForm.$pristine}}
-createClientForm.$dirty = {{createClientForm.$dirty}}
-createClientForm.name.$valid = {{createClientForm.name.$valid}}
-createClientForm.name.$error = {{createClientForm.name.$error}}
-createClientForm.name.$error.required = {{createClientForm.name.$error.required}}
-createClientForm.$valid = {{createClientForm.$valid}}
-$valid && &dirty = {{ (createClientForm.$valid && createClientForm.$dirty) }}
-!($valid && &dirty) = {{ !(createClientForm.$valid && createClientForm.$dirty) }}
-createClientForm.$error.required (json) = {{createClientForm.$error.required | json}}
-createClientForm.$error.required.length = {{createClientForm.$error.required.length}}
-createClientForm.$error.required !! = {{!!createClientForm.$error.required}}
-createClientForm = {{createClientForm|json}}
-</pre>
-
 			</div>
 		</div>
 	</form>
