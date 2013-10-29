@@ -79,6 +79,7 @@ request = <%=request%></pre>
 			<script src="/resources/js/app.js"></script>
 			<script src="/resources/js/services.js"></script>
 			<script src="/resources/js/controllers.js"></script>
+			<script src="/resources/js/controllers/admin-controllers.js"></script>
 			<script src="/resources/js/filters.js"></script>
 			<script src="/resources/js/directives.js"></script>
 			<!-- pre-load templates into angular's $templateCache (see: http://stackoverflow.com/a/12346901/237225) -->
