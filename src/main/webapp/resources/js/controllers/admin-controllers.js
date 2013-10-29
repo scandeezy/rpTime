@@ -98,7 +98,7 @@
 		};
 
 		$scope.set = function setFn(obj) {
-			$scope.currentClient = angular.copy(obj,{});;
+			$scope.currentClient = angular.copy(obj, {});
 			$scope.edit = true;
 			$location.search('id', $scope.currentClient.id);
 			$scope.createClientForm.$pristine = true;
@@ -109,23 +109,6 @@
 			$scope.edit = false;
 			$location.search('id', null);
 		};
-
-	} ]);
-
-	module.controller('AdminWorkerCtrl', [ '$log', '$scope', 'AdminWorkerService', //
-	function AdminWorkerCtrlFn($log, $scope, AdminWorkerService) {
-		// $log.info('AdminWorkerCtrl init', $scope);
-		$scope.edit = false;
-
-		$scope.save = function saveFn(obj) {
-			$scope.doSave(AdminWorkerService, obj, 'updateWorkers', $scope.workers);
-			$scope.edit = false;
-		};
-
-		$scope.set = function setFn(obj) {
-			$scope.edit = true;
-			$scope.currentWorker = (obj || {});
-		}
 
 	} ]);
 
@@ -144,6 +127,31 @@
 			$scope.edit = true;
 			$scope.currentContract = (obj || {});
 		}
+
+	} ]);
+
+	module.controller('AdminWorkerCtrl', [ '$log', '$scope', 'AdminWorkerService', //
+	function AdminWorkerCtrlFn($log, $scope, AdminWorkerService) {
+		// $log.info('AdminWorkerCtrl init', $scope);
+		$scope.edit = false;
+
+		$scope.save = function saveFn(obj) {
+			$scope.doSave(AdminWorkerService, obj, 'updateWorkers', $scope.workers);
+			$scope.edit = false;
+		};
+
+		$scope.set = function setFn(obj) {
+			$scope.currentWorker = angular.copy(obj, {});
+			$scope.edit = true;
+			$location.search('id', $scope.currentWorker.id);
+			$scope.createWorkerForm.$pristine = true;
+			$scope.createWorkerForm.$dirty = false;
+		}
+
+		$scope.unset = function unsetFn() {
+			$scope.edit = false;
+			$location.search('id', null);
+		};
 
 	} ]);
 

@@ -2,15 +2,17 @@
 <div>
 	<div id="workers" class="panel panel-default" ng-hide="edit">
 		<div class="panel-heading">Workers
- 			<span class="btn-group"> 
-				<button type="button" class="btn btn-sm btn-default" ng-click="set();">New</a>
-			</span>
+			<div class="pull-right">
+				<span class="btn-group">
+					<button type="button" id="new" class="btn btn-xs btn-primary" ng-click="set();">New</button>
+				</span>
+			</div>
 		</div>
 		<div class="panel-body">
 			<ul>
 				<li ng-repeat="worker in workers | orderBy:'lastName'">
 					<span class="btn-group">
-						<button type="button" class="btn btn-sm btn-default" ng-click="set(worker);">Edit</button>
+						<button type="button" id="edit-{{$id}}" class="btn btn-sm btn-default" ng-click="set(worker);">Edit</button>
 					</span>
 					{{worker.lastName}}, {{worker.firstName}} 
 					<span ng-show="worker.email">- {{worker.email}}</span>
@@ -19,14 +21,13 @@
 		</div>
 	</div>
 	
-	<div id="createWorker" class="panel panel-default" ng-show="edit">
-		<div class="panel-heading">
-			<a ng-click="edit=false;">&lt;</a> 
-			<span ng-show="currentWorker.id">Edit Worker ({{currentWorker.lastName}}, {{currentWorker.firstName}})</span>
-			<span ng-hide="currentWorker.id">Create Worker</span>
-		</div>
-		<div class="panel-body">
-			<form class="form-horizontal" role="form" name="createWorkerForm">
+	<form class="form-horizontal" role="form" name="createWorkerForm">
+		<div id="createWorker" class="panel panel-default" ng-show="edit">
+			<div class="panel-heading">
+				<span ng-show="currentWorker.id">Edit Worker - {{currentWorker.lastName}}, {{currentWorker.firstName}}</span>
+				<span ng-hide="currentWorker.id">Create Worker</span>
+			</div>
+			<div class="panel-body">
 				<div class="form-group">
 					<label for="firstName" class="col-lg-2 control-label">First Name</label>
 					<div class="col-lg-4">
@@ -61,13 +62,14 @@
 				</div>
 				<div class="form-group">
 					<div class="col-lg-offset-2 col-lg-4">
-						<button type="button" class="btn btn-primary" ng-click="save(currentWorker)">Save</button>
-						<button type="button" class="btn btn-default" ng-click="edit=false;">Cancel</button>
+						<button type="button" id="save" class="btn " ng-class="{'btn-primary': createWorkerForm.$valid}"
+							ng-disabled="!(createWorkerForm.$valid && createWorkerForm.$dirty)" ng-click="save(currentClient)">Save</button>
+						<button type="button" id="cancel" class="btn btn-default" ng-click="unset();">Cancel</button>
 					</div>
 				</div>
-			</form>
-		</div>
-	</div>	
+			</div>
+		</div>	
+	</form>
 
 	<div ng-cloak ng-show="debug" class="well"><pre>edit={{edit}}
 workers={{workers | json}} </pre><br/><pre>currentWorker={{currentWorker | json}}</pre></div>
