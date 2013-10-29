@@ -1,17 +1,20 @@
 <div>
 	<div id="contracts" class="panel panel-default" ng-hide="edit">
-		<div class="panel-heading">Contracts
-			<span class="btn-group"> 
-				<a type="button" class="btn btn-sm btn-default" ng-click="set();">New</a>
-			</span>
+		<div class="panel-heading">
+			<h4>Contracts</h4>
+			<div class="pull-right">
+				<span class="btn-group">
+					<button type="button" id="new" class="btn btn-xs btn-primary" ng-click="set();">New</button>
+				</span>
+			</div>
 		</div>
 		<div class="panel-body">
 			<ul>
 				<li ng-repeat="contract in contracts | orderBy:'end'">
 					<span class="btn-group">
-						<a type="button" class="btn btn-sm btn-default" ng-click="set(contract);">Edit</a>
+						<button type="button" id="edit" class="btn btn-sm btn-default" ng-click="set(contract);">Edit</button>
 					</span>
-					{{clientMap[contract.client].name}}, {{workerMap[contract.worker].firstName}} {{workerMap[contract.worker].lastName}}
+					{{clientsMap[contract.client].name}}, {{workersMap[contract.worker].firstName}} {{workersMap[contract.worker].lastName}}
 					<span ng-show="contract.start">- {{contract.start}}</span>
 					<span ng-show="contract.end">- {{contract.end}}</span>
 				</li>
@@ -19,39 +22,83 @@
 		</div>
 	</div>
 	
-	<div id="createContract" class="panel panel-default" ng-show="edit">
-		<div class="panel-heading">Create new contract</div>
-		<div class="panel-body">
-			<form role="form" name="createContractForm">
-				<div class="form-group">
-				
-					<label for="worker">Worker ID</label>
-                                        <select class="form-control" id="worker" ng-model="currentContract.worker" ng-options="worker.id as worker.firstName for worker in workers" ></select>
-	
-					<label for="client">Client ID</label>
-                                        <select class="form-control" id="client" ng-model="currentContract.client" ng-options="client.id as client.name for client in clients" ></select>
-	
-                                        <label for="onSite">On Site?</label>
-                                        <select ng-model="currentContract.onSite" class="form-control">
-                                            <option value="true" {true : "default", false : ""}[currentContract.onSite==true]>Yes</option>
-                                            <option value="false" {true : "default", false : ""}[currentContract.onSite==false]>No</option>
-                                        </select>
-                    
-					<label for="startDate">Start Date</label>
-					<input type="date" class="form-control" id="startDate" ng-model="currentContract.startDate" placeholder="YYYY-MM-DD">
-
-					<label for="endDate">End Date</label>
-					<input type="date" class="form-control" id="endDate" ng-model="currentContract.endDate" placeholder="YYYY-MM-DD">
-			
-					<div>
-						<a type="button" class="btn btn-default" ng-click="save(currentContract)">Save</a>
-						<a type="button" class="btn btn-default" ng-click="edit=false;">Cancel</a>
-					</div>
-					
+	<form class="form-horizontal" role="form" name="createContractForm">
+		<div id="createContract" class="panel panel-default" ng-show="edit">
+			<div class="panel-heading">
+				<span ng-show="currentContract.id"><h4>Edit Contract</h4> {{clientsMap[currentContract.client].name}}, {{workersMap[currentContract.worker].firstName}} {{workersMap[currentContract.worker].lastName}}
+				</span>
+				<span ng-hide="currentContract.id"><h4>Create Contract</h4></span>
+				<div class="pull-right">
+					<p ng-show="!createContractForm.$valid" class="text-danger">
+						Warning: <span ng-pluralize count="createContractForm.$error.required.length"
+							when="{'1': '1 required field is missing.', 'other': '{} required fields are missing.'}"> </span>
+					</p>
 				</div>
-			</form>
-		</div>
-	</div>	
+			</div>
+			<div class="panel-body">
+			
+				<div class="form-group" ng-class="{'has-error': createContractForm.worker.$error.required}">
+					<label for="worker" class="col-lg-2 control-label">Worker</label>
+					<div class="col-lg-4">
+						<select class="form-control" id="worker" name="worker" ng-model="currentContract.worker"
+							ng-options="worker.id as worker.firstName for worker in workers" required>
+							<option value="">-- Select Worker --</option>
+						</select></label>
+					</div>
+				</div>
+				<div class="form-group" ng-class="{'has-error': createContractForm.client.$error.required}">
+					<label for="client" class="col-lg-2 control-label">Client</label>
+					<div class="col-lg-4">
+						<select class="form-control" id="client" name="client" ng-model="currentContract.client"
+							ng-options="client.id as client.name for client in clients" required>
+							<option value="">-- Select Client --</option>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="onSite" class="col-lg-2 control-label">On site</label>
+					<div class="col-lg-4">
+						<input id="onSite" name="onSite" type="checkbox" ng-model="currentContract.onSite">
+					</div>
+				</div>
+				<div class="form-group" ng-class="{'has-error': createContractForm.startDate.$error.required}">
+					<label for="startDate" class="col-lg-2 control-label">Start Date</label>
+					<div class="col-lg-4">
+						<input type="date" class="form-control" id="startDate" name="startDate" ng-model="currentContract.startDate" placeholder="YYYY-MM-DD" required>
+					</div>
+				</div>
+				<div class="form-group">
+					<label for="endDate" class="col-lg-2 control-label">End Date</label>
+					<div class="col-lg-4">
+						<input type="date" class="form-control" id="endDate" name="endDate" ng-model="currentContract.endDate" placeholder="YYYY-MM-DD">
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-lg-offset-2 col-lg-4">
+						<button type="button" id="save" class="btn " ng-class="{'btn-primary': createContractForm.$valid}"
+							ng-disabled="!(createContractForm.$valid && createContractForm.$dirty)" ng-click="save(currentContract)">Save</button>
+						<button type="button" id="cancel" class="btn btn-default" ng-click="unset();">Cancel</button>
+					</div>
+				</div>
+			</div>
+		</div>	
+		
+				<pre ng-cloak ng-show="debug">
+createContractForm.$pristine = {{createContractForm.$pristine}}
+createContractForm.$dirty = {{createContractForm.$dirty}}
+createContractForm.worker.$valid = {{createContractForm.worker.$valid}}
+createContractForm.worker.$error = {{createContractForm.worker.$error}}
+createContractForm.worker.$error.required = {{createContractForm.worker.$error.required}}
+createContractForm.$valid = {{createContractForm.$valid}}
+$valid && &dirty = {{ (createContractForm.$valid && createContractForm.$dirty) }}
+!($valid && &dirty) = {{ !(createContractForm.$valid && createContractForm.$dirty) }}
+createContractForm.$error.required (json) = {{createContractForm.$error.required | json}}
+createContractForm.$error.required.length = {{createContractForm.$error.required.length}}
+createContractForm.$error.required !! = {{!!createContractForm.$error.required}}
+createContractForm = {{createContractForm|json}}
+</pre>
+		
+	</form>
 
 	<div ng-cloak ng-show="debug" class="well"><pre>contracts={{contracts | json}}
 currentContract={{currentContract | json}}</pre></div>

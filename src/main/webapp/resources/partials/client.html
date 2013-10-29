@@ -2,7 +2,7 @@
 <div>
 	<div id="clients" class="panel panel-default" ng-hide="edit">
 		<div class="panel-heading">
-			Clients
+			<h4>Clients</h4>
 			<div class="pull-right">
 				<span class="btn-group">
 					<button type="button" id="new" class="btn btn-xs btn-primary" ng-click="set();">New</button>
@@ -22,7 +22,7 @@
 	<form class="form-horizontal" role="form" name="createClientForm" ng-show="edit">
 		<div id="createClient" class="panel panel-default">
 			<div class="panel-heading">
-				<span ng-show="currentClient.id">Edit Client - {{currentClient.name}}</span> <span ng-hide="currentClient.id">Create Client</span>
+				<span ng-show="currentClient.id"><h4>Edit Client</h4>{{currentClient.name}}</span> <span ng-hide="currentClient.id"><h4>Create Client</h4></span>
 				<div class="pull-right">
 					<p ng-show="!createClientForm.$valid" class="text-danger">
 						Warning: <span ng-pluralize count="createClientForm.$error.required.length"
