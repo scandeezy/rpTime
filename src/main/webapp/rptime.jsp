@@ -27,9 +27,9 @@ String logoutUrl2 = userService2.createLogoutURL(request.getRequestURI());
 				<%
 					if (userService2.isUserAdmin()) {
 				%>
-				<li ng-class="{active : page == '/worker'}"><a href="#/worker">Workers</a><span ng-cloak ng-show="workers.length>0" class="badge">{{workers.length}}</span></li>
-				<li ng-class="{active : page == '/client'}"><a href="#/client">Clients</a><span ng-cloak ng-show="clients.length>0" class="badge">{{clients.length}}</span></li>
-                                <li ng-class="{active : page == '/contract'}"><a href="#/contract">Contracts</a><span ng-cloak ng-show="contracts.length>0" class="badge">{{contracts.length}}</span></li>
+				<li ng-class="{active : page == '/worker'}"><a href="#/worker">Workers</a></li>
+				<li ng-class="{active : page == '/client'}"><a href="#/client">Clients</a></li>
+				<li ng-class="{active : page == '/contract'}"><a href="#/contract">Contracts</a></li>
 				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown">Reports <b
 						class="caret"></b></a>
 					<ul class="dropdown-menu">

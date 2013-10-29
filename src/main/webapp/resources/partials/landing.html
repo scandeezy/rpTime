@@ -1,5 +1,21 @@
 <div>
-	<h4>landing.html</h4>
-	<p>This is the home (landing) page.</p>
+
+	<div ng-cloak ng-show="isAdmin">
+
+		<ul>
+			<li>
+				<span ng-cloak ng-show="workers.length>0" class="badge">{{workers.length}}</span>
+				<a href="#/worker">Workers</a>
+			</li>
+			<li>
+				<span ng-cloak ng-show="clients.length>0" class="badge">{{clients.length}}</span>
+				<a href="#/client">Clients</a>
+			</li>
+			<li>
+				<span ng-cloak ng-show="contracts.length>0" class="badge">{{contracts.length}}</span>	
+				<a href="#/contract">Contracts</a>
+			</li>
+		</ul>
+	</div>
 
 </div>
