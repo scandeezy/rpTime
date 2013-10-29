@@ -11,7 +11,6 @@
 		$scope.clientsMap = {};
 		$scope.workers = [];
 		$scope.workersMap = {};
-		$scope.clientMap = {};
 		$scope.workers = [];
 		$scope.workerMap = {};
 
@@ -22,11 +21,11 @@
 			AdminClientService.getAll(function successCGetAllFn(data) {
 				$log.info("inside for updateClientsFn with data size " + data.length);
 				$scope.clients = data;
-				$scope.clientMap = {};
+				$scope.clientsMap = {};
 				for (var index = 0; index < data.length; index++) {
 					var item = data[index];
 					$log.info("pushing reference to client " + item);
-					$scope.clientMap[item.id] = item;
+					$scope.clientsMap[item.id] = item;
 				}
 				$log.info("updateClientsFn after: ", $scope.clients.length);
 			});
@@ -46,7 +45,6 @@
 				id : 'idmap'
 			}, function successWGetAllFn(data) {
 				$scope.workersMap = data;
-				// $scope.workers = mapToList(data); //wtf why no worky?
 			});
 
 			AdminWorkerService.getAll(function successWGetAllFn(data) {
@@ -73,10 +71,20 @@
 		$log.info('AdminPageCtrl init complete');
 	} ]);
 
-	module.controller('AdminClientCtrl', [ '$log', '$scope', 'AdminClientService', //
-	function AdminClientCtrlFn($log, $scope, AdminClientService) {
-		$log.info('AdminClientCtrl init', $scope);
+	module.controller('AdminClientCtrl', [ '$location', '$log', '$routeParams', '$scope', 'AdminClientService', //
+	function AdminClientCtrlFn($location, $log, $routeParams, $scope, AdminClientService) {
+		$log.info('AdminClientCtrl init', $scope, $location, $routeParams);
 		$scope.edit = false;
+		if ($routeParams.id) {
+			var id = $routeParams.id;
+			$log.info('getting id', id);
+			AdminClientService.get({
+				id : id
+			}, function successFn(data) {
+				$scope.currentClient = data;
+				$scope.edit = true;
+			});
+		}
 
 		$scope.save = function saveFn(obj) {
 			$scope.doSave(AdminClientService, obj, 'updateClients', $scope.clients);
@@ -90,8 +98,16 @@
 		};
 
 		$scope.set = function setFn(obj) {
-			$scope.currentClient = (obj || {});
+			$scope.currentClient = angular.copy(obj,{});;
 			$scope.edit = true;
+			$location.search('id', $scope.currentClient.id);
+			$scope.createClientForm.$pristine = true;
+			$scope.createClientForm.$dirty = false;
+		};
+
+		$scope.unset = function unsetFn() {
+			$scope.edit = false;
+			$location.search('id', null);
 		};
 
 	} ]);

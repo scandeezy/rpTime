@@ -12,11 +12,13 @@
 		});
 		$routeProvider.when('/client', {
 			controller : 'AdminClientCtrl',
-			templateUrl : 'resources/partials/client.html'
+			templateUrl : 'resources/partials/client.html',
+			reloadOnSearch : false
 		});
 		$routeProvider.when('/history', {
 			controller : 'HistoryPageCtrl',
-			templateUrl : 'resources/partials/history.html'
+			templateUrl : 'resources/partials/history.html',
+			reloadOnSearch : false
 		});
 		$routeProvider.when('/landing', {
 			controller : 'LandingPageCtrl',
@@ -24,15 +26,18 @@
 		});
 		$routeProvider.when('/timesheet', {
 			controller : 'TimeSheetPageCtrl',
-			templateUrl : 'resources/partials/timesheet.html'
+			templateUrl : 'resources/partials/timesheet.html',
+			reloadOnSearch : false
 		});
 		$routeProvider.when('/worker', {
 			controller : 'AdminWorkerCtrl',
-			templateUrl : 'resources/partials/worker.html'
+			templateUrl : 'resources/partials/worker.html',
+			reloadOnSearch : false
 		});
 		$routeProvider.when('/contract', {
 			controller : 'AdminContractCtrl',
-			templateUrl : 'resources/partials/contract.html'
+			templateUrl : 'resources/partials/contract.html',
+			reloadOnSearch : false
 		});
 		$routeProvider.otherwise({
 			redirectTo : '/'

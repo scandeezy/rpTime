@@ -2,48 +2,56 @@
 <div>
 	<div id="clients" class="panel panel-default" ng-hide="edit">
 		<div class="panel-heading">
-			Clients <span class="btn-group">
-				<button type="button" class="btn btn-sm btn-default" ng-click="set();">New</button>
-			</span>
+			Clients
+			<div class="pull-right">
+				<span class="btn-group">
+					<button type="button" id="new" class="btn btn-xs btn-primary" ng-click="set();">New</button>
+				</span>
+			</div>
 		</div>
 		<div class="panel-body">
 			<ul>
-				<li ng-repeat="client in clients | orderBy:'name'"><span class="btn-group">
-						<button type="button" class="btn btn-sm btn-default" ng-click="set(client)">Edit</button>
-						<button type="button" class="btn btn-sm btn-default" ng-click="remove(client);" ng-hide="!debug">Delete</button>
+				<li ng-repeat="client in clients | orderBy:'name'"><span class="btn-group" ng-class="{disabled:disabled}">
+						<button type="button" id="edit-{{$id}}" class="btn btn-sm btn-default" ng-click="set(client);">Edit</button>
+						<button type="button" id="delete-{{$id}}" class="btn btn-sm btn-default" ng-click="disabled=true;remove(client);" ng-hide="!debug">Delete</button>
 				</span> {{client.name}}</li>
 			</ul>
 		</div>
 	</div>
 
-	<div id="createClient" class="panel panel-default" ng-show="edit">
-		<div class="panel-heading">
-			<a ng-click="edit=false;">&lt;</a> <span ng-show="currentClient.id">Edit Client - {{currentClient.name}}</span> <span
-				ng-hide="currentClient.id">Create Client</span>
-		</div>
+	<form class="form-horizontal" role="form" name="createClientForm" ng-show="edit">
+		<div id="createClient" class="panel panel-default">
+			<div class="panel-heading">
+				<span ng-show="currentClient.id">Edit Client - {{currentClient.name}}</span> <span ng-hide="currentClient.id">Create Client</span>
+				<div class="pull-right">
+					<p ng-show="!createClientForm.$valid" class="text-danger">
+						Warning: <span ng-pluralize count="createClientForm.$error.required.length"
+							when="{'1': '1 required field is missing.', 'other': '{} required fields are missing.'}"> </span>
+					</p>
+				</div>
+			</div>
 
-		<div class="panel-body">
-			<form class="form-horizontal" role="form" name="createClientForm">
-				<div class="form-group">
+			<div class="panel-body">
+				<div class="form-group" ng-class="{'has-error': createClientForm.name.$error.required}">
 					<label for="name" class="col-lg-2 control-label">Name</label>
 					<div class="col-lg-4">
-						<input type="text" class="form-control" id="name" ng-model="currentClient.name" placeholder="Enter Name" ng-required>
+						<input type="text" class="form-control" id="name" name="name" ng-model="currentClient.name" placeholder="Enter Name" required>
 					</div>
 				</div>
 				<div class="form-group">
 					<div class="col-lg-offset-2 col-lg-4">
 						<div class="checkbox">
-							<label class="control-label" for="lunchRequired"> <input id="lunchRequired" type="checkbox"
+							<label class="control-label" for="lunchRequired"> <input id="lunchRequired" name="lunchRequired" type="checkbox"
 								ng-model="currentClient.lunchRequired"> Lunch Required
 							</label>
 						</div>
 					</div>
 				</div>
-				<div class="form-group">
+				<div class="form-group" ng-class="{'has-error': createClientForm.startDayOfWeek.$error.required}">
 					<div class="col-lg-offset-2 col-lg-4">
 						<div class="checkbox">
-							<label class="control-label" for="startDayOfWeek">Start Day of Week <select ng-model="currentClient.startDayOfWeek"
-								class="form-control" ng-required ng-options="c.code as c.description for c in dayOfWeekArr">
+							<label class="control-label" for="startDayOfWeek">Start Day of Week <select id="startDayOfWeek" name="startDayOfWeek"
+								ng-model="currentClient.startDayOfWeek" class="form-control" required ng-options="c.code as c.description for c in dayOfWeekArr">
 									<option value="">-- start day --</option>
 							</select>
 							</label>
@@ -52,14 +60,30 @@
 				</div>
 				<div class="form-group">
 					<div class="col-lg-offset-2 col-lg-4">
-						<button type="button" class="btn btn-primary" ng-click="save(currentClient)">Save</button>
-						<button type="button" class="btn btn-default" ng-click="edit=false;">Cancel</button>
+						<button type="button" id="save" class="btn " ng-class="{'btn-primary': createClientForm.$valid}"
+							ng-disabled="!(createClientForm.$valid && createClientForm.$dirty)" ng-click="save(currentClient)">Save</button>
+						<button type="button" id="cancel" class="btn btn-default" ng-click="unset();">Cancel</button>
 					</div>
 				</div>
-			</form>
 
+				<pre ng-cloak ng-show="debug">
+createClientForm.$pristine = {{createClientForm.$pristine}}
+createClientForm.$dirty = {{createClientForm.$dirty}}
+createClientForm.name.$valid = {{createClientForm.name.$valid}}
+createClientForm.name.$error = {{createClientForm.name.$error}}
+createClientForm.name.$error.required = {{createClientForm.name.$error.required}}
+createClientForm.$valid = {{createClientForm.$valid}}
+$valid && &dirty = {{ (createClientForm.$valid && createClientForm.$dirty) }}
+!($valid && &dirty) = {{ !(createClientForm.$valid && createClientForm.$dirty) }}
+createClientForm.$error.required (json) = {{createClientForm.$error.required | json}}
+createClientForm.$error.required.length = {{createClientForm.$error.required.length}}
+createClientForm.$error.required !! = {{!!createClientForm.$error.required}}
+createClientForm = {{createClientForm|json}}
+</pre>
+
+			</div>
 		</div>
-	</div>
+	</form>
 
 	<div ng-cloak ng-show="debug" class="well">
 		<pre>currentClient={{currentClient | json}}
