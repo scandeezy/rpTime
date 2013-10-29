@@ -1,68 +1,70 @@
 <!-- $scope is AdminClientCtrl -->
 <div>
 	<div id="clients" class="panel panel-default" ng-hide="edit">
-		<div class="panel-heading">Clients
-			<span class="btn-group"> 
-				<a type="button" class="btn btn-sm btn-default" ng-click="set();">New</a>
-			</span>		
+		<div class="panel-heading">
+			Clients <span class="btn-group">
+				<button type="button" class="btn btn-sm btn-default" ng-click="set();">New</button>
+			</span>
 		</div>
 		<div class="panel-body">
 			<ul>
-				<li ng-repeat="client in clients | orderBy:'name'">
-					<span class="btn-group">
-						<a type="button" class="btn btn-sm btn-default" ng-click="set(client)">Edit</a>
-						<a type="button" class="btn btn-sm btn-default" ng-click="remove(client);" ng-hide="!debug">Delete</a>
-					</span>
-					{{client.name}}
-				</li>
+				<li ng-repeat="client in clients | orderBy:'name'"><span class="btn-group">
+						<button type="button" class="btn btn-sm btn-default" ng-click="set(client)">Edit</button>
+						<button type="button" class="btn btn-sm btn-default" ng-click="remove(client);" ng-hide="!debug">Delete</button>
+				</span> {{client.name}}</li>
 			</ul>
 		</div>
 	</div>
 
 	<div id="createClient" class="panel panel-default" ng-show="edit">
 		<div class="panel-heading">
-			<a ng-click="edit=false;">&lt;</a> 
-			<span ng-show="currentClient.id">Edit Client - {{currentClient.name}}</span>
-			<span ng-hide="currentClient.id">Create Client</span>
+			<a ng-click="edit=false;">&lt;</a> <span ng-show="currentClient.id">Edit Client - {{currentClient.name}}</span> <span
+				ng-hide="currentClient.id">Create Client</span>
 		</div>
-		
-		<div class="panel-body">
-			<form role="form" name="createClientForm">
-				<div class="form-group">
-				
-					<label for="name">Name</label>
-					<input type="text" class="form-control" id="name" ng-model="currentClient.name" placeholder="Enter Name">
-					
-					<label for="lunchRequired">Lunch Required</label>
-                                        <select ng-model="currentClient.lunchRequired" class="form-control">
-                                            <option value="true" {true : "default", false : ""}[currentClient.lunchRequired==true]>Yes</option>
-                                            <option value="false" {true : "default", false : ""}[currentClient.lunchRequired==false]>No</option>
-                                        </select>
-			
-					<label for="startDayOfWeek">Start Day of Week</label>
-                                        <select ng-model="currentClient.startDayOfWeek" class="form-control">
-                                            <option value="0" {true : "default", false : ""}[currentClient.startDayOfWeek==0]>Sunday</option>
-                                            <option value="1" {true : "default", false : ""}[currentClient.startDayOfWeek==1]>Monday</option>
-                                            <option value="2" {true : "default", false : ""}[currentClient.startDayOfWeek==2]>Tuesday</option>
-                                            <option value="3" {true : "default", false : ""}[currentClient.startDayOfWeek==3]>Wednesday</option>
-                                            <option value="4" {true : "default", false : ""}[currentClient.startDayOfWeek==4]>Thursday</option>
-                                            <option value="5" {true : "default", false : ""}[currentClient.startDayOfWeek==5]>Friday</option>
-                                            <option value="6" {true : "default", false : ""}[currentClient.startDayOfWeek==6]>Saturday</option>
-                                        </select>
 
-					<div>
-						<a type="button" class="btn btn-primary" ng-click="save(currentClient)">Save</a>
-						<a type="button" class="btn btn-default" ng-click="edit=false;">Cancel</a>
+		<div class="panel-body">
+			<form class="form-horizontal" role="form" name="createClientForm">
+				<div class="form-group">
+					<label for="name" class="col-lg-2 control-label">Name</label>
+					<div class="col-lg-4">
+						<input type="text" class="form-control" id="name" ng-model="currentClient.name" placeholder="Enter Name" ng-required>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-lg-offset-2 col-lg-4">
+						<div class="checkbox">
+							<label class="control-label" for="lunchRequired"> <input id="lunchRequired" type="checkbox"
+								ng-model="currentClient.lunchRequired"> Lunch Required
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-lg-offset-2 col-lg-4">
+						<div class="checkbox">
+							<label class="control-label" for="startDayOfWeek">Start Day of Week <select ng-model="currentClient.startDayOfWeek"
+								class="form-control" ng-required ng-options="c.code as c.description for c in dayOfWeekArr">
+									<option value="">-- start day --</option>
+							</select>
+							</label>
+						</div>
+					</div>
+				</div>
+				<div class="form-group">
+					<div class="col-lg-offset-2 col-lg-4">
+						<button type="button" class="btn btn-primary" ng-click="save(currentClient)">Save</button>
+						<button type="button" class="btn btn-default" ng-click="edit=false;">Cancel</button>
 					</div>
 				</div>
 			</form>
+
 		</div>
 	</div>
 
 	<div ng-cloak ng-show="debug" class="well">
-		<pre>clients={{clients | json}} </pre>
-		<br />
-		<pre>currentClient={{currentClient | json}}</pre>
+		<pre>currentClient={{currentClient | json}}
+
+clients={{clients | json}}</pre>
 	</div>
 
 </div>

@@ -1,10 +1,11 @@
 'use strict';
 (function() {
 
-	var module = angular.module('myApp.controllers', []);
+	var module = angular.module('myApp.controllers', ['myApp.filters']);
 
-	module.controller('MainCtrl', [ '$log', '$scope', '$location',//
-	function MainCtrlFn($log, $scope, $location) {
+	module.controller('MainCtrl', [ '$log', '$scope', '$location', 'dayOfWeekArr', //
+	function MainCtrlFn($log, $scope, $location, dayOfWeekArr) {
+		$scope.dayOfWeekArr = dayOfWeekArr;
 		$scope.debug = (($.cookie('debug') == 'true') ? true : false);
 		$log.info('MainCtrl init', $location, $scope.debug);
 

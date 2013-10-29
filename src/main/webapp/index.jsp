@@ -83,6 +83,7 @@ request = <%=request%></pre>
 			<script src="/resources/js/directives.js"></script>
 			<!-- pre-load templates into angular's $templateCache (see: http://stackoverflow.com/a/12346901/237225) -->
 			<script type="text/ng-template" src="/resources/partials/client.html"></script>
+			<script type="text/ng-template" src="/resources/partials/contract.html"></script>
 			<script type="text/ng-template" src="/resources/partials/history.html"></script>
 			<script type="text/ng-template" src="/resources/partials/landing.html"></script>
 			<script type="text/ng-template" src="/resources/partials/timesheet.html"></script>
