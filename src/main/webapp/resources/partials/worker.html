@@ -26,36 +26,42 @@
 			<div class="panel-heading">
 				<span ng-show="currentWorker.id">Edit Worker - {{currentWorker.lastName}}, {{currentWorker.firstName}}</span>
 				<span ng-hide="currentWorker.id">Create Worker</span>
+				<div class="pull-right">
+					<p ng-show="!createWorkerForm.$valid" class="text-danger">
+						Warning: <span ng-pluralize count="createWorkerForm.$error.required.length"
+							when="{'1': '1 required field is missing.', 'other': '{} required fields are missing.'}"> </span>
+					</p>
+				</div>
 			</div>
 			<div class="panel-body">
-				<div class="form-group">
+				<div class="form-group" ng-class="{'has-error': createWorkerForm.firstName.$error.required}">
 					<label for="firstName" class="col-lg-2 control-label">First Name</label>
 					<div class="col-lg-4">
-						<input type="text" class="form-control" id="firstName" ng-model="currentWorker.firstName" placeholder="First Name (i.e., John)">
+						<input type="text" class="form-control" id="firstName" name="firstName" ng-model="currentWorker.firstName" placeholder="First Name (i.e., John)" required>
 					</div>
 				</div>
-				<div class="form-group">
+				<div class="form-group" ng-class="{'has-error': createWorkerForm.lastName.$error.required}">
 					<label for="lastName" class="col-lg-2 control-label">Last Name</label>
 					<div class="col-lg-4">
-						<input type="text" class="form-control" id="lastName" ng-model="currentWorker.lastName" placeholder="Last Name (i.e., Smith)">
+						<input type="text" class="form-control" id="lastName" name="lastName" ng-model="currentWorker.lastName" placeholder="Last Name (i.e., Smith)" required>
 					</div>
 				</div>
-				<div class="form-group">
+				<div class="form-group" ng-class="{'has-error': createWorkerForm.email.$error.required, 'has-warning': !createWorkerForm.email.$valid}">
 					<label for="email" class="col-lg-2 control-label">Email</label>
 					<div class="col-lg-4">
-						<input type="email" class="form-control" id="email" ng-model="currentWorker.email" placeholder="john@smith.com">
+						<input type="email" class="form-control" id="email" name="email" ng-model="currentWorker.email" placeholder="john@smith.com" required>
 					</div>
 				</div>
 				<div class="form-group">
 					<label for="start" class="col-lg-2 control-label">Start Date</label>
 					<div class="col-lg-4">
-						<input type="date" class="form-control" id="start" ng-model="currentWorker.start" placeholder="YYYY-MM-DD">
+						<input type="date" class="form-control" id="start" name="start" ng-model="currentWorker.start" placeholder="YYYY-MM-DD">
 					</div>
 				</div>
 				<div class="form-group">
 					<div class="col-lg-offset-2 col-lg-4">
 						<div class="checkbox">
-							<label class="control-label" for="hourly"> <input id="hourly" type="checkbox" ng-model="currentWorker.hourly"> Hourly
+							<label class="control-label" for="hourly"> <input id="hourly" name="hourly" type="checkbox" ng-model="currentWorker.hourly"> Hourly
 							</label>
 						</div>
 					</div>
@@ -69,6 +75,22 @@
 				</div>
 			</div>
 		</div>	
+		
+		<pre ng-cloak ng-show="debug">
+createWorkerForm.$pristine = {{createWorkerForm.$pristine}}
+createWorkerForm.$dirty = {{createWorkerForm.$dirty}}
+createWorkerForm.name.$valid = {{createWorkerForm.name.$valid}}
+createWorkerForm.name.$error = {{createWorkerForm.name.$error}}
+createWorkerForm.name.$error.required = {{createWorkerForm.name.$error.required}}
+createWorkerForm.$valid = {{createWorkerForm.$valid}}
+$valid && &dirty = {{ (createWorkerForm.$valid && createWorkerForm.$dirty) }}
+!($valid && &dirty) = {{ !(createWorkerForm.$valid && createWorkerForm.$dirty) }}
+createWorkerForm.$error.required (json) = {{createWorkerForm.$error.required | json}}
+createWorkerForm.$error.required.length = {{createWorkerForm.$error.required.length}}
+createWorkerForm.$error.required !! = {{!!createWorkerForm.$error.required}}
+createWorkerForm = {{createWorkerForm|json}}
+</pre>
+		
 	</form>
 
 	<div ng-cloak ng-show="debug" class="well"><pre>edit={{edit}}
