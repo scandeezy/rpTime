@@ -27,12 +27,10 @@
 				<span ng-show="currentContract.id"><h4>Edit Contract</h4> {{clientsMap[currentContract.client].name}},
 					{{workersMap[currentContract.worker].firstName}} {{workersMap[currentContract.worker].lastName}} </span> <span ng-hide="currentContract.id"><h4>Create
 						Contract</h4></span>
-				<div class="pull-right">
-					<p ng-show="!createContractForm.$valid" class="text-danger">
-						Warning: <span ng-pluralize count="createContractForm.$error.required.length"
-							when="{'1': '1 required field is missing.', 'other': '{} required fields are missing.'}"> </span>
-					</p>
-				</div>
+				<p ng-show="!createContractForm.$valid" class="text-danger lead">
+					Warning: <span ng-pluralize count="createContractForm.$error.required.length"
+						when="{'1': '1 required field is missing.', 'other': '{} required fields are missing.'}"> </span>
+				</p>
 			</div>
 			<div class="panel-body">
 

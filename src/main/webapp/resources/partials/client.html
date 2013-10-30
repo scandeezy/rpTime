@@ -26,12 +26,10 @@
 			<div class="panel-heading">
 				<span ng-show="currentClient.id"><h4>Edit Client</h4>{{currentClient.name}}</span> <span ng-hide="currentClient.id"><h4>Create
 						Client</h4></span>
-				<div class="pull-right">
-					<p ng-show="!createClientForm.$valid" class="text-danger">
-						Warning: <span ng-pluralize count="createClientForm.$error.required.length"
-							when="{'1': '1 required field is missing.', 'other': '{} required fields are missing.'}"> </span>
-					</p>
-				</div>
+				<p ng-show="!createClientForm.$valid" class="text-danger lead">
+					Warning: <span ng-pluralize count="createClientForm.$error.required.length"
+						when="{'1': '1 required field is missing.', 'other': '{} required fields are missing.'}"> </span>
+				</p>
 			</div>
 
 			<div class="panel-body">
