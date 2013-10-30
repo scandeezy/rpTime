@@ -2,12 +2,14 @@
 <div>
 	<div id="workers" class="panel panel-default" ng-hide="edit">
 		<div class="panel-heading">
-			<h4>Workers</h4>
-			<div class="pull-right">
-				<span class="btn-group">
-					<button type="button" id="new" class="btn btn-xs btn-primary" ng-click="set();">New</button>
-				</span>
-			</div>
+			<h4>
+				Workers
+				<div class="pull-right">
+					<span class="btn-group">
+						<button type="button" id="new" class="btn btn-xs btn-primary" ng-click="set();">New</button>
+					</span>
+				</div>
+			</h4>
 		</div>
 		<div class="panel-body">
 			<ul>
@@ -76,22 +78,6 @@
 				</div>
 			</div>
 		</div>	
-		
-		<pre ng-cloak ng-show="debug">
-createWorkerForm.$pristine = {{createWorkerForm.$pristine}}
-createWorkerForm.$dirty = {{createWorkerForm.$dirty}}
-createWorkerForm.name.$valid = {{createWorkerForm.name.$valid}}
-createWorkerForm.name.$error = {{createWorkerForm.name.$error}}
-createWorkerForm.name.$error.required = {{createWorkerForm.name.$error.required}}
-createWorkerForm.$valid = {{createWorkerForm.$valid}}
-$valid && &dirty = {{ (createWorkerForm.$valid && createWorkerForm.$dirty) }}
-!($valid && &dirty) = {{ !(createWorkerForm.$valid && createWorkerForm.$dirty) }}
-createWorkerForm.$error.required (json) = {{createWorkerForm.$error.required | json}}
-createWorkerForm.$error.required.length = {{createWorkerForm.$error.required.length}}
-createWorkerForm.$error.required !! = {{!!createWorkerForm.$error.required}}
-createWorkerForm = {{createWorkerForm|json}}
-</pre>
-		
 	</form>
 
 	<div ng-cloak ng-show="debug" class="well"><pre>edit={{edit}}

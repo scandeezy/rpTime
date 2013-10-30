@@ -1,13 +1,15 @@
-<!-- $scope is AdminClientCtrl -->
+<!-- current $scope is AdminClientCtrl -->
 <div>
 	<div id="clients" class="panel panel-default" ng-hide="edit">
 		<div class="panel-heading">
-			<h4>Clients</h4>
-			<div class="pull-right">
-				<span class="btn-group">
-					<button type="button" id="new" class="btn btn-xs btn-primary" ng-click="set();">New</button>
-				</span>
-			</div>
+			<h4>
+				Clients
+				<div class="pull-right">
+					<span class="btn-group">
+						<button type="button" id="new" class="btn btn-xs btn-primary" ng-click="set();">New</button>
+					</span>
+				</div>
+			</h4>
 		</div>
 		<div class="panel-body">
 			<ul>
@@ -22,7 +24,8 @@
 	<form class="form-horizontal" role="form" name="createClientForm" ng-show="edit">
 		<div id="createClient" class="panel panel-default">
 			<div class="panel-heading">
-				<span ng-show="currentClient.id"><h4>Edit Client</h4>{{currentClient.name}}</span> <span ng-hide="currentClient.id"><h4>Create Client</h4></span>
+				<span ng-show="currentClient.id"><h4>Edit Client</h4>{{currentClient.name}}</span> <span ng-hide="currentClient.id"><h4>Create
+						Client</h4></span>
 				<div class="pull-right">
 					<p ng-show="!createClientForm.$valid" class="text-danger">
 						Warning: <span ng-pluralize count="createClientForm.$error.required.length"

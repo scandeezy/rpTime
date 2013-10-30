@@ -1,33 +1,32 @@
+<!-- current $scope is AdminContractCtrl -->
 <div>
 	<div id="contracts" class="panel panel-default" ng-hide="edit">
 		<div class="panel-heading">
-			<h4>Contracts</h4>
-			<div class="pull-right">
-				<span class="btn-group">
-					<button type="button" id="new" class="btn btn-xs btn-primary" ng-click="set();">New</button>
-				</span>
-			</div>
+			<h4>
+				Contracts
+				<div class="pull-right">
+					<span class="btn-group">
+						<button type="button" id="new" class="btn btn-xs btn-primary" ng-click="set();">New</button>
+					</span>
+				</div>
+			</h4>
 		</div>
 		<div class="panel-body">
 			<ul>
-				<li ng-repeat="contract in contracts | orderBy:'end'">
-					<span class="btn-group">
+				<li ng-repeat="contract in contracts | orderBy:'end'"><span class="btn-group">
 						<button type="button" id="edit" class="btn btn-sm btn-default" ng-click="set(contract);">Edit</button>
-					</span>
-					{{clientsMap[contract.client].name}}, {{workersMap[contract.worker].firstName}} {{workersMap[contract.worker].lastName}}
-					<span ng-show="contract.start">- {{contract.start}}</span>
-					<span ng-show="contract.end">- {{contract.end}}</span>
-				</li>
+				</span> {{clientsMap[contract.client].name}}, {{workersMap[contract.worker].firstName}} {{workersMap[contract.worker].lastName}} <span
+					ng-show="contract.start">- {{contract.start}}</span> <span ng-show="contract.end">- {{contract.end}}</span></li>
 			</ul>
 		</div>
 	</div>
-	
+
 	<form class="form-horizontal" role="form" name="createContractForm">
 		<div id="createContract" class="panel panel-default" ng-show="edit">
 			<div class="panel-heading">
-				<span ng-show="currentContract.id"><h4>Edit Contract</h4> {{clientsMap[currentContract.client].name}}, {{workersMap[currentContract.worker].firstName}} {{workersMap[currentContract.worker].lastName}}
-				</span>
-				<span ng-hide="currentContract.id"><h4>Create Contract</h4></span>
+				<span ng-show="currentContract.id"><h4>Edit Contract</h4> {{clientsMap[currentContract.client].name}},
+					{{workersMap[currentContract.worker].firstName}} {{workersMap[currentContract.worker].lastName}} </span> <span ng-hide="currentContract.id"><h4>Create
+						Contract</h4></span>
 				<div class="pull-right">
 					<p ng-show="!createContractForm.$valid" class="text-danger">
 						Warning: <span ng-pluralize count="createContractForm.$error.required.length"
@@ -36,7 +35,7 @@
 				</div>
 			</div>
 			<div class="panel-body">
-			
+
 				<div class="form-group" ng-class="{'has-error': createContractForm.worker.$error.required}">
 					<label for="worker" class="col-lg-2 control-label">Worker</label>
 					<div class="col-lg-4">
@@ -64,7 +63,8 @@
 				<div class="form-group" ng-class="{'has-error': createContractForm.startDate.$error.required}">
 					<label for="startDate" class="col-lg-2 control-label">Start Date</label>
 					<div class="col-lg-4">
-						<input type="date" class="form-control" id="startDate" name="startDate" ng-model="currentContract.startDate" placeholder="YYYY-MM-DD" required>
+						<input type="date" class="form-control" id="startDate" name="startDate" ng-model="currentContract.startDate" placeholder="YYYY-MM-DD"
+							required>
 					</div>
 				</div>
 				<div class="form-group">
@@ -81,9 +81,9 @@
 					</div>
 				</div>
 			</div>
-		</div>	
-		
-				<pre ng-cloak ng-show="debug">
+		</div>
+
+		<pre ng-cloak ng-show="debug">
 createContractForm.$pristine = {{createContractForm.$pristine}}
 createContractForm.$dirty = {{createContractForm.$dirty}}
 createContractForm.worker.$valid = {{createContractForm.worker.$valid}}
@@ -97,10 +97,12 @@ createContractForm.$error.required.length = {{createContractForm.$error.required
 createContractForm.$error.required !! = {{!!createContractForm.$error.required}}
 createContractForm = {{createContractForm|json}}
 </pre>
-		
+
 	</form>
 
-	<div ng-cloak ng-show="debug" class="well"><pre>contracts={{contracts | json}}
-currentContract={{currentContract | json}}</pre></div>
+	<div ng-cloak ng-show="debug" class="well">
+		<pre>contracts={{contracts | json}}
+currentContract={{currentContract | json}}</pre>
+	</div>
 
 </div>
