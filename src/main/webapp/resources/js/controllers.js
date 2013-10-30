@@ -21,24 +21,30 @@
 			$scope.isAdmin = bool; // true if Admin, false if User
 		};
 
-		$scope.doSave = function doSaveFn(svc, obj, updateFn, arr) {
+		$scope.doSave = function doSaveFn(svc, obj, updateFn, arr, afterSaveFn) {
 			$log.info("dosave:",[svc, obj, updateFn, arr]);
 			var objJson = angular.toJson(obj);
 			if(arr && arr.indexOf(obj) != null ){
 				arr.push[obj];
 			}
-			svc.save(objJson, function saveSuccessFn(data) {
+			svc.save(obj, function saveSuccessFn(data) {
 				$log.info("saved data:", data);
 				$log.info("do ($broadcast) update '" + updateFn + "'");
 				$scope.$broadcast(updateFn);
+				if(afterSaveFn){
+					afterSaveFn();
+				}
 			});
 		};
 
-		$scope.doRemove = function doRemoveFn(svc, obj, updateFn) {
+		$scope.doRemove = function doRemoveFn(svc, obj, updateFn, afterUpdateFn) {
 			$log.info("deleting:", obj);
 			svc.remove(obj, function successFn() {
 				$log.info("do ($broadcast) update '" + updateFn + "'");
 				$scope.$broadcast(updateFn);
+				if(afterUpdateFn){
+					afterUpdateFn();
+				}
 			});
 		};
 
