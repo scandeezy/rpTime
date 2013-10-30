@@ -13,40 +13,37 @@
 		</div>
 		<div class="panel-body">
 			<ul>
-				<li ng-repeat="worker in workers | orderBy:'lastName'">
-					<span class="btn-group">
+				<li ng-repeat="worker in workers | orderBy:'lastName'"><span class="btn-group">
 						<button type="button" id="edit-{{$id}}" class="btn btn-sm btn-default" ng-click="set(worker);">Edit</button>
-					</span>
-					{{worker.lastName}}, {{worker.firstName}} 
-					<span ng-show="worker.email">- {{worker.email}}</span>
-				</li>
+						<button type="button" id="delete-{{$id}}" class="btn btn-sm btn-default" ng-click="remove(worker);" ng-hide="!debug">Delete</button>
+				</span> {{worker.lastName}}, {{worker.firstName}} <span class="text-muted" ng-show="worker.email">&nbsp;&nbsp;&nbsp; {{worker.email}}</span></li>
 			</ul>
 		</div>
 	</div>
-	
+
 	<form class="form-horizontal" role="form" name="createWorkerForm">
 		<div id="createWorker" class="panel panel-default" ng-show="edit">
 			<div class="panel-heading">
-				<span ng-show="currentWorker.id"><h4>Edit Worker</h4> {{currentWorker.lastName}}, {{currentWorker.firstName}}</span>
-				<span ng-hide="currentWorker.id"><h4>Create Worker</h4></span>
-				<div class="pull-right">
-					<p ng-show="!createWorkerForm.$valid" class="text-danger">
-						Warning: <span ng-pluralize count="createWorkerForm.$error.required.length"
-							when="{'1': '1 required field is missing.', 'other': '{} required fields are missing.'}"> </span>
-					</p>
-				</div>
+				<span ng-show="currentWorker.id"><h4>Edit Worker</h4> {{currentWorker.lastName}}, {{currentWorker.firstName}}</span> <span
+					ng-hide="currentWorker.id"><h4>Create Worker</h4></span>
+				<p ng-show="!createWorkerForm.$valid" class="text-danger lead">
+					Warning: <span ng-pluralize count="createWorkerForm.$error.required.length"
+						when="{'1': '1 required field is missing.', 'other': '{} required fields are missing.'}"> </span>
+				</p>
 			</div>
 			<div class="panel-body">
 				<div class="form-group" ng-class="{'has-error': createWorkerForm.firstName.$error.required}">
 					<label for="firstName" class="col-lg-2 control-label">First Name</label>
 					<div class="col-lg-4">
-						<input type="text" class="form-control" id="firstName" name="firstName" ng-model="currentWorker.firstName" placeholder="First Name (i.e., John)" required>
+						<input type="text" class="form-control" id="firstName" name="firstName" ng-model="currentWorker.firstName"
+							placeholder="First Name (i.e., John)" required>
 					</div>
 				</div>
 				<div class="form-group" ng-class="{'has-error': createWorkerForm.lastName.$error.required}">
 					<label for="lastName" class="col-lg-2 control-label">Last Name</label>
 					<div class="col-lg-4">
-						<input type="text" class="form-control" id="lastName" name="lastName" ng-model="currentWorker.lastName" placeholder="Last Name (i.e., Smith)" required>
+						<input type="text" class="form-control" id="lastName" name="lastName" ng-model="currentWorker.lastName"
+							placeholder="Last Name (i.e., Smith)" required>
 					</div>
 				</div>
 				<div class="form-group" ng-class="{'has-error': createWorkerForm.email.$error.required, 'has-warning': !createWorkerForm.email.$valid}">
@@ -64,7 +61,8 @@
 				<div class="form-group">
 					<div class="col-lg-offset-2 col-lg-4">
 						<div class="checkbox">
-							<label class="control-label" for="hourly"> <input id="hourly" name="hourly" type="checkbox" ng-model="currentWorker.hourly"> Hourly
+							<label class="control-label" for="hourly"> <input id="hourly" name="hourly" type="checkbox" ng-model="currentWorker.hourly">
+								Hourly
 							</label>
 						</div>
 					</div>
@@ -72,15 +70,19 @@
 				<div class="form-group">
 					<div class="col-lg-offset-2 col-lg-4">
 						<button type="button" id="save" class="btn " ng-class="{'btn-primary': createWorkerForm.$valid}"
-							ng-disabled="!(createWorkerForm.$valid && createWorkerForm.$dirty)" ng-click="save(currentClient)">Save</button>
+							ng-disabled="!(createWorkerForm.$valid && createWorkerForm.$dirty)" ng-click="save(currentWorker)">Save</button>
 						<button type="button" id="cancel" class="btn btn-default" ng-click="unset();">Cancel</button>
 					</div>
 				</div>
 			</div>
-		</div>	
+		</div>
 	</form>
 
-	<div ng-cloak ng-show="debug" class="well"><pre>edit={{edit}}
-workers={{workers | json}} </pre><br/><pre>currentWorker={{currentWorker | json}}</pre></div>
+	<div ng-cloak ng-show="debug" class="well">
+		<pre>edit={{edit}}
+workers={{workers | json}} </pre>
+		<br />
+		<pre>currentWorker={{currentWorker | json}}</pre>
+	</div>
 
 </div>
