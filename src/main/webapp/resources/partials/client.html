@@ -13,7 +13,7 @@
 		</div>
 		<div class="panel-body">
 			<ul>
-				<li ng-repeat="client in clients | orderBy:'name'"><span class="btn-group">
+				<li ng-repeat="(id,client) in clientsMap | orderBy:'name'"><span class="btn-group">
 						<button type="button" id="edit-{{$id}}" class="btn btn-sm btn-default" ng-click="set(client);">Edit</button>
 						<button type="button" id="delete-{{$id}}" class="btn btn-sm btn-default" ng-click="remove(client);" ng-hide="!debug">Delete</button>
 				</span> {{client.name}}</li>
@@ -61,13 +61,19 @@
 				</div>
 				<div class="form-group">
 					<div class="col-lg-offset-2 col-lg-4">
-						<button type="button" id="save" class="btn " ng-class="{'btn-primary': createClientForm.$valid}"
+						<button type="button" id="save" class="btn btn-primary"
 							ng-disabled="!(createClientForm.$valid && createClientForm.$dirty)" ng-click="save(currentClient)">Save</button>
 						<button type="button" id="cancel" class="btn btn-default" ng-click="unset();">Cancel</button>
 					</div>
 				</div>
 			</div>
 		</div>
+		<pre ng-cloak ng-show="debug">
+createClientForm={{createClientForm|json}}
+createClientForm.$pristine={{createClientForm.$pristine}}
+createClientForm.$valid={{createClientForm.$valid}}
+createClientForm.$dirty={{createClientForm.$dirty}}
+		</pre>
 	</form>
 
 	<div ng-cloak ng-show="debug" class="well">

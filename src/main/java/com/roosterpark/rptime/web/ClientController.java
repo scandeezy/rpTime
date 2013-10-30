@@ -8,6 +8,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import javax.inject.Inject;
 
@@ -32,6 +34,17 @@ public class ClientController {
 	@ResponseBody
 	public List<Client> getAll() {
 		return service.getAll();
+	}
+
+	@RequestMapping(value = "/idmap", method = GET)
+	@ResponseBody
+	public SortedMap<Long, Client> getMap() {
+		final List<Client> list = service.getAll();
+		final SortedMap<Long, Client> map = new TreeMap<Long, Client>();
+		for (Client obj : list) {
+			map.put(obj.getId(), obj);
+		}
+		return map;
 	}
 
 	@RequestMapping(value = "/{id}", method = GET)

@@ -13,7 +13,7 @@
 		</div>
 		<div class="panel-body">
 			<ul>
-				<li ng-repeat="worker in workers | orderBy:'lastName'"><span class="btn-group">
+				<li ng-repeat="(id, worker) in workersMap | orderBy:'lastName'"><span class="btn-group">
 						<button type="button" id="edit-{{$id}}" class="btn btn-sm btn-default" ng-click="set(worker);">Edit</button>
 						<button type="button" id="delete-{{$id}}" class="btn btn-sm btn-default" ng-click="remove(worker);" ng-hide="!debug">Delete</button>
 				</span> {{worker.lastName}}, {{worker.firstName}} <span class="text-muted" ng-show="worker.email">&nbsp;&nbsp;&nbsp; {{worker.email}}</span></li>

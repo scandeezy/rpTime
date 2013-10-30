@@ -26,12 +26,21 @@ public class ClientService {
 	}
 
 	public List<Client> getAll() {
+		LOGGER.debug("getAll Clients");
 		return ofy().load().type(Client.class).list();
 	}
 
 	public void set(Client item) {
+		// List<Client> all = getAll();
+		// LOGGER.debug("all.size = {}", all.size());
+
 		LOGGER.debug("Saving Client {}", item);
 		ofy().save().entity(item).now();
+		LOGGER.debug("Saved Client={}", item);
+
+		// all = getAll();
+		// LOGGER.debug("all.size = {}", all.size());
+
 	}
 
 	public void delete(Long id) {

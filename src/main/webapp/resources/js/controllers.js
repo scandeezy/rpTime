@@ -7,7 +7,7 @@
 	function MainCtrlFn($log, $scope, $location, dayOfWeekArr) {
 		$scope.dayOfWeekArr = dayOfWeekArr;
 		$scope.debug = (($.cookie('debug') == 'true') ? true : false);
-		$log.info('MainCtrl init', $location, $scope.debug);
+		// $log.info('MainCtrl init', $location, $scope.debug);
 
 		$scope.$watch(function locationPathPage$watchFn() {
 			return $location.path();
@@ -21,29 +21,47 @@
 			$scope.isAdmin = bool; // true if Admin, false if User
 		};
 
-		$scope.doSave = function doSaveFn(svc, obj, updateFn, arr, afterSaveFn) {
-			$log.info("dosave:",[svc, obj, updateFn, arr]);
-			var objJson = angular.toJson(obj);
-			if(arr && arr.indexOf(obj) != null ){
-				arr.push[obj];
+		$scope.doSave = function doSaveFn(args){//svc, obj, updateFn, map, afterSaveFn) {
+			var svc = args.service; // the service to invoke
+			var obj = args.obj; // the entity to save
+			var updateFn = args.updateFnName;
+			var map = args.map; // the $rootScope's map to update
+			var afterFn = args.afterFn;
+
+			$log.info("dosave:",[svc, obj, updateFn, map]);
+			//var objJson = angular.toJson(obj);
+			if(obj && obj.id && map){
+				map[obj.id] = obj;
 			}
 			svc.save(obj, function saveSuccessFn(data) {
 				$log.info("saved data:", data);
+				$log.info("map[id] before:", map[data.id]);
+				map[data.id] = data;
+				$log.info("mapp[id] after:", map[data.id]);
 				$log.info("do ($broadcast) update '" + updateFn + "'");
 				$scope.$broadcast(updateFn);
-				if(afterSaveFn){
-					afterSaveFn();
+				if(afterFn){
+					afterFn();
 				}
 			});
 		};
 
-		$scope.doRemove = function doRemoveFn(svc, obj, updateFn, afterUpdateFn) {
-			$log.info("deleting:", obj);
-			svc.remove(obj, function successFn() {
+		$scope.doRemove = function doRemoveFn(args){ //svc, obj, updateFn, map, afterUpdateFn) {
+			var svc = args.service; // the service to invoke
+			var id = args.id; // the id of the entity to delete
+			var updateFn = args.updateFnName;
+			var map = args.map; // the $rootScope's map to update
+			var afterFn = args.afterFn;
+			
+			$log.info("deleting id:", id);
+			if(id){
+				delete map[id];
+			}
+			svc.remove({id:id}, function successFn() {
 				$log.info("do ($broadcast) update '" + updateFn + "'");
 				$scope.$broadcast(updateFn);
-				if(afterUpdateFn){
-					afterUpdateFn();
+				if(afterFn){
+					afterFn();
 				}
 			});
 		};
@@ -67,7 +85,7 @@
 		$scope.edit = false;
 		$scope.currentTimeSheet = {};
 		$log.info('TimeSheetPageCtrl init', $scope);
-		$scope.dows = [ 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' ];
+		// use filters.js instead:  $scope.dows = [ 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' ];
 
 		function updateTimeSheetsFn() {
                         console.log("Updating time sheets....");

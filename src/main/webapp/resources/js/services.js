@@ -1,6 +1,6 @@
 'use strict';
 (function() {
-	
+
 	var module = angular.module('myApp.services', [ 'ngResource' ]);
 
 	module.factory('AdminClientService', [ '$resource',//
@@ -9,7 +9,35 @@
 			// methods 'get', 'save', 'remove' provided by default
 			getAll : {
 				method : 'GET',
-				isArray : true
+				params : {
+					id : 'idmap'
+				}
+			}
+		});
+	} ]);
+
+	module.factory('AdminContractService', [ '$resource',//
+	function AdminContractServiceFn($resource) {
+		return $resource('contract/:id', {}, {
+			// methods 'get', 'save', 'remove' provided by default
+			getAll : {
+				method : 'GET',
+				params : {
+					id : 'idmap'
+				}
+			}
+		});
+	} ]);
+
+	module.factory('AdminWorkerService', [ '$resource',//
+	function AdminWorkerServiceFn($resource) {
+		return $resource('worker/:id', {}, {
+			// methods 'get', 'save', 'remove' provided by default
+			getAll : {
+				method : 'GET',
+				params : {
+					id : 'idmap'
+				}
 			}
 		});
 	} ]);
@@ -22,40 +50,7 @@
 				method : 'GET',
 				params : {
 					id : 'new'
-				},
-                                isArray : true
-			},
-			getAll : {
-				method : 'GET',
-				isArray : true
-			}
-		});
-	} ]);
-
-	module.factory('AdminWorkerService', [ '$resource',//
-	function AdminWorkerServiceFn($resource) {
-		return $resource('worker/:id', {}, {
-			// methods 'get', 'save', 'remove' provided by default
-			getAll : {
-				method : 'GET',
-				isArray : true
-			},
-			getMap : {
-				method : 'GET',
-				params : {
-					id : '@_id'
 				}
- 			}
-		});
-	} ]);
-
-	module.factory('AdminContractService', [ '$resource',//
-	function AdminContractServiceFn($resource) {
-		return $resource('contract/:id', {}, {
-			// methods 'get', 'save', 'remove' provided by default
-			getAll : {
-				method : 'GET',
-				isArray : true
 			}
 		});
 	} ]);

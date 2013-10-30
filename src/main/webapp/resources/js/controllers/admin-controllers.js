@@ -3,58 +3,33 @@
 	// omit [] to use existing controller: http://stackoverflow.com/a/17289451/237225
 	var module = angular.module('myApp.controllers');
 
-	module.controller('AdminPageCtrl', [ '$log', '$scope', 'AdminClientService', 'AdminWorkerService', 'AdminContractService',//
-	function AdminPageCtrlFn($log, $scope, AdminClientService, AdminWorkerService, AdminContractService) {
-		$log.info('AdminPageCtrl init', $scope);
+	module.controller('AdminPageCtrl', [ // 
+	'$log', '$rootScope', '$scope', 'AdminClientService', 'AdminWorkerService', 'AdminContractService',//
+	function AdminPageCtrlFn($log, $rootScope, $scope, AdminClientService, AdminWorkerService, AdminContractService) {
+		// $log.info('AdminPageCtrl init', $scope);
 		$scope.setAdmin(true); // inherited fn from UserNavCtrl
-		$scope.clients = [];
-		$scope.clientsMap = {};
-		$scope.workers = [];
+		$rootScope.clientsMap = {};
+		$scope.contractsMap = {};
 		$scope.workersMap = {};
 
-		$scope.contracts = [];
-
 		function updateClientsFn() {
-			$log.info("updateClientsFn before:", $scope.clients.length);
+			$log.info("updateClientsFn before:", $rootScope.clientsMap);
 			AdminClientService.getAll(function successCGetAllFn(data) {
-				$log.info("inside for updateClientsFn with data size " + data.length);
-				$scope.clients = data;
-				$scope.clientsMap = {};
-				for (var index = 0; index < data.length; index++) {
-					var item = data[index];
-					$log.info("pushing reference to client " + item);
-					$scope.clientsMap[item.id] = item;
-				}
-				$log.info("updateClientsFn after: ", $scope.clients.length);
+				$log.info("inside for updateClientsFn with data", data);
+				$rootScope.clientsMap = data;
+				$log.info("updateClientsFn after: ", $rootScope.clientsMap);
 			});
 		}
 
 		function updateContractsFn() {
-			$log.info("updateContractsFn before:", $scope.contracts.length);
 			AdminContractService.getAll(function successConGetAllFn(data) {
-				$scope.contracts = data;
-				$log.info("updateContractsFn after:", $scope.contracts.length);
+				$scope.contractsMap = data;
 			});
 		}
 
 		function updateWorkersFn() {
-			$log.info("updateWorkersFn before:", $scope.workers.length);
-			AdminWorkerService.getMap({
-				id : 'idmap'
-			}, function successWGetAllFn(data) {
-				$scope.workersMap = data;
-			});
-
 			AdminWorkerService.getAll(function successWGetAllFn(data) {
-				$log.info("inside for updateWorkersFn with data size " + data.length);
-				$scope.workers = data;
-				$scope.workersMap = {};
-				for (var index = 0; index < data.length; index++) {
-					var item = data[index];
-					$log.info("pushing reference to worker " + item);
-					$scope.workersMap[item.id] = item;
-				}
-				$log.info("updateWorkersFn after:", $scope.workers.length);
+				$scope.workersMap = data;
 			});
 		}
 
@@ -69,9 +44,9 @@
 		$log.info('AdminPageCtrl init complete');
 	} ]);
 
-	module.controller('AdminClientCtrl', [ '$location', '$log', '$routeParams', '$scope', 'AdminClientService', //
-	function AdminClientCtrlFn($location, $log, $routeParams, $scope, AdminClientService) {
-		//$log.info('AdminClientCtrl init', $scope, $location, $routeParams);
+	module.controller('AdminClientCtrl', [ '$location', '$log', '$rootScope', '$routeParams', '$scope', 'AdminClientService', //
+	function AdminClientCtrlFn($location, $log, $rootScope, $routeParams, $scope, AdminClientService) {
+		// $log.info('AdminClientCtrl init', $scope, $location, $routeParams);
 		$scope.edit = false;
 		if ($routeParams.id) {
 			var id = $routeParams.id;
@@ -85,23 +60,34 @@
 		}
 
 		$scope.save = function saveFn(obj) {
-			$scope.doSave(AdminClientService, obj, 'updateClients', $scope.clients, function doAfterSaveFn(){
-				$scope.edit = false;
+			$scope.doSave({
+				service : AdminClientService,
+				obj : obj,
+				map : $rootScope.clientsMap,
+				updateFnName : 'updateClients',
+				afterFn : function doAfterFn() {
+					$scope.edit = false;
+				}
 			});
 		};
 
-		$scope.remove = function rempveFn(obj) {
-			$scope.doRemove(AdminClientService, {
-				id : obj.id
-			}, 'updateClients');
+		$scope.remove = function removeFn(obj) {
+			$scope.doRemove({
+				service : AdminClientService,
+				id : obj.id,
+				map : $rootScope.clientsMap,
+				updateFnName : 'updateClients',
+				afterFn : function doAfterFn() {
+					delete $rootScope.clientsMap[obj.id];
+				}
+			});
 		};
 
 		$scope.set = function setFn(obj) {
 			$scope.currentClient = angular.copy(obj, {});
 			$scope.edit = true;
 			$location.search('id', $scope.currentClient.id);
-			$scope.createClientForm.$pristine = true;
-			$scope.createClientForm.$dirty = false;
+			$scope.createClientForm.$setPristine();
 		};
 
 		$scope.unset = function unsetFn() {
@@ -113,7 +99,7 @@
 
 	module.controller('AdminContractCtrl', [ '$location', '$log', '$routeParams', '$scope', 'AdminContractService', //
 	function AdminContractCtrlFn($location, $log, $routeParams, $scope, AdminContractService) {
-		$log.info('AdminContractCtrl init', $scope);
+		// $log.info('AdminContractCtrl init', $scope);
 		$scope.edit = false;
 		$scope.currentContract = {};
 		if ($routeParams.id) {
@@ -128,7 +114,7 @@
 		}
 
 		$scope.save = function saveFn(obj) {
-			$scope.doSave(AdminContractService, obj, 'updateContracts', $scope.contracts, function doAfterSaveFn(){
+			$scope.doSave(AdminContractService, obj, 'updateContracts', $scope.contractsMap, function doAfterSaveFn() {
 				$scope.edit = false;
 			});
 		};
@@ -162,15 +148,15 @@
 				$scope.edit = true;
 			});
 		}
-		
-		$scope.remove = function rempveFn(obj) {
+
+		$scope.remove = function removeFn(obj) {
 			$scope.doRemove(AdminWorkerService, {
 				id : obj.id
 			}, 'updateWorkers');
 		};
-		
+
 		$scope.save = function saveFn(obj) {
-			$scope.doSave(AdminWorkerService, obj, 'updateWorkers', $scope.workers, function doAfterSaveFn(){
+			$scope.doSave(AdminWorkerService, obj, 'updateWorkers', $scope.workersMap, function doAfterSaveFn() {
 				$scope.edit = false;
 			});
 		};
