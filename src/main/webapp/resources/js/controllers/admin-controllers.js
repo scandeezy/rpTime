@@ -85,7 +85,7 @@
 		}
 
 		$scope.save = function saveFn(obj) {
-			$scope.doSave(AdminContractService, obj, 'updateClients', $scope.clients, function doAfterSaveFn(){
+			$scope.doSave(AdminClientService, obj, 'updateClients', $scope.clients, function doAfterSaveFn(){
 				$scope.edit = false;
 			});
 		};
