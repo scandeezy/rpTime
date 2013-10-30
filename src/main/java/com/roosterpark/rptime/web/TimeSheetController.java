@@ -1,5 +1,7 @@
 package com.roosterpark.rptime.web;
 
+import com.google.appengine.api.users.User;
+import com.google.appengine.api.users.UserService;
 import static org.springframework.http.HttpStatus.ACCEPTED;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -17,7 +19,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.roosterpark.rptime.model.TimeSheet;
+import com.roosterpark.rptime.model.Worker;
 import com.roosterpark.rptime.service.TimeSheetService;
+import com.roosterpark.rptime.service.WorkerService;
+import org.joda.time.LocalDate;
 
 @Controller
 @RequestMapping(value = "/timesheet")
@@ -25,11 +30,21 @@ public class TimeSheetController {
 
 	@Inject
 	TimeSheetService service;
+        
+	@Inject
+	UserService userService;
+	@Inject
+	WorkerService workerService;
 
 	@RequestMapping(value = "/new", method = GET)
 	@ResponseBody
-	public TimeSheet create() {
-		return service.create();
+	public List<TimeSheet> create() {
+                if(userService.isUserLoggedIn()) {
+                    User user = userService.getCurrentUser();
+                    Worker worker = workerService.getByEmail(user.getEmail());
+                    return service.createForWorkerDate(worker.getId(), new LocalDate());
+                }
+                throw new IllegalArgumentException("User not logged in.");
 	}
 
 	@RequestMapping(method = GET)

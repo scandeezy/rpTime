@@ -17,53 +17,50 @@ import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserService;
 import com.roosterpark.rptime.model.Contract;
 import com.roosterpark.rptime.model.TimeSheet;
-import com.roosterpark.rptime.model.Worker;
 
 @Named
 public class TimeSheetService {
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
 	@Inject
-	UserService userService;
-
-	@Inject
-	WorkerService workerService;
-
-	@Inject
 	ContractService contractService;
 
-	public TimeSheet create() {
-		final Worker w = workerService.getByUser(userService.getCurrentUser());
-		if (w != null) {
-			TimeSheet result = new TimeSheet(w.getId());
-			result.setStartDate(new LocalDate());
-			LOGGER.debug("created new TimeSheet for worker={},timesheet={}", w, result);
-			return result;
+	public List<TimeSheet> createForWorkerDate(Long workerId, LocalDate date) {
+                List<Contract> contracts = contractService.getActiveContractsForWorker(workerId, date);
+		if (!contracts.isEmpty()) {
+                        List<TimeSheet> sheets = new LinkedList<>();
+                        
+                        for(Contract contract : contracts) {
+                            TimeSheet result = new TimeSheet();
+                            result.setWorkerId(contract.getWorker());
+                            result.setClientId(contract.getClient());
+                            result.setStartDate(new LocalDate());
+                            result.setWeek(date.getWeekOfWeekyear());
+                            result.setYear(date.getYear());
+                            result.setStartDayOfWeek(contract.getStartDayOfWeek());
+                         
+                            set(result);
+                            sheets.add(result);
+                            LOGGER.debug("created new TimeSheet for worker={},timesheet={}", workerId, result);
+                        }
+                        
+                        return sheets;
 		}
-		throw new EntityNotFoundException("Required 'Worker' not found for '" + userService.getCurrentUser()
+		throw new EntityNotFoundException("Required 'Worker' not found for '" + workerId
 				+ "'.  Solution: create Worker on the /workers page.");
 	}
 
-	public List<TimeSheet> getAll() {
-		final User currentUser = userService.getCurrentUser();
-		final boolean isAdmin = userService.isUserAdmin();
-		if (currentUser != null) {
-			final String workerId = currentUser.getEmail();
-			if (isAdmin) {
-				LOGGER.warn("Getting TimeSheets for admin");
-				return ofy().load().type(TimeSheet.class).list();
-			} else {
-				LOGGER.warn("Getting TimeSheets for workerId={}", workerId);
-				return ofy().load().type(TimeSheet.class).filter("workerId", workerId).list();
-			}
-
-		}
-		return null;
+	public List<TimeSheet> getAllForWorker(Long workerId) {
+                LOGGER.warn("Getting TimeSheets for workerId={}", workerId);
+                return ofy().load().type(TimeSheet.class).filter("workerId", workerId).list();
 	}
+        
+        public List<TimeSheet> getAll() {
+                LOGGER.warn("Getting TimeSheets for admin");
+                return ofy().load().type(TimeSheet.class).list();
+        }
 
 	public TimeSheet getById(Long id) {
 		return ofy().load().type(TimeSheet.class).id(id).now();
@@ -84,6 +81,7 @@ public class TimeSheetService {
 	}
 
 	public void set(TimeSheet item) {
+                LOGGER.debug("Saving timesheet {}", item);
 		ofy().save().entity(item).now();
 	}
 
@@ -100,17 +98,6 @@ public class TimeSheetService {
 				.limit(limit)//
 				// .order("-date")//Descending date sort
 				.list();
-		if (CollectionUtils.isEmpty(result)) {
-			LOGGER.debug("creating new Sheet for worker={},date={},week={}", workerId, date, week);
-			List<Contract> contracts = contractService.getContractsForWorker(workerId);
-			result = new LinkedList<TimeSheet>();
-			// for (Contract contract : contracts) {
-			// TimeSheet s = new TimeSheet(workerId, contract., week);
-			// set(s); // persist;
-			// LOGGER.debug("adding sheet to list: sheet={}", s);
-			// result.add(s);
-			// }
-		}
 		LOGGER.debug("returning List<Sheet>={}", result);
 		return result;
 	}

@@ -25,12 +25,12 @@ public class TimeSheetTest extends BasicRptimeUnitTest {
 
 	@Before
 	public void setup() {
-		sheet = new TimeSheet(WORKER_ID);
+		sheet = new TimeSheet(WORKER_ID, CLIENT_ID, START_DATE);
 	}
 
 	@Test
 	public void constructorTest() {
-		sheet = new TimeSheet(WORKER_ID, CLIENT_ID, WEEK, START_DATE);
+		sheet = new TimeSheet(WORKER_ID, CLIENT_ID, START_DATE);
 		assertNotNull("Object null!", sheet);
 	}
 
@@ -62,18 +62,6 @@ public class TimeSheetTest extends BasicRptimeUnitTest {
 	public void startDayTest() {
 		sheet.setStartDate(START_DATE);
 		assertEquals("Start day doesn't match!", START_DATE, sheet.getStartDate());
-	}
-
-	@Test
-	public void hoursTest() {
-		sheet.setHours(HOURS);
-		assertArrayEquals("Hours doesn't match!", HOURS, sheet.getHours());
-	}
-
-	@Test
-	public void setHoursWithNullTest() {
-		sheet.setHours(null);
-		assertArrayEquals("Arrays don't match!", HOURS, sheet.getHours());
 	}
 
 	// @Test

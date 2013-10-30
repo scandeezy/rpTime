@@ -70,28 +70,48 @@
 		$scope.dows = [ 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' ];
 
 		function updateTimeSheetsFn() {
+                        console.log("Updating time sheets....");
 			TimeSheetService.getAll(function successFn(data) {
 				$scope.timesheets = data;
+                                $scope.timesheetMap = {};
+                                for(var index = 0; index < data.length; index++) {
+                                    var sheet = data[index];
+                                    console.log("Adding sheet " + sheet + " to map...");
+                                    var key = sheet.workerId + sheet.week + sheet.year;
+                                    if(typeof $scope.timesheetMap[key] == 'undefined')
+                                        $scope.timesheetMap[key] = [];
+                                    $scope.timesheetMap[key].push(sheet);
+                                    console.log("map is now size " + $scope.timesheetMap.length);
+                                }
 			});
 		}
 
 		$scope.set = function setFn(obj) {
 			if (obj) {
+                                if(obj instanceof Array)
+                                    $scope.currentTimeSheets = obj;
 				$scope.currentTimeSheet = obj;
 			} else {
 				TimeSheetService.create(function successFn(data) {
-					$scope.currentTimeSheet = data;
+					$scope.currentTimeSheets = data;
 				});
 			}
 			$scope.edit = true;
 		}
 
 		$scope.save = function saveFn(ts) {
-			$scope.doSave(TimeSheetService, ts, 'updateTimeSheets');
+                        if(ts instanceof Array) {
+                            for(var index = 0; index < ts.length; index++) {
+                                var sheet = ts[index];
+                                $scope.doSave(TimeSheetService, sheet, 'updateTimeSheets');
+                            }
+                        } else {
+                            $scope.doSave(TimeSheetService, ts, 'updateTimeSheets');
+                        }
 			$scope.edit = false;
 		};
 
-		$scope.$on('updateTimeSheets', this.updateTimeSheetsFn);
+		$scope.$on('updateTimeSheets', updateTimeSheetsFn);
 
 		updateTimeSheetsFn();
 

@@ -30,12 +30,11 @@ public class ContractService {
 		return ofy().load().type(Contract.class).filter(Contract.WORKER_KEY, worker).list();
 	}
 
-	public List<Contract> getActiveContractsForWorker(Long worker) {
+	public List<Contract> getActiveContractsForWorker(Long worker, LocalDate date) {
 		List<Contract> contracts = getContractsForWorker(worker);
 		List<Contract> active = new LinkedList<Contract>();
-		LocalDate now = new LocalDate();
 		for (Contract contract : contracts) {
-			if (contract.getStartDate().compareTo(now) < 1 && contract.getEndDate().compareTo(now) > -1)
+			if (contract.getStartDate().compareTo(date) < 1 && (contract.getEndDate() == null || contract.getEndDate().compareTo(date) > -1))
 				active.add(contract);
 		}
 
@@ -46,12 +45,11 @@ public class ContractService {
 		return ofy().load().type(Contract.class).filter(Contract.CLIENT_KEY, client).list();
 	}
 
-	public List<Contract> getActiveContractsForClient(Long client) {
+	public List<Contract> getActiveContractsForClient(Long client, LocalDate date) {
 		List<Contract> contracts = getContractsForClient(client);
 		List<Contract> active = new LinkedList<Contract>();
-		LocalDate now = new LocalDate();
 		for (Contract contract : contracts) {
-			if (contract.getStartDate().compareTo(now) < 1 && contract.getEndDate().compareTo(now) > -1)
+			if (contract.getStartDate().compareTo(date) < 1 && (contract.getEndDate() == null || contract.getEndDate().compareTo(date) > -1))
 				active.add(contract);
 		}
 

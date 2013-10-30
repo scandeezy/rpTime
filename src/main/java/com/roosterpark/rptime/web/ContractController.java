@@ -4,6 +4,7 @@ import com.roosterpark.rptime.model.Contract;
 import com.roosterpark.rptime.service.ContractService;
 import java.util.List;
 import javax.inject.Inject;
+import org.joda.time.LocalDate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,7 +22,7 @@ public class ContractController {
     @RequestMapping(value = "/worker/{workerId}/active", method = GET)
     @ResponseBody
     public List<Contract> getActiveByWorker(@PathVariable Long workerId) {
-        return service.getActiveContractsForWorker(workerId);
+        return service.getActiveContractsForWorker(workerId, new LocalDate());
     }
     
     @RequestMapping(value = "/worker/{workerId}", method = GET)
@@ -33,7 +34,7 @@ public class ContractController {
     @RequestMapping(value = "/client/{clientId}/active", method = GET)
     @ResponseBody
     public List<Contract> getActiveByClient(@PathVariable Long clientId) {
-        return service.getActiveContractsForClient(clientId);
+        return service.getActiveContractsForClient(clientId, new LocalDate());
     }
     
     @RequestMapping(value = "/client/{clientId}", method = GET)

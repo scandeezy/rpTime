@@ -8,14 +8,86 @@
 		</div>
 		<div class="panel-body">
 			<ul>
-				<li ng-repeat="timesheet in timesheets">
-					timesheet: <a ng-click="set(timesheet)">{{timesheet.id}}</a><span ng-show="timesheet.startDate"> ({{timesheet.startDate}})</span>
+				<li ng-repeat="(week, timesheets) in timesheetMap">
+					week <a ng-click="set(timesheets)">{{week}}</a>
 				</li>
 			</ul>
 		</div>
 	</div>
 	
 	<div id="createTimeSheet" class="panel panel-default" ng-show="edit">
+                <div ng-repeat="timesheet in currentTimeSheets">
+                    <div class="panel-heading">
+                            <a ng-click="edit=false;">&lt;</a> 
+                            <span ng-show="timesheet.id">Edit Timesheet {{timesheet.id}}</span>
+                    </div>
+                    <div class="panel-body">
+                            <form role="form" name="createTimeSheetForm">
+                                    <div class="row">
+                                            <div class="col-lg-2">
+                                                    <label for="startDate">Start Date
+                                                            <input type="date" id="startDate" class="form-control" placeholder="YYYY-MM-DD" ng-model="timesheet.startDate">
+                                                    </label>
+                                            </div>
+                                    </div>
+                                    <table class="table">
+                                            <thead>
+                                                    <tr class="row">
+                                                            <th ng-repeat="dow in dows">{{dow}}</th>
+                                                    </tr>
+                                            </thead>
+                                            <tbody>
+                                                    <tr class="row">
+                                                            <td>
+                                                                <ol>
+                                                                    <li ng-repeat="hour in timesheet.sundayHours"><input type="time" class="form-control input" ng-model="timesheet.sundayHours[$index]"></li>
+                                                                </ol>
+                                                            </td>
+                                                            <td>
+                                                                <ol>
+                                                                    <li ng-repeat="hour in timesheet.mondayHours"><input type="time" class="form-control input" ng-model="timesheet.mondayHours[$index]"></li>
+                                                                </ol>
+                                                            </td>
+                                                            <td>
+                                                                <ol>
+                                                                    <li ng-repeat="hour in timesheet.tuesdayHours"><input type="time" class="form-control input" ng-model="timesheet.tuesdayHours[$index]"></li>
+                                                                </ol>
+                                                            </td>
+                                                            <td>
+                                                                <ol>
+                                                                    <li ng-repeat="hour in timesheet.wednesdayHours"><input type="time" class="form-control input" ng-model="timesheet.wednesdayHours[$index]"></li>
+                                                                </ol>
+                                                            </td>
+                                                            <td>
+                                                                <ol>
+                                                                    <li ng-repeat="hour in timesheet.thursdayHours"><input type="time" class="form-control input" ng-model="timesheet.thursdayHours[$index]"></li>
+                                                                </ol>
+                                                            </td>
+                                                            <td>
+                                                                <ol>
+                                                                    <li ng-repeat="hour in timesheet.fridayHours"><input type="time" class="form-control input" ng-model="timesheet.fridayHours[$index]"></li>
+                                                                </ol>
+                                                            </td>
+                                                            <td>
+                                                                <ol>
+                                                                    <li ng-repeat="hour in timesheet.saturdayHours"><input type="time" class="form-control input" ng-model="timesheet.saturdayHours[$index]"></li>
+                                                                </ol>
+                                                            </td>
+                                                    </tr>
+                                            </tbody>
+                                    </table>
+                            </form>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                        <a type="button" class="btn btn-primary" ng-click="save(currentTimeSheets)">Save</a>
+                        <a type="button" class="btn btn-default" ng-click="edit=false;">Cancel</a>
+                </div>
+
+                <div class="well">
+                        <pre>currentTimeSheets={{currentTimeSheets | json}}</pre>
+                </div>
 		<div class="panel-heading">
 			<a ng-click="edit=false;">&lt;</a> 
 			<span ng-show="currentTimeSheet.id">Edit Timesheet {{currentTimeSheet.id}}</span>
