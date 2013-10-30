@@ -85,8 +85,9 @@
 		}
 
 		$scope.save = function saveFn(obj) {
-			$scope.doSave(AdminClientService, obj, 'updateClients', $scope.clients);
-			$scope.edit = false;
+			$scope.doSave(AdminContractService, obj, 'updateClients', $scope.clients, function doAfterSaveFn(){
+				$scope.edit = false;
+			});
 		};
 
 		$scope.remove = function rempveFn(obj) {
@@ -127,8 +128,9 @@
 		}
 
 		$scope.save = function saveFn(obj) {
-			$scope.doSave(AdminContractService, obj, 'updateContracts', $scope.contracts);
-			$scope.edit = false;
+			$scope.doSave(AdminContractService, obj, 'updateContracts', $scope.contracts, function doAfterSaveFn(){
+				$scope.edit = false;
+			});
 		};
 
 		$scope.set = function setFn(obj) {
@@ -161,9 +163,16 @@
 			});
 		}
 		
+		$scope.remove = function rempveFn(obj) {
+			$scope.doRemove(AdminWorkerService, {
+				id : obj.id
+			}, 'updateWorkers');
+		};
+		
 		$scope.save = function saveFn(obj) {
-			$scope.doSave(AdminWorkerService, obj, 'updateWorkers', $scope.workers);
-			$scope.edit = false;
+			$scope.doSave(AdminWorkerService, obj, 'updateWorkers', $scope.workers, function doAfterSaveFn(){
+				$scope.edit = false;
+			});
 		};
 
 		$scope.set = function setFn(obj) {
