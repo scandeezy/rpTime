@@ -1,7 +1,7 @@
 'use strict';
 (function() {
 
-	var module = angular.module('myApp.controllers', ['myApp.filters']);
+	var module = angular.module('myApp.controllers', [ 'myApp.filters' ]);
 
 	module.controller('MainCtrl', [ '$log', '$scope', '$location', 'dayOfWeekArr', //
 	function MainCtrlFn($log, $scope, $location, dayOfWeekArr) {
@@ -21,46 +21,60 @@
 			$scope.isAdmin = bool; // true if Admin, false if User
 		};
 
-		$scope.doSave = function doSaveFn(args){//svc, obj, updateFn, map, afterSaveFn) {
+		$scope.doSave = function doSaveFn(args) {
 			var svc = args.service; // the service to invoke
 			var obj = args.obj; // the entity to save
-			var updateFn = args.updateFnName;
 			var map = args.map; // the $rootScope's map to update
-			var afterFn = args.afterFn;
-
-			$log.info("dosave:",[svc, obj, updateFn, map]);
-			//var objJson = angular.toJson(obj);
-			if(obj && obj.id && map){
-				map[obj.id] = obj;
+			var updateFn = args.updateFnName; // optional function NAME
+			var afterFn = args.afterFn; // optional function
+			if (!(svc && obj && map)) {
+				$log.error("missing required args: ", args);
+				throw new Error("missing required args");
 			}
+			
+			$log.info("dosave:", [ svc, obj, updateFn, map ]);
+			if(obj.id){
+				$log.info("update id=", obj.id);
+				//TODO JJZ LOH 2013-10-30 svc.update({id:obj.id},)
+			}else{
+				//TODO JJZ LOH 2013-10-30  
+			}
+			
 			svc.save(obj, function saveSuccessFn(data) {
-				$log.info("saved data:", data);
+				$log.info("saved data id=", data.id);
+				$log.info("map before:", map);
 				$log.info("map[id] before:", map[data.id]);
 				map[data.id] = data;
-				$log.info("mapp[id] after:", map[data.id]);
+				$log.info("map[id] after:", map[data.id]);
 				$log.info("do ($broadcast) update '" + updateFn + "'");
 				$scope.$broadcast(updateFn);
-				if(afterFn){
+				if (afterFn) {
 					afterFn();
 				}
 			});
 		};
 
-		$scope.doRemove = function doRemoveFn(args){ //svc, obj, updateFn, map, afterUpdateFn) {
+		$scope.doRemove = function doRemoveFn(args) {
 			var svc = args.service; // the service to invoke
 			var id = args.id; // the id of the entity to delete
-			var updateFn = args.updateFnName;
 			var map = args.map; // the $rootScope's map to update
-			var afterFn = args.afterFn;
-			
-			$log.info("deleting id:", id);
-			if(id){
+			var updateFn = args.updateFnName; // optional function NAME
+			var afterFn = args.afterFn; // optional function
+			if (!(svc && id && map)) {
+				$log.error("missing required args: ", args);
+				throw new Error("missing required args");
+			}
+
+			$log.info("deleting id:", id, "map", map);
+			if (map && id) {
 				delete map[id];
 			}
-			svc.remove({id:id}, function successFn() {
+			svc.remove({
+				id : id
+			}, function successFn() {
 				$log.info("do ($broadcast) update '" + updateFn + "'");
 				$scope.$broadcast(updateFn);
-				if(afterFn){
+				if (afterFn) {
 					afterFn();
 				}
 			});
@@ -68,7 +82,6 @@
 
 		$log.info('MainCtrl init complete');
 	} ]);
-
 
 	module.controller('LandingPageCtrl', [ '$log', '$scope', //
 	function LandingPageCtrlFn($log, $scope) {
@@ -85,7 +98,7 @@
 		$scope.edit = false;
 		$scope.currentTimeSheet = {};
 		$log.info('TimeSheetPageCtrl init', $scope);
-		// use filters.js instead:  $scope.dows = [ 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' ];
+		// use filters.js instead: $scope.dows = [ 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' ];
 
 		function updateTimeSheetsFn() {
                         console.log("Updating time sheets....");

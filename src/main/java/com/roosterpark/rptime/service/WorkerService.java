@@ -38,6 +38,10 @@ public class WorkerService {
 	}
 
 	public List<Worker> getAll() {
+		// TODO: Cache better so we don't have to do this. Costly!
+		ofy().clear();
+		// ^ Argh
+
 		return ofy().load().type(Worker.class).list();
 	}
 

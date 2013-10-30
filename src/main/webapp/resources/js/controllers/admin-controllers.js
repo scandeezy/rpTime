@@ -9,8 +9,8 @@
 		// $log.info('AdminPageCtrl init', $scope);
 		$scope.setAdmin(true); // inherited fn from UserNavCtrl
 		$rootScope.clientsMap = {};
-		$scope.contractsMap = {};
-		$scope.workersMap = {};
+		$rootScope.contractsMap = {};
+		$rootScope.workersMap = {};
 
 		function updateClientsFn() {
 			$log.info("updateClientsFn before:", $rootScope.clientsMap);
@@ -23,13 +23,13 @@
 
 		function updateContractsFn() {
 			AdminContractService.getAll(function successConGetAllFn(data) {
-				$scope.contractsMap = data;
+				$rootScope.contractsMap = data;
 			});
 		}
 
 		function updateWorkersFn() {
 			AdminWorkerService.getAll(function successWGetAllFn(data) {
-				$scope.workersMap = data;
+				$rootScope.workersMap = data;
 			});
 		}
 
@@ -59,6 +59,17 @@
 			});
 		}
 
+		$scope.remove = function removeFn(obj) {
+			$scope.doRemove({
+				service : AdminClientService,
+				id : obj.id,
+				map : $rootScope.clientsMap,
+				afterFn : function doAfterFn() {
+					delete $rootScope.clientsMap[obj.id];
+				}
+			});
+		};
+
 		$scope.save = function saveFn(obj) {
 			$scope.doSave({
 				service : AdminClientService,
@@ -67,18 +78,6 @@
 				updateFnName : 'updateClients',
 				afterFn : function doAfterFn() {
 					$scope.edit = false;
-				}
-			});
-		};
-
-		$scope.remove = function removeFn(obj) {
-			$scope.doRemove({
-				service : AdminClientService,
-				id : obj.id,
-				map : $rootScope.clientsMap,
-				updateFnName : 'updateClients',
-				afterFn : function doAfterFn() {
-					delete $rootScope.clientsMap[obj.id];
 				}
 			});
 		};
@@ -97,8 +96,8 @@
 
 	} ]);
 
-	module.controller('AdminContractCtrl', [ '$location', '$log', '$routeParams', '$scope', 'AdminContractService', //
-	function AdminContractCtrlFn($location, $log, $routeParams, $scope, AdminContractService) {
+	module.controller('AdminContractCtrl', [ '$location', '$log', '$rootScope', '$routeParams', '$scope', 'AdminContractService', //
+	function AdminContractCtrlFn($location, $log, $rootScope, $routeParams, $scope, AdminContractService) {
 		// $log.info('AdminContractCtrl init', $scope);
 		$scope.edit = false;
 		$scope.currentContract = {};
@@ -113,9 +112,26 @@
 			});
 		}
 
+		$scope.remove = function removeFn(obj) {
+			$scope.doRemove({
+				service : AdminContractService,
+				id : obj.id,
+				map : $rootScope.contractsMap,
+				afterFn : function doAfterFn() {
+					delete $rootScope.contractsMap[obj.id];
+				}
+			});
+		};
+
 		$scope.save = function saveFn(obj) {
-			$scope.doSave(AdminContractService, obj, 'updateContracts', $scope.contractsMap, function doAfterSaveFn() {
-				$scope.edit = false;
+			$scope.doSave({
+				service : AdminContractService,
+				obj : obj,
+				map : $rootScope.contractsMap,
+				updateFnName : 'updateContracts',
+				afterFn : function doAfterFn() {
+					$scope.edit = false;
+				}
 			});
 		};
 
@@ -123,8 +139,7 @@
 			$scope.currentContract = angular.copy(obj, {});
 			$scope.edit = true;
 			$location.search('id', $scope.currentContract.id);
-			$scope.createContractForm.$pristine = true;
-			$scope.createContractForm.$dirty = false;
+			$scope.createContractForm.$setPristine();
 		};
 
 		$scope.unset = function unsetFn() {
@@ -134,8 +149,8 @@
 
 	} ]);
 
-	module.controller('AdminWorkerCtrl', [ '$location', '$log', '$routeParams', '$scope', 'AdminWorkerService', //
-	function AdminWorkerCtrlFn($location, $log, $routeParams, $scope, AdminWorkerService) {
+	module.controller('AdminWorkerCtrl', [ '$location', '$log', '$rootScope', '$routeParams', '$scope', 'AdminWorkerService', //
+	function AdminWorkerCtrlFn($location, $log, $rootScope, $routeParams, $scope, AdminWorkerService) {
 		// $log.info('AdminWorkerCtrl init', $scope);
 		$scope.edit = false;
 		if ($routeParams.id) {
@@ -150,14 +165,25 @@
 		}
 
 		$scope.remove = function removeFn(obj) {
-			$scope.doRemove(AdminWorkerService, {
-				id : obj.id
-			}, 'updateWorkers');
+			$scope.doRemove({
+				service : AdminWorkerService,
+				id : obj.id,
+				map : $rootScope.workersMap,
+				afterFn : function doAfterFn() {
+					delete $rootScope.workersMap[obj.id];
+				}
+			});
 		};
 
 		$scope.save = function saveFn(obj) {
-			$scope.doSave(AdminWorkerService, obj, 'updateWorkers', $scope.workersMap, function doAfterSaveFn() {
-				$scope.edit = false;
+			$scope.doSave({
+				service : AdminWorkerService,
+				obj : obj,
+				map : $rootScope.workersMap,
+				updateFnName : 'updateWorkers',
+				afterFn : function doAfterFn() {
+					$scope.edit = false;
+				}
 			});
 		};
 
@@ -165,8 +191,7 @@
 			$scope.currentWorker = angular.copy(obj, {});
 			$scope.edit = true;
 			$location.search('id', $scope.currentWorker.id);
-			$scope.createWorkerForm.$pristine = true;
-			$scope.createWorkerForm.$dirty = false;
+			$scope.createWorkerForm.$setPristine();
 		};
 
 		$scope.unset = function unsetFn() {

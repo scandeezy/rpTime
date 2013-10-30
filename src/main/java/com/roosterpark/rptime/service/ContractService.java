@@ -62,6 +62,10 @@ public class ContractService {
 	}
 
 	public List<Contract> getAll() {
+		// TODO: Cache better so we don't have to do this. Costly!
+		ofy().clear();
+		// ^ Argh
+
 		return ofy().load().type(Contract.class).list();
 	}
 
@@ -82,20 +86,25 @@ public class ContractService {
 		if (item.getStartDate() != null && item.getEndDate() != null && item.getStartDate().compareTo(item.getEndDate()) > -1)
 			throw new IllegalArgumentException("Start must be before end.");
 
-                if (item.getStartDate() == null)
-                    throw new IllegalArgumentException("Start date required for creating a new contract.");
-                
-                if(item.getEndDate() != null && item.getStartDate().compareTo(item.getEndDate()) > -1)
-                    throw new IllegalArgumentException("Start must be before end.");
-                
-                if(item.getOnSite() == null)
-                    item.setOnSite(Boolean.TRUE);
-                
-                // Fill from client
-                item.setStartDayOfWeek(client.getStartDayOfWeek());
-                item.setLunchRequired(client.getLunchRequired());
-                
+		if (item.getStartDate() == null)
+			throw new IllegalArgumentException("Start date required for creating a new contract.");
+
+		if (item.getEndDate() != null && item.getStartDate().compareTo(item.getEndDate()) > -1)
+			throw new IllegalArgumentException("Start must be before end.");
+
+		if (item.getOnSite() == null)
+			item.setOnSite(Boolean.TRUE);
+
+		// Fill from client
+		item.setStartDayOfWeek(client.getStartDayOfWeek());
+		item.setLunchRequired(client.getLunchRequired());
+
 		LOGGER.warn("Saving contract " + item);
 		ofy().save().entity(item).now();
+	}
+
+	public void delete(Long id) {
+		Contract c = getById(id);
+		ofy().delete().entity(c).now();
 	}
 }

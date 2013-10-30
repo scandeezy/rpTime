@@ -15,12 +15,13 @@
 			<ul>
 				<li ng-repeat="(id, contract) in contractsMap | orderBy:'end'"><span class="btn-group">
 						<button type="button" id="edit" class="btn btn-sm btn-default" ng-click="set(contract);">Edit</button>
+						<button type="button" id="delete-{{$id}}" class="btn btn-sm btn-default" ng-click="remove(contract);" ng-hide="!debug">Delete</button>
 				</span> {{clientsMap[contract.client].name}}, {{workersMap[contract.worker].firstName}} {{workersMap[contract.worker].lastName}} <span
-					ng-show="contract.start">- {{contract.start}}</span> <span ng-show="contract.end">- {{contract.end}}</span></li>
+					class="text-muted" ng-show="contract.startDate">- {{contract.startDate}} <span class="text-muted" ng-show="contract.endDate">- {{contract.endDate}}</span></span></li>
 			</ul>
 		</div>
 	</div>
-
+	
 	<form class="form-horizontal" role="form" name="createContractForm">
 		<div id="createContract" class="panel panel-default" ng-show="edit">
 			<div class="panel-heading">
@@ -38,7 +39,7 @@
 					<label for="worker" class="col-lg-2 control-label">Worker</label>
 					<div class="col-lg-4">
 						<select class="form-control" id="worker" name="worker" ng-model="currentContract.worker"
-							ng-options="worker.id as worker.firstName for worker in workers" required>
+							ng-options="worker.id as (worker.lastName + ', ' + worker.firstName) for (workerid,worker) in workersMap" required>
 							<option value="">-- Select Worker --</option>
 						</select></label>
 					</div>
@@ -47,7 +48,7 @@
 					<label for="client" class="col-lg-2 control-label">Client</label>
 					<div class="col-lg-4">
 						<select class="form-control" id="client" name="client" ng-model="currentContract.client"
-							ng-options="client.id as client.name for client in clients" required>
+							ng-options="client.id as client.name for (clientid,client) in clientsMap" required>
 							<option value="">-- Select Client --</option>
 						</select>
 					</div>

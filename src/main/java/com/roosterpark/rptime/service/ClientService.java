@@ -27,6 +27,10 @@ public class ClientService {
 
 	public List<Client> getAll() {
 		LOGGER.debug("getAll Clients");
+		// TODO: Cache better so we don't have to do this. Costly!
+		ofy().clear();
+		// ^ Argh
+
 		return ofy().load().type(Client.class).list();
 	}
 
