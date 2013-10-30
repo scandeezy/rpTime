@@ -42,17 +42,16 @@ public class WorkerService {
 	}
 
 	public void set(Worker item) {
-                Worker check = getByEmail(item.getEmail());
-                
-                if(check != null && (item.getId() == null || item.getId() != check.getId()))
-                {
-                    throw new IllegalArgumentException("Worker already exists with email " + item.getEmail());
-                }
-                
-                // Default to true
-                if(item.getActive() == null)
-                    item.setActive(Boolean.TRUE);
-                
+		Worker check = getByEmail(item.getEmail());
+
+		if (check != null && (item.getId() == null || item.getId() != check.getId())) {
+			throw new IllegalArgumentException("Worker already exists with email " + item.getEmail());
+		}
+
+		// Default to true
+		if (item.getActive() == null)
+			item.setActive(Boolean.TRUE);
+
 		LOGGER.warn("Saving worker " + item);
 		ofy().save().entity(item).now();
 	}
@@ -62,5 +61,11 @@ public class WorkerService {
 			return getByEmail(user.getEmail());
 		}
 		return null;
+	}
+
+	public void delete(Long id) {
+		Worker w = getById(id);
+		LOGGER.debug("Delete Worker {}", id);
+		ofy().delete().entity(w).now();
 	}
 }
