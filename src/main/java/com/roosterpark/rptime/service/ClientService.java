@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.roosterpark.rptime.model.Client;
+import org.datanucleus.util.StringUtils;
 
 @Named
 public class ClientService {
@@ -35,8 +36,12 @@ public class ClientService {
 	}
 
 	public void set(Client item) {
-		// List<Client> all = getAll();
-		// LOGGER.debug("all.size = {}", all.size());
+                if(StringUtils.isEmpty(item.getName()))
+                    throw new IllegalArgumentException("Client name required.");
+                if(null == item.getStartDayOfWeek())
+                    throw new IllegalArgumentException("Start Day Of Week required.");
+                if(null == item.getLunchRequired())
+                    item.setLunchRequired(true);
 
 		LOGGER.debug("Saving Client {}", item);
 		ofy().save().entity(item).now();
