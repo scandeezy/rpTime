@@ -11,16 +11,11 @@ import org.slf4j.LoggerFactory;
 
 import com.google.appengine.api.users.User;
 import com.roosterpark.rptime.model.Worker;
+import org.datanucleus.util.StringUtils;
 
 @Named
 public class WorkerService {
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
-
-	// public WorkerService() {
-	// LOGGER.trace("registering Worker class with ObjectifyService");
-	// ObjectifyService.register(Worker.class);
-	// LOGGER.trace("registered Worker");
-	// }
 
 	public Worker getById(Long id) {
 		LOGGER.warn("Getting worker with id={}", id);
@@ -38,6 +33,7 @@ public class WorkerService {
 	}
 
 	public List<Worker> getAll() {
+                // TODO: separate the business logic of the service from the DAO
 		// TODO: Cache better so we don't have to do this. Costly!
 		ofy().clear();
 		// ^ Argh
@@ -46,6 +42,13 @@ public class WorkerService {
 	}
 
 	public void set(Worker item) {
+                if(StringUtils.isEmpty(item.getEmail()))
+                    throw new IllegalArgumentException("Email required.");
+                if(StringUtils.isEmpty(item.getFirstName()))
+                    throw new IllegalArgumentException("First name required.");
+                if(StringUtils.isEmpty(item.getLastName()))
+                    throw new IllegalArgumentException("Last name required.");
+                
 		Worker check = getByEmail(item.getEmail());
 
 		if (check != null && (item.getId() == null || item.getId() != check.getId())) {
