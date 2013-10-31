@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import com.roosterpark.rptime.model.Client;
 import com.roosterpark.rptime.model.Contract;
 import com.roosterpark.rptime.model.Worker;
+import org.datanucleus.util.StringUtils;
 
 @Named
 public class ContractService {
@@ -75,6 +76,11 @@ public class ContractService {
 	}
 
 	public void set(Contract item) {
+                if (null == item.getWorker())
+                    throw new IllegalArgumentException("Worker ID required.");
+                if (null == item.getClient())
+                    throw new IllegalArgumentException("Client ID required.");
+                
 		// Verify data given
 		Worker worker = workerService.getById(item.getWorker());
 		Client client = clientService.getById(item.getClient());
