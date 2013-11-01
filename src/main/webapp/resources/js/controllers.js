@@ -131,13 +131,16 @@
 		}
 
 		$scope.save = function saveFn(ts) {
-                        if(ts instanceof Array) {
-                            for(var index = 0; index < ts.length; index++) {
-                                var sheet = ts[index];
-                                $scope.doSave(TimeSheetService, sheet, 'updateTimeSheets');
-                            }
-                        } else {
-                            $scope.doSave(TimeSheetService, ts, 'updateTimeSheets');
+                        for(var index = 0; index < ts.length; index++) {
+                            var sheet = ts[index];
+                            $scope.sheetMap = {};
+                            //$scope.doSave(TimeSheetService, sheet, 'updateTimeSheets');
+                            $scope.doSave({
+                                    service : TimeSheetService,
+                                    obj : sheet,
+                                    map : $scope.sheetMap,
+                                    updateFnName : 'updateTimeSheets'
+                            });
                         }
 			$scope.edit = false;
 		};
