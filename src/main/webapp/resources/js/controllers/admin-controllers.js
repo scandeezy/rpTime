@@ -75,7 +75,7 @@
 				service : AdminClientService,
 				obj : obj,
 				map : $rootScope.clientsMap,
-				updateFnName : 'updateClients',
+				//updateFnName : 'updateClients', //trust client-side: server side has delay.
 				afterFn : function doAfterFn() {
 					$scope.edit = false;
 				}
@@ -128,7 +128,7 @@
 				service : AdminContractService,
 				obj : obj,
 				map : $rootScope.contractsMap,
-				updateFnName : 'updateContracts',
+				// updateFnName : 'updateContracts',  //trust client-side: server side has delay.
 				afterFn : function doAfterFn() {
 					$scope.edit = false;
 				}
@@ -164,6 +164,16 @@
 			});
 		}
 
+		$scope.newRandom = function newRandomFn() {
+			var randomNum = Math.floor(Math.random() * 900) + 100;
+			var r = {
+				firstName : 'first-' + randomNum,
+				lastName : 'last-' + randomNum,
+				email : 'email-' + randomNum + '@test.com'
+			};
+			$scope.set(r);
+		}
+
 		$scope.remove = function removeFn(obj) {
 			$scope.doRemove({
 				service : AdminWorkerService,
@@ -180,8 +190,11 @@
 				service : AdminWorkerService,
 				obj : obj,
 				map : $rootScope.workersMap,
-				updateFnName : 'updateWorkers',
-				afterFn : function doAfterFn() {
+				// updateFnName : 'updateWorkers', //trust client-side: server side has delay.
+				afterFn : function doAfterFn(savedObj) {
+					$log.info("workersMap keys before=" + Object.keys($rootScope.workersMap).length);
+					// $rootScope.workersMap[savedObj.id] = savedObj;
+					// $log.info("workersMap keys after="+Object.keys($rootScope.workersMap).length);
 					$scope.edit = false;
 				}
 			});

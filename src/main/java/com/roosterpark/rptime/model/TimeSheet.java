@@ -81,10 +81,6 @@ public class TimeSheet {
 			days.add(d);
 			startTimes.add(new LocalTime(9, 0));
 			endTimes.add(new LocalTime(17, 0));
-			// List<LocalTime> t = new ArrayList<LocalTime>(2);
-			// t.add(new LocalTime());
-			// t.add(new LocalTime());
-			// days.put(d, t);
 			d = d.plusDays(1);
 		}
 

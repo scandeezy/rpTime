@@ -43,31 +43,27 @@
 				svc.update({
 					id : obj.id
 				}, obj, function updateSuccessFn(data) {
-					$log.info("updated data id=", data.id);
-					$log.info("map before:", map);
-					$log.info("map[id] before:", map[data.id]);
-					map[data.id] = data;
-					$log.info("map[id] after:", map[data.id]);
-					$log.info("do ($broadcast) update '" + updateFn + "'");
-					$scope.$broadcast(updateFn);
-					if (afterFn) {
-						afterFn();
-					}
+					saveOrUpdateSuccessFn(data, map, updateFn, afterFn);
 				});
 
 			} else {
 				svc.save(obj, function saveSuccessFn(data) {
-					$log.info("saved data id=", data.id);
-					$log.info("map before:", map);
-					$log.info("map[id] before:", map[data.id]);
-					map[data.id] = data;
-					$log.info("map[id] after:", map[data.id]);
+					saveOrUpdateSuccessFn(data, map, updateFn, afterFn);
+				});
+			}
+			
+			function saveOrUpdateSuccessFn(data, map, updateFn, afterFn){
+				$log.info("saved data id=", data.id);
+				map[data.id] = data;
+				if(updateFn){
 					$log.info("do ($broadcast) update '" + updateFn + "'");
 					$scope.$broadcast(updateFn);
-					if (afterFn) {
-						afterFn();
-					}
-				});
+				}else{
+					$log.info("skipped $broadcast update");
+				}
+				if (afterFn) {
+					afterFn(data);
+				}
 			}
 
 		};
@@ -90,8 +86,10 @@
 			svc.remove({
 				id : id
 			}, function successFn() {
-				$log.info("do ($broadcast) update '" + updateFn + "'");
-				$scope.$broadcast(updateFn);
+				if(updateFn){
+					$log.info("do ($broadcast) update '" + updateFn + "'");
+					$scope.$broadcast(updateFn);
+				}
 				if (afterFn) {
 					afterFn();
 				}
@@ -158,6 +156,7 @@
 				afterFn : function doAfterFn() {
 					// stay in the edit view!
 					// $scope.edit = false;
+					 $scope.createTimeSheetForm.$setPristine();
 				}
 			});
 		};

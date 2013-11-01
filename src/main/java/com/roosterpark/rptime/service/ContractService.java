@@ -13,30 +13,53 @@ import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.appengine.api.users.User;
+import com.google.appengine.api.users.UserService;
 import com.roosterpark.rptime.model.Client;
 import com.roosterpark.rptime.model.Contract;
 import com.roosterpark.rptime.model.Worker;
-import org.datanucleus.util.StringUtils;
 
 @Named
 public class ContractService {
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
 	@Inject
+	ClientService clientService;
+	@Inject
 	WorkerService workerService;
 	@Inject
-	ClientService clientService;
+	UserService userService;
 
 	public List<Contract> getContractsForWorker(Long worker) {
 		return ofy().load().type(Contract.class).filter(Contract.WORKER_KEY, worker).list();
 	}
 
-	public List<Contract> getActiveContractsForWorker(Long worker, LocalDate date) {
-		List<Contract> contracts = getContractsForWorker(worker);
+	/**
+	 * {@link Contract Contracts} with {@code date} between {@code startDate} and {@code endDate}.
+	 * 
+	 * @param workerId
+	 * @param date
+	 * @return the {@link List} of active {@link Contract Contracts}.
+	 * @throws EntityNotFoundException
+	 *             if no {@link Worker} found for {@code workerId}.
+	 */
+	public List<Contract> getActiveContractsForWorker(Long workerId, LocalDate date) throws EntityNotFoundException {
+		Worker w = workerService.getById(workerId);
+		if (w == null) {
+			User u = userService.getCurrentUser();
+			throw new EntityNotFoundException("Required 'Worker' not found for id '" + workerId
+					+ "'.  Solution: create Worker on the /workers page: perhaps for user " + u);
+		}
+		List<Contract> contracts = getContractsForWorker(workerId);
 		List<Contract> active = new LinkedList<Contract>();
 		for (Contract contract : contracts) {
-			if (contract.getStartDate().compareTo(date) < 1 && (contract.getEndDate() == null || contract.getEndDate().compareTo(date) > -1))
+			if (contract.getStartDate().compareTo(date) < 1
+					&& (contract.getEndDate() == null || contract.getEndDate().compareTo(date) > -1)) {
 				active.add(contract);
+			} else {
+				LOGGER.debug("inactive contract found; date mismatch.  Expected: {} < {} < {}", new Object[] { contract.getStartDate(),
+						date, contract.getEndDate() });
+			}
 		}
 
 		return active;
@@ -50,7 +73,8 @@ public class ContractService {
 		List<Contract> contracts = getContractsForClient(client);
 		List<Contract> active = new LinkedList<Contract>();
 		for (Contract contract : contracts) {
-			if (contract.getStartDate().compareTo(date) < 1 && (contract.getEndDate() == null || contract.getEndDate().compareTo(date) > -1))
+			if (contract.getStartDate().compareTo(date) < 1
+					&& (contract.getEndDate() == null || contract.getEndDate().compareTo(date) > -1))
 				active.add(contract);
 		}
 
@@ -76,11 +100,11 @@ public class ContractService {
 	}
 
 	public void set(Contract item) {
-                if (null == item.getWorker())
-                    throw new IllegalArgumentException("Worker ID required.");
-                if (null == item.getClient())
-                    throw new IllegalArgumentException("Client ID required.");
-                
+		if (null == item.getWorker())
+			throw new IllegalArgumentException("Worker ID required.");
+		if (null == item.getClient())
+			throw new IllegalArgumentException("Client ID required.");
+
 		// Verify data given
 		Worker worker = workerService.getById(item.getWorker());
 		Client client = clientService.getById(item.getClient());

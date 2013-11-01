@@ -49,8 +49,10 @@ public class TimeSheetService {
 
 			return sheets;
 		}
-		throw new EntityNotFoundException("Required 'Worker' not found for '" + workerId
-				+ "'.  Solution: create Worker on the /workers page.");
+
+		throw new EntityNotFoundException("No active Contracts found for Worker id='" + workerId + "' and date '" + date
+				+ "'.  Solution: create Contract on the /contracts page for this Worker with beginDate < " + date + "< endDate.");
+
 	}
 
 	public List<TimeSheet> getAllForWorker(Long workerId) {

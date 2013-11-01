@@ -51,8 +51,6 @@
 				params : {
 					id : 'new'
 				}
-			// ,
-			// isArray : true
 			},
 			getAll : {
 				method : 'GET',
