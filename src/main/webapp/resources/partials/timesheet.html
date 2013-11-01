@@ -1,167 +1,124 @@
-<!-- $scope is on TimesheetPageCtrl -->
+<!-- $scope is on TimeSheetPageCtrl -->
 <div>
 	<div class="panel panel-default" ng-hide="edit">
-		<div class="panel-heading">Timesheets
- 			<span class="btn-group"> 
-				<a type="button" class="btn btn-sm btn-default" ng-click="set();">Create</a>
-			</span>
+		<div class="panel-heading">
+			<h4>
+				TimeSheets
+				<div class="pull-right">
+					<span class="btn-group">
+						<button type="button" id="new" class="btn btn-xs btn-primary" ng-click="set();">Create</button>
+					</span>
+				</div>
+			</h4>
 		</div>
 		<div class="panel-body">
 			<ul>
-				<li ng-repeat="(week, timesheets) in timesheetMap">
-					week <a ng-click="set(timesheets)">{{week}}</a>
+				<li ng-repeat="(id, currentTimeSheet) in timeSheetsMap">currentTimeSheet <a ng-click="set(currentTimeSheet)">{{currentTimeSheet.id}}</a>
+					<button type="button" id="delete-{{$id}}" class="btn btn-sm btn-default" ng-click="remove(currentTimeSheet);" ng-hide="!debug">Delete</button>
 				</li>
 			</ul>
 		</div>
 	</div>
-	
-	<div id="createTimeSheet" class="panel panel-default" ng-show="edit">
-                <div ng-repeat="timesheet in currentTimeSheets">
-                    <div class="panel-heading">
-                            <a ng-click="edit=false;">&lt;</a> 
-                            <span ng-show="timesheet.id">Edit Timesheet {{timesheet.id}}</span>
-                    </div>
-                    <div class="panel-body">
-                            <form role="form" name="createTimeSheetForm">
-                                    <div class="row">
-                                            <div class="col-lg-2">
-                                                    <label for="startDate">Start Date
-                                                            <input type="date" id="startDate" class="form-control" placeholder="YYYY-MM-DD" ng-model="timesheet.startDate">
-                                                    </label>
-                                            </div>
-                                    </div>
-                                    <table class="table">
-                                            <thead>
-                                                    <tr class="row">
-                                                            <th ng-repeat="dow in dows">{{dow}}</th>
-                                                    </tr>
-                                            </thead>
-                                            <tbody>
-                                                    <tr class="row">
-                                                            <td>
-                                                                <ol>
-                                                                    <li ng-repeat="hour in timesheet.sundayHours"><input type="time" class="form-control input" ng-model="timesheet.sundayHours[$index]"></li>
-                                                                </ol>
-                                                            </td>
-                                                            <td>
-                                                                <ol>
-                                                                    <li ng-repeat="hour in timesheet.mondayHours"><input type="time" class="form-control input" ng-model="timesheet.mondayHours[$index]"></li>
-                                                                </ol>
-                                                            </td>
-                                                            <td>
-                                                                <ol>
-                                                                    <li ng-repeat="hour in timesheet.tuesdayHours"><input type="time" class="form-control input" ng-model="timesheet.tuesdayHours[$index]"></li>
-                                                                </ol>
-                                                            </td>
-                                                            <td>
-                                                                <ol>
-                                                                    <li ng-repeat="hour in timesheet.wednesdayHours"><input type="time" class="form-control input" ng-model="timesheet.wednesdayHours[$index]"></li>
-                                                                </ol>
-                                                            </td>
-                                                            <td>
-                                                                <ol>
-                                                                    <li ng-repeat="hour in timesheet.thursdayHours"><input type="time" class="form-control input" ng-model="timesheet.thursdayHours[$index]"></li>
-                                                                </ol>
-                                                            </td>
-                                                            <td>
-                                                                <ol>
-                                                                    <li ng-repeat="hour in timesheet.fridayHours"><input type="time" class="form-control input" ng-model="timesheet.fridayHours[$index]"></li>
-                                                                </ol>
-                                                            </td>
-                                                            <td>
-                                                                <ol>
-                                                                    <li ng-repeat="hour in timesheet.saturdayHours"><input type="time" class="form-control input" ng-model="timesheet.saturdayHours[$index]"></li>
-                                                                </ol>
-                                                            </td>
-                                                    </tr>
-                                            </tbody>
-                                    </table>
-                            </form>
-                    </div>
-                </div>
 
-                <div class="btn-group">
-                        <a type="button" class="btn btn-primary" ng-click="save(currentTimeSheets)">Save</a>
-                        <a type="button" class="btn btn-default" ng-click="edit=false;">Cancel</a>
-                </div>
 
-                <div class="well">
-                        <pre>currentTimeSheets={{currentTimeSheets | json}}</pre>
-                </div>
-		<div class="panel-heading">
-			<a ng-click="edit=false;">&lt;</a> 
-			<span ng-show="currentTimeSheet.id">Edit Timesheet {{currentTimeSheet.id}}</span>
-			<!-- <span ng-hide="currentTimeSheet.id">Create Timesheet</span> -->
-		</div>
-		<div class="panel-body">
-			<form role="form" name="createTimeSheetForm">
-				<div class="row">
+	<form role="form" name="createTimeSheetForm">
+		<div id="createTimeSheet" class="panel panel-default" ng-show="edit">
+			<div class="panel-heading">
+				<h4>
+					<span ng-show="currentTimeSheet.id">Edit TimeSheet <span class="text-muted">{{currentTimeSheet.id}}</span></span>
+				</h4>
+			</div>
+			<div class="panel-body">
+				<div class="row form-group">
 					<div class="col-lg-2">
-						<label for="startDate">Start Date
-		 					<input type="date" id="startDate" class="form-control" placeholder="YYYY-MM-DD" ng-model="currentTimeSheet.startDate">
-		 				</label>
+						<label for="startDate">Start Date <input type="date" id="startDate" name="startDate" class="form-control"
+							placeholder="YYYY-MM-DD" ng-model="currentTimeSheet.startDate" required>
+						</label>
+					</div>
+					<div class="col-lg-2 pull-right">
+						<span class="text-muted">As of {{currentTimeSheet.updateTimestamp}}</span>
 					</div>
 				</div>
-				<table class="table">
-					<thead>
-						<tr class="row">
-							<th ng-repeat="dow in dows">{{dow}}</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr class="row">
-							<td><input type="number" class="form-control input" ng-model="currentTimeSheet.hours[0]"></td>
-							<td><input type="number" class="form-control input" ng-model="currentTimeSheet.hours[1]"></td>
-							<td><input type="number" class="form-control input" ng-model="currentTimeSheet.hours[2]"></td>
-							<td><input type="number" class="form-control input" ng-model="currentTimeSheet.hours[3]"></td>
-							<td><input type="number" class="form-control input" ng-model="currentTimeSheet.hours[4]"></td>
-							<td><input type="number" class="form-control input" ng-model="currentTimeSheet.hours[5]"></td>
-							<td><input type="number" class="form-control input" ng-model="currentTimeSheet.hours[6]"></td>
-						</tr>
-					</tbody>
-				</table>
-			</form>
-		
-			<div class="btn-group">
-				<a type="button" class="btn btn-primary" ng-click="save(currentTimeSheet)">Save</a>
-				<a type="button" class="btn btn-default" ng-click="edit=false;">Cancel</a>
+				<div class="form-group">
+
+					<ul class="list-group">
+						<li ng-repeat="d in currentTimeSheet.days" class="list-group-item">{{d.day}} <input type="time" class="input-sm"
+							ng-model="day.startTimes[0]" title="Clock-in Time"> <input type="time" class="input-sm" ng-model="day.endTimes[0]"
+							title="Clock-out Time">
+						</li>
+						<li class="list-group-item">Dapibus ac facilisis in</li>
+					</ul>
+				</div>
+
+				<div class="form-group">
+					<div class="col-lg-offset-2 col-lg-4">
+						<button type="button" id="save" class="btn " ng-class="{'btn-primary': createTimeSheetForm.$valid}"
+							ng-disabled="!(createTimeSheetForm.$valid && createTimeSheetForm.$dirty)" ng-click="save(currentTimeSheet)">Save</button>
+						<button type="button" id="save" class="btn btn-primary" ng-show="debug" ng-click="save(currentTimeSheet)">ZSave</button>
+						<button type="button" id="cancel" class="btn btn-default" ng-click="unset();">Cancel</button>
+					</div>
+				</div>
+
 			</div>
 		</div>
-		
-		<div class="well">
-			<pre>currentTimeSheet={{currentTimeSheet | json}}</pre>
-		</div>
-	</div>
-	
-	<!-- 
-	<div>
-		<p>This is the timesheet page.</p>
-		<div class="pull-right btn-group">
-			<a type="button" class="btn btn-default" ng-class="{'btn-primary': !edit}" ng-click="edit=!edit">Edit</a>
-			<a type="button" class="btn btn-default" ng-class="{'btn-primary': edit}" ng-disabled="!edit">Save</a>
-		</div>
-	</div>
-	<form>
-		<table class="table">
-			<thead>
-				<tr class="row">
-					<th ng-repeat="dow in dows">{{dow}}</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr ng-repeat="days in dates" class="row">
-					<td ng-repeat="day in days">
-						<label for="input-hours-{{$id}}" class="">{{ day.date }} 
-							
-							<input ng-show="edit" type="text" class="form-control input col-lg-2" id="input-hours-{{$id}}" ng-model="day.hours">
-							<span ng-hide="edit">/ {{day.hours}}</span> 
-							/ {{day.type}}
-						</label>
-					</td>
-				</tr>
-			</tbody>
-		</table>
 	</form>
-	-->
+
+
+
+
+	<!-- 
+	<div class="btn-group">
+		<a type="button" class="btn btn-primary" ng-click="save(currentTimeSheet);">Save</a> <a type="button" class="btn btn-default"
+			ng-click="unset();">Cancel</a>
+	</div>
+
+	<div class="well">
+		<pre>currentTimeSheet={{currentTimeSheet | json}}</pre>
+	</div>
+	<div class="panel-heading">
+		<a ng-click="edit=false;">&lt;</a> <span ng-show="currentTimeSheet.id">Edit TimeSheet {{currentTimeSheet.id}}</span>
+	</div>
+	<div class="panel-body">
+		<form role="form" name="createTimeSheetForm">
+			<div class="row">
+				<div class="col-lg-2">
+					<label for="startDate">Start Date <input type="date" id="startDate" class="form-control" placeholder="YYYY-MM-DD"
+						ng-model="currentTimeSheet.startDate">
+					</label>
+				</div>
+			</div>
+			<table class="table">
+				<thead>
+					<tr class="row">
+						<th ng-repeat="dow in dayOfWeekArr">{{dow}}</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr class="row">
+						<td><input type="number" class="form-control input" ng-model="currentTimeSheet.hours[0]"></td>
+						<td><input type="number" class="form-control input" ng-model="currentTimeSheet.hours[1]"></td>
+						<td><input type="number" class="form-control input" ng-model="currentTimeSheet.hours[2]"></td>
+						<td><input type="number" class="form-control input" ng-model="currentTimeSheet.hours[3]"></td>
+						<td><input type="number" class="form-control input" ng-model="currentTimeSheet.hours[4]"></td>
+						<td><input type="number" class="form-control input" ng-model="currentTimeSheet.hours[5]"></td>
+						<td><input type="number" class="form-control input" ng-model="currentTimeSheet.hours[6]"></td>
+					</tr>
+				</tbody>
+			</table>
+		</form>
+
+		<div class="btn-group">
+			<a type="button" class="btn btn-primary" ng-click="save(currentTimeSheet)">Save</a> <a type="button" class="btn btn-default"
+				ng-click="edit=false;">Cancel</a>
+		</div>
+	</div>
+ -->
+	<div class="well">
+		<pre>currentTimeSheet={{currentTimeSheet | json}}
+timeSheetsMap length={{Objects.keys(timeSheetsMap).length}}
+timeSheetsMap={{timeSheetsMap|json}}
+</pre>
+	</div>
+</div>
 
 </div>

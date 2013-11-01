@@ -12,8 +12,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityNotFoundException;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,39 +28,40 @@ public class TimeSheetService {
 	ContractService contractService;
 
 	public List<TimeSheet> createForWorkerDate(Long workerId, LocalDate date) {
-                List<Contract> contracts = contractService.getActiveContractsForWorker(workerId, date);
+		List<Contract> contracts = contractService.getActiveContractsForWorker(workerId, date);
 		if (!contracts.isEmpty()) {
-                        List<TimeSheet> sheets = new LinkedList<>();
-                        
-                        for(Contract contract : contracts) {
-                            TimeSheet result = new TimeSheet();
-                            result.setWorkerId(contract.getWorker());
-                            result.setClientId(contract.getClient());
-                            result.setStartDate(new LocalDate());
-                            result.setWeek(date.getWeekOfWeekyear());
-                            result.setYear(date.getYear());
-                            result.setStartDayOfWeek(contract.getStartDayOfWeek());
-                         
-                            set(result);
-                            sheets.add(result);
-                            LOGGER.debug("created new TimeSheet for worker={},timesheet={}", workerId, result);
-                        }
-                        
-                        return sheets;
+			List<TimeSheet> sheets = new LinkedList<>();
+
+			for (Contract contract : contracts) {
+				Long clientId = contract.getClient();
+				TimeSheet result = new TimeSheet(workerId, clientId, date);
+				// result.setWorkerId(contract.getWorker());
+				// result.setClientId(contract.getClient());
+				// result.setStartDate(new LocalDate());
+				result.setWeek(date.getWeekOfWeekyear());
+				result.setYear(date.getYear());
+				result.setStartDayOfWeek(contract.getStartDayOfWeek());
+
+				set(result);
+				sheets.add(result);
+				LOGGER.debug("created new TimeSheet for worker={},timesheet={}", workerId, result);
+			}
+
+			return sheets;
 		}
 		throw new EntityNotFoundException("Required 'Worker' not found for '" + workerId
 				+ "'.  Solution: create Worker on the /workers page.");
 	}
 
 	public List<TimeSheet> getAllForWorker(Long workerId) {
-                LOGGER.warn("Getting TimeSheets for workerId={}", workerId);
-                return ofy().load().type(TimeSheet.class).filter("workerId", workerId).list();
+		LOGGER.warn("Getting TimeSheets for workerId={}", workerId);
+		return ofy().load().type(TimeSheet.class).filter("workerId", workerId).list();
 	}
-        
-        public List<TimeSheet> getAll() {
-                LOGGER.warn("Getting TimeSheets for admin");
-                return ofy().load().type(TimeSheet.class).list();
-        }
+
+	public List<TimeSheet> getAll() {
+		LOGGER.warn("Getting TimeSheets for admin");
+		return ofy().load().type(TimeSheet.class).list();
+	}
 
 	public TimeSheet getById(Long id) {
 		return ofy().load().type(TimeSheet.class).id(id).now();
@@ -81,7 +82,8 @@ public class TimeSheetService {
 	}
 
 	public void set(TimeSheet item) {
-                LOGGER.debug("Saving timesheet {}", item);
+		LOGGER.debug("Saving timesheet {}", item);
+		item.setUpdateTimestamp(new LocalDateTime());
 		ofy().save().entity(item).now();
 	}
 
@@ -100,6 +102,11 @@ public class TimeSheetService {
 				.list();
 		LOGGER.debug("returning List<Sheet>={}", result);
 		return result;
+	}
+
+	public void delete(Long id) {
+		TimeSheet c = getById(id);
+		ofy().delete().entity(c).now();
 	}
 
 }
