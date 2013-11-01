@@ -5,7 +5,8 @@
 	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder>
 			<!-- %rEx... prints exception causes in REVERSE order: http://nurkiewicz.blogspot.com/2011/09/logging-exceptions-root-cause-first.html -->
-			<pattern><![CDATA[%-32(%date [%.8thread]) %-5level  %-128(%-32(%replace(%logger{1}){'^com\.jjz.*\.',''}) %M - %msg) %n%rEx]]></pattern>
+			<!-- <pattern><![CDATA[%-32(%date [%.8thread]) %-5level  %-128(%-32(%replace(%logger{1}){'^com\.jjz.*\.',''}) %M - %msg) %n%rEx]]></pattern> -->
+			<pattern><![CDATA[%12(%date) %-5level  %-60(%-32(%replace(%logger{1}){'^com\.jjz.*\.',''} ).%M) - %msg %n%rEx]]></pattern>
 		</encoder>
 	</appender>
 
@@ -20,6 +21,9 @@
 	<logger name="org.eclipse.jetty" level="WARN" />
 	<logger name="org.datanucleus" level="WARN" />
 	<logger name="org.jboss" level="WARN" />
+	<logger name="org.springframework" level="TRACE" />
+	<logger name="org.springframework.web.servlet.mvc" level="TRACE" />
+	<!-- 
 	<logger name="org.springframework" level="DEBUG" />
 	<logger name="org.springframework.aop" level="WARN" />
 	<logger name="org.springframework.beans" level="WARN" />
@@ -33,7 +37,8 @@
 	<logger name="org.springframework.jndi" level="WARN" />
 	<logger name="org.springframework.web" level="DEBUG" />
 	<logger name="org.springframework.web.context" level="WARN" />
-	
+	 -->
+	 
 	<root level="DEBUG">
 		<appender-ref ref="STDOUT" />
 		<!-- <appender-ref ref="LOG" /> -->
