@@ -51,15 +51,16 @@ public class WorkerService {
                 
 		Worker check = getByEmail(item.getEmail());
 
-		if (check != null && (item.getId() == null || item.getId() != check.getId())) {
-			throw new IllegalArgumentException("Worker already exists with email " + item.getEmail());
+		if (check != null && (item.getId() == null || !item.getId().equals(check.getId()))) {
+			throw new IllegalArgumentException("Worker already exists with email " + 
+                                item.getEmail() + " and id " + check.getId() + ", provided id " + item.getId());
 		}
 
 		// Default to true
 		if (item.getActive() == null)
 			item.setActive(true);
                 if (item.getHourly() == null)
-                        item.setHourly(true);
+                        item.setHourly(false);
 
 		LOGGER.warn("Saving worker " + item);
 		ofy().save().entity(item).now();
