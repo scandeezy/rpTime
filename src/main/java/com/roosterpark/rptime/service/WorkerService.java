@@ -57,7 +57,9 @@ public class WorkerService {
 
 		// Default to true
 		if (item.getActive() == null)
-			item.setActive(Boolean.TRUE);
+			item.setActive(true);
+                if (item.getHourly() == null)
+                        item.setHourly(true);
 
 		LOGGER.warn("Saving worker " + item);
 		ofy().save().entity(item).now();
