@@ -133,15 +133,6 @@
 			$log.info("Updating time sheets map....");
 			TimeSheetService.getAll(function successFn(data) {
 				$scope.timeSheetsMap = data;
-				// for (var index = 0; index < data.length; index++) {
-				// var sheet = data[index];
-				// console.log("Adding sheet " + sheet + " to map...");
-				// var key = sheet.workerId + sheet.week + sheet.year;
-				// if (typeof $scope.timeSheetMap[key] == 'undefined')
-				// $scope.timeSheetMap[key] = [];
-				// $scope.timeSheetMap[key].push(sheet);
-				// console.log("map is now size " + $scope.timeSheetMap.length);
-				// }
 				$log.info('found ' + Object.keys($scope.timeSheetsMap).length + ' timeSheets');
 				$log.info('timeSheetsMap', $scope.timeSheetsMap);
 			});
@@ -165,17 +156,19 @@
 				map : $scope.timeSheetsMap,
 				// updateFnName : 'updateTimeSheets',
 				afterFn : function doAfterFn() {
-					//stay in the edit view!
-					//$scope.edit = false;
+					// stay in the edit view!
+					// $scope.edit = false;
 				}
 			});
 		};
 
 		$scope.set = function setFn(obj) {
 			if (!obj) {
-				$scope.currentTimeSheet = TimeSheetService.create();
+				var o = TimeSheetService.create();
+				$scope.timeSheetsMap[o.id] = o;
+				$scope.currentTimeSheet = o;
 			} else {
-				$scope.currentTimeSheet = angular.copy(obj, {} );
+				$scope.currentTimeSheet = angular.copy(obj, {});
 			}
 			$log.info('$scope.currentTimeSheet=', $scope.currentTimeSheet);
 			$scope.edit = true;

@@ -42,11 +42,11 @@
 				<div class="form-group">
 
 					<ul class="list-group">
-						<li ng-repeat="d in currentTimeSheet.days" class="list-group-item">{{d.day}} <input type="time" class="input-sm"
-							ng-model="day.startTimes[0]" title="Clock-in Time"> <input type="time" class="input-sm" ng-model="day.endTimes[0]"
-							title="Clock-out Time">
+						<li ng-repeat="d in currentTimeSheet.days" class="list-group-item" ng-init="ii=$index">
+							{{d}} 
+							<input type="time" class="input-sm" ng-model="currentTimeSheet.startTimes[ii]" title="Clock-in Time"> 
+							<input type="time" class="input-sm" ng-model="currentTimeSheet.endTimes[ii]" title="Clock-out Time">
 						</li>
-						<li class="list-group-item">Dapibus ac facilisis in</li>
 					</ul>
 				</div>
 

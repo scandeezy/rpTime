@@ -80,16 +80,16 @@ public class TimeSheetController {
 
 	@RequestMapping(value = "/new", method = { POST, GET })
 	@ResponseBody
-	public List<TimeSheet> create() {
+	public TimeSheet create() {
 		return createOptionalDate(new LocalDate());
 	}
 
 	@RequestMapping(value = "/new/{date}", method = { POST, GET })
 	@ResponseBody
-	public List<TimeSheet> createOptionalDate(@PathVariable("date") LocalDate date) {
+	public TimeSheet createOptionalDate(@PathVariable("date") LocalDate date) {
 		final Worker worker = getValidatedWorker();
 		LOGGER.debug("creating timesheet for worker={}, date={}", worker, date);
-		return service.createForWorkerDate(worker.getId(), date);
+		return service.createForWorkerDate(worker.getId(), date).get(0);
 	}
 
 	@RequestMapping(method = GET)

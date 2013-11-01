@@ -51,6 +51,10 @@ public class TimeSheet {
 
 	private LocalDateTime updateTimestamp;
 
+	private List<LocalDate> days;
+	private List<LocalTime> startTimes;
+	private List<LocalTime> endTimes;
+
 	/**
 	 * required for Objectify.
 	 * 
@@ -60,6 +64,9 @@ public class TimeSheet {
 	public TimeSheet() {
 		initHours();
 		this.updateTimestamp = new LocalDateTime();
+		this.days = new LinkedList<LocalDate>();
+		this.startTimes = new LinkedList<LocalTime>();
+		this.endTimes = new LinkedList<LocalTime>();
 	}
 
 	public TimeSheet(Long workerId, Long clientId, LocalDate startDate) {
@@ -68,6 +75,19 @@ public class TimeSheet {
 		this.clientId = clientId;
 		this.startDate = startDate;
 		this.week = startDate.getWeekOfWeekyear();
+
+		LocalDate d = new LocalDate(startDate);
+		for (int i = 0; i < 7; i++) {
+			days.add(d);
+			startTimes.add(new LocalTime(9, 0));
+			endTimes.add(new LocalTime(17, 0));
+			// List<LocalTime> t = new ArrayList<LocalTime>(2);
+			// t.add(new LocalTime());
+			// t.add(new LocalTime());
+			// days.put(d, t);
+			d = d.plusDays(1);
+		}
+
 	}
 
 	private void initHours() {
@@ -255,6 +275,30 @@ public class TimeSheet {
 
 	public void setUpdateTimestamp(LocalDateTime updateTimestamp) {
 		this.updateTimestamp = updateTimestamp;
+	}
+
+	public List<LocalDate> getDays() {
+		return days;
+	}
+
+	public void setDays(List<LocalDate> days) {
+		this.days = days;
+	}
+
+	public List<LocalTime> getStartTimes() {
+		return startTimes;
+	}
+
+	public void setStartTimes(List<LocalTime> startTimes) {
+		this.startTimes = startTimes;
+	}
+
+	public List<LocalTime> getEndTimes() {
+		return endTimes;
+	}
+
+	public void setEndTimes(List<LocalTime> endTimes) {
+		this.endTimes = endTimes;
 	}
 
 }
