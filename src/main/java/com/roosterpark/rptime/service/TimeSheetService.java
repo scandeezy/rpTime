@@ -34,13 +34,8 @@ public class TimeSheetService {
 
 			for (Contract contract : contracts) {
 				Long clientId = contract.getClient();
-				TimeSheet result = new TimeSheet(workerId, clientId, date);
-				// result.setWorkerId(contract.getWorker());
-				// result.setClientId(contract.getClient());
-				// result.setStartDate(new LocalDate());
-				result.setWeek(date.getWeekOfWeekyear());
-				result.setYear(date.getYear());
-				result.setStartDayOfWeek(contract.getStartDayOfWeek());
+                                LocalDate contractDate = adjustDate(date, contract.getStartDayOfWeek());
+				TimeSheet result = new TimeSheet(workerId, clientId, contractDate);
 
 				set(result);
 				sheets.add(result);
@@ -54,6 +49,13 @@ public class TimeSheetService {
 				+ "'.  Solution: create Contract on the /contracts page for this Worker with beginDate < " + date + "< endDate.");
 
 	}
+        
+        private LocalDate adjustDate(LocalDate date, Integer dayOfWeek) {
+            int currentDayOfWeek = date.dayOfWeek().get();
+            LOGGER.debug("Current day of week {} and needed day of week {}", currentDayOfWeek, dayOfWeek);
+            
+            return date.plusDays(dayOfWeek - currentDayOfWeek);
+        }
 
 	public List<TimeSheet> getAllForWorker(Long workerId) {
 		LOGGER.warn("Getting TimeSheets for workerId={}", workerId);

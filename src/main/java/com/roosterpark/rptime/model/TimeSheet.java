@@ -34,21 +34,6 @@ public class TimeSheet {
 	@Index
 	private Integer startDayOfWeek;
 
-	@Index
-	private List<LocalTime> sundayHours;
-	@Index
-	private List<LocalTime> mondayHours;
-	@Index
-	private List<LocalTime> tuesdayHours;
-	@Index
-	private List<LocalTime> wednesdayHours;
-	@Index
-	private List<LocalTime> thursdayHours;
-	@Index
-	private List<LocalTime> fridayHours;
-	@Index
-	private List<LocalTime> saturdayHours;
-
 	private LocalDateTime updateTimestamp;
 
 	private List<LocalDate> days;
@@ -62,7 +47,6 @@ public class TimeSheet {
 	 * */
 	@Deprecated
 	public TimeSheet() {
-		initHours();
 		this.updateTimestamp = new LocalDateTime();
 		this.days = new LinkedList<LocalDate>();
 		this.startTimes = new LinkedList<LocalTime>();
@@ -74,7 +58,9 @@ public class TimeSheet {
 		this.workerId = workerId;
 		this.clientId = clientId;
 		this.startDate = startDate;
+                this.startDayOfWeek = startDate.getDayOfWeek();
 		this.week = startDate.getWeekOfWeekyear();
+                this.year = startDate.getYear();
 
 		LocalDate d = new LocalDate(startDate);
 		for (int i = 0; i < 7; i++) {
@@ -84,51 +70,6 @@ public class TimeSheet {
 			d = d.plusDays(1);
 		}
 
-	}
-
-	private void initHours() {
-		this.sundayHours = new LinkedList<LocalTime>() {
-			{
-				add(LocalTime.MIDNIGHT);
-				add(LocalTime.MIDNIGHT.plusMinutes(1));
-			}
-		};
-		this.mondayHours = new LinkedList<LocalTime>() {
-			{
-				add(LocalTime.MIDNIGHT);
-				add(LocalTime.MIDNIGHT.plusMinutes(1));
-			}
-		};
-		this.tuesdayHours = new LinkedList<LocalTime>() {
-			{
-				add(LocalTime.MIDNIGHT);
-				add(LocalTime.MIDNIGHT.plusMinutes(1));
-			}
-		};
-		this.wednesdayHours = new LinkedList<LocalTime>() {
-			{
-				add(LocalTime.MIDNIGHT);
-				add(LocalTime.MIDNIGHT.plusMinutes(1));
-			}
-		};
-		this.thursdayHours = new LinkedList<LocalTime>() {
-			{
-				add(LocalTime.MIDNIGHT);
-				add(LocalTime.MIDNIGHT.plusMinutes(1));
-			}
-		};
-		this.fridayHours = new LinkedList<LocalTime>() {
-			{
-				add(LocalTime.MIDNIGHT);
-				add(LocalTime.MIDNIGHT.plusMinutes(1));
-			}
-		};
-		this.saturdayHours = new LinkedList<LocalTime>() {
-			{
-				add(LocalTime.MIDNIGHT);
-				add(LocalTime.MIDNIGHT.plusMinutes(1));
-			}
-		};
 	}
 
 	public Long getId() {
@@ -187,62 +128,6 @@ public class TimeSheet {
 		this.startDayOfWeek = startDayOfWeek;
 	}
 
-	public List<LocalTime> getSundayHours() {
-		return sundayHours;
-	}
-
-	public void setSundayHours(List<LocalTime> sundayHours) {
-		this.sundayHours = sundayHours;
-	}
-
-	public List<LocalTime> getMondayHours() {
-		return mondayHours;
-	}
-
-	public void setMondayHours(List<LocalTime> mondayHours) {
-		this.mondayHours = mondayHours;
-	}
-
-	public List<LocalTime> getTuesdayHours() {
-		return tuesdayHours;
-	}
-
-	public void setTuesdayHours(List<LocalTime> tuesdayHours) {
-		this.tuesdayHours = tuesdayHours;
-	}
-
-	public List<LocalTime> getWednesdayHours() {
-		return wednesdayHours;
-	}
-
-	public void setWednesdayHours(List<LocalTime> wednesdayHours) {
-		this.wednesdayHours = wednesdayHours;
-	}
-
-	public List<LocalTime> getThursdayHours() {
-		return thursdayHours;
-	}
-
-	public void setThursdayHours(List<LocalTime> thursdayHours) {
-		this.thursdayHours = thursdayHours;
-	}
-
-	public List<LocalTime> getFridayHours() {
-		return fridayHours;
-	}
-
-	public void setFridayHours(List<LocalTime> fridayHours) {
-		this.fridayHours = fridayHours;
-	}
-
-	public List<LocalTime> getSaturdayHours() {
-		return saturdayHours;
-	}
-
-	public void setSaturdayHours(List<LocalTime> saturdayHours) {
-		this.saturdayHours = saturdayHours;
-	}
-
 	@Override
 	public String toString() {
 		return Objects
@@ -258,10 +143,6 @@ public class TimeSheet {
 				//
 				.add("startDate", this.startDate)
 				//
-				.add("sundayHours", this.sundayHours)
-				//
-				.add("mondayHours", this.mondayHours).add("tuesdayHours", this.tuesdayHours).add("wednesdayHours", this.wednesdayHours)
-				.add("thursdayHours", this.thursdayHours).add("fridayHours", this.fridayHours).add("saturdayHours", this.saturdayHours)
 				.toString();
 	}
 
