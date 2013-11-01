@@ -109,11 +109,13 @@
 		$log.info('HistoryPageCtrl init', $scope);
 	} ]);
 
-	module.controller('TimeSheetPageCtrl', [ '$location', '$log', '$routeParams', '$scope', 'TimeSheetService', //
-	function TimeSheetPageCtrlPageCtrlFn($location, $log, $routeParams, $scope, TimeSheetService) {
+	module.controller('TimeSheetPageCtrl', [ '$location', '$log', '$routeParams', '$scope', 'AdminClientService', 'TimeSheetService', //
+	function TimeSheetPageCtrlPageCtrlFn($location, $log, $routeParams, $scope, AdminClientService, TimeSheetService) {
 		$scope.edit = false;
 		$scope.timeSheetsMap = {};
 		$scope.currentTimeSheet = {};
+		$scope.clientsMap = AdminClientService.getAll();
+		
 		if ($routeParams.id) {
 			var id = $routeParams.id;
 			$log.info('getting id', id);

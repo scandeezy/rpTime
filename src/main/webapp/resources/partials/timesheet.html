@@ -5,49 +5,44 @@
 			<h4>
 				TimeSheets
 				<div class="pull-right">
-					<span class="btn-group">
-						<button type="button" id="new" class="btn btn-xs btn-primary" ng-click="set();">Create</button>
-					</span>
+					<div class="btn-group">
+						<button type="button" id="new" class="btn btn-primary btn-sm" ng-click="set();">Create</button>
+					</div>
 				</div>
 			</h4>
 		</div>
 		<div class="panel-body">
 			<ul>
-				<li ng-repeat="(id, currentTimeSheet) in timeSheetsMap">
-					<a ng-click="set(currentTimeSheet)">{{currentTimeSheet.year}} week {{currentTimeSheet.week}} ({{currentTimeSheet.startDate}})</a>
-					<button type="button" id="delete-{{$id}}" class="btn btn-sm btn-default" ng-click="remove(currentTimeSheet);" ng-hide="!debug">Delete</button>
+				<li ng-repeat="(id, timeSheet) in timeSheetsMap"><a ng-click="set(timeSheet)">{{timeSheet.year}}, week {{timeSheet.week}} -
+						{{timeSheet.startDate}} for {{clientsMap[timeSheet.clientId].name}} </a>
+					<button type="button" id="delete-{{$id}}" class="btn btn-sm btn-default" ng-click="remove(timeSheet);" ng-hide="!debug">Delete</button>
 				</li>
 			</ul>
 		</div>
 	</div>
 
-
 	<form role="form" name="createTimeSheetForm">
 		<div id="createTimeSheet" class="panel panel-default" ng-show="edit">
 			<div class="panel-heading">
 				<h4>
-					<span ng-show="currentTimeSheet.id">Edit TimeSheet <span class="text-muted small">{{currentTimeSheet.id}}</span></span>
+					<span ng-show="currentTimeSheet.id">Edit TimeSheet: {{currentTimeSheet.startDate}} for
+						{{clientsMap[currentTimeSheet.clientId].name}} <span class="text-muted">{{currentTimeSheet.id}}</span>
+					</span>
 				</h4>
-			</div>
-			<div class="panel-body">
-				<div class="row form-group">
-					<div class="col-lg-2">
-						<label for="startDate">Start Date <input type="date" id="startDate" name="startDate" class="form-control"
-							placeholder="YYYY-MM-DD" ng-model="currentTimeSheet.startDate" required>
-						</label>
-					</div>
+				<div class="row">
 					<div class="col-lg-2 pull-right">
 						<small><span class="text-muted">As of {{currentTimeSheet.updateTimestamp}}</span></small>
 					</div>
 				</div>
+			</div>
+			<div class="panel-body">
 				<div class="form-group">
 
 					<ul class="list-group">
-						<li ng-repeat="d in currentTimeSheet.days" class="list-group-item" ng-init="ii=$index">
-							{{d}} 
-							<input type="time" class="input-sm" ng-model="currentTimeSheet.startTimes[ii]" title="Clock-in Time"> 
-							<input type="time" class="input-sm" ng-model="currentTimeSheet.endTimes[ii]" title="Clock-out Time">
-							{{dayOfWeekArr[((currentTimeSheet.startDayOfWeek + $index) % 7)].description}}
+						<li ng-repeat="d in currentTimeSheet.days" class="list-group-item" ng-init="ii=$index">{{d}} <input type="time" class="input-sm"
+							ng-model="currentTimeSheet.startTimes[ii]" title="Clock-in Time"> <input type="time" class="input-sm"
+							ng-model="currentTimeSheet.endTimes[ii]" title="Clock-out Time"> {{dayOfWeekArr[((currentTimeSheet.startDayOfWeek + $index) %
+							7)].description}}
 						</li>
 					</ul>
 				</div>
@@ -56,8 +51,10 @@
 					<div class="col-lg-offset-2 col-lg-4">
 						<button type="button" id="save" class="btn " ng-class="{'btn-primary': createTimeSheetForm.$valid}"
 							ng-disabled="!(createTimeSheetForm.$valid && createTimeSheetForm.$dirty)" ng-click="save(currentTimeSheet)">Save</button>
-						<button type="button" id="save" class="btn btn-primary" ng-show="debug" ng-click="save(currentTimeSheet)">ZSave</button>
-						<button type="button" id="cancel" class="btn btn-default" ng-click="unset();">Cancel</button>
+						<button type="button" id="cancel" class="btn btn-default" ng-click="unset();">
+							<span ng-show="!createTimeSheetForm.$dirty">Done</span> <span ng-show="createTimeSheetForm.$dirty">Cancel</span>
+						</button>
+						<button type="button" id="submit" class="btn btn-default disabled" ng-click="alert('not implemented yet!')">Submit</button>
 					</div>
 				</div>
 
