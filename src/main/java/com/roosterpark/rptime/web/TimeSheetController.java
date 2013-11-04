@@ -39,7 +39,6 @@ public class TimeSheetController {
 
 	@Inject
 	TimeSheetService service;
-
 	@Inject
 	UserService userService;
 	@Inject
@@ -82,6 +81,20 @@ public class TimeSheetController {
 	@ResponseBody
 	public TimeSheet create() {
 		return createOptionalDate(new LocalDate());
+	}
+
+	@RequestMapping(value = "/last", method = { GET })
+	@ResponseBody
+	public TimeSheet getLast() {
+		final LocalDate d = (new LocalDate()).minusWeeks(1);
+		return createOptionalDate(d);
+	}
+
+	@RequestMapping(value = "/next", method = { GET })
+	@ResponseBody
+	public TimeSheet getNext() {
+		final LocalDate d = (new LocalDate()).plusWeeks(1);
+		return createOptionalDate(d);
 	}
 
 	@RequestMapping(value = "/new/{date}", method = { POST, GET })

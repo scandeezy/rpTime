@@ -179,11 +179,15 @@
 		};
 
 		$scope.setWeekLast = function setWeekLastFn() {
-			$scope.currentTimeSheet = TimeSheetService.getLast();
+			TimeSheetService.getLast(function successFn(data){
+				$scope.set(data);
+			});
 		};
 		
 		$scope.setWeekNext = function setWeekNextFn() {
-			$scope.currentTimeSheet = TimeSheetService.getNext();
+			TimeSheetService.getNext(function successFn(data){
+				$scope.set(data);
+			});
 		};
 
 		$scope.setWeekOther = function setWeekOtherFn() {
