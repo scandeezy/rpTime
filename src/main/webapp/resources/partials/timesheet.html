@@ -48,17 +48,23 @@
 			</div>
 			<div class="panel-body">
 				<div class="form-group">
-
 					<ul class="list-group">
-						<li ng-repeat="d in currentTimeSheet.days" class="list-group-item" ng-init="ii=$index">{{d}} <input type="time" class="input-sm"
-							ng-model="currentTimeSheet.startTimes[ii]" title="Clock-in Time"> <input type="time" class="input-sm"
-							ng-model="currentTimeSheet.endTimes[ii]" title="Clock-out Time"> {{dayOfWeekArr[((currentTimeSheet.startDayOfWeek + $index) %
-							7)].description}}
+						<li ng-repeat="d in currentTimeSheet.days" class="list-group-item row" ng-init="ii=$index">
+							<div class="col-lg-2">{{d}} {{dayOfWeekArr[((currentTimeSheet.startDayOfWeek + $index) % 7)].description}}</div>
+							<div class="col-lg-4">
+								<input type="time" class="input-sm" ng-model="currentTimeSheet.startTimes[ii]" title="Clock-in Time"> <input type="time"
+									class="input-sm" ng-model="currentTimeSheet.endTimes[ii]" title="Clock-out Time">
+							</div>
 						</li>
 					</ul>
 				</div>
-
-				<div class="form-group">
+				<div class="form-group row">
+					<label for="note" class="col-lg-2 control-label">Notes</label>
+					<div class="col-lg-4">
+						<textarea class="form-control" id="note" name="note" rows="2" ng-model="currentTimeSheet.note"></textarea>
+					</div>
+				</div>
+				<div class="form-group row">
 					<div class="col-lg-offset-2 col-lg-4">
 						<button type="button" id="save" class="btn " ng-class="{'btn-primary': createTimeSheetForm.$valid}"
 							ng-disabled="!(createTimeSheetForm.$valid && createTimeSheetForm.$dirty)" ng-click="save(currentTimeSheet)">Save</button>
@@ -68,7 +74,6 @@
 						<button type="button" id="submit" class="btn btn-default disabled" ng-click="alert('not implemented yet!')">Submit</button>
 					</div>
 				</div>
-
 			</div>
 		</div>
 	</form>

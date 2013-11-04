@@ -35,10 +35,10 @@ public class TimeSheet {
 	private Integer startDayOfWeek;
 
 	private LocalDateTime updateTimestamp;
-
 	private List<LocalDate> days;
 	private List<LocalTime> startTimes;
 	private List<LocalTime> endTimes;
+	private String note;
 
 	/**
 	 * required for Objectify.
@@ -58,9 +58,9 @@ public class TimeSheet {
 		this.workerId = workerId;
 		this.clientId = clientId;
 		this.startDate = startDate;
-                this.startDayOfWeek = startDate.getDayOfWeek();
+		this.startDayOfWeek = startDate.getDayOfWeek();
 		this.week = startDate.getWeekOfWeekyear();
-                this.year = startDate.getYear();
+		this.year = startDate.getYear();
 
 		LocalDate d = new LocalDate(startDate);
 		for (int i = 0; i < 7; i++) {
@@ -130,9 +130,8 @@ public class TimeSheet {
 
 	@Override
 	public String toString() {
-		return Objects
-				.toStringHelper(this)
-				//
+		return Objects.toStringHelper(this)
+		//
 				.add("id", this.id)
 				//
 				.add("workerId", this.workerId)
@@ -176,6 +175,14 @@ public class TimeSheet {
 
 	public void setEndTimes(List<LocalTime> endTimes) {
 		this.endTimes = endTimes;
+	}
+
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
 	}
 
 }
