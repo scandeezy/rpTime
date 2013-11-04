@@ -57,6 +57,18 @@
 				params : {
 					id : 'idmap'
 				}
+			},
+			getLast : {
+				method : 'GET',
+				params : {
+					id : 'last'
+				}
+			},
+			getNext : {
+				method : 'GET',
+				params : {
+					id : 'next'
+				}
 			}
 		});
 	} ]);

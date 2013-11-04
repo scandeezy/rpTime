@@ -7,7 +7,18 @@
 				<div class="pull-right">
 					<div class="btn-group">
 						<button type="button" id="new" class="btn btn-primary btn-sm" ng-click="set();">Create</button>
+						<button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown">
+							<span class="caret"></span> <span class="sr-only">Toggle Create Dropdown</span> &nbsp;
+						</button>
+						<ul class="dropdown-menu" role="menu">
+							<li><a ng-click="setWeekLast();">Last Week</a></li>
+							<li><a ng-click="set();">This Week <i>(default)</i></a></li>
+							<li><a ng-click="setWeekNext();">Next Week</a></li>
+							<li class="divider"></li>
+							<li><a ng-click="setWeekOther();">Other...</a></li>
+						</ul>
 					</div>
+					<div class="col-lg-2"></div>
 				</div>
 			</h4>
 		</div>

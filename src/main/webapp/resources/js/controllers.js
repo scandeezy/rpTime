@@ -35,11 +35,8 @@
 			}
 
 			$log.info("dosave:", [ svc, obj, updateFn, map ]);
-			if (obj.id && false && 'JJZ TODO Implement UPDATE in angular services.js and server @Controllers') {
-				$log.info("update id=", obj.id);
-				$log.error("JJZ LOH: Implement UPDATE in @Controllers");
-				// TODO JJZ LOH 2013-10-30 svc.update({id:obj.id},)
-
+			if (obj.id // JJZ LOH FIXME
+					&& false && 'JJZ TODO Implement UPDATE in angular services.js and server @Controllers') {
 				svc.update({
 					id : obj.id
 				}, obj, function updateSuccessFn(data) {
@@ -47,18 +44,22 @@
 				});
 
 			} else {
+				if (obj.id) {
+					$log.error("JJZ LOH FIXME: Implement UPDATE in @Controllers. FIXME.");
+					// TODO JJZ LOH FIXME 2013-10-30 svc.update({id:obj.id},)
+				}
 				svc.save(obj, function saveSuccessFn(data) {
 					saveOrUpdateSuccessFn(data, map, updateFn, afterFn);
 				});
 			}
-			
-			function saveOrUpdateSuccessFn(data, map, updateFn, afterFn){
+
+			function saveOrUpdateSuccessFn(data, map, updateFn, afterFn) {
 				$log.info("saved data id=", data.id);
 				map[data.id] = data;
-				if(updateFn){
+				if (updateFn) {
 					$log.info("do ($broadcast) update '" + updateFn + "'");
 					$scope.$broadcast(updateFn);
-				}else{
+				} else {
 					$log.info("skipped $broadcast update");
 				}
 				if (afterFn) {
@@ -86,7 +87,7 @@
 			svc.remove({
 				id : id
 			}, function successFn() {
-				if(updateFn){
+				if (updateFn) {
 					$log.info("do ($broadcast) update '" + updateFn + "'");
 					$scope.$broadcast(updateFn);
 				}
@@ -115,7 +116,7 @@
 		$scope.timeSheetsMap = {};
 		$scope.currentTimeSheet = {};
 		$scope.clientsMap = AdminClientService.getAll();
-		
+
 		if ($routeParams.id) {
 			var id = $routeParams.id;
 			$log.info('getting id', id);
@@ -158,7 +159,7 @@
 				afterFn : function doAfterFn() {
 					// stay in the edit view!
 					// $scope.edit = false;
-					 $scope.createTimeSheetForm.$setPristine();
+					$scope.createTimeSheetForm.$setPristine();
 				}
 			});
 		};
@@ -175,6 +176,18 @@
 			$scope.edit = true;
 			$location.search('id', $scope.currentTimeSheet.id);
 			// $scope.createTimeSheetForm.$setPristine();
+		};
+
+		$scope.setWeekLast = function setWeekLastFn() {
+			$scope.currentTimeSheet = TimeSheetService.getLast();
+		};
+		
+		$scope.setWeekNext = function setWeekNextFn() {
+			$scope.currentTimeSheet = TimeSheetService.getNext();
+		};
+
+		$scope.setWeekOther = function setWeekOtherFn() {
+			$log.error("TODO: Placeholder for setWeekXxxxFn");
 		};
 
 		$scope.unset = function unsetFn() {
