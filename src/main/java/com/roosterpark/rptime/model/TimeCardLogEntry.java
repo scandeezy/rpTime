@@ -1,5 +1,6 @@
 package com.roosterpark.rptime.model;
 
+import com.googlecode.objectify.annotation.Embed;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
@@ -12,7 +13,7 @@ import org.joda.time.LocalTime;
  *
  * @author scandeezy
  */
-@Entity
+@Embed
 public class TimeCardLogEntry implements Comparable
 {
     @Id

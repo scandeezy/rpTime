@@ -9,7 +9,6 @@ import com.googlecode.objectify.annotation.Id;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import javax.persistence.Embedded;
 
 /**
  *
@@ -20,7 +19,6 @@ public class TimeSheetDay
 {
     @Id
     private Long id;
-    @Embedded
     private List<TimeCardLogEntry> entries;
     
     public TimeSheetDay() {
