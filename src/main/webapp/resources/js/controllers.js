@@ -138,6 +138,13 @@
 				$log.info('timeSheetsMap', $scope.timeSheetsMap);
 			});
 		}
+		
+		$scope.addNewTimeCardLogEntry = function addNewTimeCardLogEntryFn(timeSheet){
+			if(!timeSheet.timeSheetLogEntries){
+				timeSheet.timeSheetLogEntries = [];
+			}
+			timeSheet.timeSheetLogEntries.push({});
+		}
 
 		$scope.remove = function removeFn(obj) {
 			$scope.doRemove({

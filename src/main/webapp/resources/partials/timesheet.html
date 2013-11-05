@@ -18,7 +18,7 @@
 							<li><a ng-click="setWeekOther();">Other...</a></li>
 						</ul>
 					</div>
-					<div class="col-lg-2"></div>
+					<div class="col-sm-2"></div>
 				</div>
 			</h4>
 		</div>
@@ -41,7 +41,7 @@
 					</span>
 				</h4>
 				<div class="row">
-					<div class="col-lg-2 pull-right">
+					<div class="col-sm-2 pull-right">
 						<small><span class="text-muted">As of {{currentTimeSheet.updateTimestamp}}</span></small>
 					</div>
 				</div>
@@ -50,22 +50,36 @@
 				<div class="form-group">
 					<ul class="list-group">
 						<li ng-repeat="d in currentTimeSheet.days" class="list-group-item row" ng-init="ii=$index">
-							<div class="col-lg-2">{{d}} {{dayOfWeekArr[((currentTimeSheet.startDayOfWeek + $index) % 7)].description}}</div>
-							<div class="col-lg-4">
-								<input type="time" class="input-sm" ng-model="currentTimeSheet.startTimes[ii]" title="Clock-in Time"> <input type="time"
-									class="input-sm" ng-model="currentTimeSheet.endTimes[ii]" title="Clock-out Time">
+							<div class="col-sm-2">{{d}} {{dayOfWeekArr[((currentTimeSheet.startDayOfWeek + ii) % 7)].description}}</div>
+							<div class="col-sm-4">
+								<!--  -->
+								<!-- The following DIV to be removed when timeSheetLogEntry is fixed -->
+								<!--  -->
+								<div class="row">
+									<input type="time" class="input-sm" ng-model="currentTimeSheet.startTimes[ii]" title="Clock-in Time"> 
+									<input type="time" class="input-sm" ng-model="currentTimeSheet.endTimes[ii]" title="Clock-out Time">
+									<button type="button" class="btn btn-default btn-sm" ng-click="addNewTimeCardLogEntry(currentTimeSheet);"
+									ng-hide="currentTimeSheet.timeSheetLogEntries"><span class="glyphicon glyphicon-plus-sign"></span>
+									</button>
+								</div>
+								<div class="row" ng-repeat="timeSheetLogEntry in currentTimeSheet.timeSheetLogEntries">
+									<input type="time" class="input-sm" ng-model="timeSheetLogEntry.startTime" title="Clock-in Time"> 
+									<input type="time" class="input-sm" ng-model="timeSheetLogEntry.endTime" title="Clock-out Time">
+								 	<button type="button" class="btn btn-default btn-sm" ng-click="addNewTimeCardLogEntry(currentTimeSheet);"
+								 	ng-show="$index==(currentTimeSheet.timeSheetLogEntries.length - 1)"><span class="glyphicon glyphicon-plus-sign"></span></button>
+								</div>
 							</div>
 						</li>
 					</ul>
 				</div>
 				<div class="form-group row">
-					<label for="note" class="col-lg-2 control-label">Notes</label>
-					<div class="col-lg-4">
+					<label for="note" class="col-sm-2 control-label">Notes</label>
+					<div class="col-sm-4">
 						<textarea class="form-control" id="note" name="note" rows="2" ng-model="currentTimeSheet.note"></textarea>
 					</div>
 				</div>
 				<div class="form-group row">
-					<div class="col-lg-offset-2 col-lg-4">
+					<div class="col-sm-offset-2 col-sm-4">
 						<button type="button" id="save" class="btn " ng-class="{'btn-primary': createTimeSheetForm.$valid}"
 							ng-disabled="!(createTimeSheetForm.$valid && createTimeSheetForm.$dirty)" ng-click="save(currentTimeSheet)">Save</button>
 						<button type="button" id="cancel" class="btn btn-default" ng-click="unset();">

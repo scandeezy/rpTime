@@ -125,10 +125,6 @@
 
 @charset "UTF-8";
 
-body {
-	-webkit-backface-visibility: hidden;
-}
-
 .animated {
 	-webkit-animation-duration: 0.5s;
 	-moz-animation-duration: 0.5s;
