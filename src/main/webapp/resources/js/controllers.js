@@ -143,7 +143,7 @@
 			if(!timeSheet.timeSheetLogEntries){
 				timeSheet.timeSheetLogEntries = [];
 			}
-			timeSheet.timeSheetLogEntries.push({});
+			timeSheet.timeSheetLogEntries.push({clientId: timeSheet.clientId});
 		}
 
 		$scope.remove = function removeFn(obj) {

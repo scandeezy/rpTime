@@ -36,14 +36,16 @@
 				<div class="form-group" ng-class="{'has-error': createClientForm.name.$error.required}">
 					<label for="name" class="col-sm-2 control-label">Name</label>
 					<div class="col-sm-4">
-						<input type="text" class="form-control" id="name" name="name" ng-model="currentClient.name" placeholder="Enter Name" required>
+						<input type="text" class="form-control" id="name" name="name" ng-model="currentClient.name" placeholder="Enter Name" required
+						ng-disabled="!currentClient.editable">
 					</div>
 				</div>
 				<div class="form-group">
 					<div class="col-sm-offset-2 col-sm-4">
 						<div class="checkbox">
 							<label class="control-label" for="lunchRequired"> <input id="lunchRequired" name="lunchRequired" type="checkbox"
-								ng-model="currentClient.lunchRequired"> Lunch Required
+								ng-model="currentClient.lunchRequired"
+								ng-disabled="!currentClient.editable"> Lunch Required
 							</label>
 						</div>
 					</div>
@@ -52,7 +54,8 @@
 					<div class="col-sm-offset-2 col-sm-4">
 						<div class="checkbox">
 							<label class="control-label" for="startDayOfWeek">Start Day of Week <select id="startDayOfWeek" name="startDayOfWeek"
-								ng-model="currentClient.startDayOfWeek" class="form-control" required ng-options="c.code as c.description for c in dayOfWeekArr">
+								ng-model="currentClient.startDayOfWeek" class="form-control" required ng-options="c.code as c.description for c in dayOfWeekArr"
+								ng-disabled="!currentClient.editable">
 									<option value="">-- start day --</option>
 							</select>
 							</label>
@@ -61,7 +64,8 @@
 				</div>
 				<div class="form-group">
 					<div class="col-sm-offset-2 col-sm-4">
-						<button type="button" id="save" class="btn btn-primary" ng-click="save(currentClient)">Save</button>
+						<button type="button" id="save" class="btn btn-primary" ng-click="save(currentClient)"
+						ng-hide="!currentClient.editable">Save</button>
 						<button type="button" id="cancel" class="btn btn-default" ng-click="unset();">Cancel</button>
 					</div>
 				</div>

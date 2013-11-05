@@ -22,9 +22,6 @@
 	<logger name="org.datanucleus" level="WARN" />
 	<logger name="org.jboss" level="WARN" />
 	<logger name="org.springframework" level="TRACE" />
-	<logger name="org.springframework.web.servlet.mvc" level="TRACE" />
-	<!-- 
-	<logger name="org.springframework" level="DEBUG" />
 	<logger name="org.springframework.aop" level="WARN" />
 	<logger name="org.springframework.beans" level="WARN" />
 	<logger name="org.springframework.beans.CachedIntrospectionResults" level="WARN" />
@@ -37,7 +34,7 @@
 	<logger name="org.springframework.jndi" level="WARN" />
 	<logger name="org.springframework.web" level="DEBUG" />
 	<logger name="org.springframework.web.context" level="WARN" />
-	 -->
+	<logger name="org.springframework.web.servlet.mvc" level="TRACE" />
 	 
 	<root level="DEBUG">
 		<appender-ref ref="STDOUT" />
