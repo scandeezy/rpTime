@@ -34,6 +34,7 @@ public class TimeSheetDayDao
     }
     
     public List<TimeSheetDay> getEntries(List<Long> ids) {
+        LOGGER.debug("Ids being retreived {}", ids);
         return new LinkedList<TimeSheetDay>(ofy().load().type(TimeSheetDay.class).ids(ids).values());
     }
     

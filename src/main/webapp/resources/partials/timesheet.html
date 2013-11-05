@@ -49,45 +49,27 @@
 			<div class="panel-body">
 				<div class="form-group">
 					<ul class="list-group">
-						<li ng-repeat="d in currentTimeSheet.days" class="list-group-item row" ng-init="ii=$index">
-							<div class="col-sm-2">{{d}} {{dayOfWeekArr[((currentTimeSheet.startDayOfWeek + ii) % 7)].description}}</div>
+						<li ng-repeat="day in currentTimeSheet.days" class="list-group-item row" ng-init="ii=$index">
+							<div class="col-sm-2">{{dayOfWeekArr[((currentTimeSheet.startDayOfWeek + ii) % 7)].description}}</div>
 							<div class="col-sm-4">
-								<!--  -->
-								<!-- The following DIV to be removed when timeSheetLogEntry is fixed -->
-								<!--  -->
-								<div class="row">
-									<input type="time" class="input-sm" ng-model="currentTimeSheet.startTimes[ii]" title="Clock-in Time"> 
-									<input type="time" class="input-sm" ng-model="currentTimeSheet.endTimes[ii]" title="Clock-out Time">
-											
-									<select class="form-control input-sm" 
-										id="timeSheetLogEntry-clientId-{{ii}}" 
-										name="timeSheetLogEntry-clientId-{{ii}}" 
-										ng-model="currentTimeSheet.clientId"
-										ng-options="client.id as (client.name) for (clientid,client) in clientsMap" 
-										required>
-										<option value="">-- Select Client --</option>
-									</select>
-																		
-									<button type="button" class="btn btn-default btn-sm" ng-click="addNewTimeCardLogEntry(currentTimeSheet);"
-									ng-hide="currentTimeSheet.timeSheetLogEntries"><span class="glyphicon glyphicon-plus-sign"></span>
-									</button>
-								</div>
-								<div class="row" ng-repeat="timeSheetLogEntry in currentTimeSheet.timeSheetLogEntries">
-									<input type="time" class="input-sm" ng-model="timeSheetLogEntry.startTime" title="Clock-in Time"> 
+								<div class="row" ng-repeat="entry in day.entries">
+                                                                        
+									<input type="time" class="input-sm" ng-model="entry.startTime" title="Clock-in Time"> 
 									
-									<input type="time" class="input-sm" ng-model="timeSheetLogEntry.endTime" title="Clock-out Time">
+									<input type="time" class="input-sm" ng-model="entry.endTime" title="Clock-out Time">
 									
 									<select class="form-control input-sm" 
 										id="timeSheetLogEntry-clientId-{{ii}}" 
 										name="timeSheetLogEntry-clientId-{{ii}}" 
-										ng-model="timeSheetLogEntry.clientId"
+										ng-model="entry.clientId"
 										ng-options="client.id as (client.name) for (clientid,client) in clientsMap" 
 										required>
 										<option value="">-- Select Client --</option>
 									</select>
 									
-								 	<button type="button" class="btn btn-default btn-sm" ng-click="addNewTimeCardLogEntry(currentTimeSheet);"
-								 	ng-show="$index==(currentTimeSheet.timeSheetLogEntries.length - 1)"><span class="glyphicon glyphicon-plus-sign"></span></button>
+								 	<button type="button" class="btn btn-default btn-sm" ng-click="addNewTimeCardLogEntry(currentTimeSheet);">
+                                                                            <span class="glyphicon glyphicon-plus-sign"></span>
+                                                                        </button>
 								</div>
 							</div>
 						</li>

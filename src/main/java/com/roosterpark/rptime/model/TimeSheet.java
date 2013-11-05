@@ -76,9 +76,7 @@ public class TimeSheet {
             this.note = view.getNote();
             
             for(TimeSheetDay entry : view.getDays()) {
-                for(TimeCardLogEntry card : entry.getEntries()){
-                    this.timeCardIds.add(card.getId());
-                }
+                this.timeCardIds.add(entry.getId());
             }
         }
 
@@ -174,10 +172,16 @@ public class TimeSheet {
 				//
 				.add("clientId", this.clientId)
 				//
+                                .add("startDate", this.startDate)
+                                //
 				.add("week", this.week)
+                                //
+				.add("year", this.year)
 				//
 				.add("startDate", this.startDate)
 				//
+                                .add("timeSheetDayIds", this.timeCardIds)
+                                //
 				.toString();
 	}
 }

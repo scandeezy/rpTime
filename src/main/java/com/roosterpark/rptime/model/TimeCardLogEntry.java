@@ -16,8 +16,6 @@ import org.joda.time.LocalTime;
 @Embed
 public class TimeCardLogEntry implements Comparable
 {
-    @Id
-    private Long id;
     @Index
     private Long workerId;
     @Index
@@ -35,16 +33,6 @@ public class TimeCardLogEntry implements Comparable
         this.date = date;
         this.startTime = new LocalTime(9,0);
         this.endTime = new LocalTime(17,0);
-    }
-    
-    public Long getId()
-    {
-        return id;
-    }
-
-    public void setId(Long id)
-    {
-        this.id = id;
     }
 
     public Long getWorkerId()

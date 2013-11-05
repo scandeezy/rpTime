@@ -70,7 +70,7 @@ public class TimeSheetService {
                     day.addEntry(entry);
                     day = timeSheetDayDao.set(day);
                     entries.add(day);
-                    logIds.add(entry.getId());
+                    logIds.add(day.getId());
                 }
                 Long clientId = contract.getClient();
                 LocalDate contractDate = adjustDate(date, contract.getStartDayOfWeek());
@@ -114,6 +114,7 @@ public class TimeSheetService {
 	public List<TimeSheetView> getAll() {
 		LOGGER.warn("Getting TimeSheets for admin");
 		List<TimeSheet> sheets = timeSheetDao.getAll();
+                LOGGER.debug("Found these sheets for all {}", sheets);
                 List<TimeSheetView> views = new LinkedList<>();
                 for(TimeSheet sheet : sheets) {
                     views.add(convert(sheet));
