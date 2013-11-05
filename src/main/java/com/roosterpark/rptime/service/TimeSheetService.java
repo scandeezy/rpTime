@@ -149,9 +149,9 @@ public class TimeSheetService {
 
         public TimeSheetView set(TimeSheetView view) {
                 LOGGER.debug("Saving timesheet {}", view);
-                List<TimeCardLogEntry> entries = view.getTimeCards();
+                List<TimeCardLogEntry> entries = view.getDays();
                 entries = set(entries);
-                view.setTimeCards(entries);
+                view.setDays(entries);
                 TimeSheet sheet = new TimeSheet(view);
                 sheet = set(sheet);
                 

@@ -29,11 +29,11 @@ public class TimeSheetView
 	@Index
 	private Integer startDayOfWeek;
 
-        private List<TimeCardLogEntry> timeCards;
+        private List<TimeCardLogEntry> days;
 	private String note;
 
         public TimeSheetView() {
-            this.timeCards = new LinkedList<>();
+            this.days = new LinkedList<>();
         }
         
         public TimeSheetView(TimeSheet sheet) {
@@ -45,12 +45,12 @@ public class TimeSheetView
                 this.year = sheet.getYear();
                 this.startDayOfWeek = sheet.getStartDayOfWeek();
                 this.note = sheet.getNote();
-                this.timeCards = new LinkedList<>();
+                this.days = new LinkedList<>();
         }
         
         public TimeSheetView(TimeSheet sheet, List<TimeCardLogEntry> logs) {
                 this(sheet);
-                this.timeCards = logs;
+                this.days = logs;
         }
 
         public Long getId()
@@ -123,14 +123,14 @@ public class TimeSheetView
             this.startDayOfWeek = startDayOfWeek;
         }
 
-        public List<TimeCardLogEntry> getTimeCards()
+        public List<TimeCardLogEntry> getDays()
         {
-            return timeCards;
+            return days;
         }
 
-        public void setTimeCards(List<TimeCardLogEntry> timeCards)
+        public void setDays(List<TimeCardLogEntry> timeCards)
         {
-            this.timeCards = timeCards;
+            this.days = timeCards;
         }
 
         public String getNote()
