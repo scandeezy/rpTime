@@ -36,8 +36,8 @@
 			<div class="panel-body">
 
 				<div class="form-group" ng-class="{'has-error': createContractForm.worker.$error.required}">
-					<label for="worker" class="col-lg-2 control-label">Worker</label>
-					<div class="col-lg-4">
+					<label for="worker" class="col-sm-2 control-label">Worker</label>
+					<div class="col-sm-4">
 						<select class="form-control" id="worker" name="worker" ng-model="currentContract.worker"
 							ng-options="worker.id as (worker.lastName + ', ' + worker.firstName) for (workerid,worker) in workersMap" required>
 							<option value="">-- Select Worker --</option>
@@ -45,8 +45,8 @@
 					</div>
 				</div>
 				<div class="form-group" ng-class="{'has-error': createContractForm.client.$error.required}">
-					<label for="client" class="col-lg-2 control-label">Client</label>
-					<div class="col-lg-4">
+					<label for="client" class="col-sm-2 control-label">Client</label>
+					<div class="col-sm-4">
 						<select class="form-control" id="client" name="client" ng-model="currentContract.client"
 							ng-options="client.id as client.name for (clientid,client) in clientsMap" required>
 							<option value="">-- Select Client --</option>
@@ -54,26 +54,26 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="onSite" class="col-lg-2 control-label">On site</label>
-					<div class="col-lg-4">
+					<label for="onSite" class="col-sm-2 control-label">On site</label>
+					<div class="col-sm-4">
 						<input id="onSite" name="onSite" type="checkbox" ng-model="currentContract.onSite">
 					</div>
 				</div>
 				<div class="form-group" ng-class="{'has-error': createContractForm.startDate.$error.required}">
-					<label for="startDate" class="col-lg-2 control-label">Start Date</label>
-					<div class="col-lg-4">
+					<label for="startDate" class="col-sm-2 control-label">Start Date</label>
+					<div class="col-sm-4">
 						<input type="date" class="form-control" id="startDate" name="startDate" ng-model="currentContract.startDate" placeholder="YYYY-MM-DD"
 							required>
 					</div>
 				</div>
 				<div class="form-group">
-					<label for="endDate" class="col-lg-2 control-label">End Date</label>
-					<div class="col-lg-4">
+					<label for="endDate" class="col-sm-2 control-label">End Date</label>
+					<div class="col-sm-4">
 						<input type="date" class="form-control" id="endDate" name="endDate" ng-model="currentContract.endDate" placeholder="YYYY-MM-DD">
 					</div>
 				</div>
 				<div class="form-group">
-					<div class="col-lg-offset-2 col-lg-4">
+					<div class="col-sm-offset-2 col-sm-4">
 						<button type="button" id="save" class="btn btn-primary" ng-click="save(currentContract)">Save</button>
 						<button type="button" id="cancel" class="btn btn-default" ng-click="unset();">Cancel</button>
 					</div>
