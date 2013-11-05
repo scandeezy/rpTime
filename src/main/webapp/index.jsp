@@ -80,6 +80,7 @@ request = <%=request%></pre>
 			<script src="/resources/js/services.js"></script>
 			<script src="/resources/js/controllers.js"></script>
 			<script src="/resources/js/controllers/admin-controllers.js"></script>
+			<script src="/resources/js/controllers/report-controllers.js"></script>
 			<script src="/resources/js/filters.js"></script>
 			<script src="/resources/js/directives.js"></script>
 			<!-- pre-load templates into angular's $templateCache (see: http://stackoverflow.com/a/12346901/237225) -->
@@ -89,6 +90,8 @@ request = <%=request%></pre>
 			<script type="text/ng-template" src="/resources/partials/landing.html"></script>
 			<script type="text/ng-template" src="/resources/partials/timesheet.html"></script>
 			<script type="text/ng-template" src="/resources/partials/worker.html"></script>
+			<script type="text/ng-template" src="/resources/partials/reports/list.html"></script>
+			<script type="text/ng-template" src="/resources/partials/reports/total-hours-per-worker-per-month.html"></script>
 			<!-- end pre-load templates --> 
 		</div>
 

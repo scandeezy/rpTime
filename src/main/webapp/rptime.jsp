@@ -33,9 +33,9 @@ String logoutUrl2 = userService2.createLogoutURL(request.getRequestURI());
 				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown">Reports <b
 						class="caret"></b></a>
 					<ul class="dropdown-menu">
-						<li><a href="#/report/1">Report1</a></li>
-						<li><a href="#/report/2">Report2</a></li>
-						<li><a href="#/report/3">Report3</a></li>
+						<li><a href="#/report/total-hours-per-worker-per-month">Total Hours Per Worker Per Month</a></li>
+						<!-- <li><a href="#/report/2">Report2</a></li> -->
+						<!-- <li><a href="#/report/3">Report3</a></li> -->
 					</ul>
 				<%
 					}

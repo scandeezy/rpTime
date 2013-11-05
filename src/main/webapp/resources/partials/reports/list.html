@@ -1,0 +1,17 @@
+<!-- current $scope is ReportPageCtrl -->
+<div id="reports-list">
+
+	<div class="btn-group">
+		<a id="print" name="print" class="btn btn-default"
+			href="JavaScript:window.print();"><span class="glyphicon glyphicon-print"></span></a>
+	</div>
+	
+	<div ng-switch on="selection">
+		<div ng-switch-when="total-hours-per-worker-per-month">
+			<div ng-include src="'/resources/partials/reports/total-hours-per-worker-per-month.html'"
+				ng-controller="ReportTotalHoursPerWorkerPerMonthCtrl"></div>
+		</div>
+		<div ng-switch-when="home">Home Span</div>
+		<div ng-switch-default>Please select a report from the menu dropdown above.</div>
+	</div>
+</div>
