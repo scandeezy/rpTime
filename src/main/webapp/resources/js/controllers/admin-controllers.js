@@ -84,6 +84,7 @@
 
 		$scope.set = function setFn(obj) {
 			$scope.currentClient = angular.copy(obj, {});
+			$scope.currentClient.editable = true;
 			$scope.edit = true;
 			$location.search('id', $scope.currentClient.id);
 			$scope.createClientForm.$setPristine();
