@@ -1,7 +1,6 @@
 package com.roosterpark.rptime.service;
 
 import com.googlecode.objectify.Key;
-import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -21,7 +20,10 @@ import org.slf4j.LoggerFactory;
 import com.roosterpark.rptime.model.Contract;
 import com.roosterpark.rptime.model.TimeCardLogEntry;
 import com.roosterpark.rptime.model.TimeSheet;
+import com.roosterpark.rptime.model.TimeSheetDay;
 import com.roosterpark.rptime.model.TimeSheetView;
+import com.roosterpark.rptime.service.dao.TimeSheetDao;
+import com.roosterpark.rptime.service.dao.TimeSheetDayDao;
 
 @Named
 public class TimeSheetService {
@@ -29,6 +31,12 @@ public class TimeSheetService {
 
 	@Inject
 	ContractService contractService;
+        
+        @Inject
+        TimeSheetDao timeSheetDao;
+        
+        @Inject
+        TimeSheetDayDao timeSheetDayDao;
 
 	public List<TimeSheetView> createForWorkerDate(Long workerId, LocalDate date) {
 		List<Contract> contracts = contractService.getActiveContractsForWorker(workerId, date);
@@ -54,19 +62,21 @@ public class TimeSheetService {
                 LOGGER.debug("created new TimeSheet for worker={}, date={}, contract={}", workerId, date, contract);
                 
                 List<Long> logIds = new LinkedList<>();
-                List<TimeCardLogEntry> entries = new LinkedList<>();
+                List<TimeSheetDay> entries = new LinkedList<>();
                 for(int i = 0; i < 7; i++) {
+                    TimeSheetDay day = new TimeSheetDay();
                     TimeCardLogEntry entry = new TimeCardLogEntry(workerId, contract.getClient(), date.plusDays(i));
                     // Retain the ID
-                    entry = set(entry);
-                    entries.add(entry);
+                    day.addEntry(entry);
+                    day = timeSheetDayDao.set(day);
+                    entries.add(day);
                     logIds.add(entry.getId());
                 }
                 Long clientId = contract.getClient();
                 LocalDate contractDate = adjustDate(date, contract.getStartDayOfWeek());
                 TimeSheet result = new TimeSheet(workerId, clientId, contractDate, logIds);
 
-                result = set(result);
+                result = timeSheetDao.set(result);
                 
                 TimeSheetView view = new TimeSheetView(result,entries);
                 
@@ -74,12 +84,7 @@ public class TimeSheetService {
         }
         
         public List<TimeSheetView> getSheetViewsForWorkerPage(Long workerId, Integer count, Integer offset) {
-                List<TimeSheet> sheets = ofy().load().type(TimeSheet.class)
-                                                .filter("workerId", workerId)
-                                                .order(TimeSheet.START_DATE_KEY)
-                                                .limit(count)
-                                                .offset(offset)
-                                                .list();
+                List<TimeSheet> sheets = timeSheetDao.getSheetViewsForWorkerPage(workerId, count, offset);
                 List<TimeSheetView> views = new LinkedList<>();
                 for(TimeSheet sheet : sheets) {
                         views.add(convert(sheet));
@@ -89,13 +94,9 @@ public class TimeSheetService {
         }
         
         private TimeSheetView convert(TimeSheet sheet) {
-                List<TimeCardLogEntry> entries = getEntries(sheet.getTimeCardIds());
+                List<TimeSheetDay> entries = timeSheetDayDao.getEntries(sheet.getTimeCardIds());
                 // TODO assert the order is consistent
                 return new TimeSheetView(sheet, entries);
-        }
-        
-        public List<TimeCardLogEntry> getEntries(List<Long> ids) {
-            return new LinkedList<TimeCardLogEntry>(ofy().load().type(TimeCardLogEntry.class).ids(ids).values());
         }
         
         private LocalDate adjustDate(LocalDate date, Integer dayOfWeek) {
@@ -105,14 +106,14 @@ public class TimeSheetService {
             return date.plusDays(dayOfWeek - currentDayOfWeek);
         }
 
-	public List<TimeSheet> getAllForWorker(Long workerId) {
-		LOGGER.warn("Getting TimeSheets for workerId={}", workerId);
-		return ofy().load().type(TimeSheet.class).filter("workerId", workerId).list();
-	}
-
+//	public List<TimeSheet> getAllForWorker(Long workerId) {
+//		LOGGER.warn("Getting TimeSheets for workerId={}", workerId);
+//		return ofy().load().type(TimeSheet.class).filter("workerId", workerId).list();
+//	}
+//
 	public List<TimeSheetView> getAll() {
 		LOGGER.warn("Getting TimeSheets for admin");
-		List<TimeSheet> sheets = ofy().load().type(TimeSheet.class).list();
+		List<TimeSheet> sheets = timeSheetDao.getAll();
                 List<TimeSheetView> views = new LinkedList<>();
                 for(TimeSheet sheet : sheets) {
                     views.add(convert(sheet));
@@ -122,94 +123,42 @@ public class TimeSheetService {
 	}
 
 	public TimeSheetView getById(Long id) {
-                TimeSheet sheet = getSheetById(id);
+                TimeSheet sheet = timeSheetDao.getById(id);
                 
                 return convert(sheet);
 	}
-        
-        private TimeSheet getSheetById(Long id) {
-                TimeSheet sheet = ofy().load().type(TimeSheet.class).id(id).now();
-                
-                return sheet;
-        }
 
-	public List<TimeSheet> getClientWeekPage(String client, Integer week, int count, int offset) {
-		return ofy().load().type(TimeSheet.class).filter(TimeSheet.CLIENT_KEY, client).filter(TimeSheet.WEEK_KEY, week).limit(count)
-				.offset(offset).list();
-	}
-
-	public List<TimeSheet> getWorkerWeekPage(String worker, Integer week, int count, int offset) {
-		return ofy().load().type(TimeSheet.class).filter(TimeSheet.WORKER_KEY, worker).filter(TimeSheet.WEEK_KEY, week).limit(count)
-				.offset(offset).list();
-	}
-
-	public List<TimeSheet> getPage(int count, int offset) {
-		return ofy().load().type(TimeSheet.class).limit(count).offset(offset).list();
-	}
+//	public List<TimeSheet> getClientWeekPage(String client, Integer week, int count, int offset) {
+//		return ofy().load().type(TimeSheet.class).filter(TimeSheet.CLIENT_KEY, client).filter(TimeSheet.WEEK_KEY, week).limit(count)
+//				.offset(offset).list();
+//	}
+//
+//	public List<TimeSheet> getWorkerWeekPage(String worker, Integer week, int count, int offset) {
+//		return ofy().load().type(TimeSheet.class).filter(TimeSheet.WORKER_KEY, worker).filter(TimeSheet.WEEK_KEY, week).limit(count)
+//				.offset(offset).list();
+//	}
+//
+//	public List<TimeSheet> getPage(int count, int offset) {
+//		return ofy().load().type(TimeSheet.class).limit(count).offset(offset).list();
+//	}
 
         public TimeSheetView set(TimeSheetView view) {
                 LOGGER.debug("Saving timesheet {}", view);
-                List<TimeCardLogEntry> entries = view.getDays();
-                entries = set(entries);
+                List<TimeSheetDay> entries = view.getDays();
+                entries = timeSheetDayDao.set(entries);
                 view.setDays(entries);
                 TimeSheet sheet = new TimeSheet(view);
-                sheet = set(sheet);
+                sheet = timeSheetDao.set(sheet);
                 
                 return new TimeSheetView(sheet, entries);
         }
-        
-	private TimeSheet set(TimeSheet item) {
-		LOGGER.debug("Saving timesheet {}", item);
-		item.setUpdateTimestamp(new LocalDateTime());
-		Key<TimeSheet> sheetKey = ofy().save().entity(item).now();
-                LOGGER.debug("Got key {}", sheetKey);
-                item = ofy().load().key(sheetKey).now();
-                LOGGER.debug("Fetched back sheet {}", item);
-                return item;
-	}
-        
-        private TimeCardLogEntry set(TimeCardLogEntry entry) {
-            LOGGER.debug("Saving entry {}", entry);
-            Key<TimeCardLogEntry> entryKey = ofy().save().entity(entry).now();
-            LOGGER.debug("Got key {}", entryKey);
-            entry = ofy().load().key(entryKey).now();
-            
-            LOGGER.debug("Fetched back entry {}", entry);
-            return entry;
-        }
-        
-        private List<TimeCardLogEntry> set(List<TimeCardLogEntry> entries) {
-            List<TimeCardLogEntry> outbound = new LinkedList<>();
-            
-            for(TimeCardLogEntry entry : entries) {
-                outbound.add(set(entry));
-            }
-            
-            return outbound;
-        }
-
-	public List<TimeSheet> getRecentForWorker(Long workerId, Date date, int limit) {
-		GregorianCalendar cal = new GregorianCalendar();
-		cal.setTime(date);
-		Integer week = cal.get(Calendar.WEEK_OF_YEAR);
-		LOGGER.debug("querying Sheets for worker={},date={},week={}", workerId, date, week);
-		List<TimeSheet> result = ofy()//
-				.load()//
-				.type(TimeSheet.class)//
-				.filter(TimeSheet.WORKER_KEY, workerId)//
-				.filter(TimeSheet.WEEK_KEY + " <=", week)//
-				.limit(limit)//
-				// .order("-date")//Descending date sort
-				.list();
-		LOGGER.debug("returning List<Sheet>={}", result);
-		return result;
-	}
 
 	public void delete(Long id) {
-		TimeSheet c = getSheetById(id);
-                List<TimeCardLogEntry> entries = getEntries(c.getTimeCardIds());
-                ofy().delete().entities(entries).now();
-		ofy().delete().entity(c).now();
+		TimeSheet c = timeSheetDao.getById(id);
+                List<TimeSheetDay> entries = timeSheetDayDao.getEntries(c.getTimeCardIds());
+                
+                timeSheetDayDao.delete(c.getTimeCardIds());
+                timeSheetDao.delete(c.getId());
 	}
 
 }

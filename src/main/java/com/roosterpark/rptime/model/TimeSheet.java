@@ -75,8 +75,10 @@ public class TimeSheet {
             this.startDayOfWeek = view.getStartDayOfWeek();
             this.note = view.getNote();
             
-            for(TimeCardLogEntry entry : view.getDays()) {
-                this.timeCardIds.add(entry.getId());
+            for(TimeSheetDay entry : view.getDays()) {
+                for(TimeCardLogEntry card : entry.getEntries()){
+                    this.timeCardIds.add(card.getId());
+                }
             }
         }
 

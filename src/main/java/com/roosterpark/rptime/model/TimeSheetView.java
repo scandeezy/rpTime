@@ -29,7 +29,7 @@ public class TimeSheetView
 	@Index
 	private Integer startDayOfWeek;
 
-        private List<TimeCardLogEntry> days;
+        private List<TimeSheetDay> days;
 	private String note;
 
         public TimeSheetView() {
@@ -48,7 +48,7 @@ public class TimeSheetView
                 this.days = new LinkedList<>();
         }
         
-        public TimeSheetView(TimeSheet sheet, List<TimeCardLogEntry> logs) {
+        public TimeSheetView(TimeSheet sheet, List<TimeSheetDay> logs) {
                 this(sheet);
                 this.days = logs;
         }
@@ -123,12 +123,12 @@ public class TimeSheetView
             this.startDayOfWeek = startDayOfWeek;
         }
 
-        public List<TimeCardLogEntry> getDays()
+        public List<TimeSheetDay> getDays()
         {
             return days;
         }
 
-        public void setDays(List<TimeCardLogEntry> timeCards)
+        public void setDays(List<TimeSheetDay> timeCards)
         {
             this.days = timeCards;
         }

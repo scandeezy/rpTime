@@ -13,7 +13,7 @@ import org.joda.time.LocalTime;
  * @author scandeezy
  */
 @Entity
-public class TimeCardLogEntry
+public class TimeCardLogEntry implements Comparable
 {
     @Id
     private Long id;
@@ -23,27 +23,17 @@ public class TimeCardLogEntry
     private Long clientId;
     @Index
     private LocalDate date;
-    private List<LocalTime> startTimes;
-    private List<LocalTime> endTimes;
-
-    public TimeCardLogEntry() {
-        this.startTimes = new LinkedList<LocalTime>(){{add(new LocalTime(9,0));}};
-        this.endTimes = new LinkedList<LocalTime>(){{add(new LocalTime(17,0));}};
-    }
+    private LocalTime startTime;
+    private LocalTime endTime;
+    
+    public TimeCardLogEntry() {}
     
     public TimeCardLogEntry(Long workerId, Long clientId, LocalDate date) {
-        this();
         this.workerId = workerId;
         this.clientId = clientId;
         this.date = date;
-    }
-    
-    // Assumes lunch taken at noon for lunchLength minutes
-    public TimeCardLogEntry(Long workerId, Long clientId, LocalDate date, Integer lunchLength) {
-        this(workerId, clientId, date);
-        LocalTime noon = new LocalTime(12,0);
-        this.startTimes.add(noon.plusMinutes(lunchLength));
-        this.endTimes.add(0, noon);
+        this.startTime = new LocalTime(9,0);
+        this.endTime = new LocalTime(17,0);
     }
     
     public Long getId()
@@ -86,23 +76,40 @@ public class TimeCardLogEntry
         this.date = date;
     }
 
-    public List<LocalTime> getStartTimes()
+    public LocalTime getStartTime()
     {
-        return startTimes;
+        return startTime;
     }
 
-    public void setStartTimes(List<LocalTime> startTimes)
+    public void setStartTime(LocalTime startTime)
     {
-        this.startTimes = startTimes;
+        this.startTime = startTime;
     }
 
-    public List<LocalTime> getEndTimes()
+    public LocalTime getEndTime()
     {
-        return endTimes;
+        return endTime;
     }
 
-    public void setEndTimes(List<LocalTime> endTimes)
+    public void setEndTime(LocalTime endTime)
     {
-        this.endTimes = endTimes;
+        this.endTime = endTime;
+    }
+
+    // Compared strictly based on date and start times.
+    @Override
+    public int compareTo(Object o)
+    {
+        if(o instanceof TimeCardLogEntry)
+        {
+            TimeCardLogEntry other = (TimeCardLogEntry)o;
+            
+            if(this.getDate().compareTo(other.getDate()) != 0)
+                return this.getDate().compareTo(other.getDate());
+            
+            return this.getStartTime().compareTo(other.getStartTime());
+        }
+        
+        return -1;
     }
 }
