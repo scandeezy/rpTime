@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
-import com.roosterpark.rptime.model.TimeSheet;
+import com.roosterpark.rptime.model.TimeSheetView;
 import com.roosterpark.rptime.model.Worker;
 import com.roosterpark.rptime.service.TimeSheetService;
 import com.roosterpark.rptime.service.WorkerService;
@@ -79,27 +79,27 @@ public class TimeSheetController {
 
 	@RequestMapping(value = "/new", method = { POST, GET })
 	@ResponseBody
-	public TimeSheet create() {
+	public TimeSheetView create() {
 		return createOptionalDate(new LocalDate());
 	}
 
 	@RequestMapping(value = "/last", method = { GET })
 	@ResponseBody
-	public TimeSheet getLast() {
+	public TimeSheetView getLast() {
 		final LocalDate d = (new LocalDate()).minusWeeks(1);
 		return createOptionalDate(d);
 	}
 
 	@RequestMapping(value = "/next", method = { GET })
 	@ResponseBody
-	public TimeSheet getNext() {
+	public TimeSheetView getNext() {
 		final LocalDate d = (new LocalDate()).plusWeeks(1);
 		return createOptionalDate(d);
 	}
 
 	@RequestMapping(value = "/new/{date}", method = { POST, GET })
 	@ResponseBody
-	public TimeSheet createOptionalDate(@PathVariable("date") LocalDate date) {
+	public TimeSheetView createOptionalDate(@PathVariable("date") LocalDate date) {
 		final Worker worker = getValidatedWorker();
 		LOGGER.debug("creating timesheet for worker={}, date={}", worker, date);
 		return service.createForWorkerDate(worker.getId(), date).get(0);
@@ -107,16 +107,16 @@ public class TimeSheetController {
 
 	@RequestMapping(method = GET)
 	@ResponseBody
-	public List<TimeSheet> getAll() {
+	public List<TimeSheetView> getAll() {
 		return service.getAll();
 	}
 
 	@RequestMapping(value = "/idmap", method = GET)
 	@ResponseBody
-	public SortedMap<Long, TimeSheet> getMap() {
-		final List<TimeSheet> list = service.getAll();
-		final SortedMap<Long, TimeSheet> map = new TreeMap<Long, TimeSheet>();
-		for (TimeSheet obj : list) {
+	public SortedMap<Long, TimeSheetView> getMap() {
+		final List<TimeSheetView> list = service.getAll();
+		final SortedMap<Long, TimeSheetView> map = new TreeMap<>();
+		for (TimeSheetView obj : list) {
 			map.put(obj.getId(), obj);
 		}
 		return map;
@@ -124,13 +124,13 @@ public class TimeSheetController {
 
 	@RequestMapping(value = "/{id}", method = GET)
 	@ResponseBody
-	public TimeSheet getById(@PathVariable Long id) {
+	public TimeSheetView getById(@PathVariable Long id) {
 		return service.getById(id);
 	}
 
 	@RequestMapping(method = POST)
 	@ResponseBody
-	public TimeSheet post(@RequestBody TimeSheet item) {
+	public TimeSheetView post(@RequestBody TimeSheetView item) {
 		LOGGER.debug("saving timesheet {}", item);
 		service.set(item);
 		return item;
@@ -139,7 +139,7 @@ public class TimeSheetController {
 	@RequestMapping(value = "/{id}", method = PUT)
 	@ResponseStatus(ACCEPTED)
 	@ResponseBody
-	public TimeSheet put(@PathVariable("id") Long id, @RequestBody TimeSheet item) {
+	public TimeSheetView put(@PathVariable("id") Long id, @RequestBody TimeSheetView item) {
 		Validate.isTrue(item.getId().equals(id));
 		service.set(item);
 		return item;

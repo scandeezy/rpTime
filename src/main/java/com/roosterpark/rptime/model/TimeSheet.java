@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
-import org.joda.time.LocalTime;
 
 import com.google.common.base.Objects;
 import com.googlecode.objectify.annotation.Entity;
@@ -17,6 +16,7 @@ public class TimeSheet {
 
 	public static final String WORKER_KEY = "workerId";
 	public static final String CLIENT_KEY = "clientId";
+        public static final String START_DATE_KEY = "startDate";
 	public static final String WEEK_KEY = "week";
 
 	@Id
@@ -35,9 +35,7 @@ public class TimeSheet {
 	private Integer startDayOfWeek;
 
 	private LocalDateTime updateTimestamp;
-	private List<LocalDate> days;
-	private List<LocalTime> startTimes;
-	private List<LocalTime> endTimes;
+        private List<Long> timeCardIds;
 	private String note;
 
 	/**
@@ -48,9 +46,7 @@ public class TimeSheet {
 	@Deprecated
 	public TimeSheet() {
 		this.updateTimestamp = new LocalDateTime();
-		this.days = new LinkedList<LocalDate>();
-		this.startTimes = new LinkedList<LocalTime>();
-		this.endTimes = new LinkedList<LocalTime>();
+                this.timeCardIds = new LinkedList<>();
 	}
 
 	public TimeSheet(Long workerId, Long clientId, LocalDate startDate) {
@@ -61,16 +57,28 @@ public class TimeSheet {
 		this.startDayOfWeek = startDate.getDayOfWeek();
 		this.week = startDate.getWeekOfWeekyear();
 		this.year = startDate.getYear();
-
-		LocalDate d = new LocalDate(startDate);
-		for (int i = 0; i < 7; i++) {
-			days.add(d);
-			startTimes.add(new LocalTime(9, 0));
-			endTimes.add(new LocalTime(17, 0));
-			d = d.plusDays(1);
-		}
-
 	}
+        
+	public TimeSheet(Long workerId, Long clientId, LocalDate startDate, List<Long> logIds) {
+            this(workerId, clientId, startDate);
+            this.timeCardIds = logIds;
+        }
+        
+        public TimeSheet(TimeSheetView view) {
+            this();
+            this.id = view.getId();
+            this.workerId = view.getWorkerId();
+            this.clientId = view.getClientId();
+            this.startDate = view.getStartDate();
+            this.week = view.getWeek();
+            this.year = view.getYear();
+            this.startDayOfWeek = view.getStartDayOfWeek();
+            this.note = view.getNote();
+            
+            for(TimeCardLogEntry entry : view.getTimeCards()) {
+                this.timeCardIds.add(entry.getId());
+            }
+        }
 
 	public Long getId() {
 		return id;
@@ -128,6 +136,32 @@ public class TimeSheet {
 		this.startDayOfWeek = startDayOfWeek;
 	}
 
+	public LocalDateTime getUpdateTimestamp() {
+		return updateTimestamp;
+	}
+
+	public void setUpdateTimestamp(LocalDateTime updateTimestamp) {
+		this.updateTimestamp = updateTimestamp;
+	}
+
+        public List<Long> getTimeCardIds()
+        {
+            return timeCardIds;
+        }
+
+        public void setTimeCardIds(List<Long> timeCardIds)
+        {
+            this.timeCardIds = timeCardIds;
+        }
+        
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
+	}
+
 	@Override
 	public String toString() {
 		return Objects.toStringHelper(this)
@@ -144,45 +178,4 @@ public class TimeSheet {
 				//
 				.toString();
 	}
-
-	public LocalDateTime getUpdateTimestamp() {
-		return updateTimestamp;
-	}
-
-	public void setUpdateTimestamp(LocalDateTime updateTimestamp) {
-		this.updateTimestamp = updateTimestamp;
-	}
-
-	public List<LocalDate> getDays() {
-		return days;
-	}
-
-	public void setDays(List<LocalDate> days) {
-		this.days = days;
-	}
-
-	public List<LocalTime> getStartTimes() {
-		return startTimes;
-	}
-
-	public void setStartTimes(List<LocalTime> startTimes) {
-		this.startTimes = startTimes;
-	}
-
-	public List<LocalTime> getEndTimes() {
-		return endTimes;
-	}
-
-	public void setEndTimes(List<LocalTime> endTimes) {
-		this.endTimes = endTimes;
-	}
-
-	public String getNote() {
-		return note;
-	}
-
-	public void setNote(String note) {
-		this.note = note;
-	}
-
 }
