@@ -9,6 +9,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.roosterpark.rptime.BasicRptimeUnitTest;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * User: John Date: 10/21/13 Time: 11:11 AM
@@ -16,7 +18,13 @@ import com.roosterpark.rptime.BasicRptimeUnitTest;
 public class TimeSheetTest extends BasicRptimeUnitTest {
 
 	private static final Long WORKER_ID = 123L;
-	private static final Long CLIENT_ID = 234L;
+	private static final Long CLIENT_ID_1 = 234L;
+	private static final Long CLIENT_ID_2 = 567L;
+        private static final List<Long> CLIENT_IDS = new LinkedList<Long>()
+                {{
+                        add(CLIENT_ID_1);
+                        add(CLIENT_ID_2);
+                }};
 	private static final Integer WEEK = 1;
 	private static final LocalDate START_DATE = new LocalDate();
 	private static final Double[] HOURS = { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 };
@@ -25,12 +33,12 @@ public class TimeSheetTest extends BasicRptimeUnitTest {
 
 	@Before
 	public void setup() {
-		sheet = new TimeSheet(WORKER_ID, CLIENT_ID, START_DATE);
+		sheet = new TimeSheet(WORKER_ID, CLIENT_IDS, START_DATE);
 	}
 
 	@Test
 	public void constructorTest() {
-		sheet = new TimeSheet(WORKER_ID, CLIENT_ID, START_DATE);
+		sheet = new TimeSheet(WORKER_ID, CLIENT_IDS, START_DATE);
 		assertNotNull("Object null!", sheet);
 	}
 
@@ -54,8 +62,8 @@ public class TimeSheetTest extends BasicRptimeUnitTest {
 
 	@Test
 	public void clientIdTest() {
-		sheet.setClientId(CLIENT_ID);
-		assertEquals("Client ID doesn't match!", CLIENT_ID, sheet.getClientId());
+		sheet.setClientIds(CLIENT_IDS);
+		assertEquals("Client ID doesn't match!", CLIENT_IDS, sheet.getClientIds());
 	}
 
 	@Test

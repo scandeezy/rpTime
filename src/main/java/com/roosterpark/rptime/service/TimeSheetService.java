@@ -39,17 +39,16 @@ public class TimeSheetService {
 			List<TimeSheet> sheets = new LinkedList<>();
 
                         boolean lunch = false;
-                        Long defaultClientId = 0L;
+                        List<Long> clientIds = new LinkedList<>();
 			for (Contract contract : contracts) {
-                                if(defaultClientId == 0L)
-                                        defaultClientId = contract.getClient();
+                                clientIds.add(contract.getClient());
                                 if(contract.getLunchRequired())
                                 {
                                         lunch = true;
                                         break;
                                 }
 			}
-                        TimeSheetView view = createForWorkerDateContract(workerId, date, defaultClientId, lunch);
+                        TimeSheetView view = createForWorkerDateContract(workerId, date, clientIds, lunch);
 
 			return view;
 		}
@@ -59,10 +58,11 @@ public class TimeSheetService {
 
 	}
         
-        public TimeSheetView createForWorkerDateContract(Long workerId, LocalDate date, Long defaultClientId, boolean lunchRequired) {
+        public TimeSheetView createForWorkerDateContract(Long workerId, LocalDate date, List<Long> clientIds, boolean lunchRequired) {
                 // TODO verify this sheet doesn't already exist.
                 LOGGER.debug("created new TimeSheet for worker={}, date={}, lunchRequired={}", workerId, date, lunchRequired);
                 
+                Long defaultClientId = clientIds.get(0);
                 List<Long> logIds = new LinkedList<>();
                 List<TimeSheetDay> entries = new LinkedList<>();
                 for(int i = 0; i < 7; i++) {
@@ -80,10 +80,9 @@ public class TimeSheetService {
                         entries.add(day);
                         logIds.add(day.getId());
                 }
-                Long clientId = defaultClientId;
                 // Hardcoded because of our current data layer.
                 LocalDate contractDate = adjustDate(date, DateTimeConstants.SUNDAY);
-                TimeSheet result = new TimeSheet(workerId, clientId, contractDate, logIds);
+                TimeSheet result = new TimeSheet(workerId, clientIds, contractDate, logIds);
 
                 result = timeSheetDao.set(result);
                 

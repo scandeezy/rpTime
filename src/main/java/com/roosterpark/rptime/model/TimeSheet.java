@@ -15,7 +15,7 @@ import com.googlecode.objectify.annotation.Index;
 public class TimeSheet {
 
 	public static final String WORKER_KEY = "workerId";
-	public static final String CLIENT_KEY = "clientId";
+	public static final String CLIENT_KEY = "clientIds";
         public static final String START_DATE_KEY = "startDate";
 	public static final String WEEK_KEY = "week";
 
@@ -24,7 +24,7 @@ public class TimeSheet {
 	@Index
 	private Long workerId;
 	@Index
-	private Long clientId;
+	private List<Long> clientIds;
 	@Index
 	private LocalDate startDate;
 	@Index
@@ -49,18 +49,18 @@ public class TimeSheet {
                 this.timeCardIds = new LinkedList<>();
 	}
 
-	public TimeSheet(Long workerId, Long clientId, LocalDate startDate) {
+	public TimeSheet(Long workerId, List<Long> clientIds, LocalDate startDate) {
 		this();
 		this.workerId = workerId;
-		this.clientId = clientId;
+		this.clientIds = clientIds;
 		this.startDate = startDate;
 		this.startDayOfWeek = startDate.getDayOfWeek();
 		this.week = startDate.getWeekOfWeekyear();
 		this.year = startDate.getYear();
 	}
         
-	public TimeSheet(Long workerId, Long clientId, LocalDate startDate, List<Long> logIds) {
-            this(workerId, clientId, startDate);
+	public TimeSheet(Long workerId, List<Long> clientIds, LocalDate startDate, List<Long> logIds) {
+            this(workerId, clientIds, startDate);
             this.timeCardIds = logIds;
         }
         
@@ -68,7 +68,7 @@ public class TimeSheet {
             this();
             this.id = view.getId();
             this.workerId = view.getWorkerId();
-            this.clientId = view.getClientId();
+            this.clientIds = view.getClientIds();
             this.startDate = view.getStartDate();
             this.week = view.getWeek();
             this.year = view.getYear();
@@ -96,12 +96,12 @@ public class TimeSheet {
 		this.workerId = workerId;
 	}
 
-	public Long getClientId() {
-		return clientId;
+	public List<Long> getClientIds() {
+		return clientIds;
 	}
 
-	public void setClientId(Long clientId) {
-		this.clientId = clientId;
+	public void setClientIds(List<Long> clientIds) {
+		this.clientIds = clientIds;
 	}
 
 	public Integer getWeek() {
@@ -170,7 +170,7 @@ public class TimeSheet {
 				//
 				.add("workerId", this.workerId)
 				//
-				.add("clientId", this.clientId)
+				.add("clientIds", this.clientIds)
 				//
                                 .add("startDate", this.startDate)
                                 //

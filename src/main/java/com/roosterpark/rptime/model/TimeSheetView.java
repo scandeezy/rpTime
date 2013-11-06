@@ -19,7 +19,7 @@ public class TimeSheetView
 	@Index
 	private Long workerId;
 	@Index
-	private Long clientId;
+	private List<Long> clientIds;
 	@Index
 	private LocalDate startDate;
 	@Index
@@ -39,7 +39,7 @@ public class TimeSheetView
         public TimeSheetView(TimeSheet sheet) {
                 this.id = sheet.getId();
                 this.workerId = sheet.getWorkerId();
-                this.clientId = sheet.getClientId();
+                this.clientIds = sheet.getClientIds();
                 this.startDate = sheet.getStartDate();
                 this.week = sheet.getWeek();
                 this.year = sheet.getYear();
@@ -73,14 +73,14 @@ public class TimeSheetView
             this.workerId = workerId;
         }
 
-        public Long getClientId()
+        public List<Long> getClientIds()
         {
-            return clientId;
+            return clientIds;
         }
 
-        public void setClientId(Long clientId)
+        public void setClientIds(List<Long> clientIds)
         {
-            this.clientId = clientId;
+            this.clientIds = clientIds;
         }
 
         public LocalDate getStartDate()
