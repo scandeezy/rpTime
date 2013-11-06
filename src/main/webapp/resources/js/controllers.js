@@ -139,11 +139,17 @@
 			});
 		}
 		
-		$scope.addNewTimeCardLogEntry = function addNewTimeCardLogEntryFn(timeSheet){
-			if(!timeSheet.timeSheetLogEntries){
-				timeSheet.timeSheetLogEntries = [];
-			}
-			timeSheet.timeSheetLogEntries.push({clientId: timeSheet.clientId});
+		$scope.addNewTimeCardLogEntry = function addNewTimeCardLogEntryFn(day){
+                        var first = day.entries[0];
+			day.entries.push(
+                            {
+                                'workerId' : first.workerId,
+                                'clientId' : first.clientId,
+                                'date'     : first.date,
+                                'startTime': first.endTime,
+                                'endTime'  : first.endTime
+                            }
+                        );
 		}
 
 		$scope.remove = function removeFn(obj) {
