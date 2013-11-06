@@ -7,8 +7,8 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.roosterpark.rptime.service.ReportService;
@@ -41,8 +41,8 @@ public class ReportController {
 	 */
 	@RequestMapping(value = "/workers-with-fewer-than-forty-hours-per-week")
 	@ResponseBody
-	public Object getWorkersWithFewerThanFortyHoursPerWeek() {
-		return "getWorkersWithFewerThanFortyHoursPerWeek";
+	public Map<String, Object> getWorkersWithFewerThanFortyHoursPerWeek() {
+		return null;
 	}
 
 	/**
@@ -50,17 +50,16 @@ public class ReportController {
 	 */
 	@RequestMapping(value = "/timecards-per-user-for-client/{clientId}")
 	@ResponseBody
-	public Object timecardsPerUser(@RequestParam Long clientId) {
+	public Map<String, Object> timecardsPerUserForClient(@PathVariable Long clientId) {
 		return null;
 	}
 
 	/**
 	 * Per-client view: Timecards per user
 	 */
-	@RequestMapping(value = "/timecards-per-user-and-by-week-for-client/{clientId}")
+	@RequestMapping(value = "/timesheets-per-worker-by-week-for-client/{clientId}")
 	@ResponseBody
-	public Object timecardsPerUserAndByWeek(@RequestParam Long clientId) {
-		return null;
+	public Map<String, Object> timeSheetsPerWorkerByWeekForClient(@PathVariable Long clientId) {
+		return reportService.getTimeSheetsPerWorkerByWeekForClientReport(clientId);
 	}
-
 }

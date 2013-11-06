@@ -8,7 +8,11 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.Validate;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
+import org.joda.time.Period;
+import org.joda.time.PeriodType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +30,8 @@ import com.roosterpark.rptime.model.Worker;
 public class ReportService {
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
+	@Inject
+	ClientService clientService;
 	@Inject
 	TimeSheetService timeSheetService;
 	@Inject
@@ -79,12 +85,53 @@ public class ReportService {
 	public Map<String, Object> getTotalHoursPerWorkerPerMonthReport() {
 		final Map<String, Object> map = new HashMap<String, Object>();
 		final LocalDate d = new LocalDate();
-		List<Worker> workers = workerService.getAll();
-		List<TimeSheetView> timeSheets = timeSheetService.getAll();
+		final List<Worker> workers = workerService.getAll();
+		final List<TimeSheetView> timeSheets = timeSheetService.getAll();
 		map.put("workerList", workers);
 		map.put("workerIdToHoursMap", getWorkerIdToHoursMapForMonth(workers, timeSheets, d));
 		map.put("reportDate", d.toString(yearMonthDateTimeFormatter));
+		map.put("updateDate", new LocalDateTime());
 		return map;
 	}
 
+	public Map<String, Object> getTimeSheetsPerWorkerByWeekForClientReport(final Long clientId) {
+		Validate.notNull(clientId);
+		LOGGER.debug("clientId={}", clientId);
+		final Map<String, Object> map = new HashMap<String, Object>();
+		final LocalDate d = new LocalDate();
+		final List<Worker> workers = workerService.getAll();
+		final List<TimeSheetView> timeSheets = timeSheetService.getAll();
+
+		Map<Long, Map<Object, Object>> reportMap = new LinkedHashMap<Long, Map<Object, Object>>();
+		for (Worker worker : workers) {
+			reportMap.put(worker.getId(), new LinkedHashMap<Object, Object>());
+		}
+
+		for (TimeSheetView timeSheet : timeSheets) {
+			List<TimeSheetDay> days = timeSheet.getDays();
+			for (TimeSheetDay day : days) {
+				List<TimeCardLogEntry> entries = day.getEntries();
+				for (TimeCardLogEntry entry : entries) {
+					if (clientId.equals(entry.getClientId())) {
+						if (entry.getStartTime() != null && entry.getEndTime() != null) {
+							final Period p = new Period(entry.getStartTime(), entry.getEndTime(), PeriodType.minutes());
+							final long hours = ((long) p.getMinutes()) / 60L;
+							final Map<Object, Object> workerDateToHoursMap = reportMap.get(entry.getWorkerId());
+							workerDateToHoursMap.put(entry.getDate(), hours);
+						}
+					}
+				}
+			}
+		}
+
+		map.put("reportMap", reportMap);
+		map.put("workerList", workers);
+		map.put("reportDate", d.toString(yearMonthDateTimeFormatter));
+		map.put("updateDate", new LocalDateTime());
+		return map;
+	}
+
+	//
+
+	//
 }

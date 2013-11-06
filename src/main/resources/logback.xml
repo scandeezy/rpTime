@@ -34,6 +34,7 @@
 	<logger name="org.springframework.jndi" level="WARN" />
 	<logger name="org.springframework.web" level="DEBUG" />
 	<logger name="org.springframework.web.context" level="WARN" />
+	<logger name="org.springframework.web.filter" level="TRACE" />
 	<logger name="org.springframework.web.servlet.mvc" level="TRACE" />
 	 
 	<root level="DEBUG">

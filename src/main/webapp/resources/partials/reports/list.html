@@ -5,13 +5,20 @@
 		<button type="button" class="btn btn-default" ng-click="refresh();" ng-hide="!debug">
 			<span class="glyphicon glyphicon-refresh"></span>
 		</button>
-		<a id="print" name="print" class="btn btn-default" href="JavaScript:window.print();" title="Print"><span class="glyphicon glyphicon-print"></span></a>
+		<a id="print" name="print" class="btn btn-default" href="JavaScript:window.print();" title="Print"><span
+			class="glyphicon glyphicon-print"></span></a>
 	</div>
 
 	<div ng-switch on="selection">
+		<div ng-switch-when="timesheets-per-worker-by-week-for-client">
+			<div ng-include src="'/resources/partials/reports/timesheets-per-worker-by-week-for-client.html'"></div>
+		</div>
 		<div ng-switch-when="total-hours-per-worker-per-month">
 			<div ng-include src="'/resources/partials/reports/total-hours-per-worker-per-month.html'"></div>
 		</div>
-		<div ng-switch-default>Please select a report from the <b>Report</b> menu.</div>
+
+		<div ng-switch-default>
+			Please select a report from the <b>Report</b> menu.
+		</div>
 	</div>
 </div>

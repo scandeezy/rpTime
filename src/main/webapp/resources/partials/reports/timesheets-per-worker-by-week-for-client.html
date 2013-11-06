@@ -1,0 +1,53 @@
+<div id="timesheets-per-worker-by-week-for-client" ng-controller="ReportTimeSheetsPerWorkerByWeekForClientCtrl">
+
+	<div class="row" class="hidden-print">
+		<div class="col-sm-3 hidden-print">
+			<select class="form-control hidden-print" id="client" name="client" ng-model="selectedClient"
+				ng-options="client.id as client.name for (clientid,client) in clientsMap" required>
+				<option value="">-- Select Client --</option>
+			</select>
+		</div>
+	</div>
+
+	<div ng-show="selectedClient">
+		<h2>Time Sheets Per Worker, By Week, For {{clientsMap[selectedClient].name}}</h2>
+		<h3>{{report.reportDate}}</h3>
+
+		<div class="col-sm-offset-1" ng-repeat="worker in report.workerList" ng-controller="ReportTimeSheetsPerWorkerByWeekForClientWorkerCtrl">
+			<h4>{{worker.firstName}} {{worker.lastName}}</h4>
+
+			<div class="col-sm-offset-1">
+				<table class="table table-condensed table-striped table-hover" ng-show="rmap">
+					<thead>
+						<tr>
+							<th>Date</th>
+							<th>Hours</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="(date,hours) in report.reportMap[worker.id]">
+							<td>{{date}}</td>
+							<td>{{hours}}</td>
+						</tr>
+					</tbody>
+				</table>
+
+				<p ng-hide="rmap" class="text-muted">No hours logged.</p>
+			</div>
+		</div>
+
+		<hr />
+
+		<div>
+			<p>This report is as of {{report.updateDate}}.</p>
+		</div>
+	</div>
+
+	<pre>
+selectedClient ={{selectedClient|json}}
+reportMap={{reportMap|json}}
+report.reportMap={{report.reportMap|json}}
+clientsMap={{clientsMap|json}}
+</pre>
+
+</div>

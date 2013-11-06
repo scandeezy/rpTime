@@ -14,9 +14,36 @@
 
 	} ]);
 
-	module.controller('ReportTotalHoursPerWorkerPerMonthCtrl', [ '$log', '$location', '$routeParams', '$scope', 'AdminReportService', //
-	function ReportTotalHoursPerWorkerPerMonthCtrlFn($log, $location, $routeParams, $scope, AdminReportService) {
-		$log.info('ReportTotalHoursPerWorkerPerMonthCtrl init', $location, $routeParams, $scope);
+	module.controller('ReportTimeSheetsPerWorkerByWeekForClientCtrl', [ '$log', '$scope', 'AdminClientService', 'AdminReportService', //
+	function ReportTimeSheetsPerWorkerByWeekForClientCtrlFn($log, $scope, AdminClientService, AdminReportService) {
+		//$log.info('ReportTimeSheetsPerWorkerByWeekForClientCtrl init', $scope);
+
+		$scope.clientsMap = AdminClientService.getAll();
+		$scope.report = null;
+
+		$scope.$watch('selectedClient', function selectedClient$watchFn(val) {
+			$log.info('selectedClient changed: ' + val);
+			if (val) {
+				$scope.report = AdminReportService.get({
+					id : 'timesheets-per-worker-by-week-for-client',
+					client : val
+				});
+				$log.info('$scope.report=',$scope.report);
+			} else {
+				$scope.report = null;
+			}
+		});
+		
+	} ]);
+	
+	module.controller('ReportTimeSheetsPerWorkerByWeekForClientWorkerCtrl', [ '$log', '$scope',//
+	function ReportTimeSheetsPerWorkerByWeekForClientWorkerCtrlFn($log, $scope) {
+		$scope.rmap = Object.keys($scope.report.reportMap[$scope.worker.id]).length;
+	} ]);
+	
+	module.controller('ReportTotalHoursPerWorkerPerMonthCtrl', [ '$log', '$scope', 'AdminReportService', //
+	function ReportTotalHoursPerWorkerPerMonthCtrlFn($log, $scope, AdminReportService) {
+		// $log.info('ReportTotalHoursPerWorkerPerMonthCtrl init', $scope);
 		$scope.report = {};
 		AdminReportService.get({
 			id : 'total-hours-per-worker-per-month'

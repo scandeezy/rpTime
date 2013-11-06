@@ -15,7 +15,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 	</filter>
 	<filter-mapping>
 		<filter-name>etagFilter</filter-name>
-		<servlet-name>rptime-servlet</servlet-name>
+		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
 	<!-- per https://code.google.com/p/objectify-appengine/wiki/Setup -->
@@ -27,8 +27,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<filter-name>objectifyFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
-
-
 
 	<!-- Enable escaping of form submission contents -->
 	<context-param>
