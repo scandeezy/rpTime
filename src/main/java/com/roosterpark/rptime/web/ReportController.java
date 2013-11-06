@@ -2,22 +2,36 @@ package com.roosterpark.rptime.web;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
+import java.util.Map;
+
+import javax.inject.Inject;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.roosterpark.rptime.service.ReportService;
+
+/**
+ * MVC {@link RequestMapping Endpoints} for {@link ReportService}-provided reportable business objects.
+ * 
+ * @author jjzabkar
+ */
 @Controller
 @RequestMapping(value = "/report", method = GET)
 public class ReportController {
+
+	@Inject
+	ReportService reportService;
 
 	/**
 	 * Report Total Hours Per Worker Per Month (across clients)
 	 */
 	@RequestMapping(value = "/total-hours-per-worker-per-month")
 	@ResponseBody
-	public Object getTotalHoursPerWorkerPerMonth() {
-		return "getTotalHoursPerWorkerPerMonth";
+	public Map<String, Object> getTotalHoursPerWorkerPerMonth() {
+		return reportService.getTotalHoursPerWorkerPerMonthReport();
 	}
 
 	/**

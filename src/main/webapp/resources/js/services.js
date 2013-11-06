@@ -42,6 +42,13 @@
 		});
 	} ]);
 
+	module.factory('AdminReportService', [ '$resource',//
+	function AdminReportServiceFn($resource) {
+		return $resource('report/:id', {}, {
+		// methods 'get', 'save', 'remove' provided by default
+		});
+	} ]);
+
 	module.factory('TimeSheetService', [ '$resource',//
 	function TimeSheetService($resource) {
 		return $resource('timesheet/:id', {}, {

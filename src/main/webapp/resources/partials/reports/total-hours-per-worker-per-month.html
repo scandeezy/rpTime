@@ -1,23 +1,33 @@
-<div id="total-hours-per-worker-per-month.html">
- 	
-<h3>Total Hours, Per Worker, Per Month for {{reportDate}}</h3>
+<div id="total-hours-per-worker-per-month" ng-controller="ReportTotalHoursPerWorkerPerMonthCtrl">
 
-<table class="table">
-	<thead>
-		<tr>
-			<th>Worker</th>
-			<th>Hours</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>	
-			<td>x</td>
-			<td>0</td>
-		</tr>
+	<h3>Total Hours, Per Worker, Per Month, Across All Clients for {{report.reportDate}}</h3>
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Worker</th>
+				<th>ID</th>
+				<th>Total Hours</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="worker in report.workerList">
+				<td>{{worker.firstName}} {{worker.lastName}}</td>
+				<td><span class="text-muted">{{worker.id}}</span></td>
+				<td>{{report.workerIdToHoursMap[worker.id]}} hours</td>
+			</tr>
+		</tbody>
+		<tfoot>
+			<tr class="text-muted">
+				<td>{{report.workerList.length}} workers</td>
+				<td></td>
+				<td>{{totalHours}} hours</td>
+			</tr>
+		</tfoot>
+	</table>
 	
-	
-	</tbody>
-</table>
+	<pre ng-hide="!debug">workersToHoursMap={{workersToHoursMap|json}}
+reportDate={{reportDate|json}}</pre>
 
 
 </div>
