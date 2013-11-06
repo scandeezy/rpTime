@@ -18,6 +18,7 @@ import com.roosterpark.rptime.model.TimeSheetDay;
 import com.roosterpark.rptime.model.TimeSheetView;
 import com.roosterpark.rptime.service.dao.TimeSheetDao;
 import com.roosterpark.rptime.service.dao.TimeSheetDayDao;
+import org.joda.time.DateTimeConstants;
 
 @Named
 public class TimeSheetService {
@@ -32,73 +33,81 @@ public class TimeSheetService {
 	@Inject
 	TimeSheetDayDao timeSheetDayDao;
 
-	public List<TimeSheetView> createForWorkerDate(Long workerId, LocalDate date) {
+	public TimeSheetView createForWorkerDate(Long workerId, LocalDate date) {
 		List<Contract> contracts = contractService.getActiveContractsForWorker(workerId, date);
 		if (!contracts.isEmpty()) {
-			List<TimeSheetView> views = new LinkedList<>();
-			TimeSheetView view = new TimeSheetView();
 			List<TimeSheet> sheets = new LinkedList<>();
 
+                        boolean lunch = false;
+                        Long defaultClientId = 0L;
 			for (Contract contract : contracts) {
-				views.add(createForWorkerDateContract(workerId, date, contract));
+                                if(defaultClientId == 0L)
+                                        defaultClientId = contract.getClient();
+                                if(contract.getLunchRequired())
+                                {
+                                        lunch = true;
+                                        break;
+                                }
 			}
+                        TimeSheetView view = createForWorkerDateContract(workerId, date, defaultClientId, lunch);
 
-			return views;
+			return view;
 		}
 
 		throw new EntityNotFoundException("No active Contracts found for Worker id='" + workerId + "' and date '" + date
 				+ "'.  Solution: create Contract on the /contracts page for this Worker with beginDate < " + date + "< endDate.");
 
 	}
+        
+        public TimeSheetView createForWorkerDateContract(Long workerId, LocalDate date, Long defaultClientId, boolean lunchRequired) {
+                // TODO verify this sheet doesn't already exist.
+                LOGGER.debug("created new TimeSheet for worker={}, date={}, lunchRequired={}", workerId, date, lunchRequired);
+                
+                List<Long> logIds = new LinkedList<>();
+                List<TimeSheetDay> entries = new LinkedList<>();
+                for(int i = 0; i < 7; i++) {
+                        TimeSheetDay day = new TimeSheetDay();
+                        TimeCardLogEntry entry = new TimeCardLogEntry(workerId, defaultClientId, date.plusDays(i));
+                        // Retain the ID
+                        day.addEntry(entry);
+                        day = timeSheetDayDao.set(day);
+                        entries.add(day);
+                        logIds.add(day.getId());
+                }
+                Long clientId = defaultClientId;
+                // Hardcoded because of our current data layer.
+                LocalDate contractDate = adjustDate(date, DateTimeConstants.SUNDAY);
+                TimeSheet result = new TimeSheet(workerId, clientId, contractDate, logIds);
 
-	public TimeSheetView createForWorkerDateContract(Long workerId, LocalDate date, Contract contract) {
-		// TODO verify this sheet doesn't already exist.
-		LOGGER.debug("created new TimeSheet for worker={}, date={}, contract={}", workerId, date, contract);
+                result = timeSheetDao.set(result);
+                
+                TimeSheetView view = new TimeSheetView(result,entries);
+                
+                return view;
+        }
+        
+        public List<TimeSheetView> getSheetViewsForWorkerPage(Long workerId, Integer count, Integer offset) {
+                List<TimeSheet> sheets = timeSheetDao.getSheetViewsForWorkerPage(workerId, count, offset);
+                List<TimeSheetView> views = new LinkedList<>();
+                for(TimeSheet sheet : sheets) {
+                        views.add(convert(sheet));
+                }
 
-		List<Long> logIds = new LinkedList<>();
-		List<TimeSheetDay> entries = new LinkedList<>();
-		for (int i = 0; i < 7; i++) {
-			TimeSheetDay day = new TimeSheetDay();
-			TimeCardLogEntry entry = new TimeCardLogEntry(workerId, contract.getClient(), date.plusDays(i));
-			// Retain the ID
-			day.addEntry(entry);
-			day = timeSheetDayDao.set(day);
-			entries.add(day);
-			logIds.add(day.getId());
-		}
-		Long clientId = contract.getClient();
-		LocalDate contractDate = adjustDate(date, contract.getStartDayOfWeek());
-		TimeSheet result = new TimeSheet(workerId, clientId, contractDate, logIds);
+                return views;
+        }
+        
+        private TimeSheetView convert(TimeSheet sheet) {
+                List<TimeSheetDay> entries = timeSheetDayDao.getEntries(sheet.getTimeCardIds());
+                // TODO assert the order is consistent
+                return new TimeSheetView(sheet, entries);
+        }
+        
+        private LocalDate adjustDate(LocalDate date, Integer dayOfWeek) {
+                int currentDayOfWeek = date.dayOfWeek().get();
+                LOGGER.debug("Current day of week {} and needed day of week {}", currentDayOfWeek, dayOfWeek);
 
-		result = timeSheetDao.set(result);
-
-		TimeSheetView view = new TimeSheetView(result, entries);
-
-		return view;
-	}
-
-	public List<TimeSheetView> getSheetViewsForWorkerPage(Long workerId, Integer count, Integer offset) {
-		List<TimeSheet> sheets = timeSheetDao.getSheetViewsForWorkerPage(workerId, count, offset);
-		List<TimeSheetView> views = new LinkedList<>();
-		for (TimeSheet sheet : sheets) {
-			views.add(convert(sheet));
-		}
-
-		return views;
-	}
-
-	private TimeSheetView convert(TimeSheet sheet) {
-		List<TimeSheetDay> entries = timeSheetDayDao.getEntries(sheet.getTimeCardIds());
-		// TODO assert the order is consistent
-		return new TimeSheetView(sheet, entries);
-	}
-
-	private LocalDate adjustDate(LocalDate date, Integer dayOfWeek) {
-		int currentDayOfWeek = date.dayOfWeek().get();
-		LOGGER.debug("Current day of week {} and needed day of week {}", currentDayOfWeek, dayOfWeek);
-
-		return date.plusDays(dayOfWeek - currentDayOfWeek);
-	}
+                return date.plusDays(dayOfWeek - currentDayOfWeek);
+        }
 
 	public List<TimeSheetView> getAll() {
 		LOGGER.warn("Getting TimeSheets for admin");
@@ -117,31 +126,17 @@ public class TimeSheetService {
 
 		return convert(sheet);
 	}
-
-	// public List<TimeSheet> getClientWeekPage(String client, Integer week, int count, int offset) {
-	// return ofy().load().type(TimeSheet.class).filter(TimeSheet.CLIENT_KEY, client).filter(TimeSheet.WEEK_KEY, week).limit(count)
-	// .offset(offset).list();
-	// }
-	//
-	// public List<TimeSheet> getWorkerWeekPage(String worker, Integer week, int count, int offset) {
-	// return ofy().load().type(TimeSheet.class).filter(TimeSheet.WORKER_KEY, worker).filter(TimeSheet.WEEK_KEY, week).limit(count)
-	// .offset(offset).list();
-	// }
-	//
-	// public List<TimeSheet> getPage(int count, int offset) {
-	// return ofy().load().type(TimeSheet.class).limit(count).offset(offset).list();
-	// }
-
-	public TimeSheetView set(TimeSheetView view) {
-		LOGGER.debug("Saving timesheet {}", view);
-		List<TimeSheetDay> entries = view.getDays();
-		entries = timeSheetDayDao.set(entries);
-		view.setDays(entries);
-		TimeSheet sheet = new TimeSheet(view);
-		sheet = timeSheetDao.set(sheet);
-
-		return new TimeSheetView(sheet, entries);
-	}
+        
+        public TimeSheetView set(TimeSheetView view) {
+                LOGGER.debug("Saving timesheet {}", view);
+                List<TimeSheetDay> entries = view.getDays();
+                entries = timeSheetDayDao.set(entries);
+                view.setDays(entries);
+                TimeSheet sheet = new TimeSheet(view);
+                sheet = timeSheetDao.set(sheet);
+                
+                return new TimeSheetView(sheet, entries);
+        }
 
 	public void delete(Long id) {
 		TimeSheet c = timeSheetDao.getById(id);

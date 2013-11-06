@@ -102,7 +102,7 @@ public class TimeSheetController {
 	public TimeSheetView createOptionalDate(@PathVariable("date") LocalDate date) {
 		final Worker worker = getValidatedWorker();
 		LOGGER.debug("creating timesheet for worker={}, date={}", worker, date);
-		return service.createForWorkerDate(worker.getId(), date).get(0);
+		return service.createForWorkerDate(worker.getId(), date);
 	}
 
 	@RequestMapping(method = GET)
