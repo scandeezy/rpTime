@@ -15,15 +15,22 @@
 			<tr ng-repeat="worker in report.workerList">
 				<td>{{worker.firstName}} {{worker.lastName}}</td>
 				<td><span class="text-muted">{{worker.id}}</span></td>
-				<td>{{report.workerIdToHoursMap[worker.id]}} hours</td>
+				<td><p class="text-right">{{report.workerIdToHoursMap[worker.id]}} hours</p></td>
 			</tr>
 		</tbody>
 		<tfoot>
 			<tr class="text-muted">
 				<td>{{report.workerList.length}} workers</td>
 				<td></td>
-				<td>{{totalHours}} hours</td>
+				<td><p class="text-right">{{totalHours}} hours</p></td>
 			</tr>
 		</tfoot>
 	</table>
+
+	<hr />
+
+	<div>
+		<p>This report is as of {{report.updateDate}}.</p>
+	</div>
+
 </div>
