@@ -14,7 +14,7 @@
 		$scope.$watch(function locationPathPage$watchFn() {
 			return $location.path();
 		}, function(newLoc, oldLoc) {
-			$scope.page = newLoc;
+			$scope.page = "/"+(((newLoc + "/").split("/"))[1]);
 		});
 
 		$scope.isAdmin = false;
@@ -138,18 +138,16 @@
 				$log.info('timeSheetsMap', $scope.timeSheetsMap);
 			});
 		}
-		
-		$scope.addNewTimeCardLogEntry = function addNewTimeCardLogEntryFn(day){
-                        var first = day.entries[0];
-			day.entries.push(
-                            {
-                                'workerId' : first.workerId,
-                                'clientId' : first.clientId,
-                                'date'     : first.date,
-                                'startTime': first.endTime,
-                                'endTime'  : first.endTime
-                            }
-                        );
+
+		$scope.addNewTimeCardLogEntry = function addNewTimeCardLogEntryFn(day) {
+			var first = day.entries[0];
+			day.entries.push({
+				'workerId' : first.workerId,
+				'clientId' : first.clientId,
+				'date' : first.date,
+				'startTime' : first.endTime,
+				'endTime' : first.endTime
+			});
 		}
 
 		$scope.remove = function removeFn(obj) {
@@ -192,13 +190,13 @@
 		};
 
 		$scope.setWeekLast = function setWeekLastFn() {
-			TimeSheetService.getLast(function successFn(data){
+			TimeSheetService.getLast(function successFn(data) {
 				$scope.set(data);
 			});
 		};
-		
+
 		$scope.setWeekNext = function setWeekNextFn() {
-			TimeSheetService.getNext(function successFn(data){
+			TimeSheetService.getNext(function successFn(data) {
 				$scope.set(data);
 			});
 		};

@@ -1,14 +1,5 @@
 <!-- current $scope is ReportPageCtrl -->
-<div id="reports-list">
-
-	<div class="btn-group hidden-print">
-		<button type="button" class="btn btn-default" ng-click="refresh();" ng-hide="!debug">
-			<span class="glyphicon glyphicon-refresh"></span>
-		</button>
-		<a id="print" name="print" class="btn btn-default" href="JavaScript:window.print();" title="Print"><span
-			class="glyphicon glyphicon-print"></span></a>
-	</div>
-
+<div id="reports-list" class="conatiner">
 	<div ng-switch on="selection">
 		<div ng-switch-when="timesheets-per-worker-by-week-for-client">
 			<div ng-include src="'/resources/partials/reports/timesheets-per-worker-by-week-for-client.html'"></div>

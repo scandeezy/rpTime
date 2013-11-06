@@ -1,7 +1,5 @@
 <div>
-
 	<div ng-cloak ng-show="isAdmin">
-
 		<ul>
 			<li>
 				<span ng-cloak ng-show="workersMap.length>0" class="badge">{{workersMap.length}}</span>
@@ -15,7 +13,12 @@
 				<span ng-cloak ng-show="contractsMap.length>0" class="badge">{{contractsMap.length}}</span>	
 				<a href="#/contract">Contracts</a>
 			</li>
+			<li>Reports
+				<ul>
+					<li><a href="#/report/total-hours-per-worker-per-month">Hours per Worker/Month</a></li>
+					<li><a href="#/report/timesheets-per-worker-by-week-for-client">Time Sheets per Worker/Week/Client</a></li>
+				</ul>
+			</li>
 		</ul>
 	</div>
-
 </div>

@@ -30,7 +30,8 @@ String logoutUrl2 = userService2.createLogoutURL(request.getRequestURI());
 				<li ng-class="{active : page == '/worker'}"><a href="#/worker">Workers</a></li>
 				<li ng-class="{active : page == '/client'}"><a href="#/client">Clients</a></li>
 				<li ng-class="{active : page == '/contract'}"><a href="#/contract">Contracts</a></li>
-				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown">Reports <b
+				<li class="dropdown" ng-class="{active : page == '/report'}">
+					<a class="dropdown-toggle" data-toggle="dropdown">Reports <b
 						class="caret"></b></a>
 					<ul class="dropdown-menu">
 						<li><a href="#/report/total-hours-per-worker-per-month">Hours per Worker/Month</a></li>
@@ -39,7 +40,10 @@ String logoutUrl2 = userService2.createLogoutURL(request.getRequestURI());
 				<%
 					}
 				%>
-				<li ng-class="{active : page == '/history'}"><a href="#/history">History</a></li>
+				<li ng-show="page == '/report'"">
+					<a id="print" name="print" href="JavaScript:window.print();" title="Print"><span
+						class="glyphicon glyphicon-print"></span></a>
+				</li>
 			</ul>
 	
 			<ul class="nav navbar-nav navbar-right">

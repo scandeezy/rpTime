@@ -25,7 +25,7 @@
 		<div class="panel-body">
 			<ul>
 				<li ng-repeat="(id, timeSheet) in timeSheetsMap"><a ng-click="set(timeSheet)">{{timeSheet.year}}, week {{timeSheet.week}} -
-						{{timeSheet.startDate}} for {{clientsMap[timeSheet.clientId].name}} </a>
+						{{timeSheet.startDate}}</a>
 					<button type="button" id="delete-{{$id}}" class="btn btn-sm btn-default" ng-click="remove(timeSheet);" ng-hide="!debug">Delete</button>
 				</li>
 			</ul>
