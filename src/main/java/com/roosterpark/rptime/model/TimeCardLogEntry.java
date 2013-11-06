@@ -34,6 +34,12 @@ public class TimeCardLogEntry implements Comparable
         this.startTime = new LocalTime(9,0);
         this.endTime = new LocalTime(17,0);
     }
+    
+    public TimeCardLogEntry(Long workerId, Long clientId, LocalDate date, Integer start, Integer end) {
+        this(workerId, clientId, date);
+        this.startTime = new LocalTime(start,0);
+        this.endTime = new LocalTime(end,0);
+    }
 
     public Long getWorkerId()
     {

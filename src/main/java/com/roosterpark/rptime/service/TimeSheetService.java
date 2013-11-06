@@ -67,9 +67,15 @@ public class TimeSheetService {
                 List<TimeSheetDay> entries = new LinkedList<>();
                 for(int i = 0; i < 7; i++) {
                         TimeSheetDay day = new TimeSheetDay();
-                        TimeCardLogEntry entry = new TimeCardLogEntry(workerId, defaultClientId, date.plusDays(i));
-                        // Retain the ID
-                        day.addEntry(entry);
+                        if(!lunchRequired) {
+                            TimeCardLogEntry entry = new TimeCardLogEntry(workerId, defaultClientId, date.plusDays(i));
+                            day.addEntry(entry);
+                        } else {
+                            TimeCardLogEntry entry1 = new TimeCardLogEntry(workerId, defaultClientId, date.plusDays(i), 8, 12);
+                            TimeCardLogEntry entry2 = new TimeCardLogEntry(workerId, defaultClientId, date.plusDays(i), 13, 17);
+                            day.addEntry(entry1);
+                            day.addEntry(entry2);
+                        }
                         day = timeSheetDayDao.set(day);
                         entries.add(day);
                         logIds.add(day.getId());
