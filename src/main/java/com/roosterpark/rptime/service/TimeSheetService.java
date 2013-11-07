@@ -32,6 +32,14 @@ public class TimeSheetService {
 
 	@Inject
 	TimeSheetDayDao timeSheetDayDao;
+        
+        public void setTimeSheetDao(TimeSheetDao timeSheetDao) {
+                this.timeSheetDao = timeSheetDao;
+        }
+        
+        public void setTimeSheetDayDao(TimeSheetDayDao timeSheetDayDao) {
+                this.timeSheetDayDao = timeSheetDayDao;
+        }
 
 	public TimeSheetView createForWorkerDate(Long workerId, LocalDate date) {
 		List<Contract> contracts = contractService.getActiveContractsForWorker(workerId, date);
@@ -62,17 +70,26 @@ public class TimeSheetService {
                 // TODO verify this sheet doesn't already exist.
                 LOGGER.debug("created new TimeSheet for worker={}, date={}, lunchRequired={}", workerId, date, lunchRequired);
                 
+                // Hardcoded because of our current data layer.
+                LocalDate contractDate = adjustDate(date, DateTimeConstants.SUNDAY);
                 Long defaultClientId = clientIds.get(0);
                 List<Long> logIds = new LinkedList<>();
                 List<TimeSheetDay> entries = new LinkedList<>();
                 for(int i = 0; i < 7; i++) {
                         TimeSheetDay day = new TimeSheetDay();
-                        if(!lunchRequired) {
-                            TimeCardLogEntry entry = new TimeCardLogEntry(workerId, defaultClientId, date.plusDays(i));
+                        int dayOfWeek = contractDate.plusDays(i).getDayOfWeek();
+                        boolean weekend = (dayOfWeek == DateTimeConstants.SATURDAY || dayOfWeek == DateTimeConstants.SUNDAY);
+                        LOGGER.debug("Saturday is {}, Sunday is {}", DateTimeConstants.SATURDAY, DateTimeConstants.SUNDAY);
+                        LOGGER.debug("Day {} is weekend {}", dayOfWeek, weekend);
+                        if(weekend) {
+                            TimeCardLogEntry entry = new TimeCardLogEntry(workerId, defaultClientId, contractDate.plusDays(i), 12, 12);
+                            day.addEntry(entry);
+                        } else if(!lunchRequired) {
+                            TimeCardLogEntry entry = new TimeCardLogEntry(workerId, defaultClientId, contractDate.plusDays(i));
                             day.addEntry(entry);
                         } else {
-                            TimeCardLogEntry entry1 = new TimeCardLogEntry(workerId, defaultClientId, date.plusDays(i), 8, 12);
-                            TimeCardLogEntry entry2 = new TimeCardLogEntry(workerId, defaultClientId, date.plusDays(i), 13, 17);
+                            TimeCardLogEntry entry1 = new TimeCardLogEntry(workerId, defaultClientId, contractDate.plusDays(i), 8, 12);
+                            TimeCardLogEntry entry2 = new TimeCardLogEntry(workerId, defaultClientId, contractDate.plusDays(i), 13, 17);
                             day.addEntry(entry1);
                             day.addEntry(entry2);
                         }
@@ -80,8 +97,6 @@ public class TimeSheetService {
                         entries.add(day);
                         logIds.add(day.getId());
                 }
-                // Hardcoded because of our current data layer.
-                LocalDate contractDate = adjustDate(date, DateTimeConstants.SUNDAY);
                 TimeSheet result = new TimeSheet(workerId, clientIds, contractDate, logIds);
 
                 result = timeSheetDao.set(result);
@@ -110,8 +125,9 @@ public class TimeSheetService {
         private LocalDate adjustDate(LocalDate date, Integer dayOfWeek) {
                 int currentDayOfWeek = date.dayOfWeek().get();
                 LOGGER.debug("Current day of week {} and needed day of week {}", currentDayOfWeek, dayOfWeek);
-
-                return date.plusDays(dayOfWeek - currentDayOfWeek);
+                LocalDate returnDate = date.plusDays(dayOfWeek - currentDayOfWeek);
+                LOGGER.debug("The adjusted return date is {}", returnDate);
+                return returnDate;
         }
 
 	public List<TimeSheetView> getAll() {
@@ -145,7 +161,6 @@ public class TimeSheetService {
 
 	public void delete(Long id) {
 		TimeSheet c = timeSheetDao.getById(id);
-		List<TimeSheetDay> entries = timeSheetDayDao.getEntries(c.getTimeCardIds());
 
 		timeSheetDayDao.delete(c.getTimeCardIds());
 		timeSheetDao.delete(c.getId());

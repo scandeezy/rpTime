@@ -1,11 +1,7 @@
 package com.roosterpark.rptime.model;
 
 import com.googlecode.objectify.annotation.Embed;
-import com.googlecode.objectify.annotation.Entity;
-import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
-import java.util.LinkedList;
-import java.util.List;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 
