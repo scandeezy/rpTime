@@ -67,8 +67,11 @@ public class TimeSheetService {
 	}
         
         public TimeSheetView createForWorkerDateContract(Long workerId, LocalDate date, List<Long> clientIds, boolean lunchRequired) {
-                // TODO verify this sheet doesn't already exist.
                 LOGGER.debug("created new TimeSheet for worker={}, date={}, lunchRequired={}", workerId, date, lunchRequired);
+                // TODO verify this sheet doesn't already exist.
+                TimeSheet exists = timeSheetDao.getByWorkerWeek(workerId, date.getWeekOfWeekyear());
+                if(exists != null)
+                    return convert(exists);
                 
                 // Hardcoded because of our current data layer.
                 LocalDate contractDate = adjustDate(date, DateTimeConstants.SUNDAY);
