@@ -50,8 +50,10 @@
 				<div class="form-group">
 					<ul class="list-group">
 						<li ng-repeat="day in currentTimeSheet.days" class="list-group-item row" ng-init="ii=$index">
-							<div class="col-sm-2">{{dayOfWeekArr[((currentTimeSheet.startDayOfWeek + ii) % 7)].description}}</div>
-							<div class="col-sm-10">
+							<div class="col-sm-3">
+								<!-- {{day.entries[0].date}}&nbsp; -->
+								{{dayOfWeekArr[((currentTimeSheet.startDayOfWeek + ii) % 7)].description}}</div>
+							<div class="col-sm-9">
 								<div class="row" ng-repeat="entry in day.entries">
 									<div class="col-sm-6">
 										<input type="time" class="input-sm" ng-model="entry.startTime" title="Clock-in Time"> 
