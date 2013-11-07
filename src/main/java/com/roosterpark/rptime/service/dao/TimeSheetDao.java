@@ -42,6 +42,18 @@ public class TimeSheetDao
 
         return sheet;
     }
+    
+    public TimeSheet getByWorkerWeekYear(Long workerId, int week, int year) {
+        List<TimeSheet> sheets = ofy().load().type(TimeSheet.class)
+                .filter(TimeSheet.WORKER_KEY, workerId)
+                .filter(TimeSheet.WEEK_KEY,week)
+                .filter(TimeSheet.YEAR_KEY, year)
+                .list();
+        
+        if(sheets.isEmpty())
+            return null;
+        return sheets.get(0);
+    }
 
     public List<TimeSheet> getRecentForWorker(Long workerId, Date date, int limit) {
         GregorianCalendar cal = new GregorianCalendar();

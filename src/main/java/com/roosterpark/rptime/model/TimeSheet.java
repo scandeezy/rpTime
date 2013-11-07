@@ -18,6 +18,7 @@ public class TimeSheet {
 	public static final String CLIENT_KEY = "clientIds";
         public static final String START_DATE_KEY = "startDate";
 	public static final String WEEK_KEY = "week";
+	public static final String YEAR_KEY = "year";
 
 	@Id
 	private Long id;

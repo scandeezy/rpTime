@@ -69,7 +69,7 @@ public class TimeSheetService {
         public TimeSheetView createForWorkerDateContract(Long workerId, LocalDate date, List<Long> clientIds, boolean lunchRequired) {
                 LOGGER.debug("created new TimeSheet for worker={}, date={}, lunchRequired={}", workerId, date, lunchRequired);
                 // TODO verify this sheet doesn't already exist.
-                TimeSheet exists = timeSheetDao.getByWorkerWeek(workerId, date.getWeekOfWeekyear());
+                TimeSheet exists = timeSheetDao.getByWorkerWeekYear(workerId, date.getWeekOfWeekyear(), date.getYear());
                 if(exists != null)
                     return convert(exists);
                 
