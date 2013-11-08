@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.roosterpark.rptime.config;
 
 import com.google.appengine.api.users.User;
@@ -37,10 +33,12 @@ public class WorkerFilter implements Filter
     private UserService userService;
 
     public void setUserService(UserService userService) {
+        LOGGER.debug("Setting UserService to {}", userService);
         this.userService = userService;
     }
     
     public void setWorkerService(WorkerService workerService) {
+        LOGGER.debug("Setting WorkerService to {}", workerService);
         this.workerService = workerService;
     }
     

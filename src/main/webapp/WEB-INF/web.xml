@@ -27,6 +27,15 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<filter-name>objectifyFilter</filter-name>
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
+        
+<!--	<filter>
+		<filter-name>workerFilter</filter-name>
+		<filter-class>com.roosterpark.rptime.config.WorkerFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>workerFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>-->
 
 	<!-- Enable escaping of form submission contents -->
 	<context-param>

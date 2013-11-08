@@ -20,6 +20,9 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
+import com.google.appengine.api.users.UserService;
+import com.roosterpark.rptime.service.WorkerService;
+import javax.inject.Inject;
 
 /**
  * Spring MVC {@link Configuration}. Extends {@link WebMvcConfigurationSupport}, which provides convenient callbacks.
@@ -29,6 +32,9 @@ import com.fasterxml.jackson.datatype.joda.JodaModule;
 @ComponentScan(basePackages = { "com.roosterpark.rptime" }, includeFilters = @ComponentScan.Filter({ Controller.class }), excludeFilters = @ComponentScan.Filter({ Configuration.class }))
 public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 	Logger LOGGER = LoggerFactory.getLogger(getClass());
+    
+        @Inject
+        private UserService userService;
 
 	public WebMvcConfiguration() {
 		LOGGER.info("init");
@@ -91,5 +97,20 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 
 		return mapper;
 	}
+        
+        @Bean
+        public WorkerService workerService() {
+            WorkerService service = new WorkerService();
+            return service;
+        }
 
+        @Inject
+        @Bean(name="workerFilter")
+        public WorkerFilter workerFilter(UserService users, WorkerService workers) {
+            LOGGER.debug("Creating worker filter with services {} and {}", users, workers);
+            WorkerFilter filter = new WorkerFilter();
+            filter.setUserService(users);
+            filter.setWorkerService(workers);
+            return filter;
+        }
 }
