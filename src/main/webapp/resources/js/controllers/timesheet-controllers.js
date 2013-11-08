@@ -77,15 +77,31 @@
 		};
 
 		$scope.setWeekLast = function setWeekLastFn() {
-			TimeSheetService.getLast(function successFn(data) {
-				$scope.set(data);
-			});
+                        var date = new Date();
+                        date.setDate(date.getDate() - 7);
+			TimeSheetService.get(
+                                {
+                                        id : "new",
+                                        date : date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
+                                },
+                                function successFn(data) {
+                                        $scope.set(data);
+                                }
+                        );
 		};
 
 		$scope.setWeekNext = function setWeekNextFn() {
-			TimeSheetService.getNext(function successFn(data) {
-				$scope.set(data);
-			});
+                        var date = new Date();
+                        date.setDate(date.getDate() + 7);
+			TimeSheetService.get(
+                                {
+                                        id : "new",
+                                        date : date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
+                                },
+                                function successFn(data) {
+                                        $scope.set(data);
+                                }
+                        );
 		};
 
 		$scope.setWeekOther = function setWeekOtherFn() {
