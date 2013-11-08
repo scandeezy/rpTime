@@ -38,8 +38,7 @@
 		<div id="createTimeSheet" class="panel panel-default" ng-show="edit">
 			<div class="panel-heading">
 				<h4>
-					<span ng-show="currentTimeSheet.id">Edit TimeSheet: {{currentTimeSheet.startDate}}<span class="text-muted">{{currentTimeSheet.id}}</span>
-					</span>
+					<span ng-show="currentTimeSheet.id">Edit TimeSheet: {{currentTimeSheet.startDate}}</span>
 				</h4>
 				<div class="row">
 					<div class="col-sm-2 pull-right">
@@ -65,7 +64,7 @@
 											id="timeSheetLogEntry-clientId-{{ii}}" 
 											name="timeSheetLogEntry-clientId-{{ii}}" 
 											ng-model="entry.clientId"
-											ng-options="client.id as (client.name) for (clientid,client) in clientsMap" 
+                                                                                        ng-options="clientsMap[clientId].name for clientId in currentTimeSheet.clientIds"
 											required>
 											<option value="">-- Select Client --</option>
 										</select>
