@@ -9,7 +9,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 import java.util.List;
 import java.util.SortedMap;
-import java.util.TreeMap;
 
 import javax.inject.Inject;
 
@@ -113,13 +112,8 @@ public class TimeSheetController {
 
 	@RequestMapping(value = "/idmap", method = GET)
 	@ResponseBody
-	public SortedMap<Long, TimeSheetView> getMap() {
-		final List<TimeSheetView> list = service.getAll();
-		final SortedMap<Long, TimeSheetView> map = new TreeMap<>();
-		for (TimeSheetView obj : list) {
-			map.put(obj.getId(), obj);
-		}
-		return map;
+	public SortedMap<Long, TimeSheetView> getAllMap() {
+		return service.getAllMap();
 	}
 
 	@RequestMapping(value = "/{id}", method = GET)
