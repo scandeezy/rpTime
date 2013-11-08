@@ -117,6 +117,12 @@
 		};
 
 		$scope.unset = function unsetFn() {
+                        var sheet = $scope.currentTimeSheet;
+                        // In the case of a new sheet having been created
+                        if(! $scope.timeSheetsMap[sheet.id]) {
+                            // Save it if it's not in the list
+                            $scope.timeSheetsMap[sheet.id] = sheet;
+                        }
 			$scope.edit = false;
 			$location.search('id', null);
 		};
