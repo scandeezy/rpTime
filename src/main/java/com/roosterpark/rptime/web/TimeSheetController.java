@@ -98,7 +98,13 @@ public class TimeSheetController {
 
 	@RequestMapping(value = "/new/{date}", method = { POST, GET })
 	@ResponseBody
-	public TimeSheetView createOptionalDate(@PathVariable("date") LocalDate date) {
+	public TimeSheetView createOptionalDate(@PathVariable("date") String dateString) {
+                LocalDate date = new LocalDate(dateString);
+                return createOptionalDate(date);
+	}
+        
+        // TODO Jackson doesn't like using the Joda Constructor.
+        private TimeSheetView createOptionalDate(LocalDate date) {
 		final Worker worker = getValidatedWorker();
 		LOGGER.debug("creating timesheet for worker={}, date={}", worker, date);
 		return service.createForWorkerDate(worker.getId(), date);

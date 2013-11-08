@@ -51,7 +51,7 @@
 
 	module.factory('TimeSheetService', [ '$resource',//
 	function TimeSheetService($resource) {
-		return $resource('timesheet/:id', {}, {
+		return $resource('timesheet/:id/:date', {}, {
 			// methods 'get', 'save', 'remove' provided by default
 			create : {
 				method : 'GET',
@@ -76,7 +76,10 @@
 				params : {
 					id : 'next'
 				}
-			}
+			},
+                        getWeek : {
+                                method : 'GET'
+                        }
 		});
 	} ]);
 

@@ -89,7 +89,15 @@
 		};
 
 		$scope.setWeekOther = function setWeekOtherFn() {
-			$log.error("TODO: Placeholder for setWeekOther");
+                        var data = window.showModalDialog("datePickerModal.html");
+                        $log.error(data.datePicked);
+                        TimeSheetService.get({
+                                        id : "new",
+                                        date : data.datePicked
+                                }, function successFn(data) {
+                                        $scope.set(data);
+                                }
+                        );
 		};
 
 		$scope.unset = function unsetFn() {
