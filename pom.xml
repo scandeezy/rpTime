@@ -449,7 +449,7 @@
 									<pluginExecutionFilter>
 										<groupId>com.google.appengine</groupId>
 										<artifactId>appengine-maven-plugin</artifactId>
-										<versionRange>[1.8.6,)</versionRange>
+										<versionRange>[${appengine.target.version},)</versionRange>
 										<goals>
 											<goal>endpoints_get_discovery_doc</goal>
 										</goals>
@@ -1120,7 +1120,7 @@
 		<!-- -->
 		<aalto-xml.version>0.9.9</aalto-xml.version>
 		<appengine.app.version>1</appengine.app.version>
-		<appengine.target.version>1.8.6</appengine.target.version>
+		<appengine.target.version>1.8.7</appengine.target.version>
 		<asm.version>4.1</asm.version>
 		<aspectj.version>1.7.4</aspectj.version>
 		<cglib-version>3.0</cglib-version>
