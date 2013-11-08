@@ -129,7 +129,13 @@ public class TimeSheetService {
 	private LocalDate adjustDate(LocalDate date, Integer dayOfWeek) {
 		int currentDayOfWeek = date.dayOfWeek().get();
 		LOGGER.debug("Current day of week {} and needed day of week {}", currentDayOfWeek, dayOfWeek);
-		LocalDate returnDate = date.plusDays(dayOfWeek - currentDayOfWeek);
+                LocalDate returnDate = date.withDayOfWeek(dayOfWeek);
+                // Edge condition
+                if(dayOfWeek == DateTimeConstants.SUNDAY) {
+                    int week = date.getWeekOfWeekyear();
+                    LOGGER.debug("Current week {} and desired week {}", week, week - 1);
+                    returnDate = returnDate.withWeekOfWeekyear(week - 1);
+                }
 		LOGGER.debug("The adjusted return date is {}", returnDate);
 		return returnDate;
 	}
