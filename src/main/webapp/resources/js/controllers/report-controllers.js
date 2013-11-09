@@ -14,9 +14,9 @@
 
 	} ]);
 
-	module.controller('ReportTimeSheetsPerWorkerByWeekForClientCtrl', [ '$log', '$scope', 'AdminClientService', 'AdminReportService', //
-	function ReportTimeSheetsPerWorkerByWeekForClientCtrlFn($log, $scope, AdminClientService, AdminReportService) {
-		//$log.info('ReportTimeSheetsPerWorkerByWeekForClientCtrl init', $scope);
+	module.controller('ReportTimeSheetsPerWorkerByWeekForClientCtrl', ['$location', '$log', '$scope', 'AdminClientService', 'AdminReportService', //
+	function ReportTimeSheetsPerWorkerByWeekForClientCtrlFn($location, $log, $scope, AdminClientService, AdminReportService) {
+		 $log.info('ReportTimeSheetsPerWorkerByWeekForClientCtrl init', $location, $scope);
 
 		$scope.clientsMap = AdminClientService.getAll();
 		$scope.report = null;
@@ -28,19 +28,30 @@
 					id : 'timesheets-per-worker-by-week-for-client',
 					client : val
 				});
-				$log.info('$scope.report=',$scope.report);
 			} else {
 				$scope.report = null;
 			}
 		});
-		
+
 	} ]);
-	
+
 	module.controller('ReportTimeSheetsPerWorkerByWeekForClientWorkerCtrl', [ '$log', '$scope',//
 	function ReportTimeSheetsPerWorkerByWeekForClientWorkerCtrlFn($log, $scope) {
-		$scope.rmap = Object.keys($scope.report.reportMap[$scope.worker.id]).length;
+		var workerReportMap = $scope.report.reportMap[$scope.worker.id];
+		$scope.rmap = Object.keys(workerReportMap).length;
+
+		$scope.totalDaysCount = 0;
+		$scope.totalHoursSum = 0;
+
+		angular.forEach(workerReportMap, function(hoursValue, dateKey) {
+			$scope.totalHoursSum += hoursValue;
+			if (hoursValue > 0) {
+				$scope.totalDaysCount++;
+			}
+		});
+
 	} ]);
-	
+
 	module.controller('ReportTotalHoursPerWorkerPerMonthCtrl', [ '$log', '$scope', 'AdminReportService', //
 	function ReportTotalHoursPerWorkerPerMonthCtrlFn($log, $scope, AdminReportService) {
 		// $log.info('ReportTotalHoursPerWorkerPerMonthCtrl init', $scope);

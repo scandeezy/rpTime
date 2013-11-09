@@ -8,6 +8,7 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.Validate;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -117,7 +118,9 @@ public class ReportService {
 							final Period p = new Period(entry.getStartTime(), entry.getEndTime(), PeriodType.minutes());
 							final long hours = ((long) p.getMinutes()) / 60L;
 							final Map<Object, Object> workerDateToHoursMap = reportMap.get(entry.getWorkerId());
-							workerDateToHoursMap.put(entry.getDate(), hours);
+							Long h = (Long) ObjectUtils.defaultIfNull(workerDateToHoursMap.get(entry.getDate()), 0L);
+							h = h + hours;
+							workerDateToHoursMap.put(entry.getDate(), h);
 						}
 					}
 				}

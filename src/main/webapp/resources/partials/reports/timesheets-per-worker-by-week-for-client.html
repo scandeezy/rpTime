@@ -11,10 +11,12 @@
 	</div>
 
 	<div ng-show="selectedClient">
-		<h2><a ng-href="#/client?id={{selectedClient}}">{{clientsMap[selectedClient].name}} Time Sheets</a></h2>
+		<h2><a ng-href="#/client?id={{selectedClient}}">{{clientsMap[selectedClient].name}}</a> Time Sheets</h2>
 		<h3>{{report.reportDate}}</h3>
 
-		<div class="col-sm-offset-1" ng-repeat="worker in report.workerList" ng-controller="ReportTimeSheetsPerWorkerByWeekForClientWorkerCtrl">
+		<div class="col-sm-offset-1" 
+			ng-repeat="worker in report.workerList" 
+			ng-controller="ReportTimeSheetsPerWorkerByWeekForClientWorkerCtrl">
 			<h4><a ng-href="#/worker?id={{worker.id}}">{{worker.firstName}} {{worker.lastName}}</a></h4>
 
 			<div class="col-sm-offset-1">
@@ -26,11 +28,17 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="(date,hours) in report.reportMap[worker.id]">
+						<tr ng-repeat="(date,hours) in report.reportMap[worker.id]" ng-show="hours > 0">
 							<td>{{date}}</td>
 							<td>{{hours}}</td>
 						</tr>
 					</tbody>
+					<tfoot>
+						<tr class="text-muted">
+							<td>{{totalDaysCount}} days </td>
+							<td>{{totalHoursSum}}</td>
+						</tr>
+					</tfoot>
 				</table>
 
 				<p ng-hide="rmap" class="text-muted">No hours logged.</p>
