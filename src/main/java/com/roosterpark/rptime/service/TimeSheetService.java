@@ -167,19 +167,19 @@ public class TimeSheetService {
 	private LocalDate adjustDate(LocalDate date, Integer dayOfWeek) {
 		int currentDayOfWeek = date.dayOfWeek().get();
 		LOGGER.debug("Current day of week {} and needed day of week {}", currentDayOfWeek, dayOfWeek);
-                LocalDate returnDate = date.withDayOfWeek(dayOfWeek);
-                // Edge condition
-                if(dayOfWeek == DateTimeConstants.SUNDAY) {
-                    int week = date.getWeekOfWeekyear();
-                    LOGGER.debug("Current week {} and desired week {}", week, week - 1);
-                    returnDate = returnDate.withWeekOfWeekyear(week - 1);
-                }
+		LocalDate returnDate = date.withDayOfWeek(dayOfWeek);
+		// Edge condition
+		if (dayOfWeek == DateTimeConstants.SUNDAY) {
+			int week = date.getWeekOfWeekyear();
+			LOGGER.debug("Current week {} and desired week {}", week, week - 1);
+			returnDate = returnDate.withWeekOfWeekyear(week - 1);
+		}
 		LOGGER.debug("The adjusted return date is {}", returnDate);
 		return returnDate;
 	}
 
 	public List<TimeSheetView> getAll(final Long workerId, final boolean isAdmin) {
-		LOGGER.warn("Getting TimeSheets for admin");
+		LOGGER.warn("Getting TimeSheets for isAdmin={}", isAdmin);
 		List<TimeSheet> sheets = timeSheetDao.getAll(workerId, isAdmin);
 		LOGGER.debug("Found these sheets for all {}", sheets);
 		List<TimeSheetView> views = new LinkedList<>();
@@ -190,8 +190,8 @@ public class TimeSheetService {
 		return views;
 	}
 
-	public List<TimeSheetView> getAllAdmin() {
-		return getAll(null, false);
+	protected List<TimeSheetView> getAllAdmin() {
+		return getAll(null, true);
 	}
 
 	public SortedMap<Long, TimeSheetView> getAllMap(final Long workerId, final boolean isAdmin) {
