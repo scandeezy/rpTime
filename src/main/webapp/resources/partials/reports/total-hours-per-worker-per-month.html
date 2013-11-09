@@ -13,7 +13,7 @@
 		</thead>
 		<tbody>
 			<tr ng-repeat="worker in report.workerList">
-				<td>{{worker.firstName}} {{worker.lastName}}</td>
+				<td><a ng-href="#/worker?id={{worker.id}}">{{worker.firstName}} {{worker.lastName}}</a></td>
 				<td><span class="text-muted">{{worker.id}}</span></td>
 				<td><p class="text-right">{{report.workerIdToHoursMap[worker.id]}} hours</p></td>
 			</tr>

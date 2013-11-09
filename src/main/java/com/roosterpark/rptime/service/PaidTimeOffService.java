@@ -21,7 +21,7 @@ import com.roosterpark.rptime.model.Client;
 @Named
 public class PaidTimeOffService implements Serializable {
 
-	private static final long serialVersionUID = -7015834490721203964L;
+	private static final long serialVersionUID = 7015834490721L;
 
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 

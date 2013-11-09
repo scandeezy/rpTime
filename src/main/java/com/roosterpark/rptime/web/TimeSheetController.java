@@ -79,58 +79,65 @@ public class TimeSheetController {
 	@RequestMapping(value = "/new", method = { POST, GET })
 	@ResponseBody
 	public TimeSheetView create() {
-		return createOptionalDate(new LocalDate());
+		// TODO: lock down further by isUserAdmin
+		return getTimeSheetForDate(new LocalDate());
 	}
 
 	@RequestMapping(value = "/last", method = { GET })
 	@ResponseBody
 	public TimeSheetView getLast() {
 		final LocalDate d = (new LocalDate()).minusWeeks(1);
-		return createOptionalDate(d);
+		// TODO: lock down further by isUserAdmin
+		return getTimeSheetForDate(d);
 	}
 
 	@RequestMapping(value = "/next", method = { GET })
 	@ResponseBody
 	public TimeSheetView getNext() {
 		final LocalDate d = (new LocalDate()).plusWeeks(1);
-		return createOptionalDate(d);
+		// TODO: lock down further by isUserAdmin
+		return getTimeSheetForDate(d);
 	}
 
 	@RequestMapping(value = "/new/{date}", method = { POST, GET })
 	@ResponseBody
-	public TimeSheetView createOptionalDate(@PathVariable("date") String dateString) {
-                LocalDate date = new LocalDate(dateString);
-                return createOptionalDate(date);
+	public TimeSheetView getDate(@PathVariable("date") String dateString) {
+		LocalDate date = new LocalDate(dateString);
+		return getTimeSheetForDate(date);
 	}
-        
-        // TODO Jackson doesn't like using the Joda Constructor.
-        private TimeSheetView createOptionalDate(LocalDate date) {
+
+	// TODO Jackson doesn't like using the Joda Constructor.
+	private TimeSheetView getTimeSheetForDate(LocalDate date) {
 		final Worker worker = getValidatedWorker();
-		LOGGER.debug("creating timesheet for worker={}, date={}", worker, date);
-		return service.createForWorkerDate(worker.getId(), date);
+		// TODO: lock down further by isUserAdmin
+		return service.getForWorkerDate(worker.getId(), date);
 	}
 
 	@RequestMapping(method = GET)
 	@ResponseBody
 	public List<TimeSheetView> getAll() {
-		return service.getAll();
+		final Worker worker = getValidatedWorker();
+		return service.getAll(worker.getId(), userService.isUserAdmin());
 	}
 
 	@RequestMapping(value = "/idmap", method = GET)
 	@ResponseBody
 	public SortedMap<Long, TimeSheetView> getAllMap() {
-		return service.getAllMap();
+		final Worker worker = getValidatedWorker();
+		return service.getAllMap(worker.getId(), userService.isUserAdmin());
 	}
 
 	@RequestMapping(value = "/{id}", method = GET)
 	@ResponseBody
 	public TimeSheetView getById(@PathVariable Long id) {
+		// TODO: lock down further by isUserAdmin
 		return service.getById(id);
 	}
 
 	@RequestMapping(method = POST)
 	@ResponseBody
 	public TimeSheetView post(@RequestBody TimeSheetView item) {
+		// TODO: lock down further by isUserAdmin
 		LOGGER.debug("saving timesheet {}", item);
 		service.set(item);
 		return item;

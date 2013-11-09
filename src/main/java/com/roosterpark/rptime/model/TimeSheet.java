@@ -1,7 +1,11 @@
 package com.roosterpark.rptime.model;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -16,7 +20,7 @@ public class TimeSheet {
 
 	public static final String WORKER_KEY = "workerId";
 	public static final String CLIENT_KEY = "clientIds";
-        public static final String START_DATE_KEY = "startDate";
+	public static final String START_DATE_KEY = "startDate";
 	public static final String WEEK_KEY = "week";
 	public static final String YEAR_KEY = "year";
 
@@ -25,7 +29,7 @@ public class TimeSheet {
 	@Index
 	private Long workerId;
 	@Index
-	private List<Long> clientIds;
+	private SortedSet<Long> clientIds;
 	@Index
 	private LocalDate startDate;
 	@Index
@@ -36,7 +40,7 @@ public class TimeSheet {
 	private Integer startDayOfWeek;
 
 	private LocalDateTime updateTimestamp;
-        private List<Long> timeCardIds;
+	private List<Long> timeCardIds;
 	private String note;
 
 	/**
@@ -47,39 +51,40 @@ public class TimeSheet {
 	@Deprecated
 	public TimeSheet() {
 		this.updateTimestamp = new LocalDateTime();
-                this.timeCardIds = new LinkedList<>();
+		this.timeCardIds = new LinkedList<>();
+		this.clientIds = new TreeSet<Long>();
 	}
 
-	public TimeSheet(Long workerId, List<Long> clientIds, LocalDate startDate) {
+	public TimeSheet(final Long workerId, final Set<Long> clientIds, final LocalDate startDate) {
 		this();
 		this.workerId = workerId;
-		this.clientIds = clientIds;
+		setClientIds(clientIds);
 		this.startDate = startDate;
 		this.startDayOfWeek = startDate.getDayOfWeek();
 		this.week = startDate.getWeekOfWeekyear();
 		this.year = startDate.getYear();
 	}
-        
-	public TimeSheet(Long workerId, List<Long> clientIds, LocalDate startDate, List<Long> logIds) {
-            this(workerId, clientIds, startDate);
-            this.timeCardIds = logIds;
-        }
-        
-        public TimeSheet(TimeSheetView view) {
-            this();
-            this.id = view.getId();
-            this.workerId = view.getWorkerId();
-            this.clientIds = view.getClientIds();
-            this.startDate = view.getStartDate();
-            this.week = view.getWeek();
-            this.year = view.getYear();
-            this.startDayOfWeek = view.getStartDayOfWeek();
-            this.note = view.getNote();
-            
-            for(TimeSheetDay entry : view.getDays()) {
-                this.timeCardIds.add(entry.getId());
-            }
-        }
+
+	public TimeSheet(final Long workerId, final Set<Long> clientIds, final LocalDate startDate, final List<Long> logIds) {
+		this(workerId, clientIds, startDate);
+		setTimeCardIds(logIds);
+	}
+
+	public TimeSheet(TimeSheetView view) {
+		this();
+		setId(view.getId());
+		setWorkerId(view.getWorkerId());
+		setClientIds(view.getClientIds());
+		setStartDate(view.getStartDate());
+		setWeek(view.getWeek());
+		setYear(view.getYear());
+		setStartDayOfWeek(view.getStartDayOfWeek());
+		setNote(view.getNote());
+
+		for (TimeSheetDay entry : view.getDays()) {
+			this.timeCardIds.add(entry.getId());
+		}
+	}
 
 	public Long getId() {
 		return id;
@@ -97,12 +102,13 @@ public class TimeSheet {
 		this.workerId = workerId;
 	}
 
-	public List<Long> getClientIds() {
+	public Set<Long> getClientIds() {
 		return clientIds;
 	}
 
-	public void setClientIds(List<Long> clientIds) {
-		this.clientIds = clientIds;
+	public void setClientIds(Collection<Long> clientIds) {
+		this.clientIds.clear();
+		this.clientIds.addAll(clientIds);
 	}
 
 	public Integer getWeek() {
@@ -145,16 +151,15 @@ public class TimeSheet {
 		this.updateTimestamp = updateTimestamp;
 	}
 
-        public List<Long> getTimeCardIds()
-        {
-            return timeCardIds;
-        }
+	public List<Long> getTimeCardIds() {
+		return timeCardIds;
+	}
 
-        public void setTimeCardIds(List<Long> timeCardIds)
-        {
-            this.timeCardIds = timeCardIds;
-        }
-        
+	public void setTimeCardIds(List<Long> timeCardIds) {
+		this.timeCardIds.clear();
+		this.timeCardIds.addAll(timeCardIds);
+	}
+
 	public String getNote() {
 		return note;
 	}
@@ -173,16 +178,16 @@ public class TimeSheet {
 				//
 				.add("clientIds", this.clientIds)
 				//
-                                .add("startDate", this.startDate)
-                                //
+				.add("startDate", this.startDate)
+				//
 				.add("week", this.week)
-                                //
+				//
 				.add("year", this.year)
 				//
 				.add("startDate", this.startDate)
 				//
-                                .add("timeSheetDayIds", this.timeCardIds)
-                                //
+				.add("timeSheetDayIds", this.timeCardIds)
+				//
 				.toString();
 	}
 }

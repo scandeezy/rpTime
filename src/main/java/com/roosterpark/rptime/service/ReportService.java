@@ -86,7 +86,7 @@ public class ReportService {
 		final Map<String, Object> map = new HashMap<String, Object>();
 		final LocalDate d = new LocalDate();
 		final List<Worker> workers = workerService.getAll();
-		final List<TimeSheetView> timeSheets = timeSheetService.getAll();
+		final List<TimeSheetView> timeSheets = timeSheetService.getAllAdmin();
 		map.put("workerList", workers);
 		map.put("workerIdToHoursMap", getWorkerIdToHoursMapForMonth(workers, timeSheets, d));
 		map.put("reportDate", d.toString(yearMonthDateTimeFormatter));
@@ -100,7 +100,7 @@ public class ReportService {
 		final Map<String, Object> map = new HashMap<String, Object>();
 		final LocalDate d = new LocalDate();
 		final List<Worker> workers = workerService.getAll();
-		final List<TimeSheetView> timeSheets = timeSheetService.getAll();
+		final List<TimeSheetView> timeSheets = timeSheetService.getAllAdmin();
 
 		Map<Long, Map<Object, Object>> reportMap = new LinkedHashMap<Long, Map<Object, Object>>();
 		for (Worker worker : workers) {

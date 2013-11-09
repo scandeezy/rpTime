@@ -1,16 +1,16 @@
 package com.roosterpark.rptime.model;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
 import com.roosterpark.rptime.BasicRptimeUnitTest;
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * User: John Date: 10/21/13 Time: 11:11 AM
@@ -20,7 +20,7 @@ public class TimeSheetTest extends BasicRptimeUnitTest {
 	private static final Long WORKER_ID = 123L;
 	private static final Long CLIENT_ID_1 = 234L;
 	private static final Long CLIENT_ID_2 = 567L;
-        private static final List<Long> CLIENT_IDS = new LinkedList<Long>()
+        private static final SortedSet<Long> CLIENT_IDS = new TreeSet<Long>()
                 {{
                         add(CLIENT_ID_1);
                         add(CLIENT_ID_2);

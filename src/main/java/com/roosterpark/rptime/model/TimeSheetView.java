@@ -1,11 +1,15 @@
 package com.roosterpark.rptime.model;
 
-import com.googlecode.objectify.annotation.Id;
-import com.googlecode.objectify.annotation.Index;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.SortedSet;
+import java.util.TreeSet;
+
 import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
+
+import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
 
 /**
  *
@@ -19,7 +23,7 @@ public class TimeSheetView
 	@Index
 	private Long workerId;
 	@Index
-	private List<Long> clientIds;
+	private SortedSet<Long> clientIds;
 	@Index
 	private LocalDate startDate;
 	@Index
@@ -34,12 +38,14 @@ public class TimeSheetView
 
         public TimeSheetView() {
             this.days = new LinkedList<>();
+            this.clientIds = new TreeSet<Long>();
         }
         
         public TimeSheetView(TimeSheet sheet) {
+        	this();
                 this.id = sheet.getId();
                 this.workerId = sheet.getWorkerId();
-                this.clientIds = sheet.getClientIds();
+                setClientIds(sheet.getClientIds());
                 this.startDate = sheet.getStartDate();
                 this.week = sheet.getWeek();
                 this.year = sheet.getYear();
@@ -73,14 +79,15 @@ public class TimeSheetView
             this.workerId = workerId;
         }
 
-        public List<Long> getClientIds()
+        public SortedSet<Long> getClientIds()
         {
             return clientIds;
         }
 
-        public void setClientIds(List<Long> clientIds)
+        public void setClientIds(Collection<Long> clientIds)
         {
-            this.clientIds = clientIds;
+        	this.clientIds.clear();
+        	this.clientIds.addAll(clientIds);
         }
 
         public LocalDate getStartDate()

@@ -24,8 +24,10 @@
 		</div>
 		<div class="panel-body">
 			<ul>
-				<li ng-repeat="(id, timeSheet) in timeSheetsMap"><a ng-click="set(timeSheet)">{{timeSheet.year}}, week {{timeSheet.week}} -
+				<li ng-repeat="(id, timeSheet) in timeSheetsMap" ng-init="worker=workersMap[timeSheet.workerId]">
+					<a ng-click="set(timeSheet)">{{timeSheet.year}}, week {{timeSheet.week}} -
 						{{timeSheet.startDate}}</a>
+						<span ng-show="isAdmin">for {{worker.firstName}} {{worker.lastName}}</span>
 					<button type="button" id="delete-{{$id}}" class="btn btn-sm btn-default" ng-click="remove(timeSheet);" ng-hide="!debug">Delete</button>
 				</li>
 			</ul>
@@ -36,7 +38,9 @@
 		<div id="createTimeSheet" class="panel panel-default" ng-show="edit">
 			<div class="panel-heading">
 				<h4>
-					<span ng-show="currentTimeSheet.id">Edit TimeSheet: {{currentTimeSheet.startDate}}</span>
+					<span ng-show="currentTimeSheet.id">Edit TimeSheet: {{currentTimeSheet.startDate}}
+						<span ng-show="isAdmin">for <a ng-href="#/worker?id={{currentTimeSheet.workerId}}">{{workersMap[currentTimeSheet.workerId].firstName}} {{workersMap[currentTimeSheet.workerId].lastName}}</a></span>
+					</span>
 				</h4>
 				<div class="row">
 					<div class="col-sm-2 pull-right">
@@ -62,7 +66,7 @@
 											id="timeSheetLogEntry-clientId-{{ii}}" 
 											name="timeSheetLogEntry-clientId-{{ii}}" 
 											ng-model="entry.clientId"
-                                                                                        ng-options="clientsMap[clientId].name for clientId in currentTimeSheet.clientIds"
+                                            ng-options="clientsMap[clientId].name for clientId in currentTimeSheet.clientIds"
 											required>
 											<option value="">-- Select Client --</option>
 										</select>
@@ -100,9 +104,12 @@
 	</form>
 
 	<div class="well" ng-cloak ng-show="debug">
-		<pre>currentTimeSheet={{currentTimeSheet | json}}
-timeSheetsMap length={{Objects.keys(timeSheetsMap).length}}
-timeSheetsMap={{timeSheetsMap|json}}
+		<pre>
+isAdmin={{isAdmin}}
+<input type="checkbox" ng-model="showCurrentTimeSheet" ng-init="showCurrentTimeSheet=true">currentTimeSheet=<span ng-show="showCurrentTimeSheet">{{currentTimeSheet | json}}</span>
+<input type="checkbox" ng-model="showTimeSheetsMap" ng-init="showTimeSheetsMap=false">timeSheetsMap=<span ng-show="showTimeSheetsMap">{{timeSheetsMap | json}}</span>
+<input type="checkbox" ng-model="showClientsMap" ng-init="showClientsMap=false">clientsMap=<span ng-show="showClientsMap">{{clientsMap | json}}</span>
+<input type="checkbox" ng-model="showWorkersMap" ng-init="showWorkersMap=true">workersMap=<span ng-show="showWorkersMap">{{workersMap | json}}</span>
 </pre>
 	</div>
 </div>
