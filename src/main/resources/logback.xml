@@ -16,12 +16,12 @@
 
 	<!-- third party loggers last, lexicographically -->
 
-	<logger name="com.google" level="TRACE" />
+	<logger name="com.google" level="DEBUG" />
 	<logger name="org.apache" level="WARN" />
 	<logger name="org.eclipse.jetty" level="WARN" />
 	<logger name="org.datanucleus" level="WARN" />
 	<logger name="org.jboss" level="WARN" />
-	<logger name="org.springframework" level="TRACE" />
+	<logger name="org.springframework" level="DEBUG" />
 	<logger name="org.springframework.aop" level="WARN" />
 	<logger name="org.springframework.beans" level="WARN" />
 	<logger name="org.springframework.beans.CachedIntrospectionResults" level="WARN" />
@@ -34,8 +34,8 @@
 	<logger name="org.springframework.jndi" level="WARN" />
 	<logger name="org.springframework.web" level="DEBUG" />
 	<logger name="org.springframework.web.context" level="WARN" />
-	<logger name="org.springframework.web.filter" level="TRACE" />
-	<logger name="org.springframework.web.servlet.mvc" level="TRACE" />
+	<logger name="org.springframework.web.filter" level="WARN" />
+	<logger name="org.springframework.web.servlet.mvc" level="DEBUG" />
 	 
 	<root level="DEBUG">
 		<appender-ref ref="STDOUT" />
