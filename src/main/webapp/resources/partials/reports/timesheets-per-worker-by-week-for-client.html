@@ -4,7 +4,9 @@
 		<h2 ng-hide="selectedClient">Time Sheets Per Worker, By Week, For Client</h2>
 		<div class="col-sm-3 hidden-print">
 			<select class="form-control hidden-print" id="client" name="client" ng-model="selectedClient"
-				ng-options="client.id as client.name for (clientid,client) in clientsMap" required>
+				ng-options="client.id as client.name for (clientid,client) in clientsMap" 
+				ng-change="selectClient(selectedClient);"
+				required>
 				<option value="">-- Select Client --</option>
 			</select>
 		</div>

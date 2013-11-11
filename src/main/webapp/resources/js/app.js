@@ -30,7 +30,8 @@
 		});
 		$routeProvider.when('/report/:id', {
 			controller : 'ReportPageCtrl',
-			templateUrl : 'resources/partials/reports/list.html'
+			templateUrl : 'resources/partials/reports/list.html',
+			reloadOnSearch : false
 		});
 		$routeProvider.when('/timesheet', {
 			controller : 'TimeSheetPageCtrl',

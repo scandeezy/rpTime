@@ -13,11 +13,8 @@
 		$rootScope.workersMap = {};
 
 		function updateClientsFn() {
-			$log.info("updateClientsFn before:", $rootScope.clientsMap);
 			AdminClientService.getAll(function successCGetAllFn(data) {
-				$log.info("inside for updateClientsFn with data", data);
 				$rootScope.clientsMap = data;
-				$log.info("updateClientsFn after: ", $rootScope.clientsMap);
 			});
 		}
 

@@ -14,25 +14,33 @@
 
 	} ]);
 
-	module.controller('ReportTimeSheetsPerWorkerByWeekForClientCtrl', ['$location', '$log', '$scope', 'AdminClientService', 'AdminReportService', //
-	function ReportTimeSheetsPerWorkerByWeekForClientCtrlFn($location, $log, $scope, AdminClientService, AdminReportService) {
-		 $log.info('ReportTimeSheetsPerWorkerByWeekForClientCtrl init', $location, $scope);
-
-		$scope.clientsMap = AdminClientService.getAll();
-		$scope.report = null;
-
-		$scope.$watch('selectedClient', function selectedClient$watchFn(val) {
-			$log.info('selectedClient changed: ' + val);
-			if (val) {
+	module.controller('ReportTimeSheetsPerWorkerByWeekForClientCtrl', [ '$location', '$log', '$routeParams', '$scope', //
+	'AdminClientService', 'AdminReportService', //
+	function ReportTimeSheetsPerWorkerByWeekForClientCtrlFn($location, $log, $routeParams, $scope, //
+	AdminClientService, AdminReportService) {
+		//$log.info('ReportTimeSheetsPerWorkerByWeekForClientCtrl init', $routeParams, $scope);
+		
+		$scope.selectClient = function selectClientFn(clientId) {
+			if (clientId) {
 				$scope.report = AdminReportService.get({
 					id : 'timesheets-per-worker-by-week-for-client',
-					client : val
+					client : clientId
+				},function successFn(data){
+					$scope.selectedClient = clientId;
 				});
 			} else {
 				$scope.report = null;
+				$location.search('clientId', null);
 			}
-		});
-
+		};
+		
+		//init:
+		$scope.clientsMap = AdminClientService.getAll();
+		$scope.report = null;
+		if ($routeParams.clientId) {
+			$scope.selectClient($routeParams.clientId);
+		}
+		
 	} ]);
 
 	module.controller('ReportTimeSheetsPerWorkerByWeekForClientWorkerCtrl', [ '$log', '$scope',//
