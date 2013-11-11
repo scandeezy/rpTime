@@ -1175,8 +1175,8 @@
 		<tika-core.version>1.4</tika-core.version>
 		<metrics.version>3.0.1</metrics.version>
 		<tomcat.version>7.0.39</tomcat.version>
-		<org.webjars-angularjs.version>1.2.0-rc.3</org.webjars-angularjs.version>
-		<org.webjars-bootstrap.version>3.0.1</org.webjars-bootstrap.version>
+		<org.webjars-angularjs.version>1.2.0</org.webjars-angularjs.version>
+		<org.webjars-bootstrap.version>3.0.2</org.webjars-bootstrap.version>
 		<org.webjars-jquery.version>2.0.3-1</org.webjars-jquery.version>
 		<org.webjars-jquery-cookie.version>1.3.1</org.webjars-jquery-cookie.version>
 		<woodstox.version>4.2.0</woodstox.version>

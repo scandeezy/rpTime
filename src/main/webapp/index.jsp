@@ -12,8 +12,8 @@
 <meta name="author" content="Rooster Park">
 <title>rpTime</title>
 <link rel="shortcut icon" href="/favicon.ico" />
-<link rel="stylesheet" href="/resources/webjars/bootstrap/3.0.1/css/bootstrap.min.css">
-<link rel="stylesheet" href="/resources/webjars/bootstrap/3.0.1/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="/resources/webjars/bootstrap/3.0.2/css/bootstrap.min.css">
+<link rel="stylesheet" href="/resources/webjars/bootstrap/3.0.2/css/bootstrap-theme.min.css">
 <link rel="stylesheet" href="/resources/css/app.css" />
 </head>
 <body>
@@ -70,11 +70,11 @@ request = <%=request%></pre>
 			<!-- begin JS resources manageable by WebJars -->
 			<script src="/resources/webjars/jquery/2.0.3/jquery.min.js"></script>
 			<script src="/resources/webjars/jquery-cookie/1.3.1/jquery.cookie.js"></script>
-			<script src="/resources/webjars/bootstrap/3.0.1/js/bootstrap.min.js"></script>
-			<script src="/resources/webjars/angularjs/1.2.0-rc.3/angular.js"></script>
-			<script src="/resources/webjars/angularjs/1.2.0-rc.3/angular-animate.js"></script>
-			<script src="/resources/webjars/angularjs/1.2.0-rc.3/angular-route.js"></script>
-			<script src="/resources/webjars/angularjs/1.2.0-rc.3/angular-resource.js"></script>
+			<script src="/resources/webjars/bootstrap/3.0.2/js/bootstrap.min.js"></script>
+			<script src="/resources/webjars/angularjs/1.2.0/angular.js"></script>
+			<script src="/resources/webjars/angularjs/1.2.0/angular-animate.js"></script>
+			<script src="/resources/webjars/angularjs/1.2.0/angular-route.js"></script>
+			<script src="/resources/webjars/angularjs/1.2.0/angular-resource.js"></script>
 			<!-- end JS resources manageable by WebJars -->
 			<script src="/resources/js/app.js"></script>
 			<script src="/resources/js/services.js"></script>
