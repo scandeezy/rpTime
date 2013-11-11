@@ -1,5 +1,7 @@
 package com.roosterpark.rptime.service;
 
+import com.google.appengine.repackaged.org.joda.time.Hours;
+import com.roosterpark.rptime.model.Client;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -37,6 +39,8 @@ public class ReportService {
 	TimeSheetService timeSheetService;
 	@Inject
 	WorkerService workerService;
+        @Inject
+        PaidTimeOffService ptoService;
 
 	private String yearMonthDateTimeFormatter = "MMMM YYYY";
 
@@ -133,8 +137,42 @@ public class ReportService {
 		map.put("updateDate", new LocalDateTime());
 		return map;
 	}
+        
+        public Map<Long, Integer> getNumberOfHoursForClientInYear(final Long clientId, final Integer year) {
+            Map<Long, Integer> hourMap = new LinkedHashMap<>();
+            
+            LOGGER.debug("Generating report of hours logged in year {} for client {}", year, clientId);
+            List<TimeSheetView> views = timeSheetService.getAllForClientYear(clientId, year);
+            for(TimeSheetView view : views) {
+                // Initialize
+                int current = 0;
+                // Load
+                if(hourMap.containsKey(view.getWorkerId())) {
+                    current = hourMap.get(view.getWorkerId());
+                }
+                // Populate
+                for(TimeSheetDay day : view.getDays()) {
+                    for(TimeCardLogEntry entry : day.getEntries()) {
+                        LOGGER.debug("Inspecting Log entry {}", entry);
+                        if(entry.getClientId().equals(clientId)) {
+                            LOGGER.debug("FOUND hours to add...");
+                            current += entry.getEndTime().getHourOfDay() - entry.getStartTime().getHourOfDay();
+                        }
+                    }
+                }
+                // Set
+                hourMap.put(view.getWorkerId(), current);
+            }
+            
+            return hourMap;
+        }
 
 	//
-
+        public Map<Long, Integer> getNumberOfPTOHoursInYear(final Integer year) {
+            Client ptoClient = ptoService.getPtoClient();
+            Map<Long, Integer> hourMap = getNumberOfHoursForClientInYear(ptoClient.getId(), year);
+            
+            return hourMap;
+        }
 	//
 }

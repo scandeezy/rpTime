@@ -157,6 +157,15 @@ public class TimeSheetService {
 
 		return views;
 	}
+        
+        private List<TimeSheetView> convert(List<TimeSheet> sheets) {
+                List<TimeSheetView> views = new LinkedList<>();
+                for(TimeSheet sheet : sheets) {
+                    views.add(convert(sheet));
+                }
+                
+                return views;
+        }
 
 	private TimeSheetView convert(TimeSheet sheet) {
 		List<TimeSheetDay> entries = timeSheetDayDao.getEntries(sheet.getTimeCardIds());
@@ -206,6 +215,14 @@ public class TimeSheetService {
 		}
 		return map;
 	}
+        
+        public List<TimeSheetView> getAllForClient(final Long clientId) {
+                return convert(timeSheetDao.getAllForClient(clientId));
+        }
+        
+        public List<TimeSheetView> getAllForClientYear(final Long clientId, final Integer year) {
+                return convert(timeSheetDao.getAllForClient(clientId, year));
+        }
 
 	public TimeSheetView getById(Long id) {
 		TimeSheet sheet = timeSheetDao.getById(id);

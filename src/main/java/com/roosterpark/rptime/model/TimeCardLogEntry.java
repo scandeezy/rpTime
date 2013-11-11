@@ -93,4 +93,16 @@ public class TimeCardLogEntry implements Comparable {
 
 		return -1;
 	}
+
+        @Override
+        public String toString()
+        {
+            return "TimeCardLogEntry{" 
+                    + "workerId=" + workerId 
+                    + ", clientId=" + clientId 
+                    + ", date=" + date 
+                    + ", startTime=" + startTime 
+                    + ", endTime=" + endTime 
+                    + '}';
+        }
 }

@@ -62,4 +62,10 @@ public class ReportController {
 	public Map<String, Object> timeSheetsPerWorkerByWeekForClient(@PathVariable Long clientId) {
 		return reportService.getTimeSheetsPerWorkerByWeekForClientReport(clientId);
 	}
+        
+        @RequestMapping(value = "/hours-recorded/{clientId}/{year}")
+        @ResponseBody
+        public Map<Long, Integer> hoursRecordedForClientPerYear(@PathVariable Long clientId, @PathVariable Integer year) {
+                return reportService.getNumberOfPTOHoursInYear(year);
+        }
 }

@@ -75,9 +75,21 @@ public class TimeSheetDao {
 		LOGGER.debug("returning List<Sheet>={}", result);
 		return result;
 	}
+        
+        public List<TimeSheet> getAllForClient(final Long clientId) {
+                List<TimeSheet> sheets = ofy().load().type(TimeSheet.class).filter(TimeSheet.CLIENT_KEY, clientId).order(TimeSheet.START_DATE_KEY).list();
+                
+                return sheets;
+        }
+        
+        public List<TimeSheet> getAllForClient(final Long clientId, final Integer year) {
+                List<TimeSheet> sheets = ofy().load().type(TimeSheet.class).filter(TimeSheet.CLIENT_KEY, clientId).filter(TimeSheet.YEAR_KEY, year).order(TimeSheet.START_DATE_KEY).list();
+                
+                return sheets;
+        }
 
 	public List<TimeSheet> getSheetViewsForWorkerPage(Long workerId, Integer count, Integer offset) {
-		List<TimeSheet> sheets = ofy().load().type(TimeSheet.class).filter("workerId", workerId).order(TimeSheet.START_DATE_KEY)
+		List<TimeSheet> sheets = ofy().load().type(TimeSheet.class).filter(TimeSheet.WORKER_KEY, workerId).order(TimeSheet.START_DATE_KEY)
 				.limit(count).offset(offset).list();
 		return sheets;
 	}
