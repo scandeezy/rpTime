@@ -67,6 +67,7 @@ public class TimeSheetService {
 	 *         created.
 	 */
 	public TimeSheetView getForWorkerDate(Long workerId, LocalDate date) {
+                date = adjustDate(date, DateTimeConstants.SUNDAY);
 		Validate.noNullElements(new Object[] { workerId, date }, "Required: workerId and date");
 		TimeSheet exists = timeSheetDao.getByWorkerWeekYear(workerId, date.getWeekOfWeekyear(), date.getYear());
 		TimeSheetView result;
@@ -167,6 +168,9 @@ public class TimeSheetService {
 	private LocalDate adjustDate(LocalDate date, Integer dayOfWeek) {
 		int currentDayOfWeek = date.dayOfWeek().get();
 		LOGGER.debug("Current day of week {} and needed day of week {}", currentDayOfWeek, dayOfWeek);
+                if(currentDayOfWeek == dayOfWeek) {
+                    return date;
+                }
 		LocalDate returnDate = date.withDayOfWeek(dayOfWeek);
 		// Edge condition
 		if (dayOfWeek == DateTimeConstants.SUNDAY) {

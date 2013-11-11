@@ -49,9 +49,11 @@ public class TimeSheetDao {
 	}
 
 	public TimeSheet getByWorkerWeekYear(Long workerId, int week, int year) {
+                LOGGER.debug("Searching for timesheet with worker id {}, week {}, and year {}", workerId, week, year);
 		List<TimeSheet> sheets = ofy().load().type(TimeSheet.class).filter(TimeSheet.WORKER_KEY, workerId).filter(TimeSheet.WEEK_KEY, week)
 				.filter(TimeSheet.YEAR_KEY, year).list();
 
+                LOGGER.debug("Found {} timesheets", sheets.size());
 		if (sheets.isEmpty())
 			return null;
 		return sheets.get(0);

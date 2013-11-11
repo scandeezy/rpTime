@@ -6,6 +6,7 @@ package com.roosterpark.rptime.service;
 
 import com.roosterpark.rptime.BasicRptimeUnitTest;
 import com.roosterpark.rptime.model.TimeSheet;
+import com.roosterpark.rptime.model.TimeSheetView;
 import com.roosterpark.rptime.service.dao.TimeSheetDao;
 import com.roosterpark.rptime.service.dao.TimeSheetDayDao;
 
@@ -17,6 +18,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import org.junit.Ignore;
 
 /**
  *
@@ -25,6 +27,7 @@ import static org.junit.Assert.*;
 public class TimeSheetServiceTest extends BasicRptimeUnitTest
 {
     private static final Long ID_1 = 1L;
+    private static final Long WORKER_ID = 123L;
     
     private TimeSheetService service;
     
@@ -70,4 +73,19 @@ public class TimeSheetServiceTest extends BasicRptimeUnitTest
     //
     // @Test
     // public void hello() {}
+    
+    @Test
+    @Ignore
+    public void getNull() {
+        TimeSheet sheet = new TimeSheet();
+        TimeSheetDao dao = mock(TimeSheetDao.class);
+        when(dao.getById(ID_1)).thenReturn(sheet);
+        service.setTimeSheetDao(dao);
+        TimeSheetDayDao dao2 = mock(TimeSheetDayDao.class);
+        service.setTimeSheetDayDao(dao2);
+        
+        TimeSheetView view = service.getForWorkerDate(WORKER_ID, START_DATE);
+        
+        assertNull(view);
+    }
 }
