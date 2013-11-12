@@ -143,6 +143,13 @@ public class TimeSheetController {
 		return item;
 	}
 
+	@RequestMapping(value = "/submit/{id}", method = POST)
+	@ResponseBody
+	public void submit(@PathVariable("id") Long id) {
+		LOGGER.debug("submit timesheet {}", id);
+		service.submit(id);
+	}
+
 	@RequestMapping(value = "/{id}", method = PUT)
 	@ResponseStatus(ACCEPTED)
 	@ResponseBody

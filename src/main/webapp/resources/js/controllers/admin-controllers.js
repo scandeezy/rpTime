@@ -11,6 +11,7 @@
 		$rootScope.clientsMap = {};
 		$rootScope.contractsMap = {};
 		$rootScope.workersMap = {};
+		$rootScope.workersList = []; //lists allow filters: http://stackoverflow.com/a/14789258/237225
 
 		function updateClientsFn() {
 			AdminClientService.getAll(function successCGetAllFn(data) {
@@ -34,6 +35,17 @@
 		$scope.$on('updateWorkers', updateWorkersFn);
 		$scope.$on('updateContracts', updateContractsFn);
 
+		
+		$scope.$watch('workersMap',function workersMap$watchFn(map){
+			var arr = [];
+			angular.forEach(map, function(val,key){
+				if(key && val.id){
+					arr.push(val);
+				}
+			});
+			$rootScope.workersList = arr;
+		},true);
+		
 		updateClientsFn();
 		updateContractsFn();
 		updateWorkersFn();

@@ -8,145 +8,134 @@ import java.util.TreeSet;
 
 import org.joda.time.LocalDate;
 
-import com.googlecode.objectify.annotation.Id;
-import com.googlecode.objectify.annotation.Index;
-
 /**
- *
+ * 
  * @author scandeezy
  */
-public class TimeSheetView
-{
-
-	@Id
+public class TimeSheetView {
 	private Long id;
-	@Index
 	private Long workerId;
-	@Index
 	private SortedSet<Long> clientIds;
-	@Index
 	private LocalDate startDate;
-	@Index
 	private Integer week;
-	@Index
 	private Integer year;
-	@Index
 	private Integer startDayOfWeek;
-
-        private List<TimeSheetDay> days;
+	private boolean flagged;
+	private TimeSheetStatus status;
+	private List<TimeSheetDay> days;
 	private String note;
 
-        public TimeSheetView() {
-            this.days = new LinkedList<>();
-            this.clientIds = new TreeSet<Long>();
-        }
-        
-        public TimeSheetView(TimeSheet sheet) {
-        	this();
-                this.id = sheet.getId();
-                this.workerId = sheet.getWorkerId();
-                setClientIds(sheet.getClientIds());
-                this.startDate = sheet.getStartDate();
-                this.week = sheet.getWeek();
-                this.year = sheet.getYear();
-                this.startDayOfWeek = sheet.getStartDayOfWeek();
-                this.note = sheet.getNote();
-                this.days = new LinkedList<>();
-        }
-        
-        public TimeSheetView(TimeSheet sheet, List<TimeSheetDay> logs) {
-                this(sheet);
-                this.days = logs;
-        }
+	public TimeSheetView() {
+		this.days = new LinkedList<>();
+		this.clientIds = new TreeSet<Long>();
+	}
 
-        public Long getId()
-        {
-            return id;
-        }
+	public TimeSheetView(TimeSheet sheet) {
+		this();
+		this.id = sheet.getId();
+		this.workerId = sheet.getWorkerId();
+		setClientIds(sheet.getClientIds());
+		this.startDate = sheet.getStartDate();
+		this.week = sheet.getWeek();
+		this.year = sheet.getYear();
+		this.startDayOfWeek = sheet.getStartDayOfWeek();
+		this.note = sheet.getNote();
+		this.days = new LinkedList<>();
+		this.flagged = sheet.isFlagged();
+		this.status = sheet.getStatus();
+	}
 
-        public void setId(Long id)
-        {
-            this.id = id;
-        }
+	public TimeSheetView(TimeSheet sheet, List<TimeSheetDay> logs) {
+		this(sheet);
+		this.days = logs;
+	}
 
-        public Long getWorkerId()
-        {
-            return workerId;
-        }
+	public Long getId() {
+		return id;
+	}
 
-        public void setWorkerId(Long workerId)
-        {
-            this.workerId = workerId;
-        }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-        public SortedSet<Long> getClientIds()
-        {
-            return clientIds;
-        }
+	public Long getWorkerId() {
+		return workerId;
+	}
 
-        public void setClientIds(Collection<Long> clientIds)
-        {
-        	this.clientIds.clear();
-        	this.clientIds.addAll(clientIds);
-        }
+	public void setWorkerId(Long workerId) {
+		this.workerId = workerId;
+	}
 
-        public LocalDate getStartDate()
-        {
-            return startDate;
-        }
+	public SortedSet<Long> getClientIds() {
+		return clientIds;
+	}
 
-        public void setStartDate(LocalDate startDate)
-        {
-            this.startDate = startDate;
-        }
+	public void setClientIds(Collection<Long> clientIds) {
+		this.clientIds.clear();
+		this.clientIds.addAll(clientIds);
+	}
 
-        public Integer getWeek()
-        {
-            return week;
-        }
+	public LocalDate getStartDate() {
+		return startDate;
+	}
 
-        public void setWeek(Integer week)
-        {
-            this.week = week;
-        }
+	public void setStartDate(LocalDate startDate) {
+		this.startDate = startDate;
+	}
 
-        public Integer getYear()
-        {
-            return year;
-        }
+	public Integer getWeek() {
+		return week;
+	}
 
-        public void setYear(Integer year)
-        {
-            this.year = year;
-        }
+	public void setWeek(Integer week) {
+		this.week = week;
+	}
 
-        public Integer getStartDayOfWeek()
-        {
-            return startDayOfWeek;
-        }
+	public Integer getYear() {
+		return year;
+	}
 
-        public void setStartDayOfWeek(Integer startDayOfWeek)
-        {
-            this.startDayOfWeek = startDayOfWeek;
-        }
+	public void setYear(Integer year) {
+		this.year = year;
+	}
 
-        public List<TimeSheetDay> getDays()
-        {
-            return days;
-        }
+	public Integer getStartDayOfWeek() {
+		return startDayOfWeek;
+	}
 
-        public void setDays(List<TimeSheetDay> timeCards)
-        {
-            this.days = timeCards;
-        }
+	public void setStartDayOfWeek(Integer startDayOfWeek) {
+		this.startDayOfWeek = startDayOfWeek;
+	}
 
-        public String getNote()
-        {
-            return note;
-        }
+	public List<TimeSheetDay> getDays() {
+		return days;
+	}
 
-        public void setNote(String note)
-        {
-            this.note = note;
-        }
+	public void setDays(List<TimeSheetDay> timeCards) {
+		this.days = timeCards;
+	}
+
+	public String getNote() {
+		return note;
+	}
+
+	public void setNote(String note) {
+		this.note = note;
+	}
+
+	public TimeSheetStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(TimeSheetStatus status) {
+		this.status = status;
+	}
+
+	public boolean isFlagged() {
+		return flagged;
+	}
+
+	public void setFlagged(boolean flagged) {
+		this.flagged = flagged;
+	}
 }

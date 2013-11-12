@@ -1,5 +1,5 @@
 <!-- current $scope is AdminWorkerCtrl -->
-<div>
+<div class="container">
 	<div id="workers" class="panel panel-default" ng-hide="edit">
 		<div class="panel-heading">
 			<h4>
@@ -13,12 +13,19 @@
 			</h4>
 		</div>
 		<div class="panel-body">
-			<ul>
-				<li ng-repeat="(id, worker) in workersMap | orderBy:'lastName'"><span class="btn-group">
-						<button type="button" id="edit-{{$id}}" class="btn btn-sm btn-default" ng-click="set(worker);">Edit</button>
-						<button type="button" id="delete-{{$id}}" class="btn btn-sm btn-default" ng-click="remove(worker);" ng-hide="!debug">Delete</button>
-				</span> {{worker.lastName}}, {{worker.firstName}} <span class="text-muted" ng-show="worker.email">&nbsp;&nbsp;&nbsp; {{worker.email}}</span></li>
-			</ul>
+			<div class="row">
+				<div class="col-sm-10">
+					<ul>
+						<li ng-repeat="worker in workersList | filter:search:strict | orderBy:'lastName' "><span class="btn-group">
+								<button type="button" id="edit-{{$id}}" class="btn btn-sm btn-default" ng-click="set(worker);">Edit</button>
+								<button type="button" id="delete-{{$id}}" class="btn btn-sm btn-default" ng-click="remove(worker);" ng-hide="!debug">Delete</button>
+						</span> {{worker.lastName}}, {{worker.firstName}} <span class="text-muted" ng-show="worker.email">&nbsp;&nbsp;&nbsp; {{worker.email}}</span></li>
+					</ul>
+				</div>
+				<div class="col-sm-2">
+					<input type="text" class="form-control search" ng-model="search.$" placeholder="Search">
+				</div>
+			</div>
 		</div>
 	</div>
 

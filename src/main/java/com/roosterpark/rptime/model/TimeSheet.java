@@ -42,6 +42,10 @@ public class TimeSheet {
 	private LocalDateTime updateTimestamp;
 	private List<Long> timeCardIds;
 	private String note;
+	private boolean flagged;
+
+	@Index
+	private TimeSheetStatus status;
 
 	/**
 	 * required for Objectify.
@@ -53,6 +57,8 @@ public class TimeSheet {
 		this.updateTimestamp = new LocalDateTime();
 		this.timeCardIds = new LinkedList<>();
 		this.clientIds = new TreeSet<Long>();
+		this.status = TimeSheetStatus.UNSUBMITTED;
+		this.flagged = false;
 	}
 
 	public TimeSheet(final Long workerId, final Set<Long> clientIds, final LocalDate startDate) {
@@ -170,24 +176,36 @@ public class TimeSheet {
 
 	@Override
 	public String toString() {
-		return Objects.toStringHelper(this)
-		//
-				.add("id", this.id)
-				//
-				.add("workerId", this.workerId)
-				//
-				.add("clientIds", this.clientIds)
-				//
-				.add("startDate", this.startDate)
-				//
-				.add("week", this.week)
-				//
-				.add("year", this.year)
-				//
-				.add("startDate", this.startDate)
-				//
-				.add("timeSheetDayIds", this.timeCardIds)
-				//
+		return Objects.toStringHelper(this) //
+				.add("id", this.id) //
+				.add("workerId", this.workerId) //
+				.add("clientIds", this.clientIds) //
+				.add("flagged", this.flagged) //
+				.add("startDate", this.startDate) //
+				.add("week", this.week) //
+				.add("year", this.year) //
+				.add("startDate", this.startDate) //
+				.add("status", this.status) //
+				.add("timeSheetDayIds", this.timeCardIds) //
 				.toString();
+	}
+
+	public boolean isFlagged() {
+		return flagged;
+	}
+
+	public void setFlagged(boolean flagged) {
+		this.flagged = flagged;
+	}
+
+	public TimeSheetStatus getStatus() {
+		if (status == null) {
+			return TimeSheetStatus.UNSUBMITTED;
+		}
+		return status;
+	}
+
+	public void setStatus(TimeSheetStatus status) {
+		this.status = status;
 	}
 }

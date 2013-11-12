@@ -4,7 +4,7 @@
 	var module = angular.module('myApp.controllers');
 
 	module.controller('TimeSheetPageCtrl', [ '$location', '$log', '$routeParams', '$scope', 'AdminClientService', 'TimeSheetService', //
-	function TimeSheetPageCtrlPageCtrlFn($location, $log, $routeParams, $scope, AdminClientService, TimeSheetService) {
+	function TimeSheetPageCtrlFn($location, $log, $routeParams, $scope, AdminClientService, TimeSheetService) {
 		$scope.edit = false;
 		$scope.timeSheetsMap = {};
 		$scope.currentTimeSheet = {};
@@ -28,17 +28,10 @@
 			});
 		}
 
-		$scope.addNewTimeCardLogEntry = function addNewTimeCardLogEntryFn(day) {
-			var first = day.entries[0];
-			day.entries.push({
-				'workerId' : first.workerId,
-				'clientId' : first.clientId,
-				'date' : first.date,
-				'startTime' : first.endTime,
-				'endTime' : first.endTime
-			});
+		$scope.isSubmittable = function isSubmittableFn(timeSheet){
+			return timeSheet.status === 'UNSUBMITTED';
 		}
-
+		
 		$scope.remove = function removeFn(obj) {
 			$scope.doRemove({
 				service : TimeSheetService,
@@ -81,52 +74,54 @@
 		};
 
 		$scope.setWeekLast = function setWeekLastFn() {
-                        var date = new Date();
-                        date.setDate(date.getDate() - 7);
-			TimeSheetService.get(
-                                {
-                                        id : "new",
-                                        date : date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
-                                },
-                                function successFn(data) {
-                                        $scope.set(data);
-                                }
-                        );
+			var date = new Date();
+			date.setDate(date.getDate() - 7);
+			TimeSheetService.get({
+				id : "new",
+				date : date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
+			}, function successFn(data) {
+				$scope.set(data);
+			});
 		};
 
 		$scope.setWeekNext = function setWeekNextFn() {
-                        var date = new Date();
-                        date.setDate(date.getDate() + 7);
-			TimeSheetService.get(
-                                {
-                                        id : "new",
-                                        date : date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
-                                },
-                                function successFn(data) {
-                                        $scope.set(data);
-                                }
-                        );
+			var date = new Date();
+			date.setDate(date.getDate() + 7);
+			TimeSheetService.get({
+				id : "new",
+				date : date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
+			}, function successFn(data) {
+				$scope.set(data);
+			});
 		};
 
 		$scope.setWeekOther = function setWeekOtherFn() {
-                        var data = window.showModalDialog("datePickerModal.html");
-                        $log.error(data.datePicked);
-                        TimeSheetService.get({
-                                        id : "new",
-                                        date : data.datePicked
-                                }, function successFn(data) {
-                                        $scope.set(data);
-                                }
-                        );
+			var data = window.showModalDialog("datePickerModal.html");
+			$log.error(data.datePicked);
+			TimeSheetService.get({
+				id : "new",
+				date : data.datePicked
+			}, function successFn(data) {
+				$scope.set(data);
+			});
+		};
+
+		$scope.submit = function submitFn(timeSheet) {
+			$log.info("submitting timeSheet.id= " + timeSheet.id);
+			TimeSheetService.submit({
+				id : timeSheet.id
+			}, function successFn() {
+				timeSheet.status = 'SUBMITTED';
+			});
 		};
 
 		$scope.unset = function unsetFn() {
-                        var sheet = $scope.currentTimeSheet;
-                        // In the case of a new sheet having been created
-                        if(! $scope.timeSheetsMap[sheet.id]) {
-                            // Save it if it's not in the list
-                            $scope.timeSheetsMap[sheet.id] = sheet;
-                        }
+			var sheet = $scope.currentTimeSheet;
+			// In the case of a new sheet having been created
+			if (!$scope.timeSheetsMap[sheet.id]) {
+				// Save it if it's not in the list
+				$scope.timeSheetsMap[sheet.id] = sheet;
+			}
 			$scope.edit = false;
 			$location.search('id', null);
 		};
@@ -136,6 +131,31 @@
 		updateTimeSheetsFn();
 
 		$log.info('TimeSheetPageCtrl init', $scope);
+
+	} ]);
+
+	module.controller('TimeSheetDayCtrl', [ '$log', '$scope',//
+	function TimeSheetDayCtrlFn($log, $scope) {
+
+		$scope.addNewTimeCardLogEntry = function addNewTimeCardLogEntryFn(day) {
+			var last = day.entries[(day.entries.length - 1)];
+			day.entries.push({
+				'workerId' : last.workerId,
+				'clientId' : last.clientId,
+				'date' : last.date,
+				'startTime' : last.endTime,
+				'endTime' : null
+			});
+			$scope.createTimeSheetForm.$setDirty();
+		};
+
+		$scope.removeTimeCardLogEntry = function removeTimeCardLogEntryFn(entry) {
+			if ($scope.day && $scope.day.entries) {
+				var index = $scope.day.entries.indexOf(entry) || (($scope.day.entries.length) - 1);
+				$scope.day.entries.splice(index, 1);
+			}
+			$scope.createTimeSheetForm.$setDirty();
+		};
 
 	} ]);
 

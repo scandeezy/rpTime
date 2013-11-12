@@ -23,6 +23,7 @@ import com.roosterpark.rptime.model.Contract;
 import com.roosterpark.rptime.model.TimeCardLogEntry;
 import com.roosterpark.rptime.model.TimeSheet;
 import com.roosterpark.rptime.model.TimeSheetDay;
+import com.roosterpark.rptime.model.TimeSheetStatus;
 import com.roosterpark.rptime.model.TimeSheetView;
 import com.roosterpark.rptime.service.dao.TimeSheetDao;
 import com.roosterpark.rptime.service.dao.TimeSheetDayDao;
@@ -67,7 +68,7 @@ public class TimeSheetService {
 	 *         created.
 	 */
 	public TimeSheetView getForWorkerDate(Long workerId, LocalDate date) {
-                date = adjustDate(date, DateTimeConstants.SUNDAY);
+		date = adjustDate(date, DateTimeConstants.SUNDAY);
 		Validate.noNullElements(new Object[] { workerId, date }, "Required: workerId and date");
 		TimeSheet exists = timeSheetDao.getByWorkerWeekYear(workerId, date.getWeekOfWeekyear(), date.getYear());
 		TimeSheetView result;
@@ -157,15 +158,15 @@ public class TimeSheetService {
 
 		return views;
 	}
-        
-        private List<TimeSheetView> convert(List<TimeSheet> sheets) {
-                List<TimeSheetView> views = new LinkedList<>();
-                for(TimeSheet sheet : sheets) {
-                    views.add(convert(sheet));
-                }
-                
-                return views;
-        }
+
+	private List<TimeSheetView> convert(List<TimeSheet> sheets) {
+		List<TimeSheetView> views = new LinkedList<>();
+		for (TimeSheet sheet : sheets) {
+			views.add(convert(sheet));
+		}
+
+		return views;
+	}
 
 	private TimeSheetView convert(TimeSheet sheet) {
 		List<TimeSheetDay> entries = timeSheetDayDao.getEntries(sheet.getTimeCardIds());
@@ -177,9 +178,9 @@ public class TimeSheetService {
 	private LocalDate adjustDate(LocalDate date, Integer dayOfWeek) {
 		int currentDayOfWeek = date.dayOfWeek().get();
 		LOGGER.debug("Current day of week {} and needed day of week {}", currentDayOfWeek, dayOfWeek);
-                if(currentDayOfWeek == dayOfWeek) {
-                    return date;
-                }
+		if (currentDayOfWeek == dayOfWeek) {
+			return date;
+		}
 		LocalDate returnDate = date.withDayOfWeek(dayOfWeek);
 		// Edge condition
 		if (dayOfWeek == DateTimeConstants.SUNDAY) {
@@ -202,11 +203,11 @@ public class TimeSheetService {
 
 		return views;
 	}
-        
-        public List<TimeSheetView> getAllForClientWeek(final Long clientId, final LocalDate date) {
-                LocalDate adjustedDate = adjustDate(date, DateTimeConstants.SUNDAY);
-                return convert(timeSheetDao.getAllForClientWeekYear(clientId, adjustedDate.getWeekOfWeekyear(), adjustedDate.getYear()));
-        }
+
+	public List<TimeSheetView> getAllForClientWeek(final Long clientId, final LocalDate date) {
+		LocalDate adjustedDate = adjustDate(date, DateTimeConstants.SUNDAY);
+		return convert(timeSheetDao.getAllForClientWeekYear(clientId, adjustedDate.getWeekOfWeekyear(), adjustedDate.getYear()));
+	}
 
 	protected List<TimeSheetView> getAllAdmin() {
 		return getAll(null, true);
@@ -220,14 +221,14 @@ public class TimeSheetService {
 		}
 		return map;
 	}
-        
-        public List<TimeSheetView> getAllForClient(final Long clientId) {
-                return convert(timeSheetDao.getAllForClient(clientId));
-        }
-        
-        public List<TimeSheetView> getAllForClientYear(final Long clientId, final Integer year) {
-                return convert(timeSheetDao.getAllForClientYear(clientId, year));
-        }
+
+	public List<TimeSheetView> getAllForClient(final Long clientId) {
+		return convert(timeSheetDao.getAllForClient(clientId));
+	}
+
+	public List<TimeSheetView> getAllForClientYear(final Long clientId, final Integer year) {
+		return convert(timeSheetDao.getAllForClientYear(clientId, year));
+	}
 
 	public TimeSheetView getById(Long id) {
 		TimeSheet sheet = timeSheetDao.getById(id);
@@ -251,6 +252,12 @@ public class TimeSheetService {
 
 		timeSheetDayDao.delete(c.getTimeCardIds());
 		timeSheetDao.delete(c.getId());
+	}
+
+	public void submit(Long id) {
+		TimeSheet c = timeSheetDao.getById(id);
+		c.setStatus(TimeSheetStatus.SUBMITTED);
+		timeSheetDao.set(c);
 	}
 
 }

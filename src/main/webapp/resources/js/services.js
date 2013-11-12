@@ -77,9 +77,16 @@
 					id : 'next'
 				}
 			},
-                        getWeek : {
-                                method : 'GET'
-                        }
+			getWeek : {
+				method : 'GET'
+			},
+			submit : {
+				method : 'POST',
+				params : {
+					tid : '@id'
+				},
+				url : 'timesheet/submit/:tid' 
+			}
 		});
 	} ]);
 
