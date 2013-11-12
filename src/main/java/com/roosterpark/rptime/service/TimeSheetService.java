@@ -125,7 +125,8 @@ public class TimeSheetService {
 			LOGGER.debug("Saturday is {}, Sunday is {}", DateTimeConstants.SATURDAY, DateTimeConstants.SUNDAY);
 			LOGGER.debug("Day {} is weekend {}", dayOfWeek, weekend);
 			if (weekend) {
-                                // Do Nothing.
+				TimeCardLogEntry entry = new TimeCardLogEntry(workerId, defaultClientId, contractDate.plusDays(i), 12, 12);
+				day.addEntry(entry);
 			} else if (!lunchRequired) {
 				TimeCardLogEntry entry = new TimeCardLogEntry(workerId, defaultClientId, contractDate.plusDays(i));
 				day.addEntry(entry);
