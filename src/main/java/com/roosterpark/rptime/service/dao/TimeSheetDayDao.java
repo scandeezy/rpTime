@@ -50,7 +50,11 @@ public class TimeSheetDayDao
     }
     
     private List<TimeCardLogEntry> getEntriesForIds(List<Long> ids) {
-        List<TimeCardLogEntry> entries = ofy().load().type(TimeCardLogEntry.class).filter(TimeCardLogEntry.CARD_ID_KEY, ids).list();
+        
+        List<TimeCardLogEntry> entries = new LinkedList<TimeCardLogEntry>();
+        for(Long id : ids) {
+            entries.addAll(getEntriesForId(id));
+        }
         
         return entries;
     }
