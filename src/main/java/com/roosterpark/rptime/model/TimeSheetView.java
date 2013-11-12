@@ -7,6 +7,7 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 import org.joda.time.LocalDate;
+import org.joda.time.LocalDateTime;
 
 /**
  * 
@@ -20,6 +21,7 @@ public class TimeSheetView {
 	private Integer week;
 	private Integer year;
 	private Integer startDayOfWeek;
+	private LocalDateTime updateTimestamp;
 	private boolean flagged;
 	private TimeSheetStatus status;
 	private List<TimeSheetDay> days;
@@ -43,6 +45,7 @@ public class TimeSheetView {
 		this.days = new LinkedList<>();
 		this.flagged = sheet.isFlagged();
 		this.status = sheet.getStatus();
+                this.updateTimestamp = sheet.getUpdateTimestamp();
 	}
 
 	public TimeSheetView(TimeSheet sheet, List<TimeSheetDay> logs) {
@@ -138,4 +141,14 @@ public class TimeSheetView {
 	public void setFlagged(boolean flagged) {
 		this.flagged = flagged;
 	}
+
+        public LocalDateTime getUpdateTimestamp()
+        {
+            return updateTimestamp;
+        }
+
+        public void setUpdateTimestamp(LocalDateTime updateTimestamp)
+        {
+            this.updateTimestamp = updateTimestamp;
+        }
 }
