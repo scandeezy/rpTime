@@ -74,14 +74,14 @@ public class TimeSheetService {
 		if (exists != null) {
 			result = convert(exists);
 		} else {
-			result = createForWorkerDateContract(workerId, date);
+			result = createForWorkerDate(workerId, date);
 		}
 
 		result.getClientIds().add(ptoClientId);
 		return result;
 	}
 
-	protected TimeSheetView createForWorkerDateContract(final Long workerId, final LocalDate date) {
+	protected TimeSheetView createForWorkerDate(final Long workerId, final LocalDate date) {
 		Validate.noNullElements(new Object[] { workerId, date }, "Required: workerId and date");
 
 		TimeSheet exists = timeSheetDao.getByWorkerWeekYear(workerId, date.getWeekOfWeekyear(), date.getYear());
@@ -202,6 +202,11 @@ public class TimeSheetService {
 
 		return views;
 	}
+        
+        public List<TimeSheetView> getAllForClientWeek(final Long clientId, final LocalDate date) {
+                LocalDate adjustedDate = adjustDate(date, DateTimeConstants.SUNDAY);
+                return convert(timeSheetDao.getAllForClientWeekYear(clientId, adjustedDate.getWeekOfWeekyear(), adjustedDate.getYear()));
+        }
 
 	protected List<TimeSheetView> getAllAdmin() {
 		return getAll(null, true);
@@ -221,7 +226,7 @@ public class TimeSheetService {
         }
         
         public List<TimeSheetView> getAllForClientYear(final Long clientId, final Integer year) {
-                return convert(timeSheetDao.getAllForClient(clientId, year));
+                return convert(timeSheetDao.getAllForClientYear(clientId, year));
         }
 
 	public TimeSheetView getById(Long id) {

@@ -99,13 +99,13 @@ public class ReportService {
 		return map;
 	}
 
-	public Map<String, Object> getTimeSheetsPerWorkerByWeekForClientReport(final Long clientId) {
+	public Map<String, Object> getTimeSheetsPerWorkerByWeekForClientReport(final Long clientId, final LocalDate date) {
 		Validate.notNull(clientId);
 		LOGGER.debug("clientId={}", clientId);
 		final Map<String, Object> map = new HashMap<String, Object>();
 		final LocalDate d = new LocalDate();
 		final List<Worker> workers = workerService.getAll();
-		final List<TimeSheetView> timeSheets = timeSheetService.getAllAdmin();
+		final List<TimeSheetView> timeSheets = timeSheetService.getAllForClientWeek(clientId, date);
 
 		Map<Long, Map<Object, Object>> reportMap = new LinkedHashMap<Long, Map<Object, Object>>();
 		for (Worker worker : workers) {

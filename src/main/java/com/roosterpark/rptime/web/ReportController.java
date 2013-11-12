@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.roosterpark.rptime.service.ReportService;
+import org.joda.time.LocalDate;
 
 /**
  * MVC {@link RequestMapping Endpoints} for {@link ReportService}-provided reportable business objects.
@@ -60,7 +61,7 @@ public class ReportController {
 	@RequestMapping(value = "/timesheets-per-worker-by-week-for-client/{clientId}")
 	@ResponseBody
 	public Map<String, Object> timeSheetsPerWorkerByWeekForClient(@PathVariable Long clientId) {
-		return reportService.getTimeSheetsPerWorkerByWeekForClientReport(clientId);
+		return reportService.getTimeSheetsPerWorkerByWeekForClientReport(clientId, new LocalDate());
 	}
         
         @RequestMapping(value = "/hours-recorded/{clientId}/{year}")

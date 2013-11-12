@@ -82,8 +82,19 @@ public class TimeSheetDao {
                 return sheets;
         }
         
-        public List<TimeSheet> getAllForClient(final Long clientId, final Integer year) {
+        public List<TimeSheet> getAllForClientYear(final Long clientId, final Integer year) {
                 List<TimeSheet> sheets = ofy().load().type(TimeSheet.class).filter(TimeSheet.CLIENT_KEY, clientId).filter(TimeSheet.YEAR_KEY, year).order(TimeSheet.START_DATE_KEY).list();
+                
+                return sheets;
+        }
+        
+        public List<TimeSheet> getAllForClientWeekYear(final Long clientId, final Integer week, final Integer year) {
+                List<TimeSheet> sheets = ofy().load().type(TimeSheet.class)
+                        .filter(TimeSheet.CLIENT_KEY, clientId)
+                        .filter(TimeSheet.WEEK_KEY, week)
+                        .filter(TimeSheet.YEAR_KEY, year)
+                        .order(TimeSheet.START_DATE_KEY)
+                        .list();
                 
                 return sheets;
         }
