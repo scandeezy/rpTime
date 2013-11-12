@@ -241,7 +241,7 @@ public class TimeSheetService {
 		List<TimeSheetDay> entries = view.getDays();
 		entries = timeSheetDayDao.set(entries);
 		view.setDays(entries);
-		TimeSheet sheet = (TimeSheet) view;
+		TimeSheet sheet = view.toTimeSheet();
 		sheet = timeSheetDao.set(sheet);
 
 		return new TimeSheetView(sheet, entries);

@@ -138,9 +138,9 @@ public class TimeSheetController {
 	@ResponseBody
 	public TimeSheetView post(@RequestBody TimeSheetView item) {
 		// TODO: lock down further by isUserAdmin
-		LOGGER.debug("saving timesheet {}", item);
-		service.set(item);
-		return item;
+		LOGGER.debug("saving TimeSheetView {}", item);
+		TimeSheetView view = service.set(item);
+		return view;
 	}
 
 	@RequestMapping(value = "/submit/{id}", method = POST)
