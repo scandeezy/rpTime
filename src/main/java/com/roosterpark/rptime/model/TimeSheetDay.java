@@ -4,8 +4,6 @@
  */
 package com.roosterpark.rptime.model;
 
-import com.googlecode.objectify.annotation.Entity;
-import com.googlecode.objectify.annotation.Id;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,15 +12,18 @@ import java.util.List;
  *
  * @author scandeezy
  */
-@Entity
 public class TimeSheetDay
 {
-    @Id
     private Long id;
     private List<TimeCardLogEntry> entries;
     
     public TimeSheetDay() {
-        entries = new LinkedList<>();
+        this.entries = new LinkedList<>();
+    }
+    
+    public TimeSheetDay(List<TimeCardLogEntry> entries) {
+        this.entries = entries;
+        this.id = entries.get(0).getCardId();
     }
 
     public Long getId()

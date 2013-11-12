@@ -3,16 +3,22 @@ package com.roosterpark.rptime.model;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 
-import com.googlecode.objectify.annotation.Embed;
+import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 
 /**
  * 
  * @author scandeezy
  */
-@Embed
+@Entity
 public class TimeCardLogEntry implements Comparable {
-
+        public static final String CARD_ID_KEY = "cardId";
+    
+        @Id
+        private Long id;
+        @Index
+        private Long cardId;
 	@Index
 	private Long workerId;
 	@Index
@@ -38,6 +44,26 @@ public class TimeCardLogEntry implements Comparable {
 		this.startTime = new LocalTime(start, 0);
 		this.endTime = new LocalTime(end, 0);
 	}
+
+        public Long getId()
+        {
+            return id;
+        }
+
+        public void setId(Long id)
+        {
+            this.id = id;
+        }
+
+        public Long getCardId()
+        {
+            return cardId;
+        }
+
+        public void setCardId(Long cardId)
+        {
+            this.cardId = cardId;
+        }
 
 	public Long getWorkerId() {
 		return workerId;
