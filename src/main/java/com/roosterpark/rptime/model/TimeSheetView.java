@@ -50,6 +50,8 @@ public class TimeSheetView extends TimeSheet {
 		this.setTimeCardIds(sheet.getTimeCardIds());
 		this.setUpdateTimestamp(sheet.getUpdateTimestamp());
 		this.setWeek(sheet.getWeek());
+		this.setWorkerId(sheet.getWorkerId());
+		this.setYear(sheet.getYear());
 	}
 
 	public TimeSheet toTimeSheet() {
@@ -64,6 +66,8 @@ public class TimeSheetView extends TimeSheet {
 		result.setTimeCardIds(this.getTimeCardIds());
 		result.setUpdateTimestamp(this.getUpdateTimestamp());
 		result.setWeek(this.getWeek());
+		result.setWorkerId(this.getWorkerId());
+		result.setYear(this.getYear());
 		return result;
 	}
 
