@@ -9,6 +9,9 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityNotFoundException;
 
+import org.apache.commons.lang3.Validate;
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,13 +72,39 @@ public class ContractService {
 		return ofy().load().type(Contract.class).filter(Contract.CLIENT_KEY, client).list();
 	}
 
-	public List<Contract> getActiveContractsForClient(Long client, LocalDate date) {
-		List<Contract> contracts = getContractsForClient(client);
-		List<Contract> active = new LinkedList<Contract>();
+	public List<Contract> getActiveContractsForClient(final Long client, final LocalDate date) {
+		Interval searchInterval = new Interval(date.toDateTimeAtStartOfDay(), new DateTime());
+		return getActiveContractsForClientInInterval(client, searchInterval);
+	}
+
+	public List<Contract> getActiveContractsForClientInInterval(final Long clientId, final Interval searchInterval) {
+		Validate.noNullElements(new Object[] { clientId, searchInterval });
+		final List<Contract> contracts = getContractsForClient(clientId);
+		final List<Contract> active = new LinkedList<Contract>();
+		LOGGER.debug("searchInterval={}", searchInterval);
+
 		for (Contract contract : contracts) {
-			if (contract.getStartDate().compareTo(date) < 1
-					&& (contract.getEndDate() == null || contract.getEndDate().compareTo(date) > -1))
+
+			final LocalDate contractStartDate = contract.getStartDate();
+			final LocalDate contractEndDate = contract.getEndDate();
+
+			LOGGER.debug("\tcheck if searchInterval contains {} or {}", contractStartDate, contractEndDate);
+
+			boolean startDateOk = searchInterval.contains(contractStartDate.toDate().getTime());
+			if (searchInterval.isAfter(contractStartDate.toDateTimeAtStartOfDay())) {
+				if (contractEndDate == null) {
+					startDateOk = true;
+				}
+			}
+
+			boolean endDateOk = (contractEndDate == null) ? true : false;
+			if (contractEndDate != null) {
+				endDateOk = searchInterval.contains(contractEndDate.toDate().getTime());
+			}
+
+			if (startDateOk && endDateOk) {
 				active.add(contract);
+			}
 		}
 
 		return active;
@@ -97,6 +126,15 @@ public class ContractService {
 	public List<Contract> getPage(int count, int offset) {
 		LOGGER.warn("Getting contract page with count " + count + " and offset " + offset);
 		return ofy().load().type(Contract.class).limit(count).offset(offset).list();
+	}
+
+	public List<Worker> getWorkersWithActiveContractsInInterval(final Long clientId, final Interval searchInterval) {
+		final List<Worker> result = new LinkedList<Worker>();
+		final List<Contract> contracts = getActiveContractsForClientInInterval(clientId, searchInterval);
+		for (Contract c : contracts) {
+			result.add(workerService.getById(c.getWorker()));
+		}
+		return result;
 	}
 
 	public void set(Contract item) {

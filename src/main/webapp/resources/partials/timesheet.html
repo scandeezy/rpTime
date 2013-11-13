@@ -28,6 +28,10 @@
 				<li ng-repeat="(id, timeSheet) in timeSheetsMap" ng-init="worker=workersMap[timeSheet.workerId]"><a ng-click="set(timeSheet)">{{timeSheet.year}},
 						week {{timeSheet.week}} - {{timeSheet.startDate}}</a> <span ng-show="isAdmin">for {{worker.firstName}} {{worker.lastName}}</span>
 					<button type="button" id="delete-{{$id}}" class="btn btn-sm btn-default" ng-click="remove(timeSheet);" ng-hide="!debug">Delete</button>
+					<span ng-show="timeSheet.status=='UNSUBMITTED'" class="label label-warning">Not Submitted</span>
+					<span ng-show="timeSheet.status=='SUBMITTED'" class="label label-info">Submitted</span>
+					<span ng-show="timeSheet.status=='APPROVED'" class="label label-success">Approved</span>
+					<span ng-show="timeSheet.flagged" class="label label-warning">Flagged</span>
 				</li>
 			</ul>
 		</div>
@@ -43,7 +47,7 @@
 					</span>
 				</h4>
 				<div class="row">
-					<div class="col-sm-2 pull-right">
+					<div class="col-sm-4 pull-right">
 						<small><span class="text-muted">As of {{currentTimeSheet.updateTimestamp}}</span></small>
 					</div>
 				</div>

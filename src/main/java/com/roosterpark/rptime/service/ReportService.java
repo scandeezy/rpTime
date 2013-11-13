@@ -1,7 +1,5 @@
 package com.roosterpark.rptime.service;
 
-import com.google.appengine.repackaged.org.joda.time.Hours;
-import com.roosterpark.rptime.model.Client;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -12,6 +10,7 @@ import javax.inject.Named;
 
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.Validate;
+import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
@@ -37,11 +36,13 @@ public class ReportService {
 	@Inject
 	ClientService clientService;
 	@Inject
+	ContractService contractService;
+	@Inject
+	PaidTimeOffService ptoService;
+	@Inject
 	TimeSheetService timeSheetService;
 	@Inject
 	WorkerService workerService;
-        @Inject
-        PaidTimeOffService ptoService;
 
 	private String yearMonthDateTimeFormatter = "MMMM YYYY";
 
@@ -92,7 +93,9 @@ public class ReportService {
 		final Map<String, Object> map = new HashMap<String, Object>();
 		final LocalDate d = new LocalDate();
 		final List<Worker> workers = workerService.getAll();
-		final List<TimeSheetView> timeSheets = timeSheetService.getAllAdmin();
+		final List<TimeSheetView> unfiltered = timeSheetService.getAllAdmin();
+		final List<TimeSheetView> timeSheets = timeSheetService.getReportable(unfiltered);
+
 		map.put("workerList", workers);
 		map.put("workerIdToHoursMap", getWorkerIdToHoursMapForMonth(workers, timeSheets, d));
 		map.put("reportDate", d.toString(yearMonthDateTimeFormatter));
@@ -102,15 +105,16 @@ public class ReportService {
 
 	public Map<String, Object> getTimeSheetsPerWorkerByWeekForClientReport(final Long clientId, final LocalDate date) {
 		Validate.notNull(clientId);
-		LOGGER.debug("clientId={}", clientId);
+		LOGGER.debug("clientId={}, date={}", clientId, date);
+		final Interval searchInterval = getMonthSearchInterval(date);
 		final Map<String, Object> map = new HashMap<String, Object>();
-		final LocalDate d = new LocalDate();
-		final List<Worker> workers = workerService.getAll();
-		final List<TimeSheetView> timeSheets = timeSheetService.getAllForClientWeek(clientId, date);
+		final List<Worker> workers = contractService.getWorkersWithActiveContractsInInterval(clientId, searchInterval);
+		final List<TimeSheetView> unfiltered = timeSheetService.getAllForClientInInterval(clientId, searchInterval);
+		final List<TimeSheetView> timeSheets = timeSheetService.getReportable(unfiltered);
 
-		Map<Long, Map<Object, Object>> reportMap = new LinkedHashMap<Long, Map<Object, Object>>();
+		Map<Long, Map<LocalDate, Long>> reportMap = new LinkedHashMap<Long, Map<LocalDate, Long>>();
 		for (Worker worker : workers) {
-			reportMap.put(worker.getId(), new LinkedHashMap<Object, Object>());
+			reportMap.put(worker.getId(), new LinkedHashMap<LocalDate, Long>());
 		}
 
 		for (TimeSheetView timeSheet : timeSheets) {
@@ -122,7 +126,12 @@ public class ReportService {
 						if (entry.getStartTime() != null && entry.getEndTime() != null) {
 							final Period p = new Period(entry.getStartTime(), entry.getEndTime(), PeriodType.minutes());
 							final long hours = ((long) p.getMinutes()) / 60L;
-							final Map<Object, Object> workerDateToHoursMap = reportMap.get(entry.getWorkerId());
+							final Long key = entry.getWorkerId();
+							Map<LocalDate, Long> workerDateToHoursMap = reportMap.get(key);
+							if (workerDateToHoursMap == null) {
+								workerDateToHoursMap = new LinkedHashMap<LocalDate, Long>();
+								reportMap.put(key, workerDateToHoursMap);
+							}
 							Long h = (Long) ObjectUtils.defaultIfNull(workerDateToHoursMap.get(entry.getDate()), 0L);
 							h = h + hours;
 							workerDateToHoursMap.put(entry.getDate(), h);
@@ -134,54 +143,62 @@ public class ReportService {
 
 		map.put("reportMap", reportMap);
 		map.put("workerList", workers);
-		map.put("reportDate", d.toString(yearMonthDateTimeFormatter));
+		map.put("reportDate", new LocalDate().toString(yearMonthDateTimeFormatter));
 		map.put("updateDate", new LocalDateTime());
 		return map;
 	}
-        
-        public Map<Long, Integer> getNumberOfHoursForClientInRange(final Long clientId, LocalDate startDate, LocalDate endDate) {
-            Map<Long, Integer> hourMap = new LinkedHashMap<>();
-            
-            LOGGER.debug("Generating report of hours logged between {} and {} for client {}", startDate, endDate, clientId);
-            List<TimeSheetView> views = timeSheetService.getAllForClientRange(clientId, startDate, endDate);
-            for(TimeSheetView view : views) {
-                // Initialize
-                int current = 0;
-                // Load
-                if(hourMap.containsKey(view.getWorkerId())) {
-                    current = hourMap.get(view.getWorkerId());
-                }
-                // Populate
-                for(TimeSheetDay day : view.getDays()) {
-                    for(TimeCardLogEntry entry : day.getEntries()) {
-                        LOGGER.debug("Inspecting Log entry {}", entry);
-                        if(entry.getClientId().equals(clientId)) {
-                            LOGGER.debug("FOUND hours to add...");
-                            current += entry.getEndTime().getHourOfDay() - entry.getStartTime().getHourOfDay();
-                        }
-                    }
-                }
-                // Set
-                hourMap.put(view.getWorkerId(), current);
-            }
-            
-            return hourMap;
-        }
-        
-        public Map<Long, List<TimeCardLogEntry>> getMappedHoursForClientInRange(Long clientId, LocalDate start, LocalDate end) {
-            Map<Long, List<TimeCardLogEntry>> entries = timeSheetService.getLogsForClientOverRange(clientId, start, end);
-            
-            return entries;
-        }
-        
-        public HoursForClientInRange getHoursForClientInRange(Long clientId, LocalDate start, LocalDate end) {
-            HoursForClientInRange report = new HoursForClientInRange();
-            report.setClientId(clientId);
-            report.setStartDate(start);
-            report.setEndDate(end);
-            report.setWorkerToTotalMap(getNumberOfHoursForClientInRange(clientId, start, end));
-            report.setWorkerToTimeMap(getMappedHoursForClientInRange(clientId, start, end));
-            
-            return report;
-        }
+
+	public Map<Long, Integer> getNumberOfHoursForClientInRange(final Long clientId, LocalDate startDate, LocalDate endDate) {
+		Map<Long, Integer> hourMap = new LinkedHashMap<>();
+
+		LOGGER.debug("Generating report of hours logged between {} and {} for client {}", startDate, endDate, clientId);
+		List<TimeSheetView> unfiltered = timeSheetService.getAllForClientRange(clientId, startDate, endDate);
+		final List<TimeSheetView> timeSheets = timeSheetService.getReportable(unfiltered);
+
+		for (TimeSheetView view : timeSheets) {
+			// Initialize
+			int current = 0;
+			// Load
+			if (hourMap.containsKey(view.getWorkerId())) {
+				current = hourMap.get(view.getWorkerId());
+			}
+			// Populate
+			for (TimeSheetDay day : view.getDays()) {
+				for (TimeCardLogEntry entry : day.getEntries()) {
+					LOGGER.debug("Inspecting Log entry {}", entry);
+					if (entry.getClientId().equals(clientId)) {
+						LOGGER.debug("FOUND hours to add...");
+						current += entry.getEndTime().getHourOfDay() - entry.getStartTime().getHourOfDay();
+					}
+				}
+			}
+			// Set
+			hourMap.put(view.getWorkerId(), current);
+		}
+
+		return hourMap;
+	}
+
+	public Map<Long, List<TimeCardLogEntry>> getMappedHoursForClientInRange(Long clientId, LocalDate start, LocalDate end) {
+		Map<Long, List<TimeCardLogEntry>> entries = timeSheetService.getLogsForClientOverRange(clientId, start, end);
+
+		return entries;
+	}
+
+	public HoursForClientInRange getHoursForClientInRange(Long clientId, LocalDate start, LocalDate end) {
+		HoursForClientInRange report = new HoursForClientInRange();
+		report.setClientId(clientId);
+		report.setStartDate(start);
+		report.setEndDate(end);
+		report.setWorkerToTotalMap(getNumberOfHoursForClientInRange(clientId, start, end));
+		report.setWorkerToTimeMap(getMappedHoursForClientInRange(clientId, start, end));
+
+		return report;
+	}
+
+	public static Interval getMonthSearchInterval(final LocalDate date) {
+		final LocalDate startDate = new LocalDate(date.getYear(), date.getMonthOfYear(), 1);
+		final LocalDate endDate = startDate.plusMonths(1);
+		return new Interval(startDate.toDateTimeAtStartOfDay(), endDate.toDateTimeAtStartOfDay());
+	}
 }

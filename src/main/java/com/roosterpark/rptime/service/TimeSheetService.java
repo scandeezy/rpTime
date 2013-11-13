@@ -14,6 +14,7 @@ import javax.persistence.EntityNotFoundException;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.Validate;
 import org.joda.time.DateTimeConstants;
+import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -205,13 +206,20 @@ public class TimeSheetService {
 		return views;
 	}
 
-	public List<TimeSheetView> getAllForClientWeek(final Long clientId, final LocalDate date) {
-		LocalDate adjustedDate = adjustDate(date, DateTimeConstants.SUNDAY);
-		return convert(timeSheetDao.getAllForClientWeekYear(clientId, adjustedDate.getWeekOfWeekyear(), adjustedDate.getYear()));
-	}
-
 	protected List<TimeSheetView> getAllAdmin() {
 		return getAll(null, true);
+	}
+
+	public List<TimeSheetView> getAllForClientWeek(final Long clientId, final LocalDate date) {
+		final LocalDate adjustedDate = adjustDate(date, DateTimeConstants.SUNDAY);
+		final List<TimeSheet> timeSheets = timeSheetDao.getAllForClientWeekYear(clientId, adjustedDate.getWeekOfWeekyear(),
+				adjustedDate.getYear());
+		return convert(timeSheets);
+	}
+
+	public List<TimeSheetView> getAllForClientInInterval(final Long clientId, final Interval searchInterval) {
+		final List<TimeSheet> timeSheets = timeSheetDao.getAllForClientInInterval(clientId, searchInterval);
+		return convert(timeSheets);
 	}
 
 	public SortedMap<Long, TimeSheetView> getAllMap(final Long workerId, final boolean isAdmin) {
@@ -239,6 +247,21 @@ public class TimeSheetService {
 		TimeSheet sheet = timeSheetDao.getById(id);
 
 		return convert(sheet);
+	}
+
+	/**
+	 * @param input
+	 *            - the {@link List} to filter
+	 * @return the filtered {@link List} of "reportable" (i.e., not-{@link TimeSheetStatus.UNSUBMITTED UNSUBMITTED}) {@link TimeSheetView}s.
+	 */
+	public List<TimeSheetView> getReportable(final List<TimeSheetView> input) {
+		List<TimeSheetView> output = new LinkedList<TimeSheetView>();
+		for (TimeSheetView tsv : input) {
+			if (!tsv.getStatus().equals(TimeSheetStatus.UNSUBMITTED)) {
+				output.add(tsv);
+			}
+		}
+		return output;
 	}
 
 	public TimeSheetView set(TimeSheetView view) {

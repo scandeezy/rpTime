@@ -9,18 +9,19 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.inject.Named;
 
+import org.joda.time.Interval;
+import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.googlecode.objectify.Key;
 import com.roosterpark.rptime.model.TimeSheet;
-import java.util.LinkedList;
-import org.joda.time.LocalDate;
 
 /**
  * 
@@ -51,11 +52,11 @@ public class TimeSheetDao {
 	}
 
 	public TimeSheet getByWorkerWeekYear(Long workerId, int week, int year) {
-                LOGGER.debug("Searching for timesheet with worker id {}, week {}, and year {}", workerId, week, year);
+		LOGGER.debug("Searching for timesheet with worker id {}, week {}, and year {}", workerId, week, year);
 		List<TimeSheet> sheets = ofy().load().type(TimeSheet.class).filter(TimeSheet.WORKER_KEY, workerId).filter(TimeSheet.WEEK_KEY, week)
 				.filter(TimeSheet.YEAR_KEY, year).list();
 
-                LOGGER.debug("Found {} timesheets", sheets.size());
+		LOGGER.debug("Found {} timesheets", sheets.size());
 		if (sheets.isEmpty())
 			return null;
 		return sheets.get(0);
@@ -77,48 +78,61 @@ public class TimeSheetDao {
 		LOGGER.debug("returning List<Sheet>={}", result);
 		return result;
 	}
-        
-        public List<TimeSheet> getAllForClient(final Long clientId) {
-                List<TimeSheet> sheets = ofy().load().type(TimeSheet.class).filter(TimeSheet.CLIENT_KEY, clientId).order(TimeSheet.START_DATE_KEY).list();
-                
-                return sheets;
-        }
-        
-        public List<TimeSheet> getAllForClientYear(final Long clientId, final Integer year) {
-                List<TimeSheet> sheets = ofy().load().type(TimeSheet.class).filter(TimeSheet.CLIENT_KEY, clientId).filter(TimeSheet.YEAR_KEY, year).order(TimeSheet.START_DATE_KEY).list();
-                
-                return sheets;
-        }
-        
-        public List<TimeSheet> getAllForClientWeekYear(final Long clientId, final Integer week, final Integer year) {
-                List<TimeSheet> sheets = ofy().load().type(TimeSheet.class)
-                        .filter(TimeSheet.CLIENT_KEY, clientId)
-                        .filter(TimeSheet.WEEK_KEY, week)
-                        .filter(TimeSheet.YEAR_KEY, year)
-                        .order(TimeSheet.START_DATE_KEY)
-                        .list();
-                
-                return sheets;
-        }
-        
-        public List<TimeSheet> getAllForClientRange(final Long clientId, final LocalDate start, final LocalDate end) {
-                List<TimeSheet> sheets = ofy().load().type(TimeSheet.class)
-                        .filter(TimeSheet.CLIENT_KEY, clientId)
-                        .order(TimeSheet.START_DATE_KEY)
-                        .list();
-                
-                // Filter outside the query
-                List<TimeSheet> retval = new LinkedList<>();
-                for(TimeSheet sheet : sheets) {
-                    LOGGER.debug("Current sheet date {}", sheet.getStartDate());
-                    LOGGER.debug("Compare to start {}", sheet.getStartDate().compareTo(start));
-                    LOGGER.debug("Compare to end {}", sheet.getStartDate().compareTo(end));
-                    if(sheet.getStartDate().compareTo(start) >= 0 && sheet.getStartDate().compareTo(end) <= 0)
-                        retval.add(sheet);
-                }
-                
-                return retval;
-        }
+
+	public List<TimeSheet> getAllForClient(final Long clientId) {
+		List<TimeSheet> sheets = ofy().load().type(TimeSheet.class).filter(TimeSheet.CLIENT_KEY, clientId).order(TimeSheet.START_DATE_KEY)
+				.list();
+
+		return sheets;
+	}
+
+	public List<TimeSheet> getAllForClientRange(final Long clientId, final LocalDate start, final LocalDate end) {
+		List<TimeSheet> sheets = ofy().load().type(TimeSheet.class).filter(TimeSheet.CLIENT_KEY, clientId).order(TimeSheet.START_DATE_KEY)
+				.list();
+
+		// Filter outside the query
+		List<TimeSheet> retval = new LinkedList<>();
+		for (TimeSheet sheet : sheets) {
+			LOGGER.debug("Current sheet date {}", sheet.getStartDate());
+			LOGGER.debug("Compare to start {}", sheet.getStartDate().compareTo(start));
+			LOGGER.debug("Compare to end {}", sheet.getStartDate().compareTo(end));
+			if (sheet.getStartDate().compareTo(start) >= 0 && sheet.getStartDate().compareTo(end) <= 0)
+				retval.add(sheet);
+		}
+
+		return retval;
+	}
+
+	public List<TimeSheet> getAllForClientInInterval(final Long clientId, final Interval searchInterval) {
+		final LocalDate startDate = searchInterval.getStart().toLocalDate();
+		final LocalDate endDate = searchInterval.getEnd().toLocalDate();
+		LOGGER.debug("searching for TimeSheets with clientId={}, betweeen {} and {}", new Object[] { clientId, startDate, endDate });
+		final List<TimeSheet> sheets = ofy().load().type(TimeSheet.class)//
+				.filter(TimeSheet.CLIENT_KEY, clientId) //
+				.filter(TimeSheet.START_DATE_KEY + " >=", startDate) //
+				.filter(TimeSheet.START_DATE_KEY + " <=", endDate) //
+				.order(TimeSheet.START_DATE_KEY)//
+				.list();
+		return sheets;
+	}
+
+	public List<TimeSheet> getAllForClientYear(final Long clientId, final Integer year) {
+		List<TimeSheet> sheets = ofy().load().type(TimeSheet.class).filter(TimeSheet.CLIENT_KEY, clientId).filter(TimeSheet.YEAR_KEY, year)
+				.order(TimeSheet.START_DATE_KEY).list();
+
+		return sheets;
+	}
+
+	public List<TimeSheet> getAllForClientWeekYear(final Long clientId, final Integer week, final Integer year) {
+		List<TimeSheet> sheets = ofy().load().type(TimeSheet.class)//
+				.filter(TimeSheet.CLIENT_KEY, clientId)//
+				.filter(TimeSheet.WEEK_KEY, week)//
+				.filter(TimeSheet.YEAR_KEY, year)//
+				.order(TimeSheet.START_DATE_KEY)//
+				.list();
+
+		return sheets;
+	}
 
 	public List<TimeSheet> getSheetViewsForWorkerPage(Long workerId, Integer count, Integer offset) {
 		List<TimeSheet> sheets = ofy().load().type(TimeSheet.class).filter(TimeSheet.WORKER_KEY, workerId).order(TimeSheet.START_DATE_KEY)
@@ -135,4 +149,5 @@ public class TimeSheetDao {
 		LOGGER.debug("Fetched back sheet {}", item);
 		return item;
 	}
+
 }
