@@ -21,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -81,6 +82,18 @@ public class TimeSheetController {
 	public TimeSheetView create() {
 		// TODO: lock down further by isUserAdmin
 		return getTimeSheetForDate(new LocalDate());
+	}
+
+	@RequestMapping(value = "/current", method = { GET })
+	@ResponseBody
+	public TimeSheetView getCurrent(@RequestParam(value = "workerId", required = false) String workerId) {
+		Long id;
+		if (workerId != null) {
+			id = Long.parseLong(workerId);
+		} else {
+			id = getValidatedWorker().getId();
+		}
+		return service.getCurrentForWorker(id);
 	}
 
 	@RequestMapping(value = "/last", method = { GET })

@@ -28,10 +28,10 @@
 			});
 		}
 
-		$scope.isSubmittable = function isSubmittableFn(timeSheet){
+		$scope.isSubmittable = function isSubmittableFn(timeSheet) {
 			return timeSheet.status === 'UNSUBMITTED';
 		}
-		
+
 		$scope.remove = function removeFn(obj) {
 			$scope.doRemove({
 				service : TimeSheetService,
@@ -59,10 +59,10 @@
 		$scope.set = function setFn(obj) {
 			if (!obj) {
 				var o = TimeSheetService.create();
-                                var id = o.id;
-                                if(id) {
-                                    $scope.timeSheetsMap[id] = o;
-                                }
+				var id = o.id;
+				if (id) {
+					$scope.timeSheetsMap[id] = o;
+				}
 				$scope.currentTimeSheet = o;
 			} else {
 				$scope.timeSheetsMap[obj.id] = obj;
@@ -137,6 +137,12 @@
 	module.controller('TimeSheetDayCtrl', [ '$log', '$scope',//
 	function TimeSheetDayCtrlFn($log, $scope) {
 
+		$scope.showButtons = false;
+
+		$scope.$watch('entry', function entry$watchFn(e) {
+			$scope.showButtons = ((e.startTime || e.endTime) && !(e.startTime === e.endTime));
+		}, true);
+
 		$scope.addNewTimeCardLogEntry = function addNewTimeCardLogEntryFn(day) {
 			var last = day.entries[(day.entries.length - 1)];
 			day.entries.push({
@@ -156,8 +162,8 @@
 			}
 			$scope.createTimeSheetForm.$setDirty();
 		};
-		
-		$scope.setEntryClientId = function setEntryClientIdFn(id){
+
+		$scope.setEntryClientId = function setEntryClientIdFn(id) {
 			$scope.entry.clientId = id;
 			$scope.createTimeSheetForm.$setDirty();
 		};

@@ -51,15 +51,21 @@ public class TimeSheetDao {
 		return sheet;
 	}
 
+	public List<TimeSheet> getAllByWorker(final Long workerId) {
+		LOGGER.debug("Searching for timesheet with workerId {}", workerId);
+		return ofy().load().type(TimeSheet.class)//
+				.filter(TimeSheet.WORKER_KEY, workerId)//
+				.order(TimeSheet.START_DATE_KEY)//
+				.list();
+	}
+
 	public TimeSheet getByWorkerWeekYear(Long workerId, int week, int year) {
 		LOGGER.debug("Searching for timesheet with worker id {}, week {}, and year {}", workerId, week, year);
-		List<TimeSheet> sheets = ofy().load().type(TimeSheet.class).filter(TimeSheet.WORKER_KEY, workerId).filter(TimeSheet.WEEK_KEY, week)
-				.filter(TimeSheet.YEAR_KEY, year).list();
-
-		LOGGER.debug("Found {} timesheets", sheets.size());
-		if (sheets.isEmpty())
-			return null;
-		return sheets.get(0);
+		return ofy().load().type(TimeSheet.class)//
+				.filter(TimeSheet.WORKER_KEY, workerId)//
+				.filter(TimeSheet.WEEK_KEY, week)//
+				.filter(TimeSheet.YEAR_KEY, year)//
+				.first().now();
 	}
 
 	public List<TimeSheet> getRecentForWorker(Long workerId, Date date, int limit) {

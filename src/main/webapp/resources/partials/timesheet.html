@@ -69,7 +69,7 @@
 										<input type="time" class="form-control input-sm" ng-model="entry.endTime" title="Clock-out Time">
 									</div>
 
-									<div class="col-sm-6">
+									<div class="col-sm-6" ng-show="showButtons">
 										<div class="btn-group btn-group-sm">
 											<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="timeSheetLogEntry-clientId-{{ii}}"
 												name="timeSheetLogEntry-clientId-{{ii}}">
@@ -98,6 +98,22 @@
 					<div class="col-sm-4">
 						<textarea class="form-control" id="note" name="note" rows="2" ng-model="currentTimeSheet.note"></textarea>
 					</div>
+				</div>
+				<div class="form-group row" ng-show="debug" style="background-color: yellow">
+					<p class="text-warning">Debug Properties</p>
+					<label for="flagged" class="control-label">
+					<input id="flagged" name="flagged" type="checkbox" ng-model="currentTimeSheet.flagged">
+					Flagged
+					</label>
+					<br/>
+					<label for="status"  class="control-label">
+					<select class="input select" id="status" name="status" ng-model="currentTimeSheet.status">
+						<option>UNSUBMITTED</option>
+						<option>SUBMITTED</option>
+						<option>APPROVED</option>
+					</select>
+					Status
+					</label>
 				</div>
 				<div class="form-group row">
 					<div class="col-sm-offset-2 col-sm-4">

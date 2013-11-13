@@ -65,6 +65,12 @@
 					id : 'idmap'
 				}
 			},
+			getCurrent : {
+				method : 'GET',
+				params : {
+					id : 'current'
+				}
+			},
 			getLast : {
 				method : 'GET',
 				params : {

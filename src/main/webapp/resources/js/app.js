@@ -35,8 +35,8 @@
 		});
 		$routeProvider.when('/timesheet', {
 			controller : 'TimeSheetPageCtrl',
-			templateUrl : 'resources/partials/timesheet.html',
-			reloadOnSearch : false
+			templateUrl : 'resources/partials/timesheet.html'
+//			,reloadOnSearch : false
 		});
 		$routeProvider.when('/worker', {
 			controller : 'AdminWorkerCtrl',

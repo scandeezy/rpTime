@@ -3,6 +3,7 @@ package com.roosterpark.rptime.service;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -28,7 +29,6 @@ import com.roosterpark.rptime.model.TimeSheetStatus;
 import com.roosterpark.rptime.model.TimeSheetView;
 import com.roosterpark.rptime.service.dao.TimeSheetDao;
 import com.roosterpark.rptime.service.dao.TimeSheetDayDao;
-import java.util.Map;
 
 @Named
 public class TimeSheetService {
@@ -238,15 +238,57 @@ public class TimeSheetService {
 	public List<TimeSheetView> getAllForClientYear(final Long clientId, final Integer year) {
 		return convert(timeSheetDao.getAllForClientYear(clientId, year));
 	}
-        
-        public List<TimeSheetView> getAllForClientRange(final Long clientId, final LocalDate start, final LocalDate end) {
-                return convert(timeSheetDao.getAllForClientRange(clientId, start, end));
-        }
+
+	public List<TimeSheetView> getAllForClientRange(final Long clientId, final LocalDate start, final LocalDate end) {
+		return convert(timeSheetDao.getAllForClientRange(clientId, start, end));
+	}
 
 	public TimeSheetView getById(Long id) {
 		TimeSheet sheet = timeSheetDao.getById(id);
 
 		return convert(sheet);
+	}
+
+	public TimeSheetView getCurrentForWorker(final Long workerId) {
+		final List<TimeSheet> list = timeSheetDao.getAllByWorker(workerId);
+		final int size = list.size();
+		TimeSheetView converted = null;
+		for (int i = 0; i < size; i++) {
+			final TimeSheet s = list.get(i);
+			converted = convert(s);
+			final Double hours = getHours(converted);
+			if ((hours < 40.0)) {
+				LOGGER.debug("returning TimeSheet {} since hours ({}) < 40", s.getId(), hours);
+				return converted;
+			} else if (TimeSheetStatus.UNSUBMITTED.equals(s.getStatus())) {
+				LOGGER.debug("returning TimeSheet {} since status is {}", s.getId(), s.getStatus());
+				return converted;
+			}
+		}
+		return converted;
+	}
+
+	/**
+	 * @param timeSheetView
+	 *            - the {@link TimeSheetView} whose {@link TimeCardLogEntry entries}' {@code} hours to sum.
+	 * @return the {@link Double summed} {@code hours} found in the input {@link TimeSheet}
+	 */
+	public Double getHours(TimeSheetView timeSheetView) {
+		final List<TimeSheetDay> days = timeSheetView.getDays();
+		Double sum = 0.0;
+		for (TimeSheetDay day : days) {
+			final List<TimeCardLogEntry> entries = day.getEntries();
+			for (TimeCardLogEntry entry : entries) {
+				if (entry != null) {
+					LOGGER.trace("\thours={}, entry={}", sum, entry);
+					Double h = entry.getHours();
+					if (h != null) {
+						sum = sum + h;
+					}
+				}
+			}
+		}
+		return sum;
 	}
 
 	/**
@@ -288,7 +330,8 @@ public class TimeSheetService {
 		timeSheetDao.set(c);
 	}
 
-        public Map<Long, List<TimeCardLogEntry>> getLogsForClientOverRange(Long clientId, LocalDate start, LocalDate end) {
-                return timeSheetDayDao.getForClientOverRange(clientId, start, end);
-        }
+	public Map<Long, List<TimeCardLogEntry>> getLogsForClientOverRange(Long clientId, LocalDate start, LocalDate end) {
+		return timeSheetDayDao.getForClientOverRange(clientId, start, end);
+	}
+
 }
