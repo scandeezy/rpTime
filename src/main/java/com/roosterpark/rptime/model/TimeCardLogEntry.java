@@ -6,6 +6,8 @@ import org.joda.time.LocalTime;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
+import org.joda.time.DurationField;
+import org.joda.time.Minutes;
 
 /**
  * 
@@ -14,6 +16,8 @@ import com.googlecode.objectify.annotation.Index;
 @Entity
 public class TimeCardLogEntry implements Comparable {
         public static final String CARD_ID_KEY = "cardId";
+        public static final String CLIENT_ID_KEY = "clientId";
+        public static final String DATE_KEY = "date";
     
         @Id
         private Long id;
@@ -27,6 +31,7 @@ public class TimeCardLogEntry implements Comparable {
 	private LocalDate date;
 	private LocalTime startTime;
 	private LocalTime endTime;
+        private Double hours;
 
 	public TimeCardLogEntry() {
 	}
@@ -37,13 +42,24 @@ public class TimeCardLogEntry implements Comparable {
 		this.date = date;
 		this.startTime = new LocalTime(9, 0);
 		this.endTime = new LocalTime(17, 0);
+                correctHours();
 	}
 
 	public TimeCardLogEntry(Long workerId, Long clientId, LocalDate date, Integer start, Integer end) {
 		this(workerId, clientId, date);
 		this.startTime = new LocalTime(start, 0);
 		this.endTime = new LocalTime(end, 0);
+                correctHours();
 	}
+        
+        public void correctHours() {
+            if(this.endTime != null && this.startTime != null) {
+                DurationField dur = this.endTime.getChronology().millis();
+                DurationField dur2 = this.startTime.getChronology().millis();
+                Minutes minutes = Minutes.minutesBetween(this.startTime, this.endTime);
+                this.hours = minutes.getMinutes()/60.0;
+            }
+        }
 
         public Long getId()
         {
@@ -95,6 +111,7 @@ public class TimeCardLogEntry implements Comparable {
 
 	public void setStartTime(LocalTime startTime) {
 		this.startTime = startTime;
+                correctHours();
 	}
 
 	public LocalTime getEndTime() {
@@ -103,7 +120,17 @@ public class TimeCardLogEntry implements Comparable {
 
 	public void setEndTime(LocalTime endTime) {
 		this.endTime = endTime;
+                correctHours();
 	}
+
+        public Double getHours()
+        {
+            return hours;
+        }
+        
+        public void setHours(Double hours) {
+            this.hours = hours;
+        }
 
 	// Compared strictly based on date and start times.
 	@Override

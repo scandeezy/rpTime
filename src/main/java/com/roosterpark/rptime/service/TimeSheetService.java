@@ -27,6 +27,7 @@ import com.roosterpark.rptime.model.TimeSheetStatus;
 import com.roosterpark.rptime.model.TimeSheetView;
 import com.roosterpark.rptime.service.dao.TimeSheetDao;
 import com.roosterpark.rptime.service.dao.TimeSheetDayDao;
+import java.util.Map;
 
 @Named
 public class TimeSheetService {
@@ -229,6 +230,10 @@ public class TimeSheetService {
 	public List<TimeSheetView> getAllForClientYear(final Long clientId, final Integer year) {
 		return convert(timeSheetDao.getAllForClientYear(clientId, year));
 	}
+        
+        public List<TimeSheetView> getAllForClientRange(final Long clientId, final LocalDate start, final LocalDate end) {
+                return convert(timeSheetDao.getAllForClientRange(clientId, start, end));
+        }
 
 	public TimeSheetView getById(Long id) {
 		TimeSheet sheet = timeSheetDao.getById(id);
@@ -260,4 +265,7 @@ public class TimeSheetService {
 		timeSheetDao.set(c);
 	}
 
+        public Map<Long, List<TimeCardLogEntry>> getLogsForClientOverRange(Long clientId, LocalDate start, LocalDate end) {
+                return timeSheetDayDao.getForClientOverRange(clientId, start, end);
+        }
 }

@@ -1,0 +1,70 @@
+<div id="total-hours-per-worker-by-range-for-client" ng-controller="ReportTimeSheetsPerWorkerByRangeForClientCtrl" class="container">
+
+	<div class="row" class="hidden-print">
+		<h2 ng-hide="selectedClient">Time Sheets Per Worker, By Range, For Client</h2>
+		<div class="col-sm-3 hidden-print">
+			<select class="form-control hidden-print" id="client" name="client" ng-model="selectedClient"
+				ng-options="client.id as client.name for (clientid,client) in clientsMap"
+				required>
+				<option value="">-- Select Client --</option>
+			</select>
+		</div>
+                <div class="col-sm-3 hidden-print">
+                    Start Date
+                    <input type="date" ng-model="startDate" />
+                </div>
+                <div class="col-sm-3 hidden-print">
+                    End Date
+                    <input type="date" ng-model="endDate" />
+                </div>
+                <button type="button" 
+                        class="btn btn-primary btn-sm" 
+                        ng-click="generateReport(selectedClient, startDate, endDate)">Create</button>
+	</div>
+    
+        <div ng-show="report">
+		<h2><a ng-href="#/client?id={{selectedClient}}">{{clientsMap[selectedClient].name}}</a> {{startDate}} - {{endDate}}</h2>
+
+		<div class="col-sm-offset-1" ng-repeat="(workerId,hours) in report.workerToTotalMap">
+			<a ng-href="#/worker?id={{worker}}">{{workersMap[workerId].firstName}} {{workersMap[workerId].lastName}}</a> : {{hours}}
+                </div>
+                
+                <div class="col-sm-offset-1" ng-repeat="(workerId,hourList) in report.workerToTimeMap">
+                        <table class="table table-condensed table-striped table-hover" ng-show="hourList">
+                                <thead>
+                                        <tr>
+                                                <th>Date</th>
+                                                <th>Hours</th>
+                                        </tr>
+                                </thead>
+                                <tbody>
+                                        <tr ng-repeat="day in hourList" ng-show="hourList.length > 0">
+                                                <td>{{day.date}}</td>
+                                                <td>{{day.hours}}</td>
+                                        </tr>
+                                </tbody>
+                                <tfoot>
+                                        <tr class="text-muted">
+                                                <td>Total: {{report.workerToTotalMap[workerId]}}</td>
+                                        </tr>
+                                </tfoot>
+                        </table>
+                        <p ng-hide="rmap" class="text-muted">No hours logged.</p>
+                </div>
+
+		<hr />
+
+		<div>
+			<p>This report is as of {{report.updateDate}}.</p>
+		</div>
+	</div>
+
+	<pre ng-show="debug">
+selectedClient ={{selectedClient|json}}
+reportMap={{reportMap|json}}
+report.reportMap={{report.reportMap|json}}
+report={{report|json}}
+clientsMap={{clientsMap|json}}
+</pre>
+
+</div>

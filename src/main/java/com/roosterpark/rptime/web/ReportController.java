@@ -1,5 +1,6 @@
 package com.roosterpark.rptime.web;
 
+import com.roosterpark.rptime.model.report.HoursForClientInRange;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 import java.util.Map;
@@ -64,9 +65,11 @@ public class ReportController {
 		return reportService.getTimeSheetsPerWorkerByWeekForClientReport(clientId, new LocalDate());
 	}
         
-        @RequestMapping(value = "/hours-recorded/{clientId}/{year}")
+        @RequestMapping(value = "/hours-recorded/{clientId}/{startDate}/{endDate}")
         @ResponseBody
-        public Map<Long, Integer> hoursRecordedForClientPerYear(@PathVariable Long clientId, @PathVariable Integer year) {
-                return reportService.getNumberOfPTOHoursInYear(year);
+        public HoursForClientInRange hoursRecordedForClientPerYear(@PathVariable Long clientId, @PathVariable String startDate, @PathVariable String endDate) {
+                LocalDate start = new LocalDate(startDate);
+                LocalDate end = new LocalDate(endDate);
+                return reportService.getHoursForClientInRange(clientId, start, end);
         }
 }

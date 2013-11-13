@@ -44,7 +44,7 @@
 
 	module.factory('AdminReportService', [ '$resource',//
 	function AdminReportServiceFn($resource) {
-		return $resource('report/:id/:client', {}, {
+		return $resource('report/:id/:client/:startDate/:endDate', {}, {
 		// methods 'get', 'save', 'remove' provided by default
 		});
 	} ]);

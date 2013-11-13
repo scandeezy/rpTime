@@ -23,6 +23,7 @@ import com.roosterpark.rptime.model.TimeCardLogEntry;
 import com.roosterpark.rptime.model.TimeSheetDay;
 import com.roosterpark.rptime.model.TimeSheetView;
 import com.roosterpark.rptime.model.Worker;
+import com.roosterpark.rptime.model.report.HoursForClientInRange;
 
 /**
  * Business logic to create objects to be reported upon. Typically modeled as {@link Map Maps}.
@@ -138,11 +139,11 @@ public class ReportService {
 		return map;
 	}
         
-        public Map<Long, Integer> getNumberOfHoursForClientInYear(final Long clientId, final Integer year) {
+        public Map<Long, Integer> getNumberOfHoursForClientInRange(final Long clientId, LocalDate startDate, LocalDate endDate) {
             Map<Long, Integer> hourMap = new LinkedHashMap<>();
             
-            LOGGER.debug("Generating report of hours logged in year {} for client {}", year, clientId);
-            List<TimeSheetView> views = timeSheetService.getAllForClientYear(clientId, year);
+            LOGGER.debug("Generating report of hours logged between {} and {} for client {}", startDate, endDate, clientId);
+            List<TimeSheetView> views = timeSheetService.getAllForClientRange(clientId, startDate, endDate);
             for(TimeSheetView view : views) {
                 // Initialize
                 int current = 0;
@@ -166,13 +167,21 @@ public class ReportService {
             
             return hourMap;
         }
-
-	//
-        public Map<Long, Integer> getNumberOfPTOHoursInYear(final Integer year) {
-            Client ptoClient = ptoService.getPtoClient();
-            Map<Long, Integer> hourMap = getNumberOfHoursForClientInYear(ptoClient.getId(), year);
+        
+        public Map<Long, List<TimeCardLogEntry>> getMappedHoursForClientInRange(Long clientId, LocalDate start, LocalDate end) {
+            Map<Long, List<TimeCardLogEntry>> entries = timeSheetService.getLogsForClientOverRange(clientId, start, end);
             
-            return hourMap;
+            return entries;
         }
-	//
+        
+        public HoursForClientInRange getHoursForClientInRange(Long clientId, LocalDate start, LocalDate end) {
+            HoursForClientInRange report = new HoursForClientInRange();
+            report.setClientId(clientId);
+            report.setStartDate(start);
+            report.setEndDate(end);
+            report.setWorkerToTotalMap(getNumberOfHoursForClientInRange(clientId, start, end));
+            report.setWorkerToTimeMap(getMappedHoursForClientInRange(clientId, start, end));
+            
+            return report;
+        }
 }

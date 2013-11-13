@@ -60,6 +60,38 @@
 
 	} ]);
 
+	module.controller('ReportTimeSheetsPerWorkerByRangeForClientCtrl', [ '$location', '$log', '$routeParams', '$scope', //
+	'AdminClientService', 'AdminReportService', //
+	function ReportTimeSheetsPerWorkerByRangeForClientCtrlFn($location, $log, $routeParams, $scope, //
+	AdminClientService, AdminReportService) {
+		//$log.info('ReportTimeSheetsPerWorkerByWeekForClientCtrl init', $routeParams, $scope);
+		
+		$scope.generateReport = function generateReportFn(clientId, startDate, endDate) {
+                        $log.info("Generating report for client " + clientId + " with start " + startDate + " and end " + endDate);
+			if (clientId) {
+				$scope.report = AdminReportService.get({
+					id : 'hours-recorded',
+					client : clientId,
+                                        startDate : startDate,
+                                        endDate : endDate
+				},function successFn(data){
+					$scope.report = data;
+				});
+			} else {
+				$scope.report = null;
+				$location.search('clientId', null);
+			}
+		};
+		
+		//init:
+		$scope.clientsMap = AdminClientService.getAll();
+		$scope.report = null;
+		if ($routeParams.clientId) {
+			$scope.selectClient($routeParams.clientId);
+		}
+		
+	} ]);
+
 	module.controller('ReportTotalHoursPerWorkerPerMonthCtrl', [ '$log', '$scope', 'AdminReportService', //
 	function ReportTotalHoursPerWorkerPerMonthCtrlFn($log, $scope, AdminReportService) {
 		// $log.info('ReportTotalHoursPerWorkerPerMonthCtrl init', $scope);

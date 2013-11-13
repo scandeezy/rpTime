@@ -36,6 +36,7 @@ String logoutUrl2 = userService2.createLogoutURL(request.getRequestURI());
 					<ul class="dropdown-menu">
 						<li><a href="#/report/total-hours-per-worker-per-month">Hours per Worker/Month, all Clients</a></li>
 						<li><a href="#/report/timesheets-per-worker-by-week-for-client">Time Sheets per Worker/Week/Client</a></li>
+						<li><a href="#/report/total-hours-per-worker-by-range-for-client">Time Sheets per Worker/Range/Client</a></li>
 					</ul>
 				<%
 					}

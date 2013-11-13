@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.roosterpark.rptime.model;
 
 import java.util.Collections;
@@ -49,5 +45,14 @@ public class TimeSheetDay
     public void setEntries(List<TimeCardLogEntry> entries)
     {
         this.entries = entries;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "TimeSheetDay{" 
+                + "id=" + id 
+                + ", entries=" + entries 
+                + '}';
     }
 }

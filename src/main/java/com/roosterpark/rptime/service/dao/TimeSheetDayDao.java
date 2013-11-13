@@ -5,10 +5,13 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 import com.roosterpark.rptime.model.TimeCardLogEntry;
 
 import com.roosterpark.rptime.model.TimeSheetDay;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import javax.inject.Named;
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,14 +74,19 @@ public class TimeSheetDayDao
     public TimeSheetDay set(TimeSheetDay entry) {
         LOGGER.debug("Saving entry {}", entry);
         List<TimeCardLogEntry> logs = entry.getEntries();
-        if(entry.getId() == null)
+        Long id = entry.getId();
+        if(id == null)
         {
-            Long id = generateId();
-            for(TimeCardLogEntry log : logs) {
-                log.setCardId(id);
-            }
+            id = generateId();
         }
-        ofy().save().entities(logs);
+        
+        for(TimeCardLogEntry log : logs) {
+            log.setCardId(id);
+            log.correctHours();
+        }
+        
+        Map<Key<TimeCardLogEntry>, TimeCardLogEntry> retEntries =ofy().save().entities(logs).now();
+        entry.setEntries(new LinkedList<>(retEntries.values()));
         entry.setId(logs.get(0).getCardId());
 
         return entry;
@@ -103,4 +111,22 @@ public class TimeSheetDayDao
 
         return outbound;
     }
+    
+    public Map<Long, List<TimeCardLogEntry>> getForClientOverRange(Long clientId, LocalDate start, LocalDate end) {
+        Map<Long, List<TimeCardLogEntry>> map = new LinkedHashMap<>();
+        
+        List<TimeCardLogEntry> entries = ofy().load()
+                .type(TimeCardLogEntry.class)
+                .filter(TimeCardLogEntry.CLIENT_ID_KEY, clientId)
+                .order(TimeCardLogEntry.DATE_KEY)
+                .list();
+        
+        for(TimeCardLogEntry entry : entries) {
+            if(!map.containsKey(entry.getWorkerId()))
+                map.put(entry.getWorkerId(), new LinkedList<TimeCardLogEntry>());
+            map.get(entry.getWorkerId()).add(entry);
+        }
+        
+        return map;
+    } 
 }
