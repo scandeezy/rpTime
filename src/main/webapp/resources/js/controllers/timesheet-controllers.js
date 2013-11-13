@@ -7,6 +7,7 @@
 	function TimeSheetPageCtrlFn($location, $log, $routeParams, $scope, AdminClientService, TimeSheetService) {
 		$scope.edit = false;
 		$scope.timeSheetsMap = {};
+                $scope.timeSheetsList = [];
 		$scope.currentTimeSheet = {};
 		$scope.clientsMap = AdminClientService.getAll();
 
@@ -24,6 +25,20 @@
 		function updateTimeSheetsFn() {
 			TimeSheetService.getAll(function successFn(data) {
 				$scope.timeSheetsMap = data;
+                                for(var sheet in data) {
+                                    if(data[sheet].workerId != undefined) {
+                                        $scope.timeSheetsList.push(data[sheet]);
+                                    }
+                                }
+                                $scope.timeSheetsList.sort(
+                                        function(a,b){
+                                            if(a.year != b.year)
+                                                return b.year - a.year;
+                                            else
+                                                return b.week - a.week; 
+                                        }
+                                    );
+                                $log.info("sorted list is " + $scope.timeSheetsList);
 				$log.info('found ' + Object.keys($scope.timeSheetsMap).length + ' timeSheets');
 			});
 		}
