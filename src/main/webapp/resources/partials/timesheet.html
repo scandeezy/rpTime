@@ -19,7 +19,6 @@
 						</ul>
 					</div>
 					<div class="col-sm-2">
-											<span class="label label-info" ng-show="debug">Status: {{status}}</span>
 					</div>
 				</div>
 			</h4>
@@ -74,7 +73,7 @@
 											</button>
 											<ul class="dropdown-menu">
 												<li>-- Select Client--</li>
-												<li ng-repeat="aClientId in currentTimeSheet.clientIds"><a ng-click="entry.clientId=aClientId">{{clientsMap[aClientId].name}}</a>
+												<li ng-repeat="aClientId in currentTimeSheet.clientIds"><a ng-click="setEntryClientId(aClientId);">{{clientsMap[aClientId].name}}</a>
 												</li>
 											</ul>
 											<button class="btn btn-default" type="button" ng-hide="$first" ng-click="removeTimeCardLogEntry(entry);">

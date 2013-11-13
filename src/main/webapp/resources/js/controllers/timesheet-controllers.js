@@ -156,6 +156,11 @@
 			}
 			$scope.createTimeSheetForm.$setDirty();
 		};
+		
+		$scope.setEntryClientId = function setEntryClientIdFn(id){
+			$scope.entry.clientId = id;
+			$scope.createTimeSheetForm.$setDirty();
+		};
 
 	} ]);
 
