@@ -30,13 +30,13 @@
 		});
 		$routeProvider.when('/report/:id', {
 			controller : 'ReportPageCtrl',
-			templateUrl : 'resources/partials/reports/list.html',
-			reloadOnSearch : false
+			templateUrl : 'resources/partials/reports/list.html'
+//				,
+//			reloadOnSearch : false
 		});
 		$routeProvider.when('/timesheet', {
 			controller : 'TimeSheetPageCtrl',
 			templateUrl : 'resources/partials/timesheet.html'
-//			,reloadOnSearch : false
 		});
 		$routeProvider.when('/worker', {
 			controller : 'AdminWorkerCtrl',

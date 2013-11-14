@@ -4,49 +4,58 @@
 		<h2 ng-hide="selectedClient">Time Sheets Per Worker, By Week, For Client</h2>
 		<div class="col-sm-3 hidden-print">
 			<select class="form-control hidden-print" id="client" name="client" ng-model="selectedClient"
-				ng-options="client.id as client.name for (clientid,client) in clientsMap" 
-				ng-change="selectClient(selectedClient);"
-				required>
+				ng-options="client.id as client.name for (clientid,client) in clientsMap" ng-change="selectClient(selectedClient);" required>
 				<option value="">-- Select Client --</option>
 			</select>
 		</div>
 	</div>
 
 	<div ng-show="selectedClient">
-		<h2><a ng-href="#/client?id={{selectedClient}}">{{clientsMap[selectedClient].name}}</a> Time Sheets</h2>
+		<h2>
+			<a ng-href="#/client?id={{selectedClient}}">{{clientsMap[selectedClient].name}}</a> Time Sheets
+		</h2>
 		<h3>{{report.reportDate}}</h3>
 
-		<div class="col-sm-offset-1" 
-			ng-repeat="worker in report.workerList" 
-			ng-controller="ReportTimeSheetsPerWorkerByWeekForClientWorkerCtrl">
-			<h4><a ng-href="#/worker?id={{worker.id}}">{{worker.firstName}} {{worker.lastName}}</a></h4>
+		<div class="col-sm-offset-1" ng-repeat="worker in report.workerList" ng-controller="ReportTimeSheetsPerWorkerByWeekForClientWorkerCtrl">
+			<h4>
+				<a ng-href="#/worker?id={{worker.id}}">{{worker.firstName}} {{worker.lastName}}</a>
+			</h4>
 
 			<div class="col-sm-offset-1">
 				<table class="table table-condensed table-striped table-hover" ng-show="rmap">
 					<thead>
 						<tr>
 							<th>Date</th>
+							<th ng-show="debug" class="debug">Debug</th>
 							<th>Hours</th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr ng-repeat="(date,hours) in report.reportMap[worker.id]" ng-show="hours > 0">
-							<td>{{date}}</td>
+							<td><a ng-href="#/timesheet?id={{getTimeSheetLinkForDate(worker.id,date)}}">{{date}}</a></td>
+							<td ng-show="debug" class="debug">
+								<small>
+								worker.id={{worker.id}}<br/>
+								</small>
+							</td>
 							<td>{{hours | number:2}}
-								<button class="btn btn-xs btn-default pull-right"  
-									ng-class="{'btn-danger':flagged, 'btn-default':!flagged}" 
-									ng-click="flagged=!flagged"
-									ng-show="debug">
-									<p ng-class="{'text-muted':!flagged}">
-										<span class="glyphicon glyphicon-flag"></span>&nbsp;
-									</p>
-								</button>
+								<div class="btn-group btn-group-xs hidden-print pull-right">
+									<a class="btn btn-default" ng-href="#/timesheet?id={{getTimeSheetLinkForDate(worker.id,date)}}">
+										<span class="glyphicon glyphicon-edit"></span>&nbsp;
+									</a>
+									<button class="btn btn-default" ng-class="{'btn-danger':flagged, 'btn-default':!flagged}"
+										ng-click="flagged=!flagged" ng-show="debug">
+										<span ng-class="{'text-muted':!flagged}"> <span class="glyphicon glyphicon-flag"></span>&nbsp;
+										</span>
+									</button>
+								</div>
 							</td>
 						</tr>
 					</tbody>
 					<tfoot>
 						<tr class="text-muted">
-							<td>{{totalDaysCount}} days </td>
+							<td>{{totalDaysCount}} days</td>
+							<td ng-show="debug" class="debug">Debug</td>
 							<td>{{totalHoursSum | number:2}}</td>
 						</tr>
 					</tfoot>
@@ -63,7 +72,7 @@
 		</div>
 	</div>
 
-	<pre ng-show="debug">
+	<pre ng-show="debug" class="debug">
 selectedClient ={{selectedClient|json}}
 reportMap={{reportMap|json}}
 report.reportMap={{report.reportMap|json}}

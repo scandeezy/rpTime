@@ -106,11 +106,13 @@ public class ReportService {
 		return map;
 	}
 
+	/** url: <code>#/report/timesheets-per-worker-by-week-for-client</code> */
 	public Map<String, Object> getTimeSheetsPerWorkerByWeekForClientReport(final Long clientId, final LocalDate date) {
 		Validate.notNull(clientId);
 		LOGGER.debug("clientId={}, date={}", clientId, date);
 		final Interval searchInterval = getMonthSearchInterval(date);
 		final Map<String, Object> map = new HashMap<String, Object>();
+		final Map<Long, Map<LocalDate, Long>> workerToDateToTimeSheetMap = new HashMap<>();
 		final List<Worker> workers = contractService.getWorkersWithActiveContractsInInterval(clientId, searchInterval);
 		final List<TimeSheetView> unfiltered = timeSheetService.getAllForClientInInterval(clientId, searchInterval);
 		final List<TimeSheetView> timeSheets = timeSheetService.getReportable(unfiltered);
@@ -118,6 +120,7 @@ public class ReportService {
 		Map<Long, Map<LocalDate, Double>> reportMap = new LinkedHashMap<>();
 		for (Worker worker : workers) {
 			reportMap.put(worker.getId(), new LinkedHashMap<LocalDate, Double>());
+			workerToDateToTimeSheetMap.put(worker.getId(), new HashMap<LocalDate, Long>());
 		}
 
 		for (TimeSheetView timeSheet : timeSheets) {
@@ -125,6 +128,8 @@ public class ReportService {
 			for (TimeSheetDay day : days) {
 				List<TimeCardLogEntry> entries = day.getEntries();
 				for (TimeCardLogEntry entry : entries) {
+					Map<LocalDate, Long> dateToTimeSheetMap = workerToDateToTimeSheetMap.get(timeSheet.getWorkerId());
+					dateToTimeSheetMap.put(entry.getDate(), timeSheet.getId());
 					if (clientId.equals(entry.getClientId())) {
 						if (entry.getStartTime() != null && entry.getEndTime() != null) {
 							final Period p = new Period(entry.getStartTime(), entry.getEndTime(), PeriodType.minutes());
@@ -143,7 +148,7 @@ public class ReportService {
 				}
 			}
 		}
-
+		map.put("workerToDateToTimeSheetMap", workerToDateToTimeSheetMap);
 		map.put("reportMap", reportMap);
 		map.put("workerList", workers);
 		map.put("reportDate", new LocalDate().toString(yearMonthDateTimeFormatter));

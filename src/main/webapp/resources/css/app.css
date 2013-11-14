@@ -187,3 +187,7 @@
 	left: -6px;
 }
 /** end begin Bootstrap CSS mouseover */
+
+.debug {
+	background-color: yellow;
+}

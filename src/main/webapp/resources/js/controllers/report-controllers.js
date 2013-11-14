@@ -18,29 +18,30 @@
 	'AdminClientService', 'AdminReportService', //
 	function ReportTimeSheetsPerWorkerByWeekForClientCtrlFn($location, $log, $routeParams, $scope, //
 	AdminClientService, AdminReportService) {
-		//$log.info('ReportTimeSheetsPerWorkerByWeekForClientCtrl init', $routeParams, $scope);
-		
+		 $log.info('ReportTimeSheetsPerWorkerByWeekForClientCtrl init', $routeParams, $scope);
+
 		$scope.selectClient = function selectClientFn(clientId) {
 			if (clientId) {
 				$scope.report = AdminReportService.get({
 					id : 'timesheets-per-worker-by-week-for-client',
 					client : clientId
-				},function successFn(data){
+				}, function successFn(data) {
 					$scope.selectedClient = clientId;
+					$location.search('clientId', clientId);
 				});
 			} else {
 				$scope.report = null;
 				$location.search('clientId', null);
 			}
 		};
-		
-		//init:
+
+		// init:
 		$scope.clientsMap = AdminClientService.getAll();
 		$scope.report = null;
 		if ($routeParams.clientId) {
 			$scope.selectClient($routeParams.clientId);
 		}
-		
+
 	} ]);
 
 	module.controller('ReportTimeSheetsPerWorkerByWeekForClientWorkerCtrl', [ '$log', '$scope',//
@@ -58,23 +59,27 @@
 			}
 		});
 
+		$scope.getTimeSheetLinkForDate = function getTimeSheetLinkForDateFn(workerId, date) {
+			return $scope.report.workerToDateToTimeSheetMap[workerId][date];
+		};
+		
 	} ]);
 
 	module.controller('ReportTimeSheetsPerWorkerByRangeForClientCtrl', [ '$location', '$log', '$routeParams', '$scope', //
 	'AdminClientService', 'AdminReportService', //
 	function ReportTimeSheetsPerWorkerByRangeForClientCtrlFn($location, $log, $routeParams, $scope, //
 	AdminClientService, AdminReportService) {
-		//$log.info('ReportTimeSheetsPerWorkerByWeekForClientCtrl init', $routeParams, $scope);
-		
+		// $log.info('ReportTimeSheetsPerWorkerByWeekForClientCtrl init', $routeParams, $scope);
+
 		$scope.generateReport = function generateReportFn(clientId, startDate, endDate) {
-                        $log.info("Generating report for client " + clientId + " with start " + startDate + " and end " + endDate);
+			$log.info("Generating report for client " + clientId + " with start " + startDate + " and end " + endDate);
 			if (clientId) {
 				$scope.report = AdminReportService.get({
 					id : 'hours-recorded',
 					client : clientId,
-                                        startDate : startDate,
-                                        endDate : endDate
-				},function successFn(data){
+					startDate : startDate,
+					endDate : endDate
+				}, function successFn(data) {
 					$scope.report = data;
 				});
 			} else {
@@ -82,14 +87,14 @@
 				$location.search('clientId', null);
 			}
 		};
-		
-		//init:
+
+		// init:
 		$scope.clientsMap = AdminClientService.getAll();
 		$scope.report = null;
 		if ($routeParams.clientId) {
 			$scope.selectClient($routeParams.clientId);
 		}
-		
+
 	} ]);
 
 	module.controller('ReportTotalHoursPerWorkerPerMonthCtrl', [ '$log', '$scope', 'AdminReportService', //
