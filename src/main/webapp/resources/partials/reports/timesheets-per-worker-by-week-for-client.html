@@ -32,13 +32,22 @@
 					<tbody>
 						<tr ng-repeat="(date,hours) in report.reportMap[worker.id]" ng-show="hours > 0">
 							<td>{{date}}</td>
-							<td>{{hours}}</td>
+							<td>{{hours | number:2}}
+								<button class="btn btn-xs btn-default pull-right"  
+									ng-class="{'btn-danger':flagged, 'btn-default':!flagged}" 
+									ng-click="flagged=!flagged"
+									ng-show="debug">
+									<p ng-class="{'text-muted':!flagged}">
+										<span class="glyphicon glyphicon-flag"></span>&nbsp;
+									</p>
+								</button>
+							</td>
 						</tr>
 					</tbody>
 					<tfoot>
 						<tr class="text-muted">
 							<td>{{totalDaysCount}} days </td>
-							<td>{{totalHoursSum}}</td>
+							<td>{{totalHoursSum | number:2}}</td>
 						</tr>
 					</tfoot>
 				</table>

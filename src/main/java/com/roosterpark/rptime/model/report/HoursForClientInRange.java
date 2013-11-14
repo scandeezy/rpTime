@@ -13,7 +13,7 @@ public class HoursForClientInRange
     private LocalDate startDate;
     private LocalDate endDate;
     private Map<Long, List<TimeCardLogEntry>> workerToTimeMap;
-    private Map<Long, Integer> workerToTotalMap;
+    private Map<Long, Double> workerToTotalMap;
     
     public HoursForClientInRange() {
         workerToTimeMap = new HashMap<>();
@@ -60,12 +60,12 @@ public class HoursForClientInRange
         this.workerToTimeMap = workerToTimeMap;
     }
 
-    public Map<Long, Integer> getWorkerToTotalMap()
+    public Map<Long, Double> getWorkerToTotalMap()
     {
         return workerToTotalMap;
     }
 
-    public void setWorkerToTotalMap(Map<Long, Integer> workerToTotalMap)
+    public void setWorkerToTotalMap(Map<Long, Double> workerToTotalMap)
     {
         this.workerToTotalMap = workerToTotalMap;
     }

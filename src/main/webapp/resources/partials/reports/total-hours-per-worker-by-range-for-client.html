@@ -1,28 +1,36 @@
 <div id="total-hours-per-worker-by-range-for-client" ng-controller="ReportTimeSheetsPerWorkerByRangeForClientCtrl" class="container">
 
-	<div class="row" class="hidden-print">
-		<h2 ng-hide="selectedClient">Time Sheets Per Worker, By Range, For Client</h2>
-		<div class="col-sm-3 hidden-print">
-			<select class="form-control hidden-print" id="client" name="client" ng-model="selectedClient"
-				ng-options="client.id as client.name for (clientid,client) in clientsMap"
-				required>
-				<option value="">-- Select Client --</option>
-			</select>
+	<form class="form-inline hidden-print" role="form">
+		<div class="row">
+			<h2 ng-hide="selectedClient">Time Sheets Per Worker, By Range, For Client</h2>
+			<div class="col-sm-3">
+				<label for="client">Client
+					<select class="form-control" id="client" name="client" ng-model="selectedClient"
+						ng-options="client.id as client.name for (clientid,client) in clientsMap"
+						required>
+						<option value="">-- Select Client --</option>
+					</select>
+				</label>
+			</div>
+            <div class="col-sm-3">
+                <label for="startDate">Start Date
+                	<input type="date" id="startDate" name="startDate" class="form-control" ng-model="startDate" />
+                </label>
+            </div>
+            <div class="col-sm-3">
+                <label for="startDate">End Date
+                	<input type="date" id="endDate" name="endDate" class="form-control" ng-model="endDate" />
+                </label>
+            </div>
+            <div class="col-sm-3">
+            	<button type="button" id="create" name="create"
+                    class="btn btn-primary btn-sm" 
+                    ng-click="generateReport(selectedClient, startDate, endDate)">Create</button>
+            </div>
 		</div>
-                <div class="col-sm-3 hidden-print">
-                    Start Date
-                    <input type="date" ng-model="startDate" />
-                </div>
-                <div class="col-sm-3 hidden-print">
-                    End Date
-                    <input type="date" ng-model="endDate" />
-                </div>
-                <button type="button" 
-                        class="btn btn-primary btn-sm" 
-                        ng-click="generateReport(selectedClient, startDate, endDate)">Create</button>
-	</div>
+    </form>
     
-        <div ng-show="report">
+	<div ng-show="report">
 		<h2><a ng-href="#/client?id={{selectedClient}}">{{clientsMap[selectedClient].name}}</a> {{startDate}} - {{endDate}}</h2>
 
 		<div class="col-sm-offset-1" ng-repeat="(workerId,hours) in report.workerToTotalMap">
@@ -40,12 +48,12 @@
                                 <tbody>
                                         <tr ng-repeat="day in hourList" ng-show="hourList.length > 0">
                                                 <td>{{day.date}}</td>
-                                                <td>{{day.hours}}</td>
+                                                <td>{{day.hours | number:2}}</td>
                                         </tr>
                                 </tbody>
                                 <tfoot>
                                         <tr class="text-muted">
-                                                <td>Total: {{report.workerToTotalMap[workerId]}}</td>
+                                                <td>Total: {{report.workerToTotalMap[workerId] | number:2}}</td>
                                         </tr>
                                 </tfoot>
                         </table>

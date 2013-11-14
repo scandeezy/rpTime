@@ -15,14 +15,14 @@
 			<tr ng-repeat="worker in report.workerList">
 				<td><a ng-href="#/worker?id={{worker.id}}">{{worker.firstName}} {{worker.lastName}}</a></td>
 				<td ng-show="debug"><span class="text-muted">{{worker.id}}</span></td>
-				<td><p class="text-right">{{report.workerIdToHoursMap[worker.id]}} hours</p></td>
+				<td><p class="text-right">{{report.workerIdToHoursMap[worker.id] | number:2}} hours</p></td>
 			</tr>
 		</tbody>
 		<tfoot>
 			<tr class="text-muted">
 				<td>{{report.workerList.length}} workers</td>
 				<td ng-show="debug"></td>
-				<td><p class="text-right">{{totalHours}} hours</p></td>
+				<td><p class="text-right">{{totalHours | number:2}} hours</p></td>
 			</tr>
 		</tfoot>
 	</table>

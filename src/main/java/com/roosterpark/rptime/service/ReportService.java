@@ -46,9 +46,11 @@ public class ReportService {
 
 	private String yearMonthDateTimeFormatter = "MMMM YYYY";
 
-	protected Map<Long, Long> getWorkerIdToHoursMapForMonth(final List<Worker> workers, final List<TimeSheetView> timeSheets,
+	private static final double MILLIS_TO_HOURS = 60.0 * 60.0 * 1000.0;
+
+	protected Map<Long, Double> getWorkerIdToHoursMapForMonth(final List<Worker> workers, final List<TimeSheetView> timeSheets,
 			final LocalDate d) {
-		final Map<Long, Long> result = new LinkedHashMap<Long, Long>();
+		final Map<Long, Double> result = new LinkedHashMap<Long, Double>();
 		LocalDate date1 = new LocalDate(d.getYear(), d.getMonthOfYear(), 1);
 		LocalDate date2 = new LocalDate(date1.plusMonths(1));
 
@@ -57,7 +59,7 @@ public class ReportService {
 		for (Worker w : workers) {
 			Long workerId = w.getId();
 			LOGGER.trace("\t found {} timesheets for worker {}", timeSheets.size(), workerId);
-			Long hours = new Long(0L);
+			double hours = 0.0;
 			for (TimeSheetView t : timeSheets) {
 				if (workerId.equals(t.getWorkerId())) {
 					List<TimeSheetDay> days = t.getDays();
@@ -75,8 +77,9 @@ public class ReportService {
 									&& entry.getEndTime() != null) {
 								int start = entry.getStartTime().getMillisOfDay();
 								int end = entry.getEndTime().getMillisOfDay();
-								long entryMillis = (long) (end - start); // millis
-								long entryHours = entryMillis / (60L * 60L * 1000L);
+								double entryMillis = (double) (end - start); // millis
+								double entryHours = entryMillis / (MILLIS_TO_HOURS);
+								LOGGER.trace("\t\t\tentry {} is {} hours ({} millis)", new Object[] { entryDate, entryHours, entryMillis });
 								hours = hours + entryHours;
 							}
 						}
@@ -112,9 +115,9 @@ public class ReportService {
 		final List<TimeSheetView> unfiltered = timeSheetService.getAllForClientInInterval(clientId, searchInterval);
 		final List<TimeSheetView> timeSheets = timeSheetService.getReportable(unfiltered);
 
-		Map<Long, Map<LocalDate, Long>> reportMap = new LinkedHashMap<Long, Map<LocalDate, Long>>();
+		Map<Long, Map<LocalDate, Double>> reportMap = new LinkedHashMap<>();
 		for (Worker worker : workers) {
-			reportMap.put(worker.getId(), new LinkedHashMap<LocalDate, Long>());
+			reportMap.put(worker.getId(), new LinkedHashMap<LocalDate, Double>());
 		}
 
 		for (TimeSheetView timeSheet : timeSheets) {
@@ -125,14 +128,14 @@ public class ReportService {
 					if (clientId.equals(entry.getClientId())) {
 						if (entry.getStartTime() != null && entry.getEndTime() != null) {
 							final Period p = new Period(entry.getStartTime(), entry.getEndTime(), PeriodType.minutes());
-							final long hours = ((long) p.getMinutes()) / 60L;
+							final double hours = ((double) p.getMinutes()) / 60.0;
 							final Long key = entry.getWorkerId();
-							Map<LocalDate, Long> workerDateToHoursMap = reportMap.get(key);
+							Map<LocalDate, Double> workerDateToHoursMap = reportMap.get(key);
 							if (workerDateToHoursMap == null) {
-								workerDateToHoursMap = new LinkedHashMap<LocalDate, Long>();
+								workerDateToHoursMap = new LinkedHashMap<LocalDate, Double>();
 								reportMap.put(key, workerDateToHoursMap);
 							}
-							Long h = (Long) ObjectUtils.defaultIfNull(workerDateToHoursMap.get(entry.getDate()), 0L);
+							Double h = (Double) ObjectUtils.defaultIfNull(workerDateToHoursMap.get(entry.getDate()), 0.0);
 							h = h + hours;
 							workerDateToHoursMap.put(entry.getDate(), h);
 						}
@@ -148,8 +151,8 @@ public class ReportService {
 		return map;
 	}
 
-	public Map<Long, Integer> getNumberOfHoursForClientInRange(final Long clientId, LocalDate startDate, LocalDate endDate) {
-		Map<Long, Integer> hourMap = new LinkedHashMap<>();
+	public Map<Long, Double> getNumberOfHoursForClientInRange(final Long clientId, LocalDate startDate, LocalDate endDate) {
+		Map<Long, Double> hourMap = new LinkedHashMap<>();
 
 		LOGGER.debug("Generating report of hours logged between {} and {} for client {}", startDate, endDate, clientId);
 		List<TimeSheetView> unfiltered = timeSheetService.getAllForClientRange(clientId, startDate, endDate);
@@ -157,7 +160,7 @@ public class ReportService {
 
 		for (TimeSheetView view : timeSheets) {
 			// Initialize
-			int current = 0;
+			double current = 0;
 			// Load
 			if (hourMap.containsKey(view.getWorkerId())) {
 				current = hourMap.get(view.getWorkerId());
@@ -168,7 +171,8 @@ public class ReportService {
 					LOGGER.debug("Inspecting Log entry {}", entry);
 					if (entry.getClientId().equals(clientId)) {
 						LOGGER.debug("FOUND hours to add...");
-						current += entry.getEndTime().getHourOfDay() - entry.getStartTime().getHourOfDay();
+						double millis = (double) (entry.getEndTime().getMillisOfDay() - entry.getStartTime().getMillisOfDay());
+						current += (millis / (MILLIS_TO_HOURS));
 					}
 				}
 			}
