@@ -47,8 +47,22 @@
 					</span>
 				</h4>
 				<div class="row">
-					<div class="col-sm-4 pull-right">
+					<div class="col-sm-6 pull-right">
 						<small><span class="text-muted">As of {{currentTimeSheet.updateTimestamp}}</span></small>
+						<div class="btn-group btn-group-sm">
+							<a type="button" class="btn btn-default" ng-disabled="!currentTimeSheet.previousTimeSheetId" ng-href="#/timesheet?id={{currentTimeSheet.previousTimeSheetId}}">Previous</a>
+							<a type="button" class="btn btn-default" ng-hide="!currentTimeSheet.nextTimeSheetId" ng-href="#/timesheet?id={{currentTimeSheet.nextTimeSheetId}}">Next</a>
+							
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
+								ng-show="!currentTimeSheet.nextTimeSheetId">
+								Next <span class="caret"></span> <span class="sr-only">Toggle Create Dropdown</span>
+							</button>
+							<ul class="dropdown-menu" role="menu">
+								<li><a ng-click="setWeekNext();">Create Time Sheet for Next Week</a></li>
+								<li><a ng-click="setWeekOther();">Create Time Sheet for Other Date...</a></li>
+							</ul>
+							
+						</div>
 					</div>
 				</div>
 			</div>

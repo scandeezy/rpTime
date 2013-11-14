@@ -3,7 +3,10 @@ package com.roosterpark.rptime.model;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.joda.time.LocalDate;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.roosterpark.rptime.service.dao.TimeSheetDao;
 
 /**
  * A view of a {@link TimeSheet} that contains {@link TimeSheetDays} instead of {@code timeSheetDayIds} ({@link Long Long's}).
@@ -12,7 +15,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
  */
 public class TimeSheetView extends TimeSheet {
 
+	private boolean currentTimeSheet;
 	private List<TimeSheetDay> days;
+	private Long nextTimeSheetId;
+	private Long previousTimeSheetId;
 
 	public List<TimeSheetDay> getDays() {
 		return days;
@@ -37,7 +43,7 @@ public class TimeSheetView extends TimeSheet {
 		this.days = new LinkedList<>();
 	}
 
-	public TimeSheetView(final TimeSheet sheet, final List<TimeSheetDay> days) {
+	public TimeSheetView(final TimeSheet sheet, final List<TimeSheetDay> days, final TimeSheetDao dao) {
 		this();
 		this.setClientIds(sheet.getClientIds());
 		this.setDays(days);
@@ -52,6 +58,22 @@ public class TimeSheetView extends TimeSheet {
 		this.setWeek(sheet.getWeek());
 		this.setWorkerId(sheet.getWorkerId());
 		this.setYear(sheet.getYear());
+
+		// "my" (non-TimeSheet fields)
+		if (sheet.getStartDate() != null) {
+			LocalDate prev = sheet.getStartDate().minusWeeks(1);
+			LocalDate next = sheet.getStartDate().plusWeeks(1);
+			TimeSheet t = dao.getByWorkerWeekYear(getWorkerId(), prev.getWeekOfWeekyear(), prev.getYear());
+			if (t != null) {
+				this.setPreviousTimeSheetId(t.getId());
+			}
+			t = dao.getByWorkerWeekYear(getWorkerId(), next.getWeekOfWeekyear(), next.getYear());
+			if (t != null) {
+				this.setNextTimeSheetId(t.getId());
+			} else {
+				this.setCurrentTimeSheet(true);
+			}
+		}
 	}
 
 	public TimeSheet toTimeSheet() {
@@ -69,6 +91,30 @@ public class TimeSheetView extends TimeSheet {
 		result.setWorkerId(this.getWorkerId());
 		result.setYear(this.getYear());
 		return result;
+	}
+
+	public boolean isCurrentTimeSheet() {
+		return currentTimeSheet;
+	}
+
+	public void setCurrentTimeSheet(boolean currentTimeSheet) {
+		this.currentTimeSheet = currentTimeSheet;
+	}
+
+	public Long getNextTimeSheetId() {
+		return nextTimeSheetId;
+	}
+
+	public void setNextTimeSheetId(Long nextTimeSheetId) {
+		this.nextTimeSheetId = nextTimeSheetId;
+	}
+
+	public Long getPreviousTimeSheetId() {
+		return previousTimeSheetId;
+	}
+
+	public void setPreviousTimeSheetId(Long previousTimeSheetId) {
+		this.previousTimeSheetId = previousTimeSheetId;
 	}
 
 }

@@ -7,38 +7,45 @@
 	function TimeSheetPageCtrlFn($location, $log, $routeParams, $scope, AdminClientService, TimeSheetService) {
 		$scope.edit = false;
 		$scope.timeSheetsMap = {};
-                $scope.timeSheetsList = [];
+		$scope.timeSheetsList = [];
 		$scope.currentTimeSheet = {};
 		$scope.clientsMap = AdminClientService.getAll();
 
-		if ($routeParams.id) {
-			var id = $routeParams.id;
+		function doGet(id) {
 			$log.info('getting id', id);
 			TimeSheetService.get({
 				id : id
 			}, function successFn(data) {
-				$scope.currentTimeSheet = data;
-				$scope.edit = true;
+				$scope.set(data);
+				// $scope.currentTimeSheet = data;
+				// $scope.edit = true;
 			});
+		}
+
+		if ($routeParams.id) {
+			var id = $routeParams.id;
+			doGet(id);
+		} else {
+			if (!$scope.isAdmin) {
+				doGet('current');
+			}
 		}
 
 		function updateTimeSheetsFn() {
 			TimeSheetService.getAll(function successFn(data) {
 				$scope.timeSheetsMap = data;
-                                for(var sheet in data) {
-                                    if(data[sheet].workerId != undefined) {
-                                        $scope.timeSheetsList.push(data[sheet]);
-                                    }
-                                }
-                                $scope.timeSheetsList.sort(
-                                        function(a,b){
-                                            if(a.year != b.year)
-                                                return b.year - a.year;
-                                            else
-                                                return b.week - a.week; 
-                                        }
-                                    );
-                                $log.info("sorted list is " + $scope.timeSheetsList);
+				for ( var sheet in data) {
+					if (data[sheet].workerId != undefined) {
+						$scope.timeSheetsList.push(data[sheet]);
+					}
+				}
+				$scope.timeSheetsList.sort(function(a, b) {
+					if (a.year != b.year)
+						return b.year - a.year;
+					else
+						return b.week - a.week;
+				});
+				$log.info("sorted list is " + $scope.timeSheetsList);
 				$log.info('found ' + Object.keys($scope.timeSheetsMap).length + ' timeSheets');
 			});
 		}
@@ -72,6 +79,7 @@
 		};
 
 		$scope.set = function setFn(obj) {
+			$log.info("setting ", obj);
 			if (!obj) {
 				var o = TimeSheetService.create();
 				var id = o.id;
@@ -91,6 +99,7 @@
 		$scope.setWeekLast = function setWeekLastFn() {
 			var date = new Date();
 			date.setDate(date.getDate() - 7);
+			// TODO FIXME: use relative RESTful URLs (lets date comp happen server side)
 			TimeSheetService.get({
 				id : "new",
 				date : date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
@@ -101,6 +110,7 @@
 
 		$scope.setWeekNext = function setWeekNextFn() {
 			var date = new Date();
+			// TODO FIXME: use relative RESTful URLs (lets date comp happen server side)
 			date.setDate(date.getDate() + 7);
 			TimeSheetService.get({
 				id : "new",

@@ -146,7 +146,7 @@ public class TimeSheetService {
 
 		result = timeSheetDao.set(result);
 
-		TimeSheetView view = new TimeSheetView(result, entries);
+		TimeSheetView view = new TimeSheetView(result, entries, timeSheetDao);
 
 		return view;
 	}
@@ -174,7 +174,7 @@ public class TimeSheetService {
 		List<TimeSheetDay> entries = timeSheetDayDao.getEntries(sheet.getTimeCardIds());
 		LOGGER.debug("converting to TimeSheetView: {}, entries={}", sheet, entries);
 		// TODO assert the order is consistent
-		return new TimeSheetView(sheet, entries);
+		return new TimeSheetView(sheet, entries, timeSheetDao);
 	}
 
 	private LocalDate adjustDate(LocalDate date, Integer dayOfWeek) {
@@ -314,7 +314,7 @@ public class TimeSheetService {
 		TimeSheet sheet = view.toTimeSheet();
 		sheet = timeSheetDao.set(sheet);
 
-		return new TimeSheetView(sheet, entries);
+		return new TimeSheetView(sheet, entries, timeSheetDao);
 	}
 
 	public void delete(Long id) {
