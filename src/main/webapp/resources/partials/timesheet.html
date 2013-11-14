@@ -52,9 +52,9 @@
 					</span>
 				</h4>
 				<div class="row">
-					<div class="col-sm-6 pull-right">
+					<div class="col-sm-12">
 						<small><span class="text-muted">As of {{currentTimeSheet.updateTimestamp}}</span></small>
-						<div class="btn-group btn-group-sm">
+						<div class="btn-group btn-group-sm pull-right">
 							<a type="button" class="btn btn-default" ng-disabled="!currentTimeSheet.previousTimeSheetId" ng-href="#/timesheet?id={{currentTimeSheet.previousTimeSheetId}}">Previous</a>
 							<a type="button" class="btn btn-default" ng-hide="!currentTimeSheet.nextTimeSheetId" ng-href="#/timesheet?id={{currentTimeSheet.nextTimeSheetId}}">Next</a>
 							
@@ -66,6 +66,15 @@
 								<li><a ng-click="setWeekNext();">Create Time Sheet for Next Week</a></li>
 								<li><a ng-click="setWeekOther();">Create Time Sheet for Other Date...</a></li>
 							</ul>
+							
+							<a type="button" class="btn"  
+								ng-class="{'btn-danger':currentTimeSheet.flagged, 'btn-default':!(currentTimeSheet.flagged)}" 
+								ng-click="currentTimeSheet.flagged=!(currentTimeSheet.flagged);createTimeSheetForm.$setDirty();"
+								ng-show="isAdmin">
+								<span ng-class="{'text-muted':!(currentTimeSheet.flagged)}">
+									<span class="glyphicon glyphicon-flag"></span>&nbsp;
+								</span>
+							</a>
 							
 						</div>
 					</div>
