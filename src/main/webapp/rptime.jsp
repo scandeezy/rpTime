@@ -22,7 +22,7 @@ String logoutUrl2 = userService2.createLogoutURL(request.getRequestURI());
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse navbar-ex1-collapse">
 			<ul class="nav navbar-nav">
-				<li ng-class="{active : page == '/landing'}"><a href="#/landing">Home</a></li>
+				<li ng-class="{active : page == '/landing'}" ng-show="isAdmin"><a href="#/landing">Home</a></li>
 				<li ng-class="{active : page == '/timesheet'}"><a href="#/timesheet">Time Sheets</a></li>
 				<%
 					if (userService2.isUserAdmin()) {

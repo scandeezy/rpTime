@@ -11,24 +11,13 @@
 		$scope.currentTimeSheet = {};
 		$scope.clientsMap = AdminClientService.getAll();
 
-		function doGet(id) {
-			$log.info('getting id', id);
+		if ($routeParams.id) {
+			var id = $routeParams.id;
 			TimeSheetService.get({
 				id : id
 			}, function successFn(data) {
 				$scope.set(data);
-				// $scope.currentTimeSheet = data;
-				// $scope.edit = true;
 			});
-		}
-
-		if ($routeParams.id) {
-			var id = $routeParams.id;
-			doGet(id);
-		} else {
-			if (!$scope.isAdmin) {
-				doGet('current');
-			}
 		}
 
 		function updateTimeSheetsFn() {
@@ -40,13 +29,14 @@
 					}
 				}
 				$scope.timeSheetsList.sort(function(a, b) {
-					if (a.year != b.year)
+					if (a.year != b.year) {
 						return b.year - a.year;
-					else
+					} else {
 						return b.week - a.week;
+					}
 				});
-				$log.info("sorted list is " + $scope.timeSheetsList);
-				$log.info('found ' + Object.keys($scope.timeSheetsMap).length + ' timeSheets');
+				// $log.info("sorted list is " + $scope.timeSheetsList);
+				// $log.info('found ' + Object.keys($scope.timeSheetsMap).length + ' timeSheets');
 			});
 		}
 

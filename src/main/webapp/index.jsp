@@ -49,23 +49,16 @@ ng-controller="UserPageCtrl"
 			} else {
 		%>
 		<div class="container">
-			<form class="form-signin">
-				<h2 class="form-signin-heading">Please sign in</h2>
-				<a class="btn btn-primary" href="<%=loginUrl%>">Sign in</a>
-			</form>
+			<div class="row">
+				<form class="form-signin">
+					<h2 class="form-signin-heading">Please sign in</h2>					
+					<a class="btn btn-primary" href="<%=loginUrl%>">Sign in</a>
+				</form>
+			</div>
 		</div>
 		<%
 			}
 		%>
-
-		<div ng-cloak ng-show="debug">
-			<pre>user = <%=user%>
-userService = <%=userService%>
-userService.isUserLoggedIn = <%=userService.isUserLoggedIn()%>
-pageContext = <%=pageContext%>
-request = <%=request%></pre>
-		</div>
-
 		<div id="jsScripts">
 			<!-- begin JS resources manageable by WebJars -->
 			<script src="/resources/webjars/jquery/2.0.3/jquery.min.js"></script>

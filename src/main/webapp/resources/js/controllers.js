@@ -11,7 +11,7 @@
 		$scope.$watch(function locationPathPage$watchFn() {
 			return $location.path();
 		}, function(newLoc, oldLoc) {
-			$scope.page = "/"+(((newLoc + "/").split("/"))[1]);
+			$scope.page = "/" + (((newLoc + "/").split("/"))[1]);
 		});
 
 		$scope.isAdmin = false;
@@ -97,19 +97,24 @@
 		$log.info('MainCtrl init complete');
 	} ]);
 
-	module.controller('LandingPageCtrl', [ '$log', '$scope', //
-	function LandingPageCtrlFn($log, $scope) {
-		// $log.info('LandingPageCtrl init', $scope);
+	module.controller('LandingPageCtrl', [ '$location', '$log', '$scope', //
+	function LandingPageCtrlFn($location, $log, $scope) {
+
+		// auto-redirect to current timesheet IF not admin
+		if (!$scope.isAdmin) {
+			$location.path('/timesheet').search('id','current');
+		}
+
 	} ]);
 
 	module.controller('HistoryPageCtrl', [ '$log', '$scope', //
 	function HistoryPageCtrlFn($log, $scope) {
-		//$log.info('HistoryPageCtrl init', $scope);
+		// $log.info('HistoryPageCtrl init', $scope);
 	} ]);
 
 	module.controller('UserPageCtrl', [ '$log', '$scope', //
 	function UserPageCtrlFn($log, $scope) {
-		//$log.info('UserPageCtrl init', $scope);
+		// $log.info('UserPageCtrl init', $scope);
 		$scope.setAdmin(false); // inherited fn from UserNavCtrl
 	} ]);
 
