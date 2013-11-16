@@ -84,6 +84,14 @@ public class TimeSheetController {
 		return getTimeSheetForDate(new LocalDate());
 	}
 
+	@RequestMapping(value = "/flag/{id}/{flagged}", method = POST)
+	@ResponseBody
+	public void flag(@PathVariable("id") Long id, @PathVariable("flagged") String flagged) {
+		LOGGER.debug("flag to {} timesheet {}", flagged, id);
+		Boolean b = Boolean.valueOf(flagged);
+		service.flag(id, b);
+	}
+
 	@RequestMapping(value = "/current", method = { GET })
 	@ResponseBody
 	public TimeSheetView getCurrent(@RequestParam(value = "workerId", required = false) String workerId) {

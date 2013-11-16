@@ -334,4 +334,10 @@ public class TimeSheetService {
 		return timeSheetDayDao.getForClientOverRange(clientId, start, end);
 	}
 
+	public void flag(final Long id, final Boolean flagged) {
+		TimeSheet c = timeSheetDao.getById(id);
+		c.setFlagged(flagged);
+		timeSheetDao.set(c);
+	}
+
 }

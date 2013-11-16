@@ -59,6 +59,14 @@
 					id : 'new'
 				}
 			},
+			flag : {
+				method : 'POST',
+				params : {
+					tid : '@id',
+					flagged : '@flagged'	
+				},
+				url : 'timesheet/flag/:tid/:flagged'
+			},
 			getAll : {
 				method : 'GET',
 				params : {

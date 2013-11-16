@@ -3,10 +3,19 @@
 	// omit [] to use existing controller: http://stackoverflow.com/a/17289451/237225
 	var module = angular.module('myApp.controllers');
 
-	module.controller('ReportPageCtrl', [ '$log', '$location', '$route', '$routeParams', '$scope', //
-	function ReportPageCtrlFn($log, $location, $route, $routeParams, $scope) {
+	module.controller('ReportPageCtrl', [ '$log', '$location', '$route', '$routeParams', '$scope', 'TimeSheetService', //
+	function ReportPageCtrlFn($log, $location, $route, $routeParams, $scope, TimeSheetService) {
 		// $log.info('ReportPageCtrl init', [ '$loc', $location, '$route', $route, '$routeParams', $routeParams, $scope ]);
 		$scope.selection = $routeParams.id || '';
+
+		$scope.flag = function flagFn(id, flagged) {
+			TimeSheetService.flag({
+				id : id,
+				flagged : flagged
+			}, function successFn() {
+				$log.info('timesheet id/flagged', id, flagged);
+			});
+		};
 
 		$scope.refresh = function refreshFn() {
 			$route.reload();
@@ -18,7 +27,7 @@
 	'AdminClientService', 'AdminReportService', //
 	function ReportTimeSheetsPerWorkerByWeekForClientCtrlFn($location, $log, $routeParams, $scope, //
 	AdminClientService, AdminReportService) {
-		 $log.info('ReportTimeSheetsPerWorkerByWeekForClientCtrl init', $routeParams, $scope);
+		//$log.info('ReportTimeSheetsPerWorkerByWeekForClientCtrl init', $routeParams, $scope);
 
 		$scope.selectClient = function selectClientFn(clientId) {
 			if (clientId) {
@@ -62,7 +71,7 @@
 		$scope.getTimeSheetLinkForDate = function getTimeSheetLinkForDateFn(workerId, date) {
 			return $scope.report.workerToDateToTimeSheetMap[workerId][date];
 		};
-		
+
 	} ]);
 
 	module.controller('ReportTimeSheetsPerWorkerByRangeForClientCtrl', [ '$location', '$log', '$routeParams', '$scope', //

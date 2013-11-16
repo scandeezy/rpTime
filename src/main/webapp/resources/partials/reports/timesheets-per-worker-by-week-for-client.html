@@ -52,8 +52,8 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="(date,hours) in report.reportMap[worker.id]" ng-show="hours > 0">
-							<td><a ng-href="#/timesheet?id={{getTimeSheetLinkForDate(worker.id,date)}}">{{date}}</a></td>
+						<tr ng-repeat="(date,hours) in report.reportMap[worker.id]" ng-show="hours > 0" ng-init="timeSheetId=getTimeSheetLinkForDate(worker.id,date);">
+							<td><a ng-href="#/timesheet?id={{timeSheetId}}">{{date}}</a></td>
 							<td ng-show="debug" class="debug">
 								<small>
 								worker.id={{worker.id}}<br/>
@@ -61,11 +61,11 @@
 							</td>
 							<td>{{hours | number:2}}
 								<div class="btn-group btn-group-xs hidden-print pull-right">
-									<a class="btn btn-default" ng-href="#/timesheet?id={{getTimeSheetLinkForDate(worker.id,date)}}">
+									<a class="btn btn-default" ng-href="#/timesheet?id={{timeSheetId}}">
 										<span class="glyphicon glyphicon-edit"></span>&nbsp;
 									</a>
 									<button class="btn btn-default" ng-class="{'btn-danger':flagged, 'btn-default':!flagged}"
-										ng-click="flagged=!flagged" ng-show="debug">
+										ng-click="flagged=!flagged;flag(timeSheetId,flagged);" ng-show="debug">
 										<span ng-class="{'text-muted':!flagged}"> <span class="glyphicon glyphicon-flag"></span>&nbsp;
 										</span>
 									</button>
