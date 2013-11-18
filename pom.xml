@@ -304,7 +304,6 @@
 						<goals>
 							<goal>enforce</goal>
 						</goals>
-						<!-- <phase>verify</phase> -->
 						<phase>install</phase>
 					</execution>
 				</executions>
@@ -325,13 +324,11 @@
 					<execution>
 						<id>copy-resources-webjars</id>
 						<phase>compile</phase>
-						<!-- <phase>process-classes</phase> -->
 						<goals>
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
 							<outputDirectory>${basedir}/src/main/webapp/resources/webjars/</outputDirectory>
-							<!-- <outputDirectory>${project.build.directory}/${project.artifactId}-${project.version}/resources/webjars/</outputDirectory> -->
 							<resources>
 								<resource>
 									<directory>${project.build.directory}/maven-dependency-plugin-unpacked-dependencies/META-INF/resources/webjars/</directory>
@@ -388,8 +385,6 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
-
-
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-dependency-plugin</artifactId>
@@ -405,7 +400,6 @@
 							<id>unpack-dependencies</id>
 							<!-- Note: must be same phase as maven-resource-plugin's (copy-resources-webjars) execution -->
 							<phase>compile</phase>
-							<!-- <phase>process-classes</phase> -->
 							<goals>
 								<goal>unpack-dependencies</goal>
 							</goals>
@@ -418,7 +412,6 @@
 					<executions>
 						<execution>
 							<id>copy-resources</id>
-							<!-- here the phase you need -->
 							<phase>validate</phase>
 							<goals>
 								<goal>copy-resources</goal>
@@ -435,8 +428,6 @@
 						</execution>
 					</executions>
 				</plugin>
-
-
 				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
@@ -1143,7 +1134,7 @@
 		<hamcrest.version>1.3</hamcrest.version>
 		<htmlunit.version>2.13</htmlunit.version>
 		<httpclient.version>4.3.1</httpclient.version>
-		<jackson2.version>2.2.3</jackson2.version>
+		<jackson2.version>2.3.0</jackson2.version>
 		<janino.version>2.6.1</janino.version>
 		<java-property-utils.version>1.9</java-property-utils.version>
 		<javax-inject.version>1</javax-inject.version>
@@ -1163,7 +1154,7 @@
 		<mongo-java-driver.version>2.11.3</mongo-java-driver.version>
 		<objectify.version>4.0rc2</objectify.version>
 		<parboiled.version>1.1.6</parboiled.version>
-		<powermock.version>1.5.1</powermock.version>
+		<powermock.version>1.5.2</powermock.version>
 		<reflections.version>0.9.9-RC1</reflections.version>
 		<rest-assured.version>1.8.1</rest-assured.version>
 		<servlet-api.version>2.5</servlet-api.version>
@@ -1175,7 +1166,7 @@
 		<tika-core.version>1.4</tika-core.version>
 		<metrics.version>3.0.1</metrics.version>
 		<tomcat.version>7.0.39</tomcat.version>
-		<org.webjars-angularjs.version>1.2.0</org.webjars-angularjs.version>
+		<org.webjars-angularjs.version>1.2.1</org.webjars-angularjs.version>
 		<org.webjars-bootstrap.version>3.0.2</org.webjars-bootstrap.version>
 		<org.webjars-jquery.version>2.0.3-1</org.webjars-jquery.version>
 		<org.webjars-jquery-cookie.version>1.3.1</org.webjars-jquery-cookie.version>
