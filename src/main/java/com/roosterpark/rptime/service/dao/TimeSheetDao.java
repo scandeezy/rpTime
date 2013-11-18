@@ -7,6 +7,7 @@ package com.roosterpark.rptime.service.dao;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
@@ -93,19 +94,21 @@ public class TimeSheetDao {
 	}
 
 	public List<TimeSheet> getAllForClientRange(final Long clientId, final LocalDate start, final LocalDate end) {
-		List<TimeSheet> sheets = ofy().load().type(TimeSheet.class).filter(TimeSheet.CLIENT_KEY, clientId).order(TimeSheet.START_DATE_KEY)
-				.list();
+		final List<TimeSheet> sheets = getAllForClient(clientId);
+		return filterAndSortDates(start, end, sheets);
+	}
 
-		// Filter outside the query
-		List<TimeSheet> retval = new LinkedList<>();
+	private List<TimeSheet> filterAndSortDates(final LocalDate start, final LocalDate end, final List<TimeSheet> sheets) {
+		LOGGER.warn("Warning: pushed date filtering to filterDates() method.");
+		final List<TimeSheet> retval = new LinkedList<>();
 		for (TimeSheet sheet : sheets) {
-			LOGGER.debug("Current sheet date {}", sheet.getStartDate());
-			LOGGER.debug("Compare to start {}", sheet.getStartDate().compareTo(start));
-			LOGGER.debug("Compare to end {}", sheet.getStartDate().compareTo(end));
+			LOGGER.trace("Current sheet date {}", sheet.getStartDate());
+			LOGGER.trace("Compare to start {}", sheet.getStartDate().compareTo(start));
+			LOGGER.trace("Compare to end {}", sheet.getStartDate().compareTo(end));
 			if (sheet.getStartDate().compareTo(start) >= 0 && sheet.getStartDate().compareTo(end) <= 0)
 				retval.add(sheet);
 		}
-
+		Collections.sort(retval);
 		return retval;
 	}
 
@@ -115,16 +118,20 @@ public class TimeSheetDao {
 		LOGGER.debug("searching for TimeSheets with clientId={}, betweeen {} and {}", new Object[] { clientId, startDate, endDate });
 		final List<TimeSheet> sheets = ofy().load().type(TimeSheet.class)//
 				.filter(TimeSheet.CLIENT_KEY, clientId) //
-				.filter(TimeSheet.START_DATE_KEY + " >=", startDate) //
-				.filter(TimeSheet.START_DATE_KEY + " <=", endDate) //
-				.order(TimeSheet.START_DATE_KEY)//
+				// .filter(TimeSheet.START_DATE_KEY + " >=", startDate) //
+				// .filter(TimeSheet.START_DATE_KEY + " <=", endDate) //
+				// .order(TimeSheet.START_DATE_KEY)//
 				.list();
-		return sheets;
+		return filterAndSortDates(startDate, endDate, sheets);
+		// return sheets;
 	}
 
 	public List<TimeSheet> getAllForClientYear(final Long clientId, final Integer year) {
-		List<TimeSheet> sheets = ofy().load().type(TimeSheet.class).filter(TimeSheet.CLIENT_KEY, clientId).filter(TimeSheet.YEAR_KEY, year)
-				.order(TimeSheet.START_DATE_KEY).list();
+		List<TimeSheet> sheets = ofy().load().type(TimeSheet.class)//
+				.filter(TimeSheet.CLIENT_KEY, clientId)//
+				.filter(TimeSheet.YEAR_KEY, year)//
+				.order(TimeSheet.START_DATE_KEY)//
+				.list();
 
 		return sheets;
 	}

@@ -11,12 +11,13 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.ComparisonChain;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
 
 @Entity
-public class TimeSheet {
+public class TimeSheet implements Comparable<TimeSheet> {
 
 	public static final String WORKER_KEY = "workerId";
 	public static final String CLIENT_KEY = "clientIds";
@@ -207,5 +208,13 @@ public class TimeSheet {
 
 	public void setStatus(TimeSheetStatus status) {
 		this.status = status;
+	}
+
+	@Override
+	public int compareTo(TimeSheet that) {
+		return ComparisonChain.start() //
+				.compare(this.workerId, that.workerId) //
+				.compare(this.startDate, that.startDate) //
+				.result();
 	}
 }

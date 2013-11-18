@@ -128,7 +128,12 @@ public class ReportService {
 			for (TimeSheetDay day : days) {
 				List<TimeCardLogEntry> entries = day.getEntries();
 				for (TimeCardLogEntry entry : entries) {
-					Map<LocalDate, Long> dateToTimeSheetMap = workerToDateToTimeSheetMap.get(timeSheet.getWorkerId());
+					final Long workerId = timeSheet.getWorkerId();
+					Map<LocalDate, Long> dateToTimeSheetMap = workerToDateToTimeSheetMap.get(workerId);
+					if (dateToTimeSheetMap == null) {
+						dateToTimeSheetMap = new HashMap<>();
+						workerToDateToTimeSheetMap.put(workerId, dateToTimeSheetMap);
+					}
 					dateToTimeSheetMap.put(entry.getDate(), timeSheet.getId());
 					if (clientId.equals(entry.getClientId())) {
 						if (entry.getStartTime() != null && entry.getEndTime() != null) {
