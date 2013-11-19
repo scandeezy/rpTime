@@ -22,8 +22,6 @@ public class TimeSheetDay {
 		this.entries = entries;
 		if (CollectionUtils.isNotEmpty(entries)) {
 			this.id = entries.get(0).getCardId();
-		} else {
-			this.id = new Long((long) (Math.random() * 1111111L));
 		}
 	}
 
