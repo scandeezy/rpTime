@@ -1,5 +1,6 @@
 package com.roosterpark.rptime.service;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -202,7 +203,7 @@ public class TimeSheetService {
 		for (TimeSheet sheet : sheets) {
 			views.add(convert(sheet));
 		}
-
+		Collections.sort(views);
 		return views;
 	}
 

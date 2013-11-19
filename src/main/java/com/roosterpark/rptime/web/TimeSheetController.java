@@ -8,7 +8,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
 import java.util.List;
-import java.util.SortedMap;
 
 import javax.inject.Inject;
 
@@ -139,13 +138,6 @@ public class TimeSheetController {
 	public List<TimeSheetView> getAll() {
 		final Worker worker = getValidatedWorker();
 		return service.getAll(worker.getId(), userService.isUserAdmin());
-	}
-
-	@RequestMapping(value = "/idmap", method = GET)
-	@ResponseBody
-	public SortedMap<Long, TimeSheetView> getAllMap() {
-		final Worker worker = getValidatedWorker();
-		return service.getAllMap(worker.getId(), userService.isUserAdmin());
 	}
 
 	@RequestMapping(value = "/{id}", method = GET)

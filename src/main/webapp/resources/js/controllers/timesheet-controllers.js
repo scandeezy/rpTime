@@ -6,6 +6,7 @@
 	module.controller('TimeSheetPageCtrl', [ '$location', '$log', '$routeParams', '$scope', 'AdminClientService', 'TimeSheetService', //
 	function TimeSheetPageCtrlFn($location, $log, $routeParams, $scope, AdminClientService, TimeSheetService) {
 		$scope.edit = false;
+		$scope.adminWorkerTimeSheetMap = {};
 		$scope.timeSheetsMap = {};
 		$scope.timeSheetsList = [];
 		$scope.currentTimeSheet = {};
@@ -21,22 +22,21 @@
 		}
 
 		function updateTimeSheetsFn() {
-			TimeSheetService.getAll(function successFn(data) {
-				$scope.timeSheetsMap = data;
-				for ( var sheet in data) {
-					if (data[sheet].workerId != undefined) {
-						$scope.timeSheetsList.push(data[sheet]);
+			TimeSheetService.getAll(function successFn(list) {
+				$scope.timeSheetsList = list;
+				$scope.timeSheetsMap = {};
+				$scope.adminWorkerTimeSheetMap = {};
+				for ( var s in list) {
+					var sheet = list[s];
+					if (sheet.id != undefined) {
+						$scope.timeSheetsMap[sheet.id] = sheet;
+						var aWTSMList = $scope.adminWorkerTimeSheetMap[sheet.workerId];
+						if(!aWTSMList){
+							aWTSMList = $scope.adminWorkerTimeSheetMap[sheet.workerId] = [];
+						}
+						$scope.adminWorkerTimeSheetMap[sheet.workerId].push(sheet);
 					}
 				}
-				$scope.timeSheetsList.sort(function(a, b) {
-					if (a.year != b.year) {
-						return b.year - a.year;
-					} else {
-						return b.week - a.week;
-					}
-				});
-				// $log.info("sorted list is " + $scope.timeSheetsList);
-				// $log.info('found ' + Object.keys($scope.timeSheetsMap).length + ' timeSheets');
 			});
 		}
 

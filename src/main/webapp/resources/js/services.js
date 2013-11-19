@@ -68,10 +68,8 @@
 				url : 'timesheet/flag/:tid/:flagged'
 			},
 			getAll : {
-				method : 'GET',
-				params : {
-					id : 'idmap'
-				}
+				isArray: true,
+				method : 'GET'
 			},
 			getCurrent : {
 				method : 'GET',
