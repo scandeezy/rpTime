@@ -7,21 +7,18 @@
 		<thead>
 			<tr>
 				<th>Worker</th>
-				<th ng-show="debug">Worker ID</th>
 				<th class="text-right">Total Hours</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="worker in report.workerList">
-				<td><a ng-href="#/worker?id={{worker.id}}">{{worker.firstName}} {{worker.lastName}}</a></td>
-				<td ng-show="debug"><span class="text-muted">{{worker.id}}</span></td>
+			<tr ng-repeat="worker in report.workerList | orderBy:'worker.lastName'">
+				<td><a ng-href="#/worker?id={{worker.id}}">{{worker.lastName}}, {{worker.firstName}}</a></td>
 				<td><p class="text-right">{{report.workerIdToHoursMap[worker.id] | number:2}} hours</p></td>
 			</tr>
 		</tbody>
 		<tfoot>
 			<tr class="text-muted">
 				<td>{{report.workerList.length}} workers</td>
-				<td ng-show="debug"></td>
 				<td><p class="text-right">{{totalHours | number:2}} hours</p></td>
 			</tr>
 		</tfoot>
