@@ -64,6 +64,6 @@ String logoutUrl2 = userService2.createLogoutURL(request.getRequestURI());
 		</div>
 	</div>
 
-	<p class="text-warning" ng-show="isAdmin">
+	<p class="text-warning hidden-print" ng-show="isAdmin">
 		<span class="label label-warning">Warning</span> You are signed in as an administrator.
 	</p>
