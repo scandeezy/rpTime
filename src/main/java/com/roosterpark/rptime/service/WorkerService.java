@@ -6,12 +6,12 @@ import java.util.List;
 
 import javax.inject.Named;
 
+import org.datanucleus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.appengine.api.users.User;
 import com.roosterpark.rptime.model.Worker;
-import org.datanucleus.util.StringUtils;
 
 @Named
 public class WorkerService {
@@ -24,6 +24,7 @@ public class WorkerService {
 
 	public Worker getByEmail(String email) {
 		LOGGER.warn("Getting worker with email={} ", email);
+		// TODO: handle case-insensitive matches
 		return ofy().load().type(Worker.class).filter(Worker.EMAIL_KEY, email).first().now();
 	}
 
@@ -33,7 +34,7 @@ public class WorkerService {
 	}
 
 	public List<Worker> getAll() {
-                // TODO: separate the business logic of the service from the DAO
+		// TODO: separate the business logic of the service from the DAO
 		// TODO: Cache better so we don't have to do this. Costly!
 		ofy().clear();
 		// ^ Argh
@@ -42,25 +43,25 @@ public class WorkerService {
 	}
 
 	public void set(Worker item) {
-                if(StringUtils.isEmpty(item.getEmail()))
-                    throw new IllegalArgumentException("Email required.");
-                if(StringUtils.isEmpty(item.getFirstName()))
-                    throw new IllegalArgumentException("First name required.");
-                if(StringUtils.isEmpty(item.getLastName()))
-                    throw new IllegalArgumentException("Last name required.");
-                
+		if (StringUtils.isEmpty(item.getEmail()))
+			throw new IllegalArgumentException("Email required.");
+		if (StringUtils.isEmpty(item.getFirstName()))
+			throw new IllegalArgumentException("First name required.");
+		if (StringUtils.isEmpty(item.getLastName()))
+			throw new IllegalArgumentException("Last name required.");
+
 		Worker check = getByEmail(item.getEmail());
 
 		if (check != null && (item.getId() == null || !item.getId().equals(check.getId()))) {
-			throw new IllegalArgumentException("Worker already exists with email " + 
-                                item.getEmail() + " and id " + check.getId() + ", provided id " + item.getId());
+			throw new IllegalArgumentException("Worker already exists with email " + item.getEmail() + " and id " + check.getId()
+					+ ", provided id " + item.getId());
 		}
 
 		// Default to true
 		if (item.getActive() == null)
 			item.setActive(true);
-                if (item.getHourly() == null)
-                        item.setHourly(false);
+		if (item.getHourly() == null)
+			item.setHourly(false);
 
 		LOGGER.warn("Saving worker " + item);
 		ofy().save().entity(item).now();
