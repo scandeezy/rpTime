@@ -28,6 +28,7 @@ import com.roosterpark.rptime.model.TimeSheet;
 import com.roosterpark.rptime.model.TimeSheetDay;
 import com.roosterpark.rptime.model.TimeSheetStatus;
 import com.roosterpark.rptime.model.TimeSheetView;
+import com.roosterpark.rptime.model.Worker;
 import com.roosterpark.rptime.service.dao.TimeSheetDao;
 import com.roosterpark.rptime.service.dao.TimeSheetDayDao;
 
@@ -195,8 +196,12 @@ public class TimeSheetService {
 		return returnDate;
 	}
 
-	public List<TimeSheetView> getAll(final Long workerId, final boolean isAdmin) {
+	public List<TimeSheetView> getAll(final Worker worker, final boolean isAdmin) {
 		LOGGER.warn("Getting TimeSheets for isAdmin={}", isAdmin);
+		Long workerId = null;
+		if (worker != null) {
+			worker.getId();
+		}
 		List<TimeSheet> sheets = timeSheetDao.getAll(workerId, isAdmin);
 		LOGGER.debug("Found these sheets for all {}", sheets);
 		List<TimeSheetView> views = new LinkedList<>();
@@ -223,8 +228,8 @@ public class TimeSheetService {
 		return convert(timeSheets);
 	}
 
-	public SortedMap<Long, TimeSheetView> getAllMap(final Long workerId, final boolean isAdmin) {
-		final List<TimeSheetView> list = getAll(workerId, isAdmin);
+	public SortedMap<Long, TimeSheetView> getAllMap(final Worker worker, final boolean isAdmin) {
+		final List<TimeSheetView> list = getAll(worker, isAdmin);
 		final SortedMap<Long, TimeSheetView> map = new TreeMap<>();
 		for (TimeSheetView obj : list) {
 			map.put(obj.getId(), obj);

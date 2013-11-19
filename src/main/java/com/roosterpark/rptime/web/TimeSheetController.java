@@ -64,6 +64,8 @@ public class TimeSheetController {
 					Worker worker = workerService.getByEmail(email);
 					if (worker != null) {
 						return worker;
+					} else if (userService.isUserAdmin()) {
+						return null;
 					}
 					throw new IllegalArgumentException("No Worker found for email '" + email
 							+ "'.  To resolve, create a Worker with this email to link it to a user.");
@@ -137,7 +139,7 @@ public class TimeSheetController {
 	@ResponseBody
 	public List<TimeSheetView> getAll() {
 		final Worker worker = getValidatedWorker();
-		return service.getAll(worker.getId(), userService.isUserAdmin());
+		return service.getAll(worker, userService.isUserAdmin());
 	}
 
 	@RequestMapping(value = "/{id}", method = GET)
