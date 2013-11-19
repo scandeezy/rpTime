@@ -51,6 +51,9 @@
 				map : $scope.timeSheetsMap,
 				afterFn : function doAfterFn() {
 					delete $scope.timeSheetsMap[obj.id];
+					var aWTSMList = $scope.adminWorkerTimeSheetMap[obj.workerId];
+					var index = aWTSMList.indexOf(obj) || ((aWTSMList.length) - 1);
+					aWTSMList.splice(index, 1);
 				}
 			});
 		};
@@ -127,6 +130,7 @@
 				id : timeSheet.id
 			}, function successFn() {
 				timeSheet.status = 'SUBMITTED';
+				$scope.edit = false;
 			});
 		};
 
