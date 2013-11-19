@@ -89,17 +89,16 @@ public class ContractService {
 			final LocalDate contractEndDate = contract.getEndDate();
 
 			LOGGER.debug("\tcheck if searchInterval contains {} or {}", contractStartDate, contractEndDate);
-
 			boolean startDateOk = searchInterval.contains(contractStartDate.toDate().getTime());
 			if (searchInterval.isAfter(contractStartDate.toDateTimeAtStartOfDay())) {
-				if (contractEndDate == null) {
-					startDateOk = true;
-				}
+				startDateOk = true;
 			}
 
 			boolean endDateOk = (contractEndDate == null) ? true : false;
 			if (contractEndDate != null) {
-				endDateOk = searchInterval.contains(contractEndDate.toDate().getTime());
+				final Interval contractInterval = new Interval(contractStartDate.toDateTimeAtStartOfDay(),
+						contractEndDate.toDateTimeAtStartOfDay());
+				endDateOk = contractInterval.overlaps(searchInterval);
 			}
 
 			if (startDateOk && endDateOk) {
