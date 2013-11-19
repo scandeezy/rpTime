@@ -12,6 +12,7 @@ import org.joda.time.LocalDateTime;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ComparisonChain;
+import com.google.common.collect.Ordering;
 import com.googlecode.objectify.annotation.Entity;
 import com.googlecode.objectify.annotation.Id;
 import com.googlecode.objectify.annotation.Index;
@@ -213,8 +214,8 @@ public class TimeSheet implements Comparable<TimeSheet> {
 	@Override
 	public int compareTo(TimeSheet that) {
 		return ComparisonChain.start() //
-				.compare(this.workerId, that.workerId) //
-				.compare(this.startDate, that.startDate) //
+				.compare(this.workerId, that.workerId, Ordering.natural().nullsFirst()) //
+				.compare(this.startDate, that.startDate, Ordering.natural().nullsFirst()) //
 				.result();
 	}
 }
