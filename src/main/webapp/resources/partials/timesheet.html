@@ -71,6 +71,10 @@
 				<div class="row">
 					<div class="col-sm-12">
 						<small><span class="text-muted">As of {{currentTimeSheet.updateTimestamp}}</span></small>
+						
+						<label class="label label-success" title="A submitted time card can still be updated by clicking the 'Update' button below."
+						ng-show="currentTimeSheet.status!='UNSUBMITTED'">Submitted <span class="glyphicon glyphicon-ok"></span></label>
+						
 						<div class="btn-group btn-group-sm pull-right">
 							<a type="button" class="btn btn-default" ng-disabled="!currentTimeSheet.previousTimeSheetId" ng-href="#/timesheet?id={{currentTimeSheet.previousTimeSheetId}}">Previous</a>
 							<a type="button" class="btn btn-default" ng-hide="!currentTimeSheet.nextTimeSheetId" ng-href="#/timesheet?id={{currentTimeSheet.nextTimeSheetId}}">Next</a>
@@ -84,7 +88,6 @@
 								<li><a ng-click="setWeekOther();">Create Time Sheet for Other Date...</a></li>
 							</ul>
 							
-							<!--  ng-click="currentTimeSheet.flagged=!(currentTimeSheet.flagged);"  -->
 							<a type="button" class="btn"  
 								ng-class="{'btn-danger':currentTimeSheet.flagged, 'btn-default':!(currentTimeSheet.flagged)}" 
 								ng-click="currentTimeSheet.flagged=!(currentTimeSheet.flagged);flag(currentTimeSheet.id,currentTimeSheet.flagged);"
@@ -164,11 +167,11 @@
 				<div class="form-group row">
 					<div class="col-sm-offset-2 col-sm-10">
 						<button type="button" id="save" class="btn " ng-class="{'btn-primary': createTimeSheetForm.$valid}"
-							ng-disabled="!(createTimeSheetForm.$valid && createTimeSheetForm.$dirty)" ng-click="save(currentTimeSheet)">
-							<span ng-show="currentTimeSheet.status=='SUBMITTED'">Update</span>
-							<span ng-show="currentTimeSheet.status!='SUBMITTED'">Save</span>
+							ng-disabled="!(createTimeSheetForm.$valid && createTimeSheetForm.$dirty)" ng-click="save(currentTimeSheet);">
+							<span ng-show="currentTimeSheet.status!='UNSUBMITTED'">Update</span>
+							<span ng-show="currentTimeSheet.status=='UNSUBMITTED'">Save</span>
 							</button>
-						<span ng-show="currentTimeSheet.status!='SUBMITTED'">
+						<span ng-show="currentTimeSheet.status=='UNSUBMITTED'">
 						<button type="button" id="submit" class="btn btn-default" ng-click="submit(currentTimeSheet);" ng-disabled="!isSubmittable(currentTimeSheet);">Submit</button>
 						<p class="text-muted">A time sheet may still be updated after it has been submitted.</p>
 						</span>

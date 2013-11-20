@@ -67,6 +67,7 @@
 					// stay in the edit view!
 					// $scope.edit = false;
 					$scope.createTimeSheetForm.$setPristine();
+					updateTimeSheetsFn();
 				}
 			});
 		};
@@ -126,11 +127,17 @@
 
 		$scope.submit = function submitFn(timeSheet) {
 			$log.info("submitting timeSheet.id= " + timeSheet.id);
-			TimeSheetService.submit({
-				id : timeSheet.id
-			}, function successFn() {
-				timeSheet.status = 'SUBMITTED';
-				$scope.edit = false;
+			// make a copy since we don't want the UI-bound data to change pre-save.
+			var obj = angular.copy(timeSheet);
+			obj.status = 'SUBMITTED';
+			$scope.doSave({
+				service : TimeSheetService,
+				obj : obj,
+				map : $scope.timeSheetsMap,
+				afterFn : function doAfterFn() {
+					updateTimeSheetsFn();
+					$scope.edit = false;
+				}
 			});
 		};
 
