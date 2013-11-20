@@ -8,15 +8,6 @@
 		// $log.info('ReportPageCtrl init', [ '$loc', $location, '$route', $route, '$routeParams', $routeParams, $scope ]);
 		$scope.selection = $routeParams.id || '';
 
-		$scope.flag = function flagFn(id, flagged) {
-			TimeSheetService.flag({
-				id : id,
-				flagged : flagged
-			}, function successFn() {
-				$log.info('timesheet id/flagged', id, flagged);
-			});
-		};
-
 		$scope.refresh = function refreshFn() {
 			$route.reload();
 		};

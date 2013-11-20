@@ -43,10 +43,10 @@
 							<button type="button" id="delete-{{timeSheet.id}}" class="btn btn-sm btn-default" ng-click="remove(timeSheet);" ng-show="debug">Delete</button>
 							<a ng-click="set(timeSheet)">{{timeSheet.year}},
 						week {{timeSheet.week}} - {{timeSheet.startDate}}</a>
+							<span ng-show="timeSheet.flagged" class="label label-danger"><span class="glyphicon glyphicon-flag"></span>&nbsp;</span>
 							<span ng-show="timeSheet.status=='UNSUBMITTED'" class="label label-warning">Not Submitted</span>
 							<span ng-show="timeSheet.status=='SUBMITTED'" class="label label-info">Submitted</span>
 							<span ng-show="timeSheet.status=='APPROVED'" class="label label-success">Approved</span>
-							<span ng-show="timeSheet.flagged" class="label label-warning">Flagged</span>
 						</li>
 					</ul>
 				</li>
@@ -84,9 +84,10 @@
 								<li><a ng-click="setWeekOther();">Create Time Sheet for Other Date...</a></li>
 							</ul>
 							
+							<!--  ng-click="currentTimeSheet.flagged=!(currentTimeSheet.flagged);"  -->
 							<a type="button" class="btn"  
 								ng-class="{'btn-danger':currentTimeSheet.flagged, 'btn-default':!(currentTimeSheet.flagged)}" 
-								ng-click="currentTimeSheet.flagged=!(currentTimeSheet.flagged);createTimeSheetForm.$setDirty();"
+								ng-click="currentTimeSheet.flagged=!(currentTimeSheet.flagged);flag(currentTimeSheet.id,currentTimeSheet.flagged);"
 								ng-show="isAdmin">
 								<span ng-class="{'text-muted':!(currentTimeSheet.flagged)}">
 									<span class="glyphicon glyphicon-flag"></span>&nbsp;
@@ -161,15 +162,16 @@
 					</label>
 				</div>
 				<div class="form-group row">
-					<div class="col-sm-offset-2 col-sm-4">
-						<div class="btn-group">
-							<button type="button" id="save" class="btn " ng-class="{'btn-primary': createTimeSheetForm.$valid}"
-								ng-disabled="!(createTimeSheetForm.$valid && createTimeSheetForm.$dirty)" ng-click="save(currentTimeSheet)">Save</button>
-	
-							<button type="button" id="submit" class="btn btn-default" ng-click="submit(currentTimeSheet);" ng-disabled="!isSubmittable(currentTimeSheet);">
-								Submit<span ng-show="currentTimeSheet.status=='SUBMITTED'">ted</span>
+					<div class="col-sm-offset-2 col-sm-10">
+						<button type="button" id="save" class="btn " ng-class="{'btn-primary': createTimeSheetForm.$valid}"
+							ng-disabled="!(createTimeSheetForm.$valid && createTimeSheetForm.$dirty)" ng-click="save(currentTimeSheet)">
+							<span ng-show="currentTimeSheet.status=='SUBMITTED'">Update</span>
+							<span ng-show="currentTimeSheet.status!='SUBMITTED'">Save</span>
 							</button>
-						</div>
+						<span ng-show="currentTimeSheet.status!='SUBMITTED'">
+						<button type="button" id="submit" class="btn btn-default" ng-click="submit(currentTimeSheet);" ng-disabled="!isSubmittable(currentTimeSheet);">Submit</button>
+						<p class="text-muted">A time sheet may still be updated after it has been submitted.</p>
+						</span>
 
 					</div>
 				</div>

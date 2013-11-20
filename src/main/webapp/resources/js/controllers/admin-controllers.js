@@ -4,22 +4,22 @@
 	var module = angular.module('myApp.controllers');
 
 	module.controller('AdminPageCtrl', [ // 
-	'$log', '$rootScope', '$scope', 'AdminClientService', 'AdminWorkerService', 'AdminContractService',//
-	function AdminPageCtrlFn($log, $rootScope, $scope, AdminClientService, AdminWorkerService, AdminContractService) {
+	'$log', '$rootScope', '$scope', 'AdminClientService', 'AdminWorkerService', 'AdminContractService', 'TimeSheetService',//
+	function AdminPageCtrlFn($log, $rootScope, $scope, AdminClientService, AdminWorkerService, AdminContractService, TimeSheetService) {
 		// $log.info('AdminPageCtrl init', $scope);
 		$scope.setAdmin(true); // inherited fn from UserNavCtrl
 		$rootScope.clientsMap = {};
 		$rootScope.clientsList = [];
 		$rootScope.contractsMap = {};
 		$rootScope.workersMap = {};
-		$rootScope.workersList = []; //lists allow filters: http://stackoverflow.com/a/14789258/237225
+		$rootScope.workersList = []; // lists allow filters: http://stackoverflow.com/a/14789258/237225
 
 		function updateClientsFn() {
 			AdminClientService.getAll(function successCGetAllFn(map) {
-				var arr= [];
+				var arr = [];
 				$rootScope.clientsMap = map;
-				angular.forEach(map, function(val,key){
-					if(key && val.id){
+				angular.forEach(map, function(val, key) {
+					if (key && val.id) {
 						arr.push(val);
 					}
 				});
@@ -43,17 +43,25 @@
 		$scope.$on('updateWorkers', updateWorkersFn);
 		$scope.$on('updateContracts', updateContractsFn);
 
-		
-		$scope.$watch('workersMap',function workersMap$watchFn(map){
+		$scope.$watch('workersMap', function workersMap$watchFn(map) {
 			var arr = [];
-			angular.forEach(map, function(val,key){
-				if(key && val.id){
+			angular.forEach(map, function(val, key) {
+				if (key && val.id) {
 					arr.push(val);
 				}
 			});
 			$rootScope.workersList = arr;
-		},true);
-		
+		}, true);
+
+		$scope.flag = function flagFn(id, flagged) {
+			TimeSheetService.flag({
+				id : id,
+				flagged : flagged
+			}, function successFn() {
+				$log.info('timesheet id/flagged', id, flagged);
+			});
+		};
+
 		updateClientsFn();
 		updateContractsFn();
 		updateWorkersFn();
@@ -92,7 +100,7 @@
 				service : AdminClientService,
 				obj : obj,
 				map : $rootScope.clientsMap,
-				//updateFnName : 'updateClients', //trust client-side: server side has delay.
+				// updateFnName : 'updateClients', //trust client-side: server side has delay.
 				afterFn : function doAfterFn() {
 					$scope.edit = false;
 				}
@@ -146,7 +154,7 @@
 				service : AdminContractService,
 				obj : obj,
 				map : $rootScope.contractsMap,
-				// updateFnName : 'updateContracts',  //trust client-side: server side has delay.
+				// updateFnName : 'updateContracts', //trust client-side: server side has delay.
 				afterFn : function doAfterFn() {
 					$scope.edit = false;
 				}
