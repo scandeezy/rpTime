@@ -11,8 +11,7 @@
 		});
 		$routeProvider.when('/client', {
 			controller : 'AdminClientCtrl',
-			templateUrl : 'resources/partials/client.html',
-			reloadOnSearch : false
+			templateUrl : 'resources/partials/client.html'
 		});
 		$routeProvider.when('/contract', {
 			controller : 'AdminContractCtrl',
@@ -31,8 +30,6 @@
 		$routeProvider.when('/report/:id', {
 			controller : 'ReportPageCtrl',
 			templateUrl : 'resources/partials/reports/list.html'
-//				,
-//			reloadOnSearch : false
 		});
 		$routeProvider.when('/timesheet', {
 			controller : 'TimeSheetPageCtrl',

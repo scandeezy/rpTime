@@ -9,13 +9,21 @@
 		// $log.info('AdminPageCtrl init', $scope);
 		$scope.setAdmin(true); // inherited fn from UserNavCtrl
 		$rootScope.clientsMap = {};
+		$rootScope.clientsList = [];
 		$rootScope.contractsMap = {};
 		$rootScope.workersMap = {};
 		$rootScope.workersList = []; //lists allow filters: http://stackoverflow.com/a/14789258/237225
 
 		function updateClientsFn() {
-			AdminClientService.getAll(function successCGetAllFn(data) {
-				$rootScope.clientsMap = data;
+			AdminClientService.getAll(function successCGetAllFn(map) {
+				var arr= [];
+				$rootScope.clientsMap = map;
+				angular.forEach(map, function(val,key){
+					if(key && val.id){
+						arr.push(val);
+					}
+				});
+				$rootScope.clientsList = arr;
 			});
 		}
 
