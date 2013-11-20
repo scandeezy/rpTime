@@ -22,10 +22,11 @@ public class WorkerService {
 		return ofy().load().type(Worker.class).id(id).now();
 	}
 
-	public Worker getByEmail(String email) {
-		LOGGER.warn("Getting worker with email={} ", email);
+	public Worker getByEmail(final String email) {
+		final String emailLower = StringUtils.lowerCase(email);
+		LOGGER.warn("Getting worker with email={} ", emailLower);
 		return ofy().load().type(Worker.class)//
-				.filter("upper(" + Worker.EMAIL_KEY + ")", StringUtils.upperCase(email))//
+				.filter(Worker.EMAIL_KEY, emailLower)//
 				.first()//
 				.now();
 	}

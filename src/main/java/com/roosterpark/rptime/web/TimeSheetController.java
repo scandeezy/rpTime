@@ -11,7 +11,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
@@ -60,18 +59,14 @@ public class TimeSheetController {
 			User user = userService.getCurrentUser();
 			if (user != null) {
 				final String email = user.getEmail();
-				if (StringUtils.isNotEmpty(email)) {
-					Worker worker = workerService.getByEmail(email);
-					if (worker != null) {
-						return worker;
-					} else if (userService.isUserAdmin()) {
-						return null;
-					}
-					throw new IllegalArgumentException("No Worker found for email '" + email
-							+ "'.  To resolve, create a Worker with this email to link it to a user.");
+				Worker worker = workerService.getByEmail(email);
+				if (worker != null) {
+					return worker;
+				} else if (userService.isUserAdmin()) {
+					return null;
 				}
-				throw new IllegalArgumentException("The required email for user '" + user.toString() + "' [hash=" + user.hashCode()
-						+ "] is empty.");
+				throw new IllegalArgumentException("No Worker found for email '" + email + "' for user '" + user.toString()
+						+ "'.  To resolve, create a Worker with this email to link it to a user.");
 			}
 			throw new IllegalArgumentException("Someone is logged in, but it's not a user.");
 		}

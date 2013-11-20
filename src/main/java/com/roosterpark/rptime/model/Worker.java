@@ -1,5 +1,6 @@
 package com.roosterpark.rptime.model;
 
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.LocalDate;
 
 import com.google.common.base.Objects;
@@ -23,8 +24,8 @@ public class Worker {
 	private Boolean active;
 	@Index
 	private LocalDate start;
-        @Index
-        private Boolean hourly;
+	@Index
+	private Boolean hourly;
 
 	public Worker() {
 	}
@@ -58,7 +59,7 @@ public class Worker {
 	}
 
 	public void setEmail(String email) {
-		this.email = email;
+		this.email = StringUtils.lowerCase(email);
 	}
 
 	public LocalDate getStart() {
@@ -76,14 +77,14 @@ public class Worker {
 	public void setActive(Boolean active) {
 		this.active = active;
 	}
-        
-        public Boolean getHourly() {
-                return this.hourly;
-        }
-        
-        public void setHourly(Boolean hourly) {
-                this.hourly = hourly;
-        }
+
+	public Boolean getHourly() {
+		return this.hourly;
+	}
+
+	public void setHourly(Boolean hourly) {
+		this.hourly = hourly;
+	}
 
 	public String toString() {
 		return Objects.toStringHelper(this)//
