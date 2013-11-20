@@ -44,6 +44,7 @@ public class TimeSheet implements Comparable<TimeSheet> {
 	private LocalDateTime updateTimestamp;
 	private List<Long> timeCardIds;
 	private String note;
+	private String adminNote;
 	private boolean flagged;
 
 	@Index
@@ -188,6 +189,8 @@ public class TimeSheet implements Comparable<TimeSheet> {
 				.add("year", this.year) //
 				.add("startDate", this.startDate) //
 				.add("status", this.status) //
+				.add("note", this.note) //
+				.add("adminNote", this.adminNote) //
 				.add("timeSheetDayIds", this.timeCardIds) //
 				.toString();
 	}
@@ -209,6 +212,14 @@ public class TimeSheet implements Comparable<TimeSheet> {
 
 	public void setStatus(TimeSheetStatus status) {
 		this.status = status;
+	}
+
+	public String getAdminNote() {
+		return adminNote;
+	}
+
+	public void setAdminNote(String adminNote) {
+		this.adminNote = adminNote;
 	}
 
 	@Override

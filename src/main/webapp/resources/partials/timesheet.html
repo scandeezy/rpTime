@@ -144,8 +144,14 @@
 				</div>
 				<div class="form-group row">
 					<label for="note" class="col-sm-2 control-label">Notes</label>
-					<div class="col-sm-4">
+					<div class="col-sm-6">
 						<textarea class="form-control" id="note" name="note" rows="2" ng-model="currentTimeSheet.note"></textarea>
+					</div>
+				</div>
+				<div class="form-group row well" ng-show="isAdmin">
+					<label for="adminNote" class="col-sm-2 control-label">Admin-only Notes</label>
+					<div class="col-sm-6">
+						<textarea class="form-control" id="adminNote" name="adminNote" rows="2" ng-model="currentTimeSheet.adminNote"></textarea>
 					</div>
 				</div>
 				<div class="form-group row" ng-show="debug" style="background-color: yellow">

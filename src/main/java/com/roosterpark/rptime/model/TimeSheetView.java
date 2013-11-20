@@ -45,6 +45,7 @@ public class TimeSheetView extends TimeSheet {
 
 	public TimeSheetView(final TimeSheet sheet, final List<TimeSheetDay> days, final TimeSheetDao dao) {
 		this();
+		this.setAdminNote(sheet.getAdminNote());
 		this.setClientIds(sheet.getClientIds());
 		this.setDays(days);
 		this.setFlagged(sheet.isFlagged());
@@ -78,6 +79,7 @@ public class TimeSheetView extends TimeSheet {
 
 	public TimeSheet toTimeSheet() {
 		final TimeSheet result = new TimeSheet();
+		result.setAdminNote(this.getAdminNote());
 		result.setClientIds(this.getClientIds());
 		result.setFlagged(this.isFlagged());
 		result.setId(this.getId());
