@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.inject.Named;
 
-import org.datanucleus.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,8 +24,10 @@ public class WorkerService {
 
 	public Worker getByEmail(String email) {
 		LOGGER.warn("Getting worker with email={} ", email);
-		// TODO: handle case-insensitive matches
-		return ofy().load().type(Worker.class).filter(Worker.EMAIL_KEY, email).first().now();
+		return ofy().load().type(Worker.class)//
+				.filter("upper(" + Worker.EMAIL_KEY + ")", StringUtils.upperCase(email))//
+				.first()//
+				.now();
 	}
 
 	public List<Worker> getPage(int count, int offset) {
