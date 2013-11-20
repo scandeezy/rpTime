@@ -75,7 +75,7 @@
 							<td><a ng-href="#/timesheet?id={{timeSheetId}}">{{date}}</a></td>
 							<td ng-show="debug" class="debug">
 								<small>
-								worker.id={{worker.id}}<br/>
+								timeSheetId={{timeSheetId}}<br/>
 								</small>
 							</td>
 							<td>{{hours | number:2}}
@@ -83,9 +83,10 @@
 									<a class="btn btn-default" ng-href="#/timesheet?id={{timeSheetId}}">
 										<span class="glyphicon glyphicon-edit"></span>&nbsp;
 									</a>
-									<button class="btn btn-default" ng-class="{'btn-danger':flagged, 'btn-default':!flagged}"
-										ng-click="flagged=!flagged;flag(timeSheetId,flagged);">
-										<span ng-class="{'text-muted':!flagged}"> <span class="glyphicon glyphicon-flag"></span>&nbsp;
+									<button class="btn btn-default"
+										ng-class="{'btn-danger':(report.timeSheetMap[timeSheetId].flagged), 'btn-default':!(report.timeSheetMap[timeSheetId].flagged)}"
+										ng-click="report.timeSheetMap[timeSheetId].flagged=!(report.timeSheetMap[timeSheetId].flagged);flag(timeSheetId,(report.timeSheetMap[timeSheetId].flagged));">
+										<span ng-class="{'text-muted':!(report.timeSheetMap[timeSheetId].flagged)}"> <span class="glyphicon glyphicon-flag"></span>&nbsp;
 										</span>
 									</button>
 								</div>

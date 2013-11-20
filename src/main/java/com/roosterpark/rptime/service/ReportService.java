@@ -1,6 +1,5 @@
 package com.roosterpark.rptime.service;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -93,7 +92,7 @@ public class ReportService {
 	}
 
 	public Map<String, Object> getTotalHoursPerWorkerPerMonthReport() {
-		final Map<String, Object> map = new HashMap<String, Object>();
+		final Map<String, Object> map = new LinkedHashMap<String, Object>();
 		final LocalDate d = new LocalDate();
 		final List<Worker> workers = workerService.getAll();
 		final List<TimeSheetView> unfiltered = timeSheetService.getAllAdmin();
@@ -111,16 +110,17 @@ public class ReportService {
 		Validate.notNull(clientId);
 		LOGGER.debug("clientId={}, date={}", clientId, date);
 		final Interval searchInterval = getMonthSearchInterval(date);
-		final Map<String, Object> map = new HashMap<String, Object>();
-		final Map<Long, Map<LocalDate, Long>> workerToDateToTimeSheetMap = new HashMap<>();
+		final Map<String, Object> map = new LinkedHashMap<String, Object>();
+		final Map<Long, Map<LocalDate, Long>> workerToDateToTimeSheetMap = new LinkedHashMap<>();
 		final List<Worker> workers = contractService.getWorkersWithActiveContractsInInterval(clientId, searchInterval);
 		final List<TimeSheetView> unfiltered = timeSheetService.getAllForClientInInterval(clientId, searchInterval);
 		final List<TimeSheetView> timeSheets = timeSheetService.getReportable(unfiltered);
+		final Map<Long, Object> timeSheetMap = new LinkedHashMap<>();
 
 		Map<Long, Map<LocalDate, Double>> reportMap = new LinkedHashMap<>();
 		for (Worker worker : workers) {
 			reportMap.put(worker.getId(), new LinkedHashMap<LocalDate, Double>());
-			workerToDateToTimeSheetMap.put(worker.getId(), new HashMap<LocalDate, Long>());
+			workerToDateToTimeSheetMap.put(worker.getId(), new LinkedHashMap<LocalDate, Long>());
 		}
 
 		for (TimeSheetView timeSheet : timeSheets) {
@@ -131,7 +131,7 @@ public class ReportService {
 					final Long workerId = timeSheet.getWorkerId();
 					Map<LocalDate, Long> dateToTimeSheetMap = workerToDateToTimeSheetMap.get(workerId);
 					if (dateToTimeSheetMap == null) {
-						dateToTimeSheetMap = new HashMap<>();
+						dateToTimeSheetMap = new LinkedHashMap<>();
 						workerToDateToTimeSheetMap.put(workerId, dateToTimeSheetMap);
 					}
 					dateToTimeSheetMap.put(entry.getDate(), timeSheet.getId());
@@ -152,9 +152,11 @@ public class ReportService {
 					}
 				}
 			}
+			timeSheetMap.put(timeSheet.getId(), timeSheet);
 		}
-		map.put("workerToDateToTimeSheetMap", workerToDateToTimeSheetMap);
 		map.put("reportMap", reportMap);
+		map.put("timeSheetMap", timeSheetMap);
+		map.put("workerToDateToTimeSheetMap", workerToDateToTimeSheetMap);
 		map.put("workerList", workers);
 		map.put("reportDate", new LocalDate().toString(yearMonthDateTimeFormatter));
 		map.put("updateDate", new LocalDateTime());
