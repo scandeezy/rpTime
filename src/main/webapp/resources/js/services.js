@@ -3,6 +3,11 @@
 
 	var module = angular.module('myApp.services', [ 'ngResource' ]);
 
+	module.factory('AboutService', [ '$resource',//
+	function AboutServiceFn($resource) {
+		return $resource('about', {}, {});
+	} ]);
+
 	module.factory('AdminClientService', [ '$resource',//
 	function AdminClientServiceFn($resource) {
 		return $resource('client/:id', {}, {
@@ -63,12 +68,12 @@
 				method : 'POST',
 				params : {
 					tid : '@id',
-					flagged : '@flagged'	
+					flagged : '@flagged'
 				},
 				url : 'timesheet/flag/:tid/:flagged'
 			},
 			getAll : {
-				isArray: true,
+				isArray : true,
 				method : 'GET'
 			},
 			getCurrent : {
@@ -97,7 +102,7 @@
 				params : {
 					tid : '@id'
 				},
-				url : 'timesheet/submit/:tid' 
+				url : 'timesheet/submit/:tid'
 			}
 		});
 	} ]);

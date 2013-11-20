@@ -1,0 +1,41 @@
+<div id="about" ng-controller="AboutCtrl">
+
+	<p>
+		<h5>Code version</h5>
+		<a ng-href="https://github.com/scandeezy/rpTime/commit/{{about.commitId}}">{{about.commitIdAbbrev}}</a> &nbsp;<span class="text-muted">&nbsp;As of {{about.buildTime}}</span> 
+	</p>
+
+
+	<br/>
+	
+	<h5>Technologies Used</h5>
+
+	<ul>
+		<li><a href="#">Google App Engine</a> for cloud application hosting.
+			<ul>
+				<li><a href="http://roosterparktime.appspot.com/">PROD Instance</a></li>
+				<li><a href="http://roosterparktime-qa.appspot.com/">QA Instance</a></li>
+			</ul>
+		</li>
+		<li><a href="https://developers.google.com/appengine/docs/java/storage#App_Engine_Datastore">App Engine Datastore</a> + <a href="http://code.google.com/p/objectify-appengine/">Objectify</a> for data persistence.</li>
+		<li><a href="http://www.spring.io/">Spring </a> for server-side MVC, 
+			<a href="https://en.wikipedia.org/wiki/Dependency_injection">DI</a>, 
+			<a href="https://en.wikipedia.org/wiki/REST">REST</a>.</li>
+			
+		<li><a href="http://angularjs.org/">AngularJS</a> for client-side MVC &amp; DI.</li>
+		<li><a href="http://getbootstrap.com/">Bootstrap</a> for CSS styling, scaffolding.</li>
+		<li><a href="https://trello.com/b/jabrgV8E/rptime">Trello</a> for feature/issue tracking.</li>
+		<li><a href="https://github.com/scandeezy/rpTime/">Github</a> for SCM.
+			<label for="sgi">
+			<input id="sgi" name="sgi" type="checkbox" ng-model="showGithubInfo" ng-init="showGithubInfo=false">
+			<small>Show</small></label>
+			<pre ng-show="showGithubInfo">{{about|json}}</pre>
+		</li>
+		<li><a href="https://my.pingdom.com/">Pingdom</a> for uptime monitoring. 
+			<ul>
+				<li><a href="http://stats.pingdom.com/p0tbsprie33t/1000277">PROD Instance</a></li>
+			</ul>
+		</li>
+	</ul>
+
+</div>

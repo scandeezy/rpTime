@@ -382,6 +382,26 @@
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>${jetty-maven-plugin.version}</version>
 			</plugin>
+			<plugin>
+				<groupId>pl.project13.maven</groupId>
+				<artifactId>git-commit-id-plugin</artifactId>
+				<version>2.1.5</version>
+				<executions>
+					<execution>
+							<id>git-commit-id-plugin</id>
+							<!-- Note: must be same phase as maven-resource-plugin's execution(s) -->
+							<phase>test</phase>
+						<goals>
+							<goal>revision</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+					<generateGitPropertiesFile>true</generateGitPropertiesFile>
+					<generateGitPropertiesFilename>src/main/resources/git.properties</generateGitPropertiesFilename>
+				</configuration>
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>

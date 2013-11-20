@@ -9,6 +9,9 @@
 			controller : 'LandingPageCtrl',
 			templateUrl : 'resources/partials/landing.html'
 		});
+		$routeProvider.when('/about', {
+			templateUrl : 'resources/partials/about.html'
+		});
 		$routeProvider.when('/client', {
 			controller : 'AdminClientCtrl',
 			templateUrl : 'resources/partials/client.html'

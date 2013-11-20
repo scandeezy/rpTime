@@ -2,12 +2,17 @@ package com.roosterpark.rptime.config;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -21,20 +26,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import com.google.appengine.api.users.UserService;
+import com.roosterpark.rptime.model.GitRepositoryState;
 import com.roosterpark.rptime.service.WorkerService;
-import javax.inject.Inject;
 
 /**
  * Spring MVC {@link Configuration}. Extends {@link WebMvcConfigurationSupport}, which provides convenient callbacks.
  */
 @Configuration
 @Import(AppEngineConfiguration.class)
+@PropertySource("classpath:git.properties")
 @ComponentScan(basePackages = { "com.roosterpark.rptime" }, includeFilters = @ComponentScan.Filter({ Controller.class }), excludeFilters = @ComponentScan.Filter({ Configuration.class }))
 public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 	Logger LOGGER = LoggerFactory.getLogger(getClass());
-    
-        @Inject
-        private UserService userService;
+
+	@Inject
+	private UserService userService;
 
 	public WebMvcConfiguration() {
 		LOGGER.info("init");
@@ -97,20 +103,25 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 
 		return mapper;
 	}
-        
-        @Bean
-        public WorkerService workerService() {
-            WorkerService service = new WorkerService();
-            return service;
-        }
 
-        @Inject
-        @Bean(name="workerFilter")
-        public WorkerFilter workerFilter(UserService users, WorkerService workers) {
-            LOGGER.debug("Creating worker filter with services {} and {}", users, workers);
-            WorkerFilter filter = new WorkerFilter();
-            filter.setUserService(users);
-            filter.setWorkerService(workers);
-            return filter;
-        }
+	@Bean(name = "propertySourcesPlaceholderConfigurer")
+	public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+		return new PropertySourcesPlaceholderConfigurer();
+	}
+
+	@Bean
+	@DependsOn("propertySourcesPlaceholderConfigurer")
+	public GitRepositoryState gitRepositoryState() {
+		return new GitRepositoryState();
+	}
+
+	@Inject
+	@Bean(name = "workerFilter")
+	public WorkerFilter workerFilter(UserService users, WorkerService workers) {
+		LOGGER.debug("Creating worker filter with services {} and {}", users, workers);
+		WorkerFilter filter = new WorkerFilter();
+		filter.setUserService(users);
+		filter.setWorkerService(workers);
+		return filter;
+	}
 }

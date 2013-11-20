@@ -22,11 +22,11 @@ String logoutUrl2 = userService2.createLogoutURL(request.getRequestURI());
 		<!-- Collect the nav links, forms, and other content for toggling -->
 		<div class="collapse navbar-collapse navbar-ex1-collapse">
 			<ul class="nav navbar-nav">
-				<li ng-class="{active : page == '/landing'}" ng-show="isAdmin"><a href="#/landing">Home</a></li>
+				<% if (userService2.isUserAdmin()) { %>
 				<li ng-class="{active : page == '/timesheet'}"><a href="#/timesheet">Time Sheets</a></li>
-				<%
-					if (userService2.isUserAdmin()) {
-				%>
+				<% } else { %>
+				<li ng-class="{active : page == '/landing'}"><a href="#/landing">Home</a></li>
+				<li ng-class="{active : page == '/timesheet'}"><a href="#/timesheet">Time Sheets</a></li>
 				<li ng-class="{active : page == '/worker'}"><a href="#/worker">Workers</a></li>
 				<li ng-class="{active : page == '/client'}"><a href="#/client">Clients</a></li>
 				<li ng-class="{active : page == '/contract'}"><a href="#/contract">Contracts</a></li>
@@ -38,19 +38,21 @@ String logoutUrl2 = userService2.createLogoutURL(request.getRequestURI());
 						<li><a href="#/report/timesheets-per-worker-by-month-for-client">Time Sheets per Worker/Month/Client</a></li>
 						<li><a href="#/report/total-hours-per-worker-by-range-for-client">Time Sheets per Worker/Range/Client</a></li>
 					</ul>
-				<%
-					}
-				%>
 				<li ng-show="page == '/report'"">
 					<a id="print" name="print" href="JavaScript:window.print();" title="Print"><span
 						class="glyphicon glyphicon-print"></span></a>
 				</li>
+				<% } %>
 			</ul>
 	
 			<ul class="nav navbar-nav navbar-right">
 				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown"><%=user2.getNickname()%><b class="caret"></b></a>
 					<ul class="dropdown-menu">
 						<li><a href="<%=logoutUrl2%>">Sign out</a></li>
+						<% if (userService2.isUserAdmin()) { %>
+						<li class="divider"></li>
+ 						<li><a href="#/about">About</a></li>			
+						<% } %>
 					</ul></li>
 			</ul>
 	

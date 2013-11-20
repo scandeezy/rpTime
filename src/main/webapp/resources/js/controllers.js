@@ -3,6 +3,11 @@
 
 	var module = angular.module('myApp.controllers', [ 'myApp.filters' ]);
 
+	module.controller('AboutCtrl', [ '$log', '$scope', 'AboutService', //
+	function AboutCtrlFn($log, $scope, AboutService) {
+		$scope.about = AboutService.get();
+	} ]);
+
 	module.controller('MainCtrl', [ '$log', '$scope', '$location', 'dayOfWeekArr', //
 	function MainCtrlFn($log, $scope, $location, dayOfWeekArr) {
 		$scope.dayOfWeekArr = dayOfWeekArr;
@@ -102,7 +107,7 @@
 
 		// auto-redirect to current timesheet IF not admin
 		if (!$scope.isAdmin) {
-			$location.path('/timesheet').search('id','current');
+			$location.path('/timesheet').search('id', 'current');
 		}
 
 	} ]);
