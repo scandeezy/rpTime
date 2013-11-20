@@ -106,8 +106,8 @@ public class ReportService {
 		return map;
 	}
 
-	/** url: <code>#/report/timesheets-per-worker-by-week-for-client</code> */
-	public Map<String, Object> getTimeSheetsPerWorkerByWeekForClientReport(final Long clientId, final LocalDate date) {
+	/** url: <code>#/report/timesheets-per-worker-by-month-for-client</code> */
+	public Map<String, Object> getTimeSheetsPerWorkerByMonthForClientReport(final Long clientId, final LocalDate date) {
 		Validate.notNull(clientId);
 		LOGGER.debug("clientId={}, date={}", clientId, date);
 		final Interval searchInterval = getMonthSearchInterval(date);

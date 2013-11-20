@@ -23,16 +23,16 @@
 
 	} ]);
 
-	module.controller('ReportTimeSheetsPerWorkerByWeekForClientCtrl', [ '$location', '$log', '$routeParams', '$scope', //
+	module.controller('ReportTimeSheetsPerWorkerByMonthForClientCtrl', [ '$location', '$log', '$routeParams', '$scope', //
 	'AdminClientService', 'AdminReportService', //
-	function ReportTimeSheetsPerWorkerByWeekForClientCtrlFn($location, $log, $routeParams, $scope, //
+	function ReportTimeSheetsPerWorkerByMonthForClientCtrlFn($location, $log, $routeParams, $scope, //
 	AdminClientService, AdminReportService) {
-		//$log.info('ReportTimeSheetsPerWorkerByWeekForClientCtrl init', $routeParams, $scope);
+		//$log.info('ReportTimeSheetsPerWorkerByMonthForClientCtrl init', $routeParams, $scope);
 
 		$scope.selectClient = function selectClientFn(clientId) {
 			if (clientId) {
 				$scope.report = AdminReportService.get({
-					id : 'timesheets-per-worker-by-week-for-client',
+					id : 'timesheets-per-worker-by-month-for-client',
 					client : clientId
 				}, function successFn(data) {
 					$scope.selectedClient = clientId;
@@ -53,8 +53,8 @@
 
 	} ]);
 
-	module.controller('ReportTimeSheetsPerWorkerByWeekForClientWorkerCtrl', [ '$log', '$scope',//
-	function ReportTimeSheetsPerWorkerByWeekForClientWorkerCtrlFn($log, $scope) {
+	module.controller('ReportTimeSheetsPerWorkerByMonthForClientWorkerCtrl', [ '$log', '$scope',//
+	function ReportTimeSheetsPerWorkerByMonthForClientWorkerCtrlFn($log, $scope) {
 		var workerReportMap = $scope.report.reportMap[$scope.worker.id];
 		$scope.rmap = Object.keys(workerReportMap).length;
 
@@ -78,7 +78,7 @@
 	'AdminClientService', 'AdminReportService', //
 	function ReportTimeSheetsPerWorkerByRangeForClientCtrlFn($location, $log, $routeParams, $scope, //
 	AdminClientService, AdminReportService) {
-		// $log.info('ReportTimeSheetsPerWorkerByWeekForClientCtrl init', $routeParams, $scope);
+		// $log.info('ReportTimeSheetsPerWorkerByRangeForClientCtrlFn init', $routeParams, $scope);
 
 		$scope.generateReport = function generateReportFn(clientId, startDate, endDate) {
 			$log.info("Generating report for client " + clientId + " with start " + startDate + " and end " + endDate);

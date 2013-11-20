@@ -1,19 +1,19 @@
 package com.roosterpark.rptime.web;
 
-import com.roosterpark.rptime.model.report.HoursForClientInRange;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 
 import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.joda.time.LocalDate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.roosterpark.rptime.model.report.HoursForClientInRange;
 import com.roosterpark.rptime.service.ReportService;
-import org.joda.time.LocalDate;
 
 /**
  * MVC {@link RequestMapping Endpoints} for {@link ReportService}-provided reportable business objects.
@@ -59,17 +59,18 @@ public class ReportController {
 	/**
 	 * Per-client view: Timecards per user
 	 */
-	@RequestMapping(value = "/timesheets-per-worker-by-week-for-client/{clientId}")
+	@RequestMapping(value = "/timesheets-per-worker-by-month-for-client/{clientId}")
 	@ResponseBody
-	public Map<String, Object> timeSheetsPerWorkerByWeekForClient(@PathVariable Long clientId) {
-		return reportService.getTimeSheetsPerWorkerByWeekForClientReport(clientId, new LocalDate());
+	public Map<String, Object> timeSheetsPerWorkerByMonthForClient(@PathVariable Long clientId) {
+		return reportService.getTimeSheetsPerWorkerByMonthForClientReport(clientId, new LocalDate());
 	}
-        
-        @RequestMapping(value = "/hours-recorded/{clientId}/{startDate}/{endDate}")
-        @ResponseBody
-        public HoursForClientInRange hoursRecordedForClientPerYear(@PathVariable Long clientId, @PathVariable String startDate, @PathVariable String endDate) {
-                LocalDate start = new LocalDate(startDate);
-                LocalDate end = new LocalDate(endDate);
-                return reportService.getHoursForClientInRange(clientId, start, end);
-        }
+
+	@RequestMapping(value = "/hours-recorded/{clientId}/{startDate}/{endDate}")
+	@ResponseBody
+	public HoursForClientInRange hoursRecordedForClientPerYear(@PathVariable Long clientId, @PathVariable String startDate,
+			@PathVariable String endDate) {
+		LocalDate start = new LocalDate(startDate);
+		LocalDate end = new LocalDate(endDate);
+		return reportService.getHoursForClientInRange(clientId, start, end);
+	}
 }
