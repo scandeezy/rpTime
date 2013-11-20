@@ -81,8 +81,6 @@ public class TimeSheetService {
 		} else {
 			result = createForWorkerDate(workerId, date);
 		}
-
-		result.getClientIds().add(ptoClientId);
 		return result;
 	}
 
@@ -148,7 +146,8 @@ public class TimeSheetService {
 
 		result = timeSheetDao.set(result);
 
-		TimeSheetView view = new TimeSheetView(result, entries, timeSheetDao);
+		TimeSheetView view = convert(result);
+		// new TimeSheetView(result, entries, timeSheetDao);
 
 		return view;
 	}
@@ -176,7 +175,9 @@ public class TimeSheetService {
 		List<TimeSheetDay> entries = timeSheetDayDao.getEntries(sheet.getTimeCardIds());
 		LOGGER.debug("converting to TimeSheetView: {}, entries={}", sheet, entries);
 		// TODO assert the order is consistent
-		return new TimeSheetView(sheet, entries, timeSheetDao);
+		TimeSheetView result = new TimeSheetView(sheet, entries, timeSheetDao);
+		result.getClientIds().add(ptoClientId);
+		return result;
 	}
 
 	private LocalDate adjustDate(LocalDate date, Integer dayOfWeek) {

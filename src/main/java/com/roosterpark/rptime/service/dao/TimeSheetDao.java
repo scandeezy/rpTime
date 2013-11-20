@@ -56,7 +56,7 @@ public class TimeSheetDao {
 		LOGGER.debug("Searching for timesheet with workerId {}", workerId);
 		return ofy().load().type(TimeSheet.class)//
 				.filter(TimeSheet.WORKER_KEY, workerId)//
-				.order(TimeSheet.START_DATE_KEY)//
+				// .order(TimeSheet.START_DATE_KEY)// throws DatastoreNeedIndexException
 				.list();
 	}
 

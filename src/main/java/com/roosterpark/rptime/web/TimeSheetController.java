@@ -75,7 +75,7 @@ public class TimeSheetController {
 
 	@RequestMapping(value = "/new", method = { POST, GET })
 	@ResponseBody
-	public TimeSheetView create() {
+	public TimeSheetView getNew() {
 		// TODO: lock down further by isUserAdmin
 		return getTimeSheetForDate(new LocalDate());
 	}
