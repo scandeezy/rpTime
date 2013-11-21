@@ -240,10 +240,40 @@
 
 	} ]);
 
-	module.controller('AdminWorkerRelatedTimeSheetsCtrl', [ '$log', '$scope', 'TimeSheetService', //
-	function AdminWorkerRelatedTimeSheetsCtrlFn($log, $scope, TimeSheetService) {
-		$scope.timeSheetMap = TimeSheetService.getAll();
-		$log.info("AdminWorkerRelatedTimeSheetsCtrl", $scope.currentWorker, $scope.timeSheetMap);
+	module.controller('AdminWorkerRelatedTimeSheetsCtrl', [ '$log', '$scope', '$timeout', 'TimeSheetService', //
+	function AdminWorkerRelatedTimeSheetsCtrlFn($log, $scope, $timeout, TimeSheetService) {
+		$scope.timeSheetsList = TimeSheetService.getAll();
+		$log.info("AdminWorkerRelatedTimeSheetsCtrl", $scope.currentWorker, $scope.timeSheetsList);
+
+		$scope.myRelatedTimeSheets = [];
+
+		$scope.updateRelatedTimeSheets = function updateRelatedTimeSheetsFn() {
+			if ($scope.currentWorker && $scope.timeSheetsList.$resolved) {
+				var wid = $scope.currentWorker.id
+				var arr = [];
+				console.group("checking wid="+wid);
+				angular.forEach($scope.timeSheetsList, function(timeSheet) {
+					console.log('checking timeSheet',timeSheet);
+					if(timeSheet.workerId == wid){
+						arr.push(timeSheet);
+					}
+				});
+				console.log('arr',arr);
+				$scope.myRelatedTimeSheets = arr;
+				console.groupEnd();
+			} else {
+				$log.info('sleeping 200ms for updateRelatedTimeSheets');
+				$timeout(function my$timeoutAsyncCompensationFn() {
+					$scope.updateRelatedTimeSheets();
+				}, 200);
+			}
+		};
+
+		$scope.$watch('currentWorker', function currentWorker$watchFn(obj) {
+			if (obj) {
+				$scope.updateRelatedTimeSheets();
+			}
+		});
 
 	} ]);
 
@@ -255,7 +285,7 @@
 		$scope.myRelatedContracts = [];
 
 		$scope.updateRelatedContracts = function updateRelatedContractsFn() {
-			if ($scope.currentWorker && $rootScope.contractsMap && $rootScope.clientsMap) {
+			if ($scope.currentWorker && $rootScope.contractsMap.$resolved && $rootScope.clientsMap.$resolved) {
 				var wid = $scope.currentWorker.id
 				var arr = [];
 				angular.forEach($rootScope.contractsMap, function(contract, id) {
@@ -268,6 +298,7 @@
 				});
 				$scope.myRelatedContracts = arr;
 			} else {
+				$log.info('sleeping 200ms for updateRelatedContracts');
 				$timeout(function my$timeoutAsyncCompensationFn() {
 					$scope.updateRelatedContracts();
 				}, 200);

@@ -16,10 +16,11 @@
 			<div class="row">
 				<div class="col-sm-10">
 					<ul>
-						<li ng-repeat="worker in workersList | filter:search:strict | orderBy:'lastName' "><span class="btn-group">
-								<button type="button" id="edit-{{$id}}" class="btn btn-sm btn-default" ng-click="set(worker);">Edit</button>
-								<button type="button" id="delete-{{$id}}" class="btn btn-sm btn-default" ng-click="remove(worker);" ng-hide="!debug">Delete</button>
-						</span> {{worker.lastName}}, {{worker.firstName}} <span class="text-muted" ng-show="worker.email">&nbsp;&nbsp;&nbsp; {{worker.email}}</span></li>
+						<li ng-repeat="worker in workersList | filter:search:strict | orderBy:'lastName' ">
+							<button type="button" id="delete-{{$id}}" class="btn btn-sm btn-default" ng-click="remove(worker);" ng-show="debug">Delete</button>
+							<a ng-href="#/worker?id={{worker.id}}" ng-click="set(worker);"> </span> {{worker.lastName}}, {{worker.firstName}} <span
+								class="text-muted" ng-show="worker.email">&nbsp;&nbsp;&nbsp; {{worker.email}} </a>
+						</li>
 					</ul>
 				</div>
 				<div class="col-sm-2">
@@ -87,16 +88,18 @@
 					<div class="row" ng-controller="AdminWorkerRelatedTimeSheetsCtrl">
 						<h5>Time Sheets</h5>
 						<ul>
-							<li></li>
+							<li ng-repeat="timeSheet in myRelatedTimeSheets | orderBy:'printableTimeSheetString':1"><a
+								ng-href="#/timesheet?id={{timeSheet.id}}">{{timeSheet.printableTimeSheetString}}</a></li>
 						</ul>
 					</div>
 					<div class="row" ng-controller="AdminWorkerRelatedContractsCtrl">
 						<h5>Contracts</h5>
 						<ul>
-							<li ng-repeat="obj in myRelatedContracts | orderBy:'client.name'"><a ng-href="#/contract?id={{obj.contract.id}}">{{obj.client.name}}: <span
-								ng-show="obj.contract.startDate" class="small"> {{obj.contract.startDate}} <span ng-show="obj.contract.endDate">
-										to {{obj.contract.endDate}}</span>
-							</span></a></li>
+							<li ng-repeat="obj in myRelatedContracts | orderBy:'client.name'"><a ng-href="#/contract?id={{obj.contract.id}}">{{obj.client.name}}:
+									<span ng-show="obj.contract.startDate" class="small"> {{obj.contract.startDate}} <span ng-show="obj.contract.endDate">
+											to {{obj.contract.endDate}}</span>
+								</span>
+							</a></li>
 						</ul>
 					</div>
 				</div>
