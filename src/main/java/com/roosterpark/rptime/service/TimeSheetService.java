@@ -197,11 +197,22 @@ public class TimeSheetService {
 		return returnDate;
 	}
 
+	/**
+	 * Get all the {@link TimeSheetView TimeSheetViews} for a given {@link Worker} OR all (if {@code isAdmin == TRUE}).
+	 * 
+	 * @param worker
+	 *            -the (optional) {@link Worker} whose {@code id} will key the search. Only optional if {@code isAdmin == TRUE}.
+	 * @param isAdmin
+	 *            -
+	 * @return a {@link List} of {@link TimeSheetView TimeSheetViews}
+	 */
 	public List<TimeSheetView> getAll(final Worker worker, final boolean isAdmin) {
-		LOGGER.warn("Getting TimeSheets for isAdmin={}", isAdmin);
+		LOGGER.debug("Getting TimeSheets for isAdmin={}, worker={}", isAdmin, worker);
 		Long workerId = null;
 		if (worker != null) {
-			worker.getId();
+			workerId = worker.getId();
+		} else {
+			Validate.isTrue(isAdmin, "Required: Either admin access or a non-null Worker.");
 		}
 		List<TimeSheet> sheets = timeSheetDao.getAll(workerId, isAdmin);
 		LOGGER.debug("Found these sheets for all {}", sheets);

@@ -40,9 +40,13 @@ public class TimeSheetDao {
 
 	public List<TimeSheet> getAll(final Long workerId, final boolean isAdmin) {
 		if (isAdmin) {
+			LOGGER.debug("returning all timesheets for admin");
 			return ofy().load().type(TimeSheet.class).list();
 		} else {
-			return ofy().load().type(TimeSheet.class).filter(TimeSheet.WORKER_KEY, workerId).list();
+			LOGGER.debug("returning all timesheets for worker={}", workerId);
+			return ofy().load().type(TimeSheet.class)//
+					.filter(TimeSheet.WORKER_KEY, workerId)//
+					.list();
 		}
 	}
 

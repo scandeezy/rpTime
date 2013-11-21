@@ -19,16 +19,24 @@ public class WorkerService {
 
 	public Worker getById(Long id) {
 		LOGGER.warn("Getting worker with id={}", id);
-		return ofy().load().type(Worker.class).id(id).now();
+		final Worker result = ofy().load().type(Worker.class).id(id).now();
+		if (result == null) {
+			LOGGER.warn("Warning: no Worker found for id='{}'", id);
+		}
+		return result;
 	}
 
 	public Worker getByEmail(final String email) {
 		final String emailLower = StringUtils.lowerCase(email);
 		LOGGER.warn("Getting worker with email={} ", emailLower);
-		return ofy().load().type(Worker.class)//
+		final Worker result = ofy().load().type(Worker.class)//
 				.filter(Worker.EMAIL_KEY, emailLower)//
 				.first()//
 				.now();
+		if (result == null) {
+			LOGGER.warn("Warning: no Worker found for email='{}'", emailLower);
+		}
+		return result;
 	}
 
 	public List<Worker> getPage(int count, int offset) {
