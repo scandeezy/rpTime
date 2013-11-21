@@ -102,14 +102,14 @@ public class TimeSheetController {
 
 	@RequestMapping(value = "/client/{clientId}", method = GET)
 	@ResponseBody
-	public List<TimeSheetView> getAllForClientId(final Long clientId) {
+	public List<TimeSheetView> getAllForClientId(@PathVariable("clientId") final Long clientId) {
 		LOGGER.debug("getAll for clientId={}", clientId);
 		return service.getAllForClient(clientId);
 	}
 
 	@RequestMapping(value = "/worker/{workerId}", method = GET)
 	@ResponseBody
-	public List<TimeSheetView> getAllForWorkerId(final Long workerId) {
+	public List<TimeSheetView> getAllForWorkerId(@PathVariable("workerId") final Long workerId) {
 		LOGGER.debug("getAll for workerId={}", workerId);
 		return service.getAllForWorker(workerId);
 	}

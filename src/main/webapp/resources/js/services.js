@@ -13,10 +13,12 @@
 		return $resource('client/:id', {}, {
 			// methods 'get', 'save', 'remove' provided by default
 			getAll : {
+				method : 'GET'
+			},
+			getRelatedTimeSheets : {
+				isArray : true,
 				method : 'GET',
-				params : {
-					id : 'idmap'
-				}
+				url : 'client/:clientId/timesheet'
 			}
 		});
 	} ]);
@@ -75,6 +77,16 @@
 			getAll : {
 				isArray : true,
 				method : 'GET'
+			},
+			getAllForClient : {
+				isArray : true,
+				method : 'GET',
+				url : 'timesheet/client/:clientId'
+			},
+			getAllForWorker : {
+				isArray : true,
+				method : 'GET',
+				url : 'timesheet/worker/:workerId'
 			},
 			getCurrent : {
 				method : 'GET',

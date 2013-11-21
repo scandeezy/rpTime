@@ -122,6 +122,44 @@
 
 	} ]);
 
+	module.controller('AdminClientRelatedTimeSheetsCtrl', [ '$log', '$rootScope', '$routeParams', '$scope', 'AdminClientService', //
+	function AdminClientRelatedTimeSheetsCtrlFn($log, $rootScope, $routeParams, $scope, AdminClientService) {
+
+		$scope.showWorker = {};
+		$scope.myRelatedWorkerIdToTimeSheetsMap = {}; // workerId to timeSheet obj
+
+		$scope.$watch('currentClient', function currentClient$watchFn(client) {
+			$log.info('$rootScope.workersMap.$resolved='+$rootScope.workersMap.$resolved);
+			if (client && client.id) {
+				$log.info('get TimeSheets for client=', client);
+				var list = AdminClientService.getRelatedTimeSheets({
+					clientId : client.id
+				}, function successFn(timeSheetsList){
+					var workersMap = {};
+					var map = {};
+					angular.forEach(timeSheetsList, function(timeSheet){
+						var wid = timeSheet.workerId;
+						workersMap[wid] =true;
+						if(!map[wid]){
+							map[wid] = [];
+						}
+						map[wid].push(timeSheet);
+					});
+					$scope.showWorker = workersMap;
+					$scope.myRelatedWorkerIdToTimeSheetsMap = map;
+				});
+				var workerList = [];
+			}
+		});
+
+	} ]);
+
+	module.controller('AdminClientRelatedContractsCtrl', [ '$log', '$rootScope', '$routeParams', '$scope', 'AdminClientService', //
+	function AdminClientRelatedContractsCtrlFn($log, $rootScope, $routeParams, $scope, AdminClientService) {
+
+	} ]);
+
+
 	module.controller('AdminContractCtrl', [ '$location', '$log', '$rootScope', '$routeParams', '$scope', 'AdminContractService', //
 	function AdminContractCtrlFn($location, $log, $rootScope, $routeParams, $scope, AdminContractService) {
 		// $log.info('AdminContractCtrl init', $scope);
@@ -242,25 +280,23 @@
 
 	module.controller('AdminWorkerRelatedTimeSheetsCtrl', [ '$log', '$scope', '$timeout', 'TimeSheetService', //
 	function AdminWorkerRelatedTimeSheetsCtrlFn($log, $scope, $timeout, TimeSheetService) {
-		$scope.timeSheetsList = TimeSheetService.getAll();
-		$log.info("AdminWorkerRelatedTimeSheetsCtrl", $scope.currentWorker, $scope.timeSheetsList);
-
+		// $log.info("AdminWorkerRelatedTimeSheetsCtrl");
 		$scope.myRelatedTimeSheets = [];
 
 		$scope.updateRelatedTimeSheets = function updateRelatedTimeSheetsFn() {
-			if ($scope.currentWorker && $scope.timeSheetsList.$resolved) {
+			if ($scope.currentWorker && $scope.currentWorker.id) {
 				var wid = $scope.currentWorker.id
-				var arr = [];
-				console.group("checking wid="+wid);
-				angular.forEach($scope.timeSheetsList, function(timeSheet) {
-					console.log('checking timeSheet',timeSheet);
-					if(timeSheet.workerId == wid){
-						arr.push(timeSheet);
-					}
+				TimeSheetService.getAllForWorker({
+					workerId : wid
+				}, function successFn(timeSheetsList) {
+					var arr = [];
+					angular.forEach(timeSheetsList, function(timeSheet) {
+						if (timeSheet.workerId == wid) {
+							arr.push(timeSheet);
+						}
+					});
+					$scope.myRelatedTimeSheets = arr;
 				});
-				console.log('arr',arr);
-				$scope.myRelatedTimeSheets = arr;
-				console.groupEnd();
 			} else {
 				$log.info('sleeping 200ms for updateRelatedTimeSheets');
 				$timeout(function my$timeoutAsyncCompensationFn() {
