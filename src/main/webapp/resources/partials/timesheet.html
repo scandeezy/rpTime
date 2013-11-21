@@ -41,8 +41,7 @@
 					<ul>
 						<li ng-repeat="timeSheet in timeSheetList | orderBy:'startDate':1 ">
 							<button type="button" id="delete-{{timeSheet.id}}" class="btn btn-sm btn-default" ng-click="remove(timeSheet);" ng-show="debug">Delete</button>
-							<a ng-click="set(timeSheet)">{{timeSheet.year}},
-						week {{timeSheet.week}} - {{timeSheet.startDate}}</a>
+							<a ng-click="set(timeSheet)">{{timeSheet.printableTimeSheetString}}</a>
 							<span ng-show="timeSheet.flagged" class="label label-danger"><span class="glyphicon glyphicon-flag"></span>&nbsp;</span>
 							<span ng-show="timeSheet.status=='UNSUBMITTED'" class="label label-warning">Not Submitted</span>
 							<span ng-show="timeSheet.status=='SUBMITTED'" class="label label-info">Submitted</span>
