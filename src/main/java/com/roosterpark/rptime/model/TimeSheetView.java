@@ -15,9 +15,6 @@ import com.roosterpark.rptime.service.dao.TimeSheetDao;
  */
 public class TimeSheetView extends TimeSheet {
 
-	// private static final SimpleDateFormat ISO_YEAR_FORMAT = new SimpleDateFormat("YYYY-mm-DD");
-	private static final String ISO_YEAR_FORMAT = "YYYY-MM-dd";
-
 	private boolean currentTimeSheet;
 	private List<TimeSheetDay> days;
 	private Long nextTimeSheetId;
@@ -121,9 +118,5 @@ public class TimeSheetView extends TimeSheet {
 	public void setPreviousTimeSheetId(Long previousTimeSheetId) {
 		this.previousTimeSheetId = previousTimeSheetId;
 	}
-
-	public String getPrintableTimeSheetString() {
-		return String.format("%d, week %d - %s", getYear(), getWeek(), getStartDate().toString(ISO_YEAR_FORMAT));
-	};
 
 }

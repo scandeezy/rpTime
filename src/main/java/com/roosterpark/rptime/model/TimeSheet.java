@@ -20,6 +20,8 @@ import com.googlecode.objectify.annotation.Index;
 @Entity
 public class TimeSheet implements Comparable<TimeSheet> {
 
+	private static final String ISO_YEAR_FORMAT = "YYYY-MM-dd";
+
 	public static final String WORKER_ID_KEY = "workerId";
 	public static final String CLIENT_IDS_KEY = "clientIds";
 	public static final String START_DATE_KEY = "startDate";
@@ -222,6 +224,14 @@ public class TimeSheet implements Comparable<TimeSheet> {
 	public void setAdminNote(String adminNote) {
 		this.adminNote = adminNote;
 	}
+
+	public String getPrintableTimeSheetString() {
+		String startDateString = "";
+		if (getStartDate() != null) {
+			startDateString = getStartDate().toString(ISO_YEAR_FORMAT);
+		}
+		return String.format("%d, week %d - %s", getYear(), getWeek(), startDateString);
+	};
 
 	@Override
 	public int compareTo(TimeSheet that) {
