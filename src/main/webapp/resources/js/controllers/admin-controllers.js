@@ -122,25 +122,24 @@
 
 	} ]);
 
-	module.controller('AdminClientRelatedTimeSheetsCtrl', [ '$log', '$rootScope', '$routeParams', '$scope', 'AdminClientService', //
-	function AdminClientRelatedTimeSheetsCtrlFn($log, $rootScope, $routeParams, $scope, AdminClientService) {
+	module.controller('AdminClientRelatedTimeSheetsCtrl', [ '$log', '$rootScope', '$routeParams', '$scope', 'TimeSheetService', //
+	function AdminClientRelatedTimeSheetsCtrlFn($log, $rootScope, $routeParams, $scope, TimeSheetService) {
 
 		$scope.showWorker = {};
 		$scope.myRelatedWorkerIdToTimeSheetsMap = {}; // workerId to timeSheet obj
 
 		$scope.$watch('currentClient', function currentClient$watchFn(client) {
-			$log.info('$rootScope.workersMap.$resolved='+$rootScope.workersMap.$resolved);
 			if (client && client.id) {
 				$log.info('get TimeSheets for client=', client);
-				var list = AdminClientService.getRelatedTimeSheets({
-					clientId : client.id
-				}, function successFn(timeSheetsList){
+				TimeSheetService.getAllForClient({
+					clientId : client.id,
+				}, function successFn(list) {
 					var workersMap = {};
 					var map = {};
-					angular.forEach(timeSheetsList, function(timeSheet){
+					angular.forEach(list, function(timeSheet) {
 						var wid = timeSheet.workerId;
-						workersMap[wid] =true;
-						if(!map[wid]){
+						workersMap[wid] = true;
+						if (!map[wid]) {
 							map[wid] = [];
 						}
 						map[wid].push(timeSheet);
@@ -148,17 +147,40 @@
 					$scope.showWorker = workersMap;
 					$scope.myRelatedWorkerIdToTimeSheetsMap = map;
 				});
-				var workerList = [];
 			}
 		});
 
 	} ]);
 
-	module.controller('AdminClientRelatedContractsCtrl', [ '$log', '$rootScope', '$routeParams', '$scope', 'AdminClientService', //
-	function AdminClientRelatedContractsCtrlFn($log, $rootScope, $routeParams, $scope, AdminClientService) {
+	module.controller('AdminClientRelatedContractsCtrl', [ '$log', '$rootScope', '$routeParams', '$scope', 'AdminContractService', //
+	function AdminClientRelatedContractsCtrlFn($log, $rootScope, $routeParams, $scope, AdminContractService) {
+
+		$scope.showWorker = {};
+		$scope.myRelatedWorkerIdToContractsMap = {}; // workerId to timeSheet obj
+
+		$scope.$watch('currentClient', function currentClient$watchFn(client) {
+			if (client && client.id) {
+				$log.info('get Contracts for client=', client);
+				AdminContractService.getAllForClient({
+					clientId : client.id,
+				}, function successFn(list) {
+					var workersMap = {};
+					var map = {};
+					angular.forEach(list, function(contract) {
+						var wid = contract.worker;
+						workersMap[wid] = true;
+						if (!map[wid]) {
+							map[wid] = [];
+						}
+						map[wid].push(contract);
+					});
+					$scope.showWorker = workersMap;
+					$scope.myRelatedWorkerIdToContractsMap = map;
+				});
+			}
+		});
 
 	} ]);
-
 
 	module.controller('AdminContractCtrl', [ '$location', '$log', '$rootScope', '$routeParams', '$scope', 'AdminContractService', //
 	function AdminContractCtrlFn($location, $log, $rootScope, $routeParams, $scope, AdminContractService) {

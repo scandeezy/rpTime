@@ -21,9 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.roosterpark.rptime.model.Client;
-import com.roosterpark.rptime.model.TimeSheet;
 import com.roosterpark.rptime.service.ClientService;
-import com.roosterpark.rptime.service.dao.TimeSheetDao;
 
 @Controller
 @RequestMapping(value = "/client")
@@ -31,14 +29,6 @@ public class ClientController {
 
 	@Inject
 	ClientService service;
-	@Inject
-	TimeSheetDao timeSheetDao;
-
-	@RequestMapping(value = "/{clientId}/timesheet", method = GET)
-	@ResponseBody
-	public List<TimeSheet> getAllForClientId(@PathVariable("clientId") final Long clientId) {
-		return timeSheetDao.getAllForClient(clientId);
-	}
 
 	@RequestMapping(method = GET)
 	@ResponseBody

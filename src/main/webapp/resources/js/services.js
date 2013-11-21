@@ -14,11 +14,6 @@
 			// methods 'get', 'save', 'remove' provided by default
 			getAll : {
 				method : 'GET'
-			},
-			getRelatedTimeSheets : {
-				isArray : true,
-				method : 'GET',
-				url : 'client/:clientId/timesheet'
 			}
 		});
 	} ]);
@@ -32,6 +27,11 @@
 				params : {
 					id : 'idmap'
 				}
+			},
+			getAllForClient : {
+				isArray : true,
+				method : 'GET',
+				url : 'contract/client/:clientId'
 			}
 		});
 	} ]);
@@ -62,9 +62,7 @@
 			// methods 'get', 'save', 'remove' provided by default
 			create : {
 				method : 'GET',
-				params : {
-					id : 'new'
-				}
+				url : 'timesheet/new'
 			},
 			flag : {
 				method : 'POST',
@@ -90,21 +88,15 @@
 			},
 			getCurrent : {
 				method : 'GET',
-				params : {
-					id : 'current'
-				}
+				url : 'timesheet/current'
 			},
 			getLast : {
 				method : 'GET',
-				params : {
-					id : 'last'
-				}
+				url : 'timesheet/last'
 			},
 			getNext : {
 				method : 'GET',
-				params : {
-					id : 'next'
-				}
+				url : 'timesheet/next'
 			},
 			getWeek : {
 				method : 'GET'
