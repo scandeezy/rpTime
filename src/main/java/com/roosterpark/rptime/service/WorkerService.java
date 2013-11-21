@@ -98,7 +98,7 @@ public class WorkerService {
 	}
 
 	public boolean isCurrentUserWorkerWithId(final Long workerId) {
-		Validate.notNull(workerId);
+		Validate.notNull(workerId, "Required: workerId");
 		User user = userService.getCurrentUser();
 		if (user != null) {
 			final String email = user.getEmail();
