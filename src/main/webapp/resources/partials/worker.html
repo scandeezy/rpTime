@@ -39,56 +39,77 @@
 						when="{'1': '1 required field is missing.', 'other': '{} required fields are missing.'}"> </span>
 				</p>
 			</div>
-			<div class="panel-body">
-				<div class="form-group" ng-class="{'has-error': createWorkerForm.firstName.$error.required}">
-					<label for="firstName" class="col-sm-2 control-label">First Name</label>
-					<div class="col-sm-4">
-						<input type="text" class="form-control" id="firstName" name="firstName" ng-model="currentWorker.firstName"
-							placeholder="First Name (i.e., John)" required>
+			<div class="panel-body row">
+				<div class="col-sm-7">
+					<div class="form-group" ng-class="{'has-error': createWorkerForm.firstName.$error.required}">
+						<label for="firstName" class="col-sm-4 control-label">First Name</label>
+						<div class="col-sm-8">
+							<input type="text" class="form-control" id="firstName" name="firstName" ng-model="currentWorker.firstName"
+								placeholder="First Name (i.e., John)" required>
+						</div>
 					</div>
-				</div>
-				<div class="form-group" ng-class="{'has-error': createWorkerForm.lastName.$error.required}">
-					<label for="lastName" class="col-sm-2 control-label">Last Name</label>
-					<div class="col-sm-4">
-						<input type="text" class="form-control" id="lastName" name="lastName" ng-model="currentWorker.lastName"
-							placeholder="Last Name (i.e., Smith)" required>
+					<div class="form-group" ng-class="{'has-error': createWorkerForm.lastName.$error.required}">
+						<label for="lastName" class="col-sm-4 control-label">Last Name</label>
+						<div class="col-sm-8">
+							<input type="text" class="form-control" id="lastName" name="lastName" ng-model="currentWorker.lastName"
+								placeholder="Last Name (i.e., Smith)" required>
+						</div>
 					</div>
-				</div>
-				<div class="form-group" ng-class="{'has-error': createWorkerForm.email.$error.required, 'has-warning': !createWorkerForm.email.$valid}">
-					<label for="email" class="col-sm-2 control-label">Email</label>
-					<div class="col-sm-4">
-						<input type="email" class="form-control" id="email" name="email" ng-model="currentWorker.email" placeholder="john@smith.com" required>
+					<div class="form-group" ng-class="{'has-error': createWorkerForm.email.$error.required, 'has-warning': !createWorkerForm.email.$valid}">
+						<label for="email" class="col-sm-4 control-label">Email</label>
+						<div class="col-sm-8">
+							<input type="email" class="form-control" id="email" name="email" ng-model="currentWorker.email" placeholder="john@smith.com" required>
+						</div>
 					</div>
-				</div>
-				<div class="form-group">
-					<label for="start" class="col-sm-2 control-label">Start Date</label>
-					<div class="col-sm-4">
-						<input type="date" class="form-control" id="start" name="start" ng-model="currentWorker.start" placeholder="YYYY-MM-DD">
+					<div class="form-group">
+						<label for="start" class="col-sm-4 control-label">Start Date</label>
+						<div class="col-sm-8">
+							<input type="date" class="form-control" id="start" name="start" ng-model="currentWorker.start" placeholder="YYYY-MM-DD">
+						</div>
 					</div>
-				</div>
-				<div class="form-group">
-					<div class="col-sm-offset-2 col-sm-4">
-						<div class="checkbox">
-							<label class="control-label" for="hourly"> <input id="hourly" name="hourly" type="checkbox" ng-model="currentWorker.hourly">
-								Hourly
-							</label>
+					<div class="form-group">
+						<div class="col-sm-offset-4 col-sm-8">
+							<div class="checkbox">
+								<label class="control-label" for="hourly"> <input id="hourly" name="hourly" type="checkbox" ng-model="currentWorker.hourly">
+									Hourly
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="form-group">
+						<div class="col-sm-offset-4 col-sm-8">
+							<button type="button" id="save" class="btn btn-primary" ng-click="save(currentWorker)">Save</button>
+							<button type="button" id="cancel" class="btn btn-default" ng-click="unset();">Cancel</button>
 						</div>
 					</div>
 				</div>
-				<div class="form-group">
-					<div class="col-sm-offset-2 col-sm-4">
-                        <button type="button" id="save" class="btn btn-primary" ng-click="save(currentWorker)">Save</button>
-						<button type="button" id="cancel" class="btn btn-default" ng-click="unset();">Cancel</button>
+				<div class="col-sm-5">
+					<div class="row" ng-controller="AdminWorkerRelatedTimeSheetsCtrl">
+						<h5>Time Sheets</h5>
+						<ul>
+							<li></li>
+						</ul>
+					</div>
+					<div class="row" ng-controller="AdminWorkerRelatedContractsCtrl">
+						<h5>Contracts</h5>
+						<ul>
+							<li ng-repeat="obj in myRelatedContracts | orderBy:'client.name'"><a ng-href="#/contract?id={{obj.contract.id}}">{{obj.client.name}}: <span
+								ng-show="obj.contract.startDate" class="small"> {{obj.contract.startDate}} <span ng-show="obj.contract.endDate">
+										to {{obj.contract.endDate}}</span>
+							</span></a></li>
+						</ul>
 					</div>
 				</div>
 			</div>
 		</div>
 	</form>
 
-	<div ng-cloak ng-show="debug" class="well">
-		<pre>edit={{edit}}
+	<div ng-cloak ng-show="debug" class="debug">
+		<pre class="debug">edit={{edit}}
 workers={{workers | json}}
 currentWorker={{currentWorker | json}}
+clientsMap={{clientsMap| json}}
+contractsMap={{contractsMap | json}}
 </pre>
 	</div>
 

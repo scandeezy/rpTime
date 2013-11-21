@@ -240,4 +240,46 @@
 
 	} ]);
 
+	module.controller('AdminWorkerRelatedTimeSheetsCtrl', [ '$log', '$scope', 'TimeSheetService', //
+	function AdminWorkerRelatedTimeSheetsCtrlFn($log, $scope, TimeSheetService) {
+		$scope.timeSheetMap = TimeSheetService.getAll();
+		$log.info("AdminWorkerRelatedTimeSheetsCtrl", $scope.currentWorker, $scope.timeSheetMap);
+
+	} ]);
+
+	module.controller('AdminWorkerRelatedContractsCtrl', [ '$log', '$rootScope', '$scope', '$timeout', //
+	function AdminWorkerRelatedContractsCtrl($log, $rootScope, $scope, $timeout) {
+		// use Contracts from $rootScope
+		// $log.info("AdminWorkerRelatedContractsCtrl, contractsMap", $scope.currentWorker, $rootScope.contractsMap);
+
+		$scope.myRelatedContracts = [];
+
+		$scope.updateRelatedContracts = function updateRelatedContractsFn() {
+			if ($scope.currentWorker && $rootScope.contractsMap && $rootScope.clientsMap) {
+				var wid = $scope.currentWorker.id
+				var arr = [];
+				angular.forEach($rootScope.contractsMap, function(contract, id) {
+					if (contract.worker == wid) {
+						arr.push({
+							contract : contract,
+							client : $rootScope.clientsMap[contract.client]
+						});
+					}
+				});
+				$scope.myRelatedContracts = arr;
+			} else {
+				$timeout(function my$timeoutAsyncCompensationFn() {
+					$scope.updateRelatedContracts();
+				}, 200);
+			}
+		};
+
+		$scope.$watch('currentWorker', function currentWorker$watchFn(obj) {
+			if (obj) {
+				$scope.updateRelatedContracts();
+			}
+		});
+
+	} ]);
+
 })();
