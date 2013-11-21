@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
+import com.roosterpark.rptime.exceptions.WorkerNotFoundException;
 import com.roosterpark.rptime.model.TimeSheetView;
 import com.roosterpark.rptime.model.Worker;
 import com.roosterpark.rptime.service.TimeSheetService;
@@ -46,15 +47,16 @@ public class TimeSheetController {
 	 * Validate the session's {@link User} (via {@link UserService}).
 	 * 
 	 * @return a {@link Worker} keyed on the session {@link User User's} {@code email}.
+	 * @throws WorkerNotFoundException
+	 *             if the {@code User} is any of the following:
+	 *             <ol>
+	 *             <li>Not associated with a {@code Worker} (via the {@code email} field)
 	 * @throws IllegalArgumentException
 	 *             if the {@code User} is any of the following:
 	 *             <ol>
-	 *             <li>Not logged in
-	 *             <li>Logged in, but not associated with a {@code User}
-	 *             <li>Missing an {@code email}
-	 *             <li>Not associated with a {@code Worker} (via the {@code email} field)
+	 *             <li>Not logged in <li>Logged in, but not associated with a {@code User} <li>Missing an {@code email}
 	 */
-	private Worker getValidatedWorker() throws IllegalArgumentException {
+	private Worker getValidatedWorker() throws IllegalArgumentException, WorkerNotFoundException {
 		if (userService.isUserLoggedIn()) {
 			User user = userService.getCurrentUser();
 			if (user != null) {
@@ -65,8 +67,8 @@ public class TimeSheetController {
 				} else if (userService.isUserAdmin()) {
 					return null;
 				}
-				throw new IllegalArgumentException("No Worker found for email '" + email + "' for user '" + user.toString()
-						+ "'.  To resolve, create a Worker with this email to link it to a user.");
+				throw new WorkerNotFoundException("No Worker found for email '" + email + "' for user '" + user.toString()
+						+ "'.  To resolve, create a Worker with this email to link it to a user.", user);
 			}
 			throw new IllegalArgumentException("Someone is logged in, but it's not a user.");
 		}
