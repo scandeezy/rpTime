@@ -11,6 +11,7 @@ import java.util.TreeMap;
 
 import javax.inject.Inject;
 
+import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,7 +33,7 @@ public class ContractController {
 	@RequestMapping(value = "/worker/{workerId}/active", method = GET)
 	@ResponseBody
 	public List<Contract> getActiveByWorker(@PathVariable Long workerId) {
-		return service.getActiveContractsForWorker(workerId, new LocalDate());
+		return service.getActiveContractsForWorker(workerId, new Interval(new LocalDate()));
 	}
 
 	@RequestMapping(value = "/worker/{workerId}", method = GET)

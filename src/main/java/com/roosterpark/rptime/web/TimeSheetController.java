@@ -19,7 +19,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -90,16 +89,42 @@ public class TimeSheetController {
 		service.flag(id, b);
 	}
 
-	@RequestMapping(value = "/current", method = { GET })
+	@RequestMapping(method = GET)
 	@ResponseBody
-	public TimeSheetView getCurrent(@RequestParam(value = "workerId", required = false) String workerId) {
-		Long id;
-		if (workerId != null) {
-			id = Long.parseLong(workerId);
+	public List<TimeSheetView> getAll() {
+		if (userService.isUserAdmin()) {
+			return service.getAllAdmin();
 		} else {
-			id = getValidatedWorker().getId();
+			final Long id = getValidatedWorker().getId();
+			return service.getAllForWorker(id);
 		}
+	}
+
+	@RequestMapping(value = "/client/{clientId}", method = GET)
+	@ResponseBody
+	public List<TimeSheetView> getAllForClientId(final Long clientId) {
+		LOGGER.debug("getAll for clientId={}", clientId);
+		return service.getAllForClient(clientId);
+	}
+
+	@RequestMapping(value = "/worker/{workerId}", method = GET)
+	@ResponseBody
+	public List<TimeSheetView> getAllForWorkerId(final Long workerId) {
+		LOGGER.debug("getAll for workerId={}", workerId);
+		return service.getAllForWorker(workerId);
+	}
+
+	@RequestMapping(value = "/current", method = GET)
+	@ResponseBody
+	public TimeSheetView getCurrent() {
+		final Long id = getValidatedWorker().getId();
 		return service.getCurrentForWorker(id);
+	}
+
+	@RequestMapping(value = "/current/worker/{workerId}", method = GET)
+	@ResponseBody
+	public TimeSheetView getCurrentForWorker(final Long workerId) {
+		return service.getCurrentForWorker(workerId);
 	}
 
 	@RequestMapping(value = "/last", method = { GET })
@@ -132,12 +157,28 @@ public class TimeSheetController {
 		return service.getForWorkerDate(worker.getId(), date);
 	}
 
-	@RequestMapping(method = GET)
-	@ResponseBody
-	public List<TimeSheetView> getAll() {
-		final Worker worker = getValidatedWorker();
-		return service.getAll(worker, userService.isUserAdmin());
-	}
+	// /**
+	// *
+	// * @param clientId
+	// * - (optional)
+	// * @return
+	// */
+	// @RequestMapping(method = GET)
+	// @ResponseBody
+	// public List<TimeSheetView> getAllForClientId(@RequestParam(value = "clientId", required = false) String clientId) {
+	// List<TimeSheetView> result;
+	// if (StringUtils.isNotBlank(clientId)) {
+	// final Long id = Long.parseLong(clientId);
+	// LOGGER.debug("getAll for client={}", id);
+	// result = service.getAllForClient(id);
+	// } else {
+	// final Worker worker = getValidatedWorker();
+	// LOGGER.debug("getAll for worker={}", worker);
+	// result = service.getAll(worker, userService.isUserAdmin());
+	// }
+	// LOGGER.debug("found {} TimeSheets for getAll()", CollectionUtils.size(result));
+	// return result;
+	// }
 
 	@RequestMapping(value = "/{id}", method = GET)
 	@ResponseBody

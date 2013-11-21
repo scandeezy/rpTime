@@ -9,6 +9,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityNotFoundException;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.Validate;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
@@ -41,12 +42,13 @@ public class ContractService {
 	 * {@link Contract Contracts} with {@code date} between {@code startDate} and {@code endDate}.
 	 * 
 	 * @param workerId
-	 * @param date
+	 * @param searchInterval
+	 *            - the {@link Interval} to compare to the {@link Contract Contract's} start/end date interval.
 	 * @return the {@link List} of active {@link Contract Contracts}.
 	 * @throws EntityNotFoundException
 	 *             if no {@link Worker} found for {@code workerId}.
 	 */
-	public List<Contract> getActiveContractsForWorker(Long workerId, LocalDate date) throws EntityNotFoundException {
+	public List<Contract> getActiveContractsForWorker(Long workerId, Interval searchInterval) throws EntityNotFoundException {
 		Worker w = workerService.getById(workerId);
 		if (w == null) {
 			User u = userService.getCurrentUser();
@@ -54,14 +56,17 @@ public class ContractService {
 					+ "'.  Solution: create Worker on the /workers page: perhaps for user " + u);
 		}
 		List<Contract> contracts = getContractsForWorker(workerId);
+		LOGGER.debug("found {} contracts for worker {}.  Determine which are active.", CollectionUtils.size(contracts), workerId);
 		List<Contract> active = new LinkedList<Contract>();
 		for (Contract contract : contracts) {
-			if (contract.getStartDate().compareTo(date) < 1
-					&& (contract.getEndDate() == null || contract.getEndDate().compareTo(date) > -1)) {
+			Interval contractInterval = getIntervalForContract(contract);
+			if (searchInterval.overlaps(contractInterval)) {
+				LOGGER.debug("active contract found:  searchInterval '{}' overlaps contract interval '{}'.", searchInterval,
+						contractInterval);
 				active.add(contract);
 			} else {
-				LOGGER.debug("inactive contract found; date mismatch.  Expected: {} < {} < {}", new Object[] { contract.getStartDate(),
-						date, contract.getEndDate() });
+				LOGGER.debug("inactive contract found; date mismatch.  searchInterval '{}' does not overlap contract interval '{}'.",
+						searchInterval, contractInterval);
 			}
 		}
 
@@ -96,8 +101,7 @@ public class ContractService {
 
 			boolean endDateOk = (contractEndDate == null) ? true : false;
 			if (contractEndDate != null) {
-				final Interval contractInterval = new Interval(contractStartDate.toDateTimeAtStartOfDay(),
-						contractEndDate.toDateTimeAtStartOfDay());
+				final Interval contractInterval =getIntervalForContract(contract);
 				endDateOk = contractInterval.overlaps(searchInterval);
 			}
 
@@ -173,5 +177,19 @@ public class ContractService {
 	public void delete(Long id) {
 		Contract c = getById(id);
 		ofy().delete().entity(c).now();
+	}
+
+	public Interval getIntervalForContract(Contract c) {
+		Validate.notNull(c, "Contract required");
+		final LocalDate start = c.getStartDate();
+		Validate.notNull(start, "Contract must have a startDate");
+		final LocalDate end = c.getStartDate();
+		if (end != null) {
+			return new Interval(start.toDateTimeAtStartOfDay(), end.toDateTimeAtStartOfDay());
+		} else { // end== null
+			final DateTime d = new DateTime();
+			LOGGER.debug("Contract {} does not have an end date; using current time {}", c.getId(), d);
+			return new Interval(start.toDateTimeAtStartOfDay(), d);
+		}
 	}
 }

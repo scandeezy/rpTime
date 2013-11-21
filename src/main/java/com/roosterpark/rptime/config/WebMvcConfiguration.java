@@ -37,10 +37,10 @@ import com.roosterpark.rptime.service.WorkerService;
 @PropertySource("classpath:git.properties")
 @ComponentScan(basePackages = { "com.roosterpark.rptime" }, includeFilters = @ComponentScan.Filter({ Controller.class }), excludeFilters = @ComponentScan.Filter({ Configuration.class }))
 public class WebMvcConfiguration extends WebMvcConfigurationSupport {
-	Logger LOGGER = LoggerFactory.getLogger(getClass());
 
-	@Inject
-	private UserService userService;
+	private static final Integer DEFAULT_CACHE_EXPIRY_PERIOD = new Integer(60 * 60 * 24 * 30); // 1 month
+
+	Logger LOGGER = LoggerFactory.getLogger(getClass());
 
 	public WebMvcConfiguration() {
 		LOGGER.info("init");
@@ -50,8 +50,8 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		String[] staticResourcesLocations = { "/resources/", "classpath:/META-INF/web-resources/" };
 		String[] rootResourceLocation = { "/" };
-		registry.addResourceHandler("/resources/**").addResourceLocations(staticResourcesLocations);
-		// .setCachePeriod(0); // to disable caching
+		registry.addResourceHandler("/resources/**").addResourceLocations(staticResourcesLocations)
+				.setCachePeriod(DEFAULT_CACHE_EXPIRY_PERIOD); // '0' to disable caching
 		registry.addResourceHandler("/favicon.ico").addResourceLocations(rootResourceLocation);
 		registry.addResourceHandler("/index.jsp").addResourceLocations(rootResourceLocation);
 		// registry.addResourceHandler("/").addResourceLocations(rootResourceLocation);

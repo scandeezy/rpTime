@@ -4,18 +4,24 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.appengine.api.users.User;
+import com.google.appengine.api.users.UserService;
 import com.roosterpark.rptime.model.Worker;
 
 @Named
 public class WorkerService {
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
+
+	@Inject
+	UserService userService;
 
 	public Worker getById(Long id) {
 		LOGGER.warn("Getting worker with id={}", id);
@@ -89,5 +95,18 @@ public class WorkerService {
 		Worker w = getById(id);
 		LOGGER.debug("Delete Worker {}", id);
 		ofy().delete().entity(w).now();
+	}
+
+	public boolean isCurrentUserWorkerWithId(final Long workerId) {
+		Validate.notNull(workerId);
+		User user = userService.getCurrentUser();
+		if (user != null) {
+			final String email = user.getEmail();
+			Worker worker = getByEmail(email);
+			if (worker != null) {
+				return workerId.equals(worker.getId());
+			}
+		}
+		return false;
 	}
 }

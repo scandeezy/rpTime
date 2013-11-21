@@ -20,11 +20,12 @@ import com.googlecode.objectify.annotation.Index;
 @Entity
 public class TimeSheet implements Comparable<TimeSheet> {
 
-	public static final String WORKER_KEY = "workerId";
-	public static final String CLIENT_KEY = "clientIds";
+	public static final String WORKER_ID_KEY = "workerId";
+	public static final String CLIENT_IDS_KEY = "clientIds";
 	public static final String START_DATE_KEY = "startDate";
 	public static final String WEEK_KEY = "week";
 	public static final String YEAR_KEY = "year";
+	public static final String ID_KEY = "id";
 
 	@Id
 	private Long id;

@@ -10,11 +10,14 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
@@ -22,7 +25,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.googlecode.objectify.Key;
+import com.roosterpark.rptime.model.TimeCardLogEntry;
 import com.roosterpark.rptime.model.TimeSheet;
+import com.roosterpark.rptime.model.TimeSheetDay;
 
 /**
  * 
@@ -31,6 +36,9 @@ import com.roosterpark.rptime.model.TimeSheet;
 @Named
 public class TimeSheetDao {
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
+
+	@Inject
+	TimeSheetDayDao timeSheetDayDao;
 
 	public void delete(Long id) {
 		TimeSheet sheet = getById(id);
@@ -45,7 +53,7 @@ public class TimeSheetDao {
 		} else {
 			LOGGER.debug("returning all timesheets for worker={}", workerId);
 			return ofy().load().type(TimeSheet.class)//
-					.filter(TimeSheet.WORKER_KEY, workerId)//
+					.filter(TimeSheet.WORKER_ID_KEY, workerId)//
 					.list();
 		}
 	}
@@ -56,10 +64,15 @@ public class TimeSheetDao {
 		return sheet;
 	}
 
+	public List<TimeSheet> getAll() {
+		return ofy().load().type(TimeSheet.class)//
+				.list();
+	}
+
 	public List<TimeSheet> getAllByWorker(final Long workerId) {
 		LOGGER.debug("Searching for timesheet with workerId {}", workerId);
 		return ofy().load().type(TimeSheet.class)//
-				.filter(TimeSheet.WORKER_KEY, workerId)//
+				.filter(TimeSheet.WORKER_ID_KEY, workerId)//
 				// .order(TimeSheet.START_DATE_KEY)// throws DatastoreNeedIndexException
 				.list();
 	}
@@ -67,7 +80,7 @@ public class TimeSheetDao {
 	public TimeSheet getByWorkerWeekYear(Long workerId, int week, int year) {
 		LOGGER.debug("Searching for timesheet with worker id {}, week {}, and year {}", workerId, week, year);
 		return ofy().load().type(TimeSheet.class)//
-				.filter(TimeSheet.WORKER_KEY, workerId)//
+				.filter(TimeSheet.WORKER_ID_KEY, workerId)//
 				.filter(TimeSheet.WEEK_KEY, week)//
 				.filter(TimeSheet.YEAR_KEY, year)//
 				.first().now();
@@ -81,7 +94,7 @@ public class TimeSheetDao {
 		List<TimeSheet> result = ofy()//
 				.load()//
 				.type(TimeSheet.class)//
-				.filter(TimeSheet.WORKER_KEY, workerId)//
+				.filter(TimeSheet.WORKER_ID_KEY, workerId)//
 				.filter(TimeSheet.WEEK_KEY + " <=", week)//
 				.limit(limit)//
 				// .order("-date")//Descending date sort
@@ -91,9 +104,9 @@ public class TimeSheetDao {
 	}
 
 	public List<TimeSheet> getAllForClient(final Long clientId) {
-		List<TimeSheet> sheets = ofy().load().type(TimeSheet.class).filter(TimeSheet.CLIENT_KEY, clientId).order(TimeSheet.START_DATE_KEY)
-				.list();
-
+		List<TimeSheet> sheets = ofy().load().type(TimeSheet.class)//
+				.filter(TimeSheet.CLIENT_IDS_KEY, clientId)//
+				.order(TimeSheet.START_DATE_KEY).list();
 		return sheets;
 	}
 
@@ -121,7 +134,7 @@ public class TimeSheetDao {
 		final LocalDate endDate = searchInterval.getEnd().toLocalDate();
 		LOGGER.debug("searching for TimeSheets with clientId={}, betweeen {} and {}", new Object[] { clientId, startDate, endDate });
 		final List<TimeSheet> sheets = ofy().load().type(TimeSheet.class)//
-				.filter(TimeSheet.CLIENT_KEY, clientId) //
+				.filter(TimeSheet.CLIENT_IDS_KEY, clientId) //
 				// .filter(TimeSheet.START_DATE_KEY + " >=", startDate) //
 				// .filter(TimeSheet.START_DATE_KEY + " <=", endDate) //
 				// .order(TimeSheet.START_DATE_KEY)//
@@ -132,7 +145,7 @@ public class TimeSheetDao {
 
 	public List<TimeSheet> getAllForClientYear(final Long clientId, final Integer year) {
 		List<TimeSheet> sheets = ofy().load().type(TimeSheet.class)//
-				.filter(TimeSheet.CLIENT_KEY, clientId)//
+				.filter(TimeSheet.CLIENT_IDS_KEY, clientId)//
 				.filter(TimeSheet.YEAR_KEY, year)//
 				.order(TimeSheet.START_DATE_KEY)//
 				.list();
@@ -142,7 +155,7 @@ public class TimeSheetDao {
 
 	public List<TimeSheet> getAllForClientWeekYear(final Long clientId, final Integer week, final Integer year) {
 		List<TimeSheet> sheets = ofy().load().type(TimeSheet.class)//
-				.filter(TimeSheet.CLIENT_KEY, clientId)//
+				.filter(TimeSheet.CLIENT_IDS_KEY, clientId)//
 				.filter(TimeSheet.WEEK_KEY, week)//
 				.filter(TimeSheet.YEAR_KEY, year)//
 				.order(TimeSheet.START_DATE_KEY)//
@@ -152,12 +165,34 @@ public class TimeSheetDao {
 	}
 
 	public List<TimeSheet> getSheetViewsForWorkerPage(Long workerId, Integer count, Integer offset) {
-		List<TimeSheet> sheets = ofy().load().type(TimeSheet.class).filter(TimeSheet.WORKER_KEY, workerId).order(TimeSheet.START_DATE_KEY)
-				.limit(count).offset(offset).list();
+		List<TimeSheet> sheets = ofy().load().type(TimeSheet.class).filter(TimeSheet.WORKER_ID_KEY, workerId)
+				.order(TimeSheet.START_DATE_KEY).limit(count).offset(offset).list();
 		return sheets;
 	}
 
-	public TimeSheet set(TimeSheet item) {
+	/**
+	 * @param item
+	 *            - the {@link TimeSheet} to persist.
+	 * @param days
+	 *            - (optional) if present, the days' entries will be used to calculate the {@code clientIds}.
+	 * @return the saved {@link TimeSheet} entity.
+	 */
+	public TimeSheet set(TimeSheet item, final List<TimeSheetDay> days) {
+		// client id computation logic
+		if (CollectionUtils.isNotEmpty(days)) {
+			LOGGER.debug("computing clients");
+			HashSet<Long> clientIdsSet = new HashSet<>();
+			for (TimeSheetDay day : days) {
+				final List<TimeCardLogEntry> entries = day.getEntries();
+				for (TimeCardLogEntry entry : entries) {
+					clientIdsSet.add(entry.getClientId());
+				}
+			}
+			item.setClientIds(clientIdsSet);
+
+			LOGGER.debug("set {} clientIds", CollectionUtils.size(clientIdsSet));
+		}
+		// save logic
 		LOGGER.debug("Saving timesheet {}", item);
 		item.setUpdateTimestamp(new LocalDateTime());
 		Key<TimeSheet> sheetKey = ofy().save().entity(item).now();

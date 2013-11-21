@@ -1,13 +1,10 @@
 package com.roosterpark.rptime.service;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -28,7 +25,6 @@ import com.roosterpark.rptime.model.TimeSheet;
 import com.roosterpark.rptime.model.TimeSheetDay;
 import com.roosterpark.rptime.model.TimeSheetStatus;
 import com.roosterpark.rptime.model.TimeSheetView;
-import com.roosterpark.rptime.model.Worker;
 import com.roosterpark.rptime.service.dao.TimeSheetDao;
 import com.roosterpark.rptime.service.dao.TimeSheetDayDao;
 
@@ -42,6 +38,8 @@ public class TimeSheetService {
 	ContractService contractService;
 	@Inject
 	UserService userService;
+	@Inject
+	WorkerService workerService;
 
 	private TimeSheetDao timeSheetDao;
 
@@ -92,8 +90,10 @@ public class TimeSheetService {
 			LOGGER.info("TimeSheet already exists for date {}; returning {}", date, exists.getId());
 			return convert(exists);
 		}
-		LOGGER.debug("creating new TimeSheet for worker={}, date={}", workerId, date);
-		List<Contract> contracts = contractService.getActiveContractsForWorker(workerId, date);
+		final Interval interval = new Interval(date.toDateTimeAtStartOfDay(), date.plusDays(DateTimeConstants.DAYS_PER_WEEK - 1)
+				.toDateTimeAtStartOfDay());
+		LOGGER.debug("creating new TimeSheet for worker={}, interval={}", workerId, interval);
+		List<Contract> contracts = contractService.getActiveContractsForWorker(workerId, interval);
 
 		if (CollectionUtils.isEmpty(contracts)) {
 			throw new EntityNotFoundException("No active Contracts found for Worker id='" + workerId + "' and date '" + date
@@ -144,7 +144,7 @@ public class TimeSheetService {
 		}
 		TimeSheet result = new TimeSheet(workerId, clientIds, contractDate, logIds);
 
-		result = timeSheetDao.set(result);
+		result = timeSheetDao.set(result, null);
 
 		TimeSheetView view = convert(result);
 		// new TimeSheetView(result, entries, timeSheetDao);
@@ -197,35 +197,45 @@ public class TimeSheetService {
 		return returnDate;
 	}
 
-	/**
-	 * Get all the {@link TimeSheetView TimeSheetViews} for a given {@link Worker} OR all (if {@code isAdmin == TRUE}).
-	 * 
-	 * @param worker
-	 *            -the (optional) {@link Worker} whose {@code id} will key the search. Only optional if {@code isAdmin == TRUE}.
-	 * @param isAdmin
-	 *            -
-	 * @return a {@link List} of {@link TimeSheetView TimeSheetViews}
-	 */
-	public List<TimeSheetView> getAll(final Worker worker, final boolean isAdmin) {
-		LOGGER.debug("Getting TimeSheets for isAdmin={}, worker={}", isAdmin, worker);
-		Long workerId = null;
-		if (worker != null) {
-			workerId = worker.getId();
-		} else {
-			Validate.isTrue(isAdmin, "Required: Either admin access or a non-null Worker.");
-		}
-		List<TimeSheet> sheets = timeSheetDao.getAll(workerId, isAdmin);
-		LOGGER.debug("Found these sheets for all {}", sheets);
-		List<TimeSheetView> views = new LinkedList<>();
-		for (TimeSheet sheet : sheets) {
-			views.add(convert(sheet));
-		}
-		Collections.sort(views);
-		return views;
+	// /**
+	// * Get all the {@link TimeSheetView TimeSheetViews} for a given {@link Worker} OR all (if {@code isAdmin == TRUE}).
+	// *
+	// * @param worker
+	// * -the (optional) {@link Worker} whose {@code id} will key the search. Only optional if {@code isAdmin == TRUE}.
+	// * @param isAdmin
+	// * -
+	// * @return a {@link List} of {@link TimeSheetView TimeSheetViews}
+	// */
+	// public List<TimeSheetView> getAll(final Worker worker, final boolean isAdmin) {
+	// LOGGER.debug("Getting TimeSheets for isAdmin={}, worker={}", isAdmin, worker);
+	// Long workerId = null;
+	// if (worker != null) {
+	// workerId = worker.getId();
+	// } else {
+	// Validate.isTrue(isAdmin, "Required: Either admin access or a non-null Worker.");
+	// }
+	// List<TimeSheet> sheets = timeSheetDao.getAll(workerId, isAdmin);
+	// LOGGER.debug("Found these sheets for all {}", sheets);
+	// List<TimeSheetView> views = new LinkedList<>();
+	// for (TimeSheet sheet : sheets) {
+	// views.add(convert(sheet));
+	// }
+	// Collections.sort(views);
+	// return views;
+	// }
+
+	public List<TimeSheetView> getAllAdmin() {
+		Validate.isTrue(userService.isUserAdmin(), "Admin required for this operation");
+		return convert(timeSheetDao.getAll());
 	}
 
-	protected List<TimeSheetView> getAllAdmin() {
-		return getAll(null, true);
+	public List<TimeSheetView> getAllForWorker(final Long workerId) {
+		boolean isAdmin = userService.isUserAdmin();
+		boolean isCurrentWorker = workerService.isCurrentUserWorkerWithId(workerId);
+		if (!(isAdmin || isCurrentWorker)) {
+			throw new IllegalArgumentException("Required: Admin or current workerId=" + workerId);
+		}
+		return convert(timeSheetDao.getAllByWorker(workerId));
 	}
 
 	public List<TimeSheetView> getAllForClientWeek(final Long clientId, final LocalDate date) {
@@ -240,14 +250,14 @@ public class TimeSheetService {
 		return convert(timeSheets);
 	}
 
-	public SortedMap<Long, TimeSheetView> getAllMap(final Worker worker, final boolean isAdmin) {
-		final List<TimeSheetView> list = getAll(worker, isAdmin);
-		final SortedMap<Long, TimeSheetView> map = new TreeMap<>();
-		for (TimeSheetView obj : list) {
-			map.put(obj.getId(), obj);
-		}
-		return map;
-	}
+	// public SortedMap<Long, TimeSheetView> getAllMap(final Worker worker, final boolean isAdmin) {
+	// final List<TimeSheetView> list = getAll(worker, isAdmin);
+	// final SortedMap<Long, TimeSheetView> map = new TreeMap<>();
+	// for (TimeSheetView obj : list) {
+	// map.put(obj.getId(), obj);
+	// }
+	// return map;
+	// }
 
 	public List<TimeSheetView> getAllForClient(final Long clientId) {
 		return convert(timeSheetDao.getAllForClient(clientId));
@@ -330,8 +340,7 @@ public class TimeSheetService {
 		entries = timeSheetDayDao.set(entries);
 		view.setDays(entries);
 		TimeSheet sheet = view.toTimeSheet();
-		sheet = timeSheetDao.set(sheet);
-
+		sheet = timeSheetDao.set(sheet, entries);
 		return new TimeSheetView(sheet, entries, timeSheetDao);
 	}
 
@@ -345,7 +354,7 @@ public class TimeSheetService {
 	public void submit(Long id) {
 		TimeSheet c = timeSheetDao.getById(id);
 		c.setStatus(TimeSheetStatus.SUBMITTED);
-		timeSheetDao.set(c);
+		timeSheetDao.set(c, null);
 	}
 
 	public Map<Long, List<TimeCardLogEntry>> getLogsForClientOverRange(Long clientId, LocalDate start, LocalDate end) {
@@ -355,7 +364,7 @@ public class TimeSheetService {
 	public void flag(final Long id, final Boolean flagged) {
 		TimeSheet c = timeSheetDao.getById(id);
 		c.setFlagged(flagged);
-		timeSheetDao.set(c);
+		timeSheetDao.set(c, null);
 	}
 
 }
