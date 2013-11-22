@@ -2,39 +2,39 @@
 <div>
 	<div id="contracts" class="panel panel-default" ng-hide="edit">
 		<div class="panel-heading">
-			<h4>
-				Contracts
-				<div class="pull-right">
-					<span class="btn-group">
-						<button type="button" id="new" class="btn btn-xs btn-primary" ng-click="set();">New</button>
-					</span>
-				</div>
-			</h4>
+			<h4>Contracts</h4>
 		</div>
 		<div class="panel-body">
-			<ul>
-				<li ng-repeat="client in clientsList | orderBy:'name'">
-					{{client.name}} <button type="button" id="new" class="btn btn-xs btn-primary" ng-click="newForClient(client);">New</button>
-					<ul>
-						<li ng-repeat="contract in contractsList | orderBy:'startDate'" ng-show="contract.client==client.id">
-							<span class="btn-group btn-group-sm">
-									<button type="button" id="edit" class="btn btn-default" ng-click="set(contract);">Edit</button>
-									<button type="button" id="delete-{{$id}}" class="btn btn-default" ng-click="remove(contract);" ng-hide="!debug">Delete</button>
-							</span> {{workersMap[contract.worker].lastName}}, {{workersMap[contract.worker].firstName}} <span
-								class="text-muted" ng-show="contract.startDate">- {{contract.startDate}} <span class="text-muted" ng-show="contract.endDate">- {{contract.endDate}}</span></span>
-						</li>
+			<div ng-show="clientsList.length > 0">
+				<div class="btn-group btn-group-sm">
+					<button type="button" class="btn btn-primary" ng-click="set();">New</button>
+					<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+						<span class="caret"></span> <span class="sr-only">Toggle Create Dropdown</span> &nbsp;
+					</button>
+					<ul class="dropdown-menu" role="menu">
+						<li ng-repeat="client in clientsList | orderBy:'name'"><a ng-click="newForClient(client);">New Contract for <i>{{client.name}}</i></a></li>
 					</ul>
-				</li>
-			</ul>
-			<!-- 
-			<ul>
-				<li ng-repeat="(id, contract) in contractsMap | orderBy:'end'"><span class="btn-group">
-						<button type="button" id="edit" class="btn btn-sm btn-default" ng-click="set(contract);">Edit</button>
-						<button type="button" id="delete-{{$id}}" class="btn btn-sm btn-default" ng-click="remove(contract);" ng-hide="!debug">Delete</button>
-				</span> {{clientsMap[contract.client].name}}, {{workersMap[contract.worker].firstName}} {{workersMap[contract.worker].lastName}} <span
-					class="text-muted" ng-show="contract.startDate">- {{contract.startDate}} <span class="text-muted" ng-show="contract.endDate">- {{contract.endDate}}</span></span></li>
-			</ul>
-			 -->
+				</div>
+				<ul>
+					<li ng-repeat="client in clientsList | orderBy:'name'">
+						{{client.name}}
+						<ul>
+							<li ng-repeat="contract in contractsList | orderBy:'workersMap[contract.worker].lastName' " ng-show="contract.client==client.id"><span
+								class="btn-group btn-group-sm">
+									<button type="button" id="delete-{{$id}}" class="btn debug" ng-click="remove(contract);" ng-show="debug">Delete</button> <a
+									id="edit" ng-click="set(contract);">
+							</span> {{workersMap[contract.worker].lastName}}, {{workersMap[contract.worker].firstName}} <span 
+								ng-show="contract.startDate">- {{contract.startDate}} <span ng-show="contract.endDate">to
+										{{contract.endDate}}</span></span> </a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+			<div ng-hide="clientsList.length > 0">
+				<p class="text-warning">
+					No clients found.  Please create a client on the <a href="#/client">clients page</a>.
+				</p>
+			</div>
 		</div>
 	</div>
 	
@@ -44,14 +44,15 @@
 				<span ng-show="currentContract.id"><h4>Edit Contract</h4> {{clientsMap[currentContract.client].name}},
 					{{workersMap[currentContract.worker].firstName}} {{workersMap[currentContract.worker].lastName}} </span> <span ng-hide="currentContract.id"><h4>Create
 						Contract</h4></span>
-				<p ng-show="!createContractForm.$valid" class="text-danger lead">
+				<p ng-hide="true" class="text-danger lead">
 					Warning: <span ng-pluralize count="createContractForm.$error.required.length"
 						when="{'1': '1 required field is missing.', 'other': '{} required fields are missing.'}"> </span>
 				</p>
 			</div>
 			<div class="panel-body">
 
-				<div class="form-group" ng-class="{'has-error': createContractForm.worker.$error.required}">
+				<!-- <div class="form-group" ng-class="{'has-error': createContractForm.worker.$error.required}"> -->
+				<div class="form-group">
 					<label for="worker" class="col-sm-2 control-label">Worker</label>
 					<div class="col-sm-4">
 						<select class="form-control" id="worker" name="worker" ng-model="currentContract.worker"
@@ -60,7 +61,8 @@
 						</select>
 					</div>
 				</div>
-				<div class="form-group" ng-class="{'has-error': createContractForm.client.$error.required}">
+				<!-- <div class="form-group" ng-class="{'has-error': createContractForm.client.$error.required}"> -->
+				<div class="form-group">
 					<label for="client" class="col-sm-2 control-label">Client</label>
 					<div class="col-sm-4">
 						<select class="form-control" id="client" name="client" ng-model="currentContract.client"
@@ -75,7 +77,8 @@
 						<input id="onSite" name="onSite" type="checkbox" ng-model="currentContract.onSite">
 					</div>
 				</div>
-				<div class="form-group" ng-class="{'has-error': createContractForm.startDate.$error.required}">
+				<!-- <div class="form-group" ng-class="{'has-error': createContractForm.client.$error.required}"> -->
+				<div class="form-group">
 					<label for="startDate" class="col-sm-2 control-label">Start Date</label>
 					<div class="col-sm-4">
 						<input type="date" class="form-control" id="startDate" name="startDate" ng-model="currentContract.startDate" placeholder="YYYY-MM-DD"
@@ -97,7 +100,7 @@
 			</div>
 		</div>
 
-		<pre ng-cloak ng-show="debug">
+		<pre ng-cloak ng-show="debug" class="debug">
 createContractForm.$pristine = {{createContractForm.$pristine}}
 createContractForm.$dirty = {{createContractForm.$dirty}}
 createContractForm.worker.$valid = {{createContractForm.worker.$valid}}

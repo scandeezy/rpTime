@@ -17,29 +17,42 @@
 
 		function updateClientsFn() {
 			AdminClientService.getAll(function successCGetAllFn(map) {
-				var arr = [];
+//				var arr = [];
 				$rootScope.clientsMap = map;
-				angular.forEach(map, function(val, key) {
-					if (key && val.id) {
-						arr.push(val);
-					}
-				});
-				$rootScope.clientsList = arr;
+//				angular.forEach(map, function(val, key) {
+//					if (key && val.id) {
+//						arr.push(val);
+//					}
+//				});
+//				$rootScope.clientsList = arr;
 			});
 		}
 
 		function updateContractsFn() {
 			AdminContractService.getAll(function successConGetAllFn(map) {
-				var arr = [];
 				$rootScope.contractsMap = map;
-				angular.forEach(map, function(val, key) {
-					if (key && val.id) {
-						arr.push(val);
-					}
-				});
-				$rootScope.contractsList = arr;
 			});
 		}
+
+		$rootScope.$watch('clientsMap',function clientsMap$watchListSyncFn(map){
+			var arr = [];
+			angular.forEach(map, function(val, key) {
+				if (key && val.id) {
+					arr.push(val);
+				}
+			});
+			$rootScope.clientsList = arr;
+		},true);
+
+		$rootScope.$watch('contractsMap',function contractsMap$watchListSyncFn(map){
+			var arr = [];
+			angular.forEach(map, function(val, key) {
+				if (key && val.id) {
+					arr.push(val);
+				}
+			});
+			$rootScope.contractsList = arr;
+		},true);
 
 		function updateWorkersFn() {
 			AdminWorkerService.getAll(function successWGetAllFn(data) {
@@ -208,8 +221,7 @@
 		}
 		
 		$scope.newForClient = function newForClientFn(client){
-			$log.error("JJZ LOH 2013-11-21");
-			//TODO: Sort/Group Contracts
+			$scope.set({client:client.id});
 		}
 
 		$scope.remove = function removeFn(obj) {
