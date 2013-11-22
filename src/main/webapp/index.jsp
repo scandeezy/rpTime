@@ -50,7 +50,7 @@ ng-controller="UserPageCtrl"
 		%>
 		<div class="container">
 			<div class="row">
-				<form class="form-signin">
+				<form class="form-signin ">
 					<h2 class="form-signin-heading">Please sign in</h2>					
 					<a class="btn btn-primary" href="<%=loginUrl%>">Sign in</a>
 				</form>
@@ -72,20 +72,33 @@ ng-controller="UserPageCtrl"
 			<script src="/resources/js/app.js"></script>
 			<script src="/resources/js/services.js"></script>
 			<script src="/resources/js/controllers.js"></script>
-			<script src="/resources/js/controllers/admin-controllers.js"></script>
-			<script src="/resources/js/controllers/report-controllers.js"></script>
 			<script src="/resources/js/controllers/timesheet-controllers.js"></script>
 			<script src="/resources/js/filters.js"></script>
 			<script src="/resources/js/directives.js"></script>
+		<% if (userService.isUserAdmin()) { %>
+			<!-- admin-only resources -->
+			<script src="/resources/js/admin/admin-services.js"></script>
+			<script src="/resources/js/admin/admin-controllers.js"></script>
+			<script src="/resources/js/admin/admin-client-controllers.js"></script>
+			<script src="/resources/js/admin/admin-contract-controllers.js"></script>
+			<script src="/resources/js/admin/admin-report-controllers.js"></script>
+			<script src="/resources/js/admin/admin-worker-controllers.js"></script>
+		<% } %>
 			<!-- pre-load templates into angular's $templateCache (see: http://stackoverflow.com/a/12346901/237225) -->
+			<script type="text/ng-template" src="/resources/partials/about.html"></script>
 			<script type="text/ng-template" src="/resources/partials/client.html"></script>
 			<script type="text/ng-template" src="/resources/partials/contract.html"></script>
 			<script type="text/ng-template" src="/resources/partials/history.html"></script>
 			<script type="text/ng-template" src="/resources/partials/landing.html"></script>
 			<script type="text/ng-template" src="/resources/partials/timesheet.html"></script>
 			<script type="text/ng-template" src="/resources/partials/worker.html"></script>
+		<% if (userService.isUserAdmin()) { %>
+			<!-- admin-only resources -->
 			<script type="text/ng-template" src="/resources/partials/reports/list.html"></script>
+			<script type="text/ng-template" src="/resources/partials/reports/timesheets-per-worker-by-month-for-client.html"></script>
+			<script type="text/ng-template" src="/resources/partials/reports/total-hours-per-worker-by-range-for-client.html"></script>
 			<script type="text/ng-template" src="/resources/partials/reports/total-hours-per-worker-per-month.html"></script>
+		<% } %>
 			<!-- end pre-load templates --> 
 		</div>
 
