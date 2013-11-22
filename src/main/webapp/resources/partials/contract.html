@@ -13,12 +13,28 @@
 		</div>
 		<div class="panel-body">
 			<ul>
+				<li ng-repeat="client in clientsList | orderBy:'name'">
+					{{client.name}} <button type="button" id="new" class="btn btn-xs btn-primary" ng-click="newForClient(client);">New</button>
+					<ul>
+						<li ng-repeat="contract in contractsList | orderBy:'startDate'" ng-show="contract.client==client.id">
+							<span class="btn-group btn-group-sm">
+									<button type="button" id="edit" class="btn btn-default" ng-click="set(contract);">Edit</button>
+									<button type="button" id="delete-{{$id}}" class="btn btn-default" ng-click="remove(contract);" ng-hide="!debug">Delete</button>
+							</span> {{workersMap[contract.worker].lastName}}, {{workersMap[contract.worker].firstName}} <span
+								class="text-muted" ng-show="contract.startDate">- {{contract.startDate}} <span class="text-muted" ng-show="contract.endDate">- {{contract.endDate}}</span></span>
+						</li>
+					</ul>
+				</li>
+			</ul>
+			<!-- 
+			<ul>
 				<li ng-repeat="(id, contract) in contractsMap | orderBy:'end'"><span class="btn-group">
 						<button type="button" id="edit" class="btn btn-sm btn-default" ng-click="set(contract);">Edit</button>
 						<button type="button" id="delete-{{$id}}" class="btn btn-sm btn-default" ng-click="remove(contract);" ng-hide="!debug">Delete</button>
 				</span> {{clientsMap[contract.client].name}}, {{workersMap[contract.worker].firstName}} {{workersMap[contract.worker].lastName}} <span
 					class="text-muted" ng-show="contract.startDate">- {{contract.startDate}} <span class="text-muted" ng-show="contract.endDate">- {{contract.endDate}}</span></span></li>
 			</ul>
+			 -->
 		</div>
 	</div>
 	
@@ -99,7 +115,7 @@ createContractForm = {{createContractForm|json}}
 	</form>
 
 	<div ng-cloak ng-show="debug" class="well">
-		<pre>contracts={{contracts | json}}
+		<pre class="debug">contractsList={{contractsList | json}}
 currentContract={{currentContract | json}}</pre>
 	</div>
 

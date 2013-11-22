@@ -11,6 +11,7 @@
 		$rootScope.clientsMap = {};
 		$rootScope.clientsList = [];
 		$rootScope.contractsMap = {};
+		$rootScope.contractsList = [];
 		$rootScope.workersMap = {};
 		$rootScope.workersList = []; // lists allow filters: http://stackoverflow.com/a/14789258/237225
 
@@ -28,8 +29,15 @@
 		}
 
 		function updateContractsFn() {
-			AdminContractService.getAll(function successConGetAllFn(data) {
-				$rootScope.contractsMap = data;
+			AdminContractService.getAll(function successConGetAllFn(map) {
+				var arr = [];
+				$rootScope.contractsMap = map;
+				angular.forEach(map, function(val, key) {
+					if (key && val.id) {
+						arr.push(val);
+					}
+				});
+				$rootScope.contractsList = arr;
 			});
 		}
 
@@ -187,6 +195,7 @@
 		// $log.info('AdminContractCtrl init', $scope);
 		$scope.edit = false;
 		$scope.currentContract = {};
+		
 		if ($routeParams.id) {
 			var id = $routeParams.id;
 			$log.info('getting id', id);
@@ -196,6 +205,11 @@
 				$scope.currentContract = data;
 				$scope.edit = true;
 			});
+		}
+		
+		$scope.newForClient = function newForClientFn(client){
+			$log.error("JJZ LOH 2013-11-21");
+			//TODO: Sort/Group Contracts
 		}
 
 		$scope.remove = function removeFn(obj) {
