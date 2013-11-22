@@ -51,7 +51,8 @@
 		});
 	} ]);
 
-	module.factory('AdminTimeSheetService', [ '$resource',//
+	console && console.error("redefining TimeSheetService...");
+	module.factory('TimeSheetService', [ '$resource',//
 	function AdminTimeSheetService($resource) {
 		return $resource('admin/timesheet/:id/:date', {}, {
 			// methods 'get', 'save', 'remove' provided by default

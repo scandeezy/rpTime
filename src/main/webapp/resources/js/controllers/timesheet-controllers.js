@@ -12,9 +12,12 @@
 		$scope.currentTimeSheet = {};
 		$scope.clientsMap = ClientService.getAll();
 
+		//TimeSheetService will be redefined with admin paths in admin-services.js
+		var svc = TimeSheetService;
+
 		if ($routeParams.id) {
 			var id = $routeParams.id;
-			TimeSheetService.get({
+			svc.get({
 				id : id
 			}, function successFn(data) {
 				$scope.set(data);
@@ -22,7 +25,7 @@
 		}
 
 		function updateTimeSheetsFn() {
-			TimeSheetService.getAll(function successFn(list) {
+			svc.getAll(function successFn(list) {
 				$scope.timeSheetsList = list;
 				$scope.timeSheetsMap = {};
 				$scope.adminWorkerTimeSheetMap = {};
@@ -31,7 +34,7 @@
 					if (sheet.id != undefined) {
 						$scope.timeSheetsMap[sheet.id] = sheet;
 						var aWTSMList = $scope.adminWorkerTimeSheetMap[sheet.workerId];
-						if(!aWTSMList){
+						if (!aWTSMList) {
 							aWTSMList = $scope.adminWorkerTimeSheetMap[sheet.workerId] = [];
 						}
 						$scope.adminWorkerTimeSheetMap[sheet.workerId].push(sheet);
@@ -46,7 +49,7 @@
 
 		$scope.remove = function removeFn(obj) {
 			$scope.doRemove({
-				service : TimeSheetService,
+				service : svc,
 				id : obj.id,
 				map : $scope.timeSheetsMap,
 				afterFn : function doAfterFn() {
@@ -60,7 +63,7 @@
 
 		$scope.save = function saveFn(obj) {
 			$scope.doSave({
-				service : TimeSheetService,
+				service : svc,
 				obj : obj,
 				map : $scope.timeSheetsMap,
 				afterFn : function doAfterFn() {
@@ -75,7 +78,7 @@
 		$scope.set = function setFn(obj) {
 			$log.info("setting ", obj);
 			if (!obj) {
-				var o = TimeSheetService.create();
+				var o = svc.create();
 				var id = o.id;
 				if (id) {
 					$scope.timeSheetsMap[id] = o;
@@ -94,7 +97,7 @@
 			var date = new Date();
 			date.setDate(date.getDate() - 7);
 			// TODO FIXME: use relative RESTful URLs (lets date comp happen server side)
-			TimeSheetService.get({
+			svc.get({
 				id : "new",
 				date : date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
 			}, function successFn(data) {
@@ -106,7 +109,7 @@
 			var date = new Date();
 			// TODO FIXME: use relative RESTful URLs (lets date comp happen server side)
 			date.setDate(date.getDate() + 7);
-			TimeSheetService.get({
+			svc.get({
 				id : "new",
 				date : date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
 			}, function successFn(data) {
@@ -117,7 +120,7 @@
 		$scope.setWeekOther = function setWeekOtherFn() {
 			var data = window.showModalDialog("datePickerModal.html");
 			$log.error(data.datePicked);
-			TimeSheetService.get({
+			svc.get({
 				id : "new",
 				date : data.datePicked
 			}, function successFn(data) {
@@ -131,7 +134,7 @@
 			var obj = angular.copy(timeSheet);
 			obj.status = 'SUBMITTED';
 			$scope.doSave({
-				service : TimeSheetService,
+				service : svc,
 				obj : obj,
 				map : $scope.timeSheetsMap,
 				afterFn : function doAfterFn() {
