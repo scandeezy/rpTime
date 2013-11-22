@@ -153,7 +153,7 @@
 						<textarea class="form-control" id="adminNote" name="adminNote" rows="2" ng-model="currentTimeSheet.adminNote"></textarea>
 					</div>
 				</div>
-				<div class="form-group row" ng-show="debug" style="background-color: yellow">
+				<div class="form-group row debug" ng-show="debug">
 					<p class="text-warning">Debug Properties</p>
 					<label for="flagged" class="control-label">
 					<input id="flagged" name="flagged" type="checkbox" ng-model="currentTimeSheet.flagged">
@@ -186,7 +186,7 @@
 			</div>
 		</div>
 
-		<pre ng-show="debug">
+		<pre ng-show="debug" class="debug">
 createTimeSheetForm.$dirty   ={{createTimeSheetForm.$dirty}}
 
 createTimeSheetForm.$pristine={{createTimeSheetForm.$pristine}}
@@ -197,7 +197,7 @@ createTimeSheetForm.$valid   ={{createTimeSheetForm.$valid}}
 	</form>
 
 	<div class="well" ng-cloak ng-show="debug">
-		<pre>
+		<pre class="debug">
 isAdmin={{isAdmin}}
 <input type="checkbox" ng-model="showCurrentTimeSheet" ng-init="showCurrentTimeSheet=true">currentTimeSheet=<span
 				ng-show="showCurrentTimeSheet">{{currentTimeSheet | json}}</span>
