@@ -3,14 +3,14 @@
 	// omit [] to use existing controller: http://stackoverflow.com/a/17289451/237225
 	var module = angular.module('myApp.controllers');
 
-	module.controller('TimeSheetPageCtrl', [ '$location', '$log', '$routeParams', '$scope', 'AdminClientService', 'TimeSheetService', //
-	function TimeSheetPageCtrlFn($location, $log, $routeParams, $scope, AdminClientService, TimeSheetService) {
+	module.controller('TimeSheetPageCtrl', [ '$location', '$log', '$routeParams', '$scope', 'ClientService', 'TimeSheetService', //
+	function TimeSheetPageCtrlFn($location, $log, $routeParams, $scope, ClientService, TimeSheetService) {
 		$scope.edit = false;
 		$scope.adminWorkerTimeSheetMap = {};
 		$scope.timeSheetsMap = {};
 		$scope.timeSheetsList = [];
 		$scope.currentTimeSheet = {};
-		$scope.clientsMap = AdminClientService.getAll();
+		$scope.clientsMap = ClientService.getAll();
 
 		if ($routeParams.id) {
 			var id = $routeParams.id;

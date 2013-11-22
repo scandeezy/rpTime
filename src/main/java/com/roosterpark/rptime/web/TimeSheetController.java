@@ -22,16 +22,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
-import com.roosterpark.rptime.exceptions.WorkerNotFoundException;
+import com.roosterpark.rptime.model.TimeSheet;
 import com.roosterpark.rptime.model.TimeSheetView;
-import com.roosterpark.rptime.model.Worker;
 import com.roosterpark.rptime.service.TimeSheetService;
 import com.roosterpark.rptime.service.WorkerService;
 
+/**
+ * {@link Controller} responsible for {@link TimeSheet} ({@link TimeSheetView})-related MVC endpoints.
+ * <p>
+ * Per {@code web.xml} Administrator-only endpoint {@link RequestMapping RequestMappings} are secured by having {@code /admin/} in their URL
+ * path.
+ * 
+ * @author jjzabkar
+ */
 @Controller
-@RequestMapping(value = "/timesheet")
+// @RequestMapping(value = "/admin/timesheet/timesheet")
 public class TimeSheetController {
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
@@ -42,46 +48,13 @@ public class TimeSheetController {
 	@Inject
 	WorkerService workerService;
 
-	/**
-	 * Validate the session's {@link User} (via {@link UserService}).
-	 * 
-	 * @return a {@link Worker} keyed on the session {@link User User's} {@code email}.
-	 * @throws WorkerNotFoundException
-	 *             if the {@code User} is any of the following:
-	 *             <ol>
-	 *             <li>Not associated with a {@code Worker} (via the {@code email} field)
-	 * @throws IllegalArgumentException
-	 *             if the {@code User} is any of the following:
-	 *             <ol>
-	 *             <li>Not logged in <li>Logged in, but not associated with a {@code User} <li>Missing an {@code email}
-	 */
-	private Worker getValidatedWorker() throws IllegalArgumentException, WorkerNotFoundException {
-		if (userService.isUserLoggedIn()) {
-			User user = userService.getCurrentUser();
-			if (user != null) {
-				final String email = user.getEmail();
-				Worker worker = workerService.getByEmail(email);
-				if (worker != null) {
-					return worker;
-				} else if (userService.isUserAdmin()) {
-					return null;
-				}
-				throw new WorkerNotFoundException("No Worker found for email '" + email + "' for user '" + user.toString()
-						+ "'.  To resolve, create a Worker with this email to link it to a user.", user);
-			}
-			throw new IllegalArgumentException("Someone is logged in, but it's not a user.");
-		}
-		throw new IllegalArgumentException("User not logged in.");
-	};
-
-	@RequestMapping(value = "/new", method = { POST, GET })
+	@RequestMapping(value = "/admin/timesheet/new", method = { POST, GET })
 	@ResponseBody
 	public TimeSheetView getNew() {
-		// TODO: lock down further by isUserAdmin
 		return getTimeSheetForDate(new LocalDate());
 	}
 
-	@RequestMapping(value = "/flag/{id}/{flagged}", method = POST)
+	@RequestMapping(value = "/admin/timesheet/flag/{id}/{flagged}", method = POST)
 	@ResponseBody
 	public void flag(@PathVariable("id") Long id, @PathVariable("flagged") String flagged) {
 		LOGGER.debug("flag to {} timesheet {}", flagged, id);
@@ -89,121 +62,20 @@ public class TimeSheetController {
 		service.flag(id, b);
 	}
 
-	@RequestMapping(method = GET)
+	@RequestMapping(value = "/admin/timesheet", method = GET)
 	@ResponseBody
-	public List<TimeSheetView> getAll() {
-		if (userService.isUserAdmin()) {
-			return service.getAllAdmin();
-		} else {
-			final Long id = getValidatedWorker().getId();
-			return service.getAllForWorker(id);
-		}
+	public List<TimeSheetView> getAllAdmin() {
+		return service.getAllAdmin();
 	}
 
-	@RequestMapping(value = "/client/{clientId}", method = GET)
-	@ResponseBody
-	public List<TimeSheetView> getAllForClientId(@PathVariable("clientId") final Long clientId) {
-		LOGGER.debug("getAll for clientId={}", clientId);
-		return service.getAllForClient(clientId);
-	}
-
-	@RequestMapping(value = "/worker/{workerId}", method = GET)
-	@ResponseBody
-	public List<TimeSheetView> getAllForWorkerId(@PathVariable("workerId") final Long workerId) {
-		LOGGER.debug("getAll for workerId={}", workerId);
-		return service.getAllForWorker(workerId);
-	}
-
-	@RequestMapping(value = "/current", method = GET)
-	@ResponseBody
-	public TimeSheetView getCurrent() {
-		final Long id = getValidatedWorker().getId();
-		return service.getCurrentForWorker(id);
-	}
-
-	@RequestMapping(value = "/current/worker/{workerId}", method = GET)
-	@ResponseBody
-	public TimeSheetView getCurrentForWorker(final Long workerId) {
-		return service.getCurrentForWorker(workerId);
-	}
-
-	@RequestMapping(value = "/last", method = { GET })
-	@ResponseBody
-	public TimeSheetView getLast() {
-		final LocalDate d = (new LocalDate()).minusWeeks(1);
-		// TODO: lock down further by isUserAdmin
-		return getTimeSheetForDate(d);
-	}
-
-	@RequestMapping(value = "/next", method = { GET })
-	@ResponseBody
-	public TimeSheetView getNext() {
-		final LocalDate d = (new LocalDate()).plusWeeks(1);
-		// TODO: lock down further by isUserAdmin
-		return getTimeSheetForDate(d);
-	}
-
-	@RequestMapping(value = "/new/{date}", method = { POST, GET })
-	@ResponseBody
-	public TimeSheetView getDate(@PathVariable("date") String dateString) {
-		LocalDate date = new LocalDate(dateString);
-		return getTimeSheetForDate(date);
-	}
-
-	// TODO Jackson doesn't like using the Joda Constructor.
-	private TimeSheetView getTimeSheetForDate(LocalDate date) {
-		final Worker worker = getValidatedWorker();
-		// TODO: lock down further by isUserAdmin
-		return service.getForWorkerDate(worker.getId(), date);
-	}
-
-	// /**
-	// *
-	// * @param clientId
-	// * - (optional)
-	// * @return
-	// */
-	// @RequestMapping(method = GET)
-	// @ResponseBody
-	// public List<TimeSheetView> getAllForClientId(@RequestParam(value = "clientId", required = false) String clientId) {
-	// List<TimeSheetView> result;
-	// if (StringUtils.isNotBlank(clientId)) {
-	// final Long id = Long.parseLong(clientId);
-	// LOGGER.debug("getAll for client={}", id);
-	// result = service.getAllForClient(id);
-	// } else {
-	// final Worker worker = getValidatedWorker();
-	// LOGGER.debug("getAll for worker={}", worker);
-	// result = service.getAll(worker, userService.isUserAdmin());
-	// }
-	// LOGGER.debug("found {} TimeSheets for getAll()", CollectionUtils.size(result));
-	// return result;
-	// }
-
-	@RequestMapping(value = "/{id}", method = GET)
-	@ResponseBody
-	public TimeSheetView getById(@PathVariable Long id) {
-		// TODO: lock down further by isUserAdmin
-		return service.getById(id);
-	}
-
-	@RequestMapping(method = POST)
-	@ResponseBody
-	public TimeSheetView post(@RequestBody TimeSheetView item) {
-		// TODO: lock down further by isUserAdmin
-		LOGGER.debug("saving TimeSheetView {}", item);
-		TimeSheetView view = service.set(item);
-		return view;
-	}
-
-	@RequestMapping(value = "/submit/{id}", method = POST)
+	@RequestMapping(value = "/admin/timesheet/submit/{id}", method = POST)
 	@ResponseBody
 	public void submit(@PathVariable("id") Long id) {
 		LOGGER.debug("submit timesheet {}", id);
 		service.submit(id);
 	}
 
-	@RequestMapping(value = "/{id}", method = PUT)
+	@RequestMapping(value = "/admin/timesheet/{id}", method = PUT)
 	@ResponseStatus(ACCEPTED)
 	@ResponseBody
 	public TimeSheetView put(@PathVariable("id") Long id, @RequestBody TimeSheetView item) {
@@ -212,10 +84,92 @@ public class TimeSheetController {
 		return item;
 	}
 
-	@RequestMapping(value = "/{id}", method = DELETE)
+	@RequestMapping(value = "/admin/timesheet/{id}", method = DELETE)
 	@ResponseStatus(NO_CONTENT)
 	public void delete(@PathVariable("id") Long id) {
 		service.delete(id);
+	}
+
+	@RequestMapping(value = "/admin/timesheet/client/{clientId}", method = GET)
+	@ResponseBody
+	public List<TimeSheetView> getAllForClientId(@PathVariable("clientId") final Long clientId) {
+		LOGGER.debug("getAll for clientId={}", clientId);
+		return service.getAllForClient(clientId);
+	}
+
+	@RequestMapping(value = "/admin/timesheet/worker/{workerId}", method = GET)
+	@ResponseBody
+	public List<TimeSheetView> getAllForWorkerId(@PathVariable("workerId") final Long workerId) {
+		LOGGER.debug("getAll for workerId={}", workerId);
+		return service.getAllForWorker(workerId);
+	}
+
+	// non-admin functions
+
+	@RequestMapping(value = "/timesheet", method = GET)
+	@ResponseBody
+	public List<TimeSheetView> getAll() {
+		final Long id = workerService.getValidatedWorker().getId();
+		return service.getAllForWorker(id);
+	}
+
+	@RequestMapping(value = "/timesheet/current", method = GET)
+	@ResponseBody
+	public TimeSheetView getCurrent() {
+		final Long id = workerService.getValidatedWorkerId();
+		return service.getCurrentForWorker(id);
+	}
+
+	@RequestMapping(value = "/timesheet/current/worker/{workerId}", method = GET)
+	@ResponseBody
+	public TimeSheetView getCurrentForWorker(final Long workerId) {
+		return service.getCurrentForWorker(workerId);
+	}
+
+	@RequestMapping(value = "/timesheet/last", method = { GET })
+	@ResponseBody
+	public TimeSheetView getLast() {
+		final LocalDate d = (new LocalDate()).minusWeeks(1);
+		return getTimeSheetForDate(d);
+	}
+
+	@RequestMapping(value = "/timesheet/next", method = { GET })
+	@ResponseBody
+	public TimeSheetView getNext() {
+		final LocalDate d = (new LocalDate()).plusWeeks(1);
+		return getTimeSheetForDate(d);
+	}
+
+	@RequestMapping(value = "/timesheet/new/{date}", method = { POST, GET })
+	@ResponseBody
+	public TimeSheetView getDate(@PathVariable("date") String dateString) {
+		LocalDate date = new LocalDate(dateString);
+		return getTimeSheetForDate(date);
+	}
+
+	@RequestMapping(value = "/timesheet/{id}", method = GET)
+	@ResponseBody
+	public TimeSheetView getById(@PathVariable Long id) {
+		final Long workerId = workerService.getValidatedWorkerId();
+		final TimeSheetView result = service.getById(id);
+		Validate.isTrue(workerId.equals(result.getWorkerId()));
+		return result;
+	}
+
+	@RequestMapping(value = "/timesheet", method = POST)
+	@ResponseBody
+	public TimeSheetView post(@RequestBody TimeSheetView item) {
+		LOGGER.debug("saving TimeSheetView {}", item);
+		TimeSheetView view = service.set(item);
+		return view;
+	}
+
+	// private helper methods
+
+	// TODO Jackson doesn't like using the Joda Constructor.
+	private TimeSheetView getTimeSheetForDate(LocalDate date) {
+		final Long id = workerService.getValidatedWorkerId();
+		return service.getForWorkerDate(id, date);
 	}
 
 }

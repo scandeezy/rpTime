@@ -5,7 +5,7 @@
 
 	module.factory('AdminClientService', [ '$resource',//
 	function AdminClientServiceFn($resource) {
-		return $resource('client/:id', {}, {
+		return $resource('admin/client/:id', {}, {
 			// methods 'get', 'save', 'remove' provided by default
 			getAll : {
 				method : 'GET'

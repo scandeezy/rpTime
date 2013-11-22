@@ -7,9 +7,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
 
-import java.util.List;
 import java.util.SortedMap;
-import java.util.TreeMap;
 
 import javax.inject.Inject;
 
@@ -22,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.roosterpark.rptime.model.Client;
 import com.roosterpark.rptime.service.ClientService;
+import com.roosterpark.rptime.service.WorkerService;
 
 /**
  * {@link Controller} responsible for {@link Client}-related MVC endpoints.
@@ -36,16 +35,20 @@ public class ClientController {
 
 	@Inject
 	ClientService service;
+	@Inject
+	WorkerService workerService;
 
 	@RequestMapping(value = "/admin/client", method = GET)
 	@ResponseBody
 	public SortedMap<Long, Client> getAll() {
-		final List<Client> list = service.getAll();
-		final SortedMap<Long, Client> map = new TreeMap<Long, Client>();
-		for (Client obj : list) {
-			map.put(obj.getId(), obj);
-		}
-		return map;
+		return service.getAllMap();
+	}
+
+	@RequestMapping(value = "/client", method = GET)
+	@ResponseBody
+	public SortedMap<Long, Client> getAllForCurrentWorker() {
+		final Long workerId = workerService.getValidatedWorkerId();
+		return service.getAllForWorker(workerId);
 	}
 
 	@RequestMapping(value = "/admin/client/{id}", method = GET)

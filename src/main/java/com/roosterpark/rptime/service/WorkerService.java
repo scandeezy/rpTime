@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
+import com.roosterpark.rptime.exceptions.WorkerNotFoundException;
 import com.roosterpark.rptime.model.Worker;
 
 @Named
@@ -109,4 +110,46 @@ public class WorkerService {
 		}
 		return false;
 	}
+
+	/**
+	 * Get the current {@link Worker} via the session's {@link User} (via {@link UserService}).
+	 * 
+	 * @return a {@link Worker} keyed on the session {@link User User's} {@code email}.
+	 * @throws WorkerNotFoundException
+	 *             if the {@code User} is any of the following:
+	 *             <ol>
+	 *             <li>Not associated with a {@code Worker} (via the {@code email} field)
+	 * @throws IllegalArgumentException
+	 *             if the {@code User} is any of the following:
+	 *             <ol>
+	 *             <li>Not logged in <li>Logged in, but not associated with a {@code User} <li>Missing an {@code email}
+	 */
+	public Worker getValidatedWorker() throws IllegalArgumentException, WorkerNotFoundException {
+		if (userService.isUserLoggedIn()) {
+			User user = userService.getCurrentUser();
+			if (user != null) {
+				final String email = user.getEmail();
+				Worker worker = getByEmail(email);
+				if (worker != null) {
+					return worker;
+				} else if (userService.isUserAdmin()) {
+					return null;
+				}
+				throw new WorkerNotFoundException("No Worker found for email '" + email + "' for user '" + user.toString()
+						+ "'.  To resolve, create a Worker with this email to link it to a user.", user);
+			}
+			throw new IllegalArgumentException("Someone is logged in, but it's not a user.");
+		}
+		throw new IllegalArgumentException("User not logged in.");
+	};
+
+	public Long getValidatedWorkerId() throws WorkerNotFoundException {
+		final Worker w = getValidatedWorker();
+		if (w != null) {
+			return w.getId();
+		} else {
+			throw new WorkerNotFoundException("No Worker found.  Unknown error occurred.", userService.getCurrentUser());
+		}
+	}
+
 }

@@ -14,7 +14,7 @@ String logoutUrl2 = userService2.createLogoutURL(request.getRequestURI());
 			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
 				<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="//roosterpark.com"> <img src="/resources/img/roosterpark-logo.png" alt="Rooster Park" height="18"
+			<a class="navbar-brand" href="//roosterpark.com" tabindex="-1"> <img src="/resources/img/roosterpark-logo.png" alt="Rooster Park" height="18"
 				width="40">
 			</a>
 		</div>
@@ -23,23 +23,25 @@ String logoutUrl2 = userService2.createLogoutURL(request.getRequestURI());
 		<div class="collapse navbar-collapse navbar-ex1-collapse">
 			<ul class="nav navbar-nav">
 				<% if (!userService2.isUserAdmin()) { %>
-				<li ng-class="{active : page == '/timesheet'}"><a href="#/timesheet">Time Sheets</a></li>
+				<li ng-class="{active : page == '/timesheet'}"><a href="#/timesheet" tabindex="-1">Time Sheets</a></li>
 				<% } else { %>
-				<li ng-class="{active : page == '/landing'}"><a href="#/landing">Home</a></li>
-				<li ng-class="{active : page == '/timesheet'}"><a href="#/timesheet">Time Sheets</a></li>
-				<li ng-class="{active : page == '/worker'}"><a href="#/worker">Workers</a></li>
-				<li ng-class="{active : page == '/client'}"><a href="#/client">Clients</a></li>
-				<li ng-class="{active : page == '/contract'}"><a href="#/contract">Contracts</a></li>
+				<li ng-class="{active : page == '/landing'}"><a href="#/landing" tabindex="-1">Home</a></li>
+				<li ng-class="{active : page == '/timesheet'}"><a href="#/timesheet" tabindex="-1">Time Sheets</a></li>
+				<li ng-class="{active : page == '/worker'}"><a href="#/worker" tabindex="-1">Workers</a></li>
+				<li ng-class="{active : page == '/client'}"><a href="#/client" tabindex="-1">Clients</a></li>
+				<li ng-class="{active : page == '/contract'}"><a href="#/contract" tabindex="-1">Contracts</a></li>
 				<li class="dropdown" ng-class="{active : page == '/report'}">
 					<a class="dropdown-toggle" data-toggle="dropdown">Reports <b
 						class="caret"></b></a>
 					<ul class="dropdown-menu">
-						<li><a href="#/report/total-hours-per-worker-per-month">Hours per Worker/Month, all Clients</a></li>
-						<li><a href="#/report/timesheets-per-worker-by-month-for-client">Time Sheets per Worker/Month/Client</a></li>
-						<li><a href="#/report/total-hours-per-worker-by-range-for-client">Time Sheets per Worker/Range/Client</a></li>
+						<li><a href="#/report/total-hours-per-worker-per-month" tabindex="-1">Hours per Worker/Month, all Clients</a></li>
+						<li><a href="#/report/timesheets-per-worker-by-month-for-client" tabindex="-1">Time Sheets per Worker/Month/Client</a></li>
+						<li ng-show="debug">
+							<a href="#/report/total-hours-per-worker-by-range-for-client" tabindex="-1">Time Sheets per Worker/Range/Client</a>
+						</li>
 					</ul>
-				<li ng-show="page == '/report'"">
-					<a id="print" name="print" href="JavaScript:window.print();" title="Print"><span
+				<li ng-show="page == '/report'">
+					<a id="print" name="print" href="JavaScript:window.print();" title="Print" tabindex="-1"><span
 						class="glyphicon glyphicon-print"></span></a>
 				</li>
 				<% } %>
@@ -48,11 +50,11 @@ String logoutUrl2 = userService2.createLogoutURL(request.getRequestURI());
 			<ul class="nav navbar-nav navbar-right">
 				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown"><%=user2.getNickname()%><b class="caret"></b></a>
 					<ul class="dropdown-menu">
-						<li><a href="<%=logoutUrl2%>">Sign out</a></li>
 						<% if (userService2.isUserAdmin()) { %>
-						<li class="divider"></li>
  						<li><a href="#/about">About</a></li>			
+						<li class="divider"></li>
 						<% } %>
+						<li><a href="<%=logoutUrl2%>">Sign out</a></li>
 					</ul></li>
 			</ul>
 	

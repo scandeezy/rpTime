@@ -5,6 +5,8 @@ import static com.googlecode.objectify.ObjectifyService.ofy;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import javax.inject.Named;
 
@@ -19,6 +21,8 @@ import com.roosterpark.rptime.model.TimeSheetDay;
 @Named
 public class ClientService {
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
+
+	ContractService contractService;
 
 	public Client getById(Long id) {
 		LOGGER.debug("Getting Client with key {}", id);
@@ -70,5 +74,19 @@ public class ClientService {
 			}
 		}
 		return result;
+	}
+
+	public SortedMap<Long, Client> getAllForWorker(Long workerId) {
+		// TODO: lock down here if needed
+		return getAllMap();
+	}
+
+	public SortedMap<Long, Client> getAllMap() {
+		final List<Client> list = getAll();
+		final SortedMap<Long, Client> map = new TreeMap<Long, Client>();
+		for (Client obj : list) {
+			map.put(obj.getId(), obj);
+		}
+		return map;
 	}
 }

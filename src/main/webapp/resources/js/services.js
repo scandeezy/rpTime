@@ -8,6 +8,16 @@
 		return $resource('about', {}, {});
 	} ]);
 
+	module.factory('ClientService', [ '$resource',//
+	function ClientServiceFn($resource) {
+		// methods 'get', 'save', 'remove' provided by default
+		return $resource('client/:id', {}, {
+			getAll : {
+				method : 'GET'
+			}
+		});
+	} ]);
+
 	module.factory('TimeSheetService', [ '$resource',//
 	function TimeSheetService($resource) {
 		return $resource('timesheet/:id/:date', {}, {
