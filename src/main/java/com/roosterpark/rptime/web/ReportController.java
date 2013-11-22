@@ -16,12 +16,15 @@ import com.roosterpark.rptime.model.report.HoursForClientInRange;
 import com.roosterpark.rptime.service.ReportService;
 
 /**
- * MVC {@link RequestMapping Endpoints} for {@link ReportService}-provided reportable business objects.
+ * {@link Controller} responsible for {@link ReportService}-provided MVC endpoints.
+ * <p>
+ * Per {@code web.xml} Administrator-only endpoint {@link RequestMapping RequestMappings} are secured by having {@code /admin/} in their URL
+ * path.
  * 
  * @author jjzabkar
  */
 @Controller
-@RequestMapping(value = "/report", method = GET)
+@RequestMapping(value = "/admin/report", method = GET)
 public class ReportController {
 
 	@Inject

@@ -23,14 +23,21 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.roosterpark.rptime.model.Client;
 import com.roosterpark.rptime.service.ClientService;
 
+/**
+ * {@link Controller} responsible for {@link Client}-related MVC endpoints.
+ * <p>
+ * Per {@code web.xml} Administrator-only endpoint {@link RequestMapping RequestMappings} are secured by having {@code /admin/} in their URL
+ * path.
+ * 
+ * @author jjzabkar
+ */
 @Controller
-@RequestMapping(value = "/client")
 public class ClientController {
 
 	@Inject
 	ClientService service;
 
-	@RequestMapping(method = GET)
+	@RequestMapping(value = "/admin/client", method = GET)
 	@ResponseBody
 	public SortedMap<Long, Client> getAll() {
 		final List<Client> list = service.getAll();
@@ -41,13 +48,13 @@ public class ClientController {
 		return map;
 	}
 
-	@RequestMapping(value = "/{id}", method = GET)
+	@RequestMapping(value = "/admin/client/{id}", method = GET)
 	@ResponseBody
 	public Client getById(@PathVariable Long id) {
 		return service.getById(id);
 	}
 
-	@RequestMapping(method = POST)
+	@RequestMapping(value = "/admin/client", method = POST)
 	// @ResponseStatus(CREATED)
 	@ResponseBody
 	public Client post(@RequestBody Client item) {
@@ -55,7 +62,7 @@ public class ClientController {
 		return item;
 	}
 
-	@RequestMapping(value = "/{id}", method = PUT)
+	@RequestMapping(value = "/admin/client/{id}", method = PUT)
 	@ResponseStatus(ACCEPTED)
 	@ResponseBody
 	public Client put(@PathVariable("id") Long id, @RequestBody Client item) {
@@ -63,7 +70,7 @@ public class ClientController {
 		return item;
 	}
 
-	@RequestMapping(value = "/{id}", method = DELETE)
+	@RequestMapping(value = "/admin/client/{id}", method = DELETE)
 	@ResponseStatus(NO_CONTENT)
 	public void delete(@PathVariable("id") Long id) {
 		service.delete(id);

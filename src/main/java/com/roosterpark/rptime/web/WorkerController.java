@@ -21,20 +21,27 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.roosterpark.rptime.model.Worker;
 import com.roosterpark.rptime.service.WorkerService;
 
+/**
+ * {@link Controller} responsible for {@link Worker}-related MVC endpoints.
+ * <p>
+ * Per {@code web.xml} Administrator-only endpoint {@link RequestMapping RequestMappings} are secured by having {@code /admin/} in their URL
+ * path.
+ * 
+ * @author jjzabkar
+ */
 @Controller
-@RequestMapping(value = "/worker")
 public class WorkerController {
 
 	@Inject
 	WorkerService service;
 
-	@RequestMapping(method = GET)
+	@RequestMapping(value = "/admin/worker", method = GET)
 	@ResponseBody
 	public List<Worker> getAll() {
 		return service.getAll();
 	}
 
-	@RequestMapping(value = "/idmap", method = GET)
+	@RequestMapping(value = "/admin/worker/idmap", method = GET)
 	@ResponseBody
 	public SortedMap<Long, Worker> getMap() {
 		final List<Worker> list = service.getAll();
@@ -45,20 +52,20 @@ public class WorkerController {
 		return map;
 	}
 
-	@RequestMapping(value = "/{id}", method = GET)
+	@RequestMapping(value = "/admin/worker/{id}", method = GET)
 	@ResponseBody
 	public Worker getById(@PathVariable Long id) {
 		return service.getById(id);
 	}
 
-	@RequestMapping(method = POST)
+	@RequestMapping(value = "/admin/worker", method = POST)
 	@ResponseBody
 	public Worker post(@RequestBody Worker item) {
 		service.set(item);
 		return item;
 	}
 
-	@RequestMapping(value = "/{id}", method = DELETE)
+	@RequestMapping(value = "/admin/worker/{id}", method = DELETE)
 	@ResponseStatus(NO_CONTENT)
 	public void delete(@PathVariable("id") Long id) {
 		service.delete(id);

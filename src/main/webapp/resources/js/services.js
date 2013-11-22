@@ -8,54 +8,6 @@
 		return $resource('about', {}, {});
 	} ]);
 
-	module.factory('AdminClientService', [ '$resource',//
-	function AdminClientServiceFn($resource) {
-		return $resource('client/:id', {}, {
-			// methods 'get', 'save', 'remove' provided by default
-			getAll : {
-				method : 'GET'
-			}
-		});
-	} ]);
-
-	module.factory('AdminContractService', [ '$resource',//
-	function AdminContractServiceFn($resource) {
-		return $resource('contract/:id', {}, {
-			// methods 'get', 'save', 'remove' provided by default
-			getAll : {
-				method : 'GET',
-				params : {
-					id : 'idmap'
-				}
-			},
-			getAllForClient : {
-				isArray : true,
-				method : 'GET',
-				url : 'contract/client/:clientId'
-			}
-		});
-	} ]);
-
-	module.factory('AdminWorkerService', [ '$resource',//
-	function AdminWorkerServiceFn($resource) {
-		return $resource('worker/:id', {}, {
-			// methods 'get', 'save', 'remove' provided by default
-			getAll : {
-				method : 'GET',
-				params : {
-					id : 'idmap'
-				}
-			}
-		});
-	} ]);
-
-	module.factory('AdminReportService', [ '$resource',//
-	function AdminReportServiceFn($resource) {
-		return $resource('report/:id/:client/:startDate/:endDate', {}, {
-		// methods 'get', 'save', 'remove' provided by default
-		});
-	} ]);
-
 	module.factory('TimeSheetService', [ '$resource',//
 	function TimeSheetService($resource) {
 		return $resource('timesheet/:id/:date', {}, {

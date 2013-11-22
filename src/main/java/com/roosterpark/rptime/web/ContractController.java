@@ -23,50 +23,57 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.roosterpark.rptime.model.Contract;
 import com.roosterpark.rptime.service.ContractService;
 
+/**
+ * {@link Controller} responsible for {@link Contract}-related MVC endpoints.
+ * <p>
+ * Per {@code web.xml} Administrator-only endpoint {@link RequestMapping RequestMappings} are secured by having {@code /admin/} in their URL
+ * path.
+ * 
+ * @author jjzabkar
+ */
 @Controller
-@RequestMapping(value = "/contract")
 public class ContractController {
 
 	@Inject
 	ContractService service;
 
-	@RequestMapping(value = "/worker/{workerId}/active", method = GET)
+	@RequestMapping(value = "/admin/contract/worker/{workerId}/active", method = GET)
 	@ResponseBody
 	public List<Contract> getActiveByWorker(@PathVariable Long workerId) {
 		return service.getActiveContractsForWorker(workerId, new Interval(new LocalDate()));
 	}
 
-	@RequestMapping(value = "/worker/{workerId}", method = GET)
+	@RequestMapping(value = "/admin/contract/worker/{workerId}", method = GET)
 	@ResponseBody
 	public List<Contract> getAllByWorker(@PathVariable Long workerId) {
 		return service.getContractsForWorker(workerId);
 	}
 
-	@RequestMapping(value = "/client/{clientId}/active", method = GET)
+	@RequestMapping(value = "/admin/contract/client/{clientId}/active", method = GET)
 	@ResponseBody
 	public List<Contract> getActiveByClient(@PathVariable Long clientId) {
 		return service.getActiveContractsForClient(clientId, new LocalDate());
 	}
 
-	@RequestMapping(value = "/client/{clientId}", method = GET)
+	@RequestMapping(value = "/admin/contract/client/{clientId}", method = GET)
 	@ResponseBody
 	public List<Contract> getAllByClient(@PathVariable Long clientId) {
 		return service.getContractsForClient(clientId);
 	}
 
-	@RequestMapping(value = "/{id}", method = GET)
+	@RequestMapping(value = "/admin/contract/{id}", method = GET)
 	@ResponseBody
 	public Contract getContract(@PathVariable Long id) {
 		return service.getById(id);
 	}
 
-	@RequestMapping(method = GET)
+	@RequestMapping(value = "/admin/contract", method = GET)
 	@ResponseBody
 	public List<Contract> getAllContracts() {
 		return service.getAll();
 	}
 
-	@RequestMapping(value = "/idmap", method = GET)
+	@RequestMapping(value = "/admin/contract/idmap", method = GET)
 	@ResponseBody
 	public SortedMap<Long, Contract> getMap() {
 		final List<Contract> list = service.getAll();
@@ -77,7 +84,7 @@ public class ContractController {
 		return map;
 	}
 
-	@RequestMapping(method = POST)
+	@RequestMapping(value = "/admin/contract", method = POST)
 	@ResponseBody
 	public Contract saveContract(@RequestBody Contract contract) {
 		service.set(contract);
@@ -85,7 +92,7 @@ public class ContractController {
 		return contract;
 	}
 
-	@RequestMapping(value = "/{id}", method = DELETE)
+	@RequestMapping(value = "/admin/contract/{id}", method = DELETE)
 	@ResponseStatus(NO_CONTENT)
 	public void delete(@PathVariable("id") Long id) {
 		service.delete(id);
