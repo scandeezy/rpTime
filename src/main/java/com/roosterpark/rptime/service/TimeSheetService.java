@@ -35,6 +35,8 @@ public class TimeSheetService {
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
 	@Inject
+	ClientService clientService;
+	@Inject
 	ContractService contractService;
 	@Inject
 	UserService userService;
@@ -147,8 +149,6 @@ public class TimeSheetService {
 		result = timeSheetDao.set(result, null);
 
 		TimeSheetView view = convert(result);
-		// new TimeSheetView(result, entries, timeSheetDao);
-
 		return view;
 	}
 
@@ -172,12 +172,12 @@ public class TimeSheetService {
 	}
 
 	private TimeSheetView convert(TimeSheet sheet) {
-		List<TimeSheetDay> entries = timeSheetDayDao.getEntries(sheet.getTimeCardIds());
-		LOGGER.debug("converting to TimeSheetView: {}, entries={}", sheet, entries);
+		final List<TimeSheetDay> days = timeSheetDayDao.getEntries(sheet.getTimeCardIds());
+		final Set<Long> activeClientIds = clientService.getAvailableForTimeSheetDays(days);
+		activeClientIds.add(ptoClientId);
+		LOGGER.debug("converting to TimeSheetView: {}, days={}", sheet, days);
 		// TODO assert the order is consistent
-		TimeSheetView result = new TimeSheetView(sheet, entries, timeSheetDao);
-		result.getClientIds().add(ptoClientId);
-		return result;
+		return new TimeSheetView(sheet, days, timeSheetDao, activeClientIds);
 	}
 
 	private LocalDate adjustDate(LocalDate date, Integer dayOfWeek) {
@@ -196,33 +196,6 @@ public class TimeSheetService {
 		LOGGER.debug("The adjusted return date is {}", returnDate);
 		return returnDate;
 	}
-
-	// /**
-	// * Get all the {@link TimeSheetView TimeSheetViews} for a given {@link Worker} OR all (if {@code isAdmin == TRUE}).
-	// *
-	// * @param worker
-	// * -the (optional) {@link Worker} whose {@code id} will key the search. Only optional if {@code isAdmin == TRUE}.
-	// * @param isAdmin
-	// * -
-	// * @return a {@link List} of {@link TimeSheetView TimeSheetViews}
-	// */
-	// public List<TimeSheetView> getAll(final Worker worker, final boolean isAdmin) {
-	// LOGGER.debug("Getting TimeSheets for isAdmin={}, worker={}", isAdmin, worker);
-	// Long workerId = null;
-	// if (worker != null) {
-	// workerId = worker.getId();
-	// } else {
-	// Validate.isTrue(isAdmin, "Required: Either admin access or a non-null Worker.");
-	// }
-	// List<TimeSheet> sheets = timeSheetDao.getAll(workerId, isAdmin);
-	// LOGGER.debug("Found these sheets for all {}", sheets);
-	// List<TimeSheetView> views = new LinkedList<>();
-	// for (TimeSheet sheet : sheets) {
-	// views.add(convert(sheet));
-	// }
-	// Collections.sort(views);
-	// return views;
-	// }
 
 	public List<TimeSheetView> getAllAdmin() {
 		Validate.isTrue(userService.isUserAdmin(), "Admin required for this operation");
@@ -249,15 +222,6 @@ public class TimeSheetService {
 		final List<TimeSheet> timeSheets = timeSheetDao.getAllForClientInInterval(clientId, searchInterval);
 		return convert(timeSheets);
 	}
-
-	// public SortedMap<Long, TimeSheetView> getAllMap(final Worker worker, final boolean isAdmin) {
-	// final List<TimeSheetView> list = getAll(worker, isAdmin);
-	// final SortedMap<Long, TimeSheetView> map = new TreeMap<>();
-	// for (TimeSheetView obj : list) {
-	// map.put(obj.getId(), obj);
-	// }
-	// return map;
-	// }
 
 	public List<TimeSheetView> getAllForClient(final Long clientId) {
 		return convert(timeSheetDao.getAllForClient(clientId));
@@ -336,12 +300,13 @@ public class TimeSheetService {
 
 	public TimeSheetView set(TimeSheetView view) {
 		LOGGER.debug("Saving timesheet {}", view);
-		List<TimeSheetDay> entries = view.getDays();
-		entries = timeSheetDayDao.set(entries);
-		view.setDays(entries);
+		List<TimeSheetDay> days = view.getDays();
+		days = timeSheetDayDao.set(days);
+		view.setDays(days);
 		TimeSheet sheet = view.toTimeSheet();
-		sheet = timeSheetDao.set(sheet, entries);
-		return new TimeSheetView(sheet, entries, timeSheetDao);
+		sheet = timeSheetDao.set(sheet, days);
+		Set<Long> activeClientIds = clientService.getAvailableForTimeSheetDays(days);
+		return new TimeSheetView(sheet, days, timeSheetDao, activeClientIds);
 	}
 
 	public void delete(Long id) {

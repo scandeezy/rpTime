@@ -125,7 +125,7 @@
 											</button>
 											<ul class="dropdown-menu">
 												<li>-- Select Client--</li>
-												<li ng-repeat="aClientId in currentTimeSheet.clientIds"><a ng-click="setEntryClientId(aClientId);">{{clientsMap[aClientId].name}}</a>
+												<li ng-repeat="aClientId in currentTimeSheet.availableClientIds"><a ng-click="setEntryClientId(aClientId);">{{clientsMap[aClientId].name}}</a>
 												</li>
 											</ul>
 											<button class="btn btn-default" type="button" ng-hide="$first" ng-click="removeTimeCardLogEntry(entry);">

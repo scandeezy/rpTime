@@ -1,7 +1,10 @@
 package com.roosterpark.rptime.model;
 
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.joda.time.LocalDate;
 
@@ -15,37 +18,24 @@ import com.roosterpark.rptime.service.dao.TimeSheetDao;
  */
 public class TimeSheetView extends TimeSheet {
 
+	private Set<Long> availableClientIds;
 	private boolean currentTimeSheet;
 	private List<TimeSheetDay> days;
 	private Long nextTimeSheetId;
 	private Long previousTimeSheetId;
 
-	public List<TimeSheetDay> getDays() {
-		return days;
-	}
-
-	public void setDays(List<TimeSheetDay> timeSheetDays) {
-		this.days = timeSheetDays;
-		super.getTimeCardIds().clear();
-		for (TimeSheetDay d : timeSheetDays) {
-			super.getTimeCardIds().add(d.getId());
-		}
-	}
-
-	@JsonIgnore
-	@Override
-	public List<Long> getTimeCardIds() {
-		return super.getTimeCardIds();
-	}
-
+	@SuppressWarnings("deprecation")
 	public TimeSheetView() {
 		super();
 		this.days = new LinkedList<>();
+		this.availableClientIds = new HashSet<>();
 	}
 
-	public TimeSheetView(final TimeSheet sheet, final List<TimeSheetDay> days, final TimeSheetDao dao) {
+	public TimeSheetView(final TimeSheet sheet, final List<TimeSheetDay> days, final TimeSheetDao dao, final Set<Long> availableClientIds) {
 		this();
 		this.setAdminNote(sheet.getAdminNote());
+
+		this.setAvailableClientIds(availableClientIds);
 		this.setClientIds(sheet.getClientIds());
 		this.setDays(days);
 		this.setFlagged(sheet.isFlagged());
@@ -77,7 +67,26 @@ public class TimeSheetView extends TimeSheet {
 		}
 	}
 
+	public List<TimeSheetDay> getDays() {
+		return days;
+	}
+
+	public void setDays(List<TimeSheetDay> timeSheetDays) {
+		this.days = timeSheetDays;
+		super.getTimeCardIds().clear();
+		for (TimeSheetDay d : timeSheetDays) {
+			super.getTimeCardIds().add(d.getId());
+		}
+	}
+
+	@JsonIgnore
+	@Override
+	public List<Long> getTimeCardIds() {
+		return super.getTimeCardIds();
+	}
+
 	public TimeSheet toTimeSheet() {
+		@SuppressWarnings("deprecation")
 		final TimeSheet result = new TimeSheet();
 		result.setAdminNote(this.getAdminNote());
 		result.setClientIds(this.getClientIds());
@@ -97,6 +106,15 @@ public class TimeSheetView extends TimeSheet {
 
 	public boolean isCurrentTimeSheet() {
 		return currentTimeSheet;
+	}
+
+	public Set<Long> getAvailableClientIds() {
+		return availableClientIds;
+	}
+
+	public void setAvailableClientIds(Collection<Long> availableClientIds) {
+		this.availableClientIds.clear();
+		this.availableClientIds.addAll(availableClientIds);
 	}
 
 	public void setCurrentTimeSheet(boolean currentTimeSheet) {

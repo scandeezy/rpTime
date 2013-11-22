@@ -82,22 +82,6 @@ public class TimeSheet implements Comparable<TimeSheet> {
 		setTimeCardIds(logIds);
 	}
 
-	// public TimeSheet(TimeSheetView view) {
-	// this();
-	// setId(view.getId());
-	// setWorkerId(view.getWorkerId());
-	// setClientIds(view.getClientIds());
-	// setStartDate(view.getStartDate());
-	// setWeek(view.getWeek());
-	// setYear(view.getYear());
-	// setStartDayOfWeek(view.getStartDayOfWeek());
-	// setNote(view.getNote());
-	//
-	// for (TimeSheetDay entry : view.getDays()) {
-	// this.timeCardIds.add(entry.getId());
-	// }
-	// }
-
 	public Long getId() {
 		return id;
 	}

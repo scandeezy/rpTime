@@ -2,15 +2,19 @@ package com.roosterpark.rptime.service;
 
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Named;
 
+import org.datanucleus.util.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.roosterpark.rptime.model.Client;
-import org.datanucleus.util.StringUtils;
+import com.roosterpark.rptime.model.TimeCardLogEntry;
+import com.roosterpark.rptime.model.TimeSheetDay;
 
 @Named
 public class ClientService {
@@ -36,12 +40,12 @@ public class ClientService {
 	}
 
 	public void set(Client item) {
-                if(StringUtils.isEmpty(item.getName()))
-                    throw new IllegalArgumentException("Client name required.");
-                if(null == item.getStartDayOfWeek())
-                    throw new IllegalArgumentException("Start Day Of Week required.");
-                if(null == item.getLunchRequired())
-                    item.setLunchRequired(true);
+		if (StringUtils.isEmpty(item.getName()))
+			throw new IllegalArgumentException("Client name required.");
+		if (null == item.getStartDayOfWeek())
+			throw new IllegalArgumentException("Start Day Of Week required.");
+		if (null == item.getLunchRequired())
+			item.setLunchRequired(true);
 
 		LOGGER.debug("Saving Client {}", item);
 		ofy().save().entity(item).now();
@@ -56,5 +60,15 @@ public class ClientService {
 		LOGGER.debug("Delete Client {}", id);
 		Client c = getById(id);
 		ofy().delete().entity(c).now();
+	}
+
+	public Set<Long> getAvailableForTimeSheetDays(List<TimeSheetDay> days) {
+		final Set<Long> result = new HashSet<>();
+		for (TimeSheetDay day : days) {
+			for (TimeCardLogEntry e : day.getEntries()) {
+				result.add(e.getClientId());
+			}
+		}
+		return result;
 	}
 }
