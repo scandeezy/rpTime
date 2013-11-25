@@ -37,7 +37,6 @@ import com.roosterpark.rptime.service.WorkerService;
  * @author jjzabkar
  */
 @Controller
-// @RequestMapping(value = "/admin/timesheet/timesheet")
 public class TimeSheetController {
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
@@ -82,6 +81,12 @@ public class TimeSheetController {
 		Validate.isTrue(item.getId().equals(id));
 		service.set(item);
 		return item;
+	}
+
+	@RequestMapping(value = "/admin/timesheet/{id}", method = GET)
+	@ResponseBody
+	public TimeSheetView getByAdminId(@PathVariable Long id) {
+		return service.getById(id);
 	}
 
 	@RequestMapping(value = "/admin/timesheet/{id}", method = DELETE)
@@ -159,6 +164,16 @@ public class TimeSheetController {
 	@RequestMapping(value = "/timesheet", method = POST)
 	@ResponseBody
 	public TimeSheetView post(@RequestBody TimeSheetView item) {
+		LOGGER.debug("saving TimeSheetView {}", item);
+		final Long workerId = workerService.getValidatedWorkerId();
+		Validate.isTrue(workerId.equals(item.getWorkerId()));
+		TimeSheetView view = service.set(item);
+		return view;
+	}
+
+	@RequestMapping(value = "/admin/timesheet", method = POST)
+	@ResponseBody
+	public TimeSheetView postAdmin(@RequestBody TimeSheetView item) {
 		LOGGER.debug("saving TimeSheetView {}", item);
 		TimeSheetView view = service.set(item);
 		return view;
