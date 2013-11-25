@@ -121,11 +121,11 @@
 										<div class="btn-group btn-group-sm">
 											<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="timeSheetLogEntry-clientId-{{ii}}"
 												name="timeSheetLogEntry-clientId-{{ii}}">
-												{{clientsMap[entry.clientId].name}} <span class="caret"></span>
+												{{currentAvailableClientsMap[entry.clientId].name}} <span class="caret"></span>
 											</button>
 											<ul class="dropdown-menu">
 												<li>-- Select Client--</li>
-												<li ng-repeat="aClientId in currentTimeSheet.availableClientIds"><a ng-click="setEntryClientId(aClientId);">{{clientsMap[aClientId].name}}</a>
+												<li ng-repeat="client in currentTimeSheet.availableClients | orderBy:'name'"><a ng-click="setEntryClientId(client.id);">{{client.name}}</a>
 												</li>
 											</ul>
 											<button class="btn btn-default" type="button" ng-hide="$first" ng-click="removeTimeCardLogEntry(entry);">
@@ -203,7 +203,6 @@ isAdmin={{isAdmin}}
 				ng-show="showCurrentTimeSheet">{{currentTimeSheet | json}}</span>
 <input type="checkbox" ng-model="showTimeSheetsMap" ng-init="showTimeSheetsMap=false">timeSheetsMap=<span
 				ng-show="showTimeSheetsMap">{{timeSheetsMap | json}}</span>
-<input type="checkbox" ng-model="showClientsMap" ng-init="showClientsMap=false">clientsMap=<span ng-show="showClientsMap">{{clientsMap | json}}</span>
 <input type="checkbox" ng-model="showWorkersMap" ng-init="showWorkersMap=true">workersMap=<span ng-show="showWorkersMap">{{workersMap | json}}</span>
 </pre>
 	</div>

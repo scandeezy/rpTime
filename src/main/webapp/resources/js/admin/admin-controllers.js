@@ -27,26 +27,6 @@
 			});
 		}
 
-		$rootScope.$watch('clientsMap',function clientsMap$watchListSyncFn(map){
-			var arr = [];
-			angular.forEach(map, function(val, key) {
-				if (key && val.id) {
-					arr.push(val);
-				}
-			});
-			$rootScope.clientsList = arr;
-		},true);
-
-		$rootScope.$watch('contractsMap',function contractsMap$watchListSyncFn(map){
-			var arr = [];
-			angular.forEach(map, function(val, key) {
-				if (key && val.id) {
-					arr.push(val);
-				}
-			});
-			$rootScope.contractsList = arr;
-		},true);
-
 		function updateWorkersFn() {
 			AdminWorkerService.getAll(function successWGetAllFn(data) {
 				$rootScope.workersMap = data;
@@ -56,6 +36,26 @@
 		$scope.$on('updateClients', updateClientsFn);
 		$scope.$on('updateWorkers', updateWorkersFn);
 		$scope.$on('updateContracts', updateContractsFn);
+
+		$rootScope.$watch('clientsMap', function clientsMap$watchListSyncFn(map) {
+			var arr = [];
+			angular.forEach(map, function(val, key) {
+				if (key && val.id) {
+					arr.push(val);
+				}
+			});
+			$rootScope.clientsList = arr;
+		}, true);
+
+		$rootScope.$watch('contractsMap', function contractsMap$watchListSyncFn(map) {
+			var arr = [];
+			angular.forEach(map, function(val, key) {
+				if (key && val.id) {
+					arr.push(val);
+				}
+			});
+			$rootScope.contractsList = arr;
+		}, true);
 
 		$scope.$watch('workersMap', function workersMap$watchFn(map) {
 			var arr = [];

@@ -38,17 +38,17 @@ public class ClientController {
 	@Inject
 	WorkerService workerService;
 
-	@RequestMapping(value = "/admin/client", method = GET)
-	@ResponseBody
-	public SortedMap<Long, Client> getAll() {
-		return service.getAllMap();
-	}
-
 	@RequestMapping(value = "/client", method = GET)
 	@ResponseBody
 	public SortedMap<Long, Client> getAllForCurrentWorker() {
 		final Long workerId = workerService.getValidatedWorkerId();
 		return service.getAllForWorker(workerId);
+	}
+
+	@RequestMapping(value = "/admin/client", method = GET)
+	@ResponseBody
+	public SortedMap<Long, Client> getAll() {
+		return service.getAllMap();
 	}
 
 	@RequestMapping(value = "/admin/client/{id}", method = GET)

@@ -3,14 +3,22 @@
 	// omit [] to use existing controller: http://stackoverflow.com/a/17289451/237225
 	var module = angular.module('myApp.controllers');
 
-	module.controller('TimeSheetPageCtrl', [ '$location', '$log', '$routeParams', '$scope', 'ClientService', 'TimeSheetService', //
-	function TimeSheetPageCtrlFn($location, $log, $routeParams, $scope, ClientService, TimeSheetService) {
+	module.controller('TimeSheetPageCtrl', [ '$location', '$log', '$routeParams', '$scope', 'TimeSheetService', //
+	function TimeSheetPageCtrlFn($location, $log, $routeParams, $scope, TimeSheetService) {
 		$scope.edit = false;
 		$scope.adminWorkerTimeSheetMap = {};
 		$scope.timeSheetsMap = {};
 		$scope.timeSheetsList = [];
 		$scope.currentTimeSheet = {};
-		$scope.clientsMap = ClientService.getAll();
+		$scope.currentAvailableClientsMap = {};
+
+		$scope.$watch('currentTimeSheet.availableClients',function(list){
+			var map = {};
+			angular.forEach(list,function(obj){
+				map[obj.id] = obj;
+			});
+			$scope.currentAvailableClientsMap = map;
+		},true);
 
 		//TimeSheetService will be redefined with admin paths in admin-services.js
 		var svc = TimeSheetService;

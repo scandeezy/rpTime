@@ -6,9 +6,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.joda.time.Interval;
 import org.joda.time.LocalDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.roosterpark.rptime.service.ClientService;
 import com.roosterpark.rptime.service.dao.TimeSheetDao;
 
 /**
@@ -17,8 +22,10 @@ import com.roosterpark.rptime.service.dao.TimeSheetDao;
  * @author scandeezy
  */
 public class TimeSheetView extends TimeSheet {
+	private static final Logger LOGGER = LoggerFactory.getLogger(TimeSheet.class);
 
-	private Set<Long> availableClientIds;
+	private Set<Client> availableClients;
+	private Set<Long> selectedClientIds;
 	private boolean currentTimeSheet;
 	private List<TimeSheetDay> days;
 	private Long nextTimeSheetId;
@@ -28,14 +35,14 @@ public class TimeSheetView extends TimeSheet {
 	public TimeSheetView() {
 		super();
 		this.days = new LinkedList<>();
-		this.availableClientIds = new HashSet<>();
+		this.availableClients = new HashSet<>();
+		this.selectedClientIds = new HashSet<>();
 	}
 
-	public TimeSheetView(final TimeSheet sheet, final List<TimeSheetDay> days, final TimeSheetDao dao, final Set<Long> availableClientIds) {
+	public TimeSheetView(final TimeSheet sheet, final List<TimeSheetDay> days, final TimeSheetDao dao, final ClientService clientService) {
 		this();
-		this.setAdminNote(sheet.getAdminNote());
 
-		this.setAvailableClientIds(availableClientIds);
+		this.setAdminNote(sheet.getAdminNote());
 		this.setClientIds(sheet.getClientIds());
 		this.setDays(days);
 		this.setFlagged(sheet.isFlagged());
@@ -51,6 +58,17 @@ public class TimeSheetView extends TimeSheet {
 		this.setYear(sheet.getYear());
 
 		// "my" (non-TimeSheet fields)
+
+		final Interval timeSheetInterval = new Interval(sheet.getStartDate().toDateTimeAtStartOfDay(), sheet.getStartDate().plusDays(7)
+				.toDateTimeAtStartOfDay());
+
+		final Set<Client> availableClients = clientService.getAvailableForWorkerIntervalDays(sheet.getWorkerId(), timeSheetInterval, days);
+		LOGGER.debug("found {} availableClients for TimeSheet.id={}", CollectionUtils.size(availableClients), sheet.getId());
+		final Set<Long> selectedClientIds = clientService.getSelectedIdsForTimeSheetDays(days);
+		LOGGER.debug("found {} selectedClientIds for TimeSheet.id={}", CollectionUtils.size(selectedClientIds), sheet.getId());
+		this.setAvailableClients(availableClients);
+		this.setSelectedClientIds(selectedClientIds);
+
 		if (sheet.getStartDate() != null) {
 			LocalDate prev = sheet.getStartDate().minusWeeks(1);
 			LocalDate next = sheet.getStartDate().plusWeeks(1);
@@ -108,13 +126,22 @@ public class TimeSheetView extends TimeSheet {
 		return currentTimeSheet;
 	}
 
-	public Set<Long> getAvailableClientIds() {
-		return availableClientIds;
+	public Set<Client> getAvailableClients() {
+		return availableClients;
 	}
 
-	public void setAvailableClientIds(Collection<Long> availableClientIds) {
-		this.availableClientIds.clear();
-		this.availableClientIds.addAll(availableClientIds);
+	public void setAvailableClients(Collection<Client> availableClients) {
+		this.availableClients.clear();
+		this.availableClients.addAll(availableClients);
+	}
+
+	public Set<Long> getSelectedClientIds() {
+		return selectedClientIds;
+	}
+
+	public void setSelectedClientIds(Collection<Long> selectedClientIds) {
+		this.selectedClientIds.clear();
+		this.selectedClientIds.addAll(selectedClientIds);
 	}
 
 	public void setCurrentTimeSheet(boolean currentTimeSheet) {

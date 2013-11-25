@@ -55,9 +55,9 @@ public class ContractService {
 			throw new EntityNotFoundException("Required 'Worker' not found for id '" + workerId
 					+ "'.  Solution: create Worker on the /workers page: perhaps for user " + u);
 		}
-		List<Contract> contracts = getContractsForWorker(workerId);
+		final List<Contract> contracts = getContractsForWorker(workerId);
 		LOGGER.debug("found {} contracts for worker {}.  Determine which are active.", CollectionUtils.size(contracts), workerId);
-		List<Contract> active = new LinkedList<Contract>();
+		final List<Contract> active = new LinkedList<Contract>();
 		for (Contract contract : contracts) {
 			Interval contractInterval = getIntervalForContract(contract);
 			if (searchInterval.overlaps(contractInterval)) {
@@ -69,7 +69,6 @@ public class ContractService {
 						searchInterval, contractInterval);
 			}
 		}
-
 		return active;
 	}
 
@@ -101,7 +100,7 @@ public class ContractService {
 
 			boolean endDateOk = (contractEndDate == null) ? true : false;
 			if (contractEndDate != null) {
-				final Interval contractInterval =getIntervalForContract(contract);
+				final Interval contractInterval = getIntervalForContract(contract);
 				endDateOk = contractInterval.overlaps(searchInterval);
 			}
 
@@ -183,7 +182,7 @@ public class ContractService {
 		Validate.notNull(c, "Contract required");
 		final LocalDate start = c.getStartDate();
 		Validate.notNull(start, "Contract must have a startDate");
-		final LocalDate end = c.getStartDate();
+		final LocalDate end = c.getEndDate();
 		if (end != null) {
 			return new Interval(start.toDateTimeAtStartOfDay(), end.toDateTimeAtStartOfDay());
 		} else { // end== null

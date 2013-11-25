@@ -47,13 +47,6 @@ public class TimeSheetService {
 
 	private TimeSheetDayDao timeSheetDayDao;
 
-	private Long ptoClientId;
-
-	@Inject
-	public void setPtoClientId(PaidTimeOffService ptoService) {
-		ptoClientId = ptoService.getPtoClient().getId();
-	}
-
 	@Inject
 	public void setTimeSheetDao(TimeSheetDao timeSheetDao) {
 		this.timeSheetDao = timeSheetDao;
@@ -171,13 +164,10 @@ public class TimeSheetService {
 		return views;
 	}
 
-	private TimeSheetView convert(TimeSheet sheet) {
+	private TimeSheetView convert(final TimeSheet sheet) {
 		final List<TimeSheetDay> days = timeSheetDayDao.getEntries(sheet.getTimeCardIds());
-		final Set<Long> activeClientIds = clientService.getAvailableForTimeSheetDays(days);
-		activeClientIds.add(ptoClientId);
 		LOGGER.debug("converting to TimeSheetView: {}, days={}", sheet, days);
-		// TODO assert the order is consistent
-		return new TimeSheetView(sheet, days, timeSheetDao, activeClientIds);
+		return new TimeSheetView(sheet, days, timeSheetDao, clientService);
 	}
 
 	private LocalDate adjustDate(LocalDate date, Integer dayOfWeek) {
@@ -305,8 +295,7 @@ public class TimeSheetService {
 		view.setDays(days);
 		TimeSheet sheet = view.toTimeSheet();
 		sheet = timeSheetDao.set(sheet, days);
-		Set<Long> activeClientIds = clientService.getAvailableForTimeSheetDays(days);
-		return new TimeSheetView(sheet, days, timeSheetDao, activeClientIds);
+		return new TimeSheetView(sheet, days, timeSheetDao, clientService);
 	}
 
 	public void delete(Long id) {
