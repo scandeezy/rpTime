@@ -36,33 +36,19 @@
 				throw new Error("missing required args");
 			}
 
-			$log.info("dosave:", [ svc, obj, updateFn, map ]);
-			if (obj.id // JJZ LOH FIXME
-					&& false && 'JJZ TODO Implement UPDATE in angular services.js and server @Controllers') {
-				svc.update({
-					id : obj.id
-				}, obj, function updateSuccessFn(data) {
-					saveOrUpdateSuccessFn(data, map, updateFn, afterFn);
-				});
-
-			} else {
-				if (obj.id) {
-					$log.error("JJZ LOH FIXME: Implement UPDATE in @Controllers. FIXME.");
-					// TODO JJZ LOH FIXME 2013-10-30 svc.update({id:obj.id},)
-				}
-				svc.save(obj, function saveSuccessFn(data) {
-					saveOrUpdateSuccessFn(data, map, updateFn, afterFn);
-				});
-			}
+			// $log.info("dosave:", [ svc, obj, updateFn, map ]);
+			svc.save(obj, function saveSuccessFn(data) {
+				saveOrUpdateSuccessFn(data, map, updateFn, afterFn);
+			});
 
 			function saveOrUpdateSuccessFn(data, map, updateFn, afterFn) {
 				$log.info("saved data id=", data.id);
 				map[data.id] = data;
 				if (updateFn) {
-					$log.info("do ($broadcast) update '" + updateFn + "'");
+					// $log.info("do ($broadcast) update '" + updateFn + "'");
 					$scope.$broadcast(updateFn);
 				} else {
-					$log.info("skipped $broadcast update");
+					// $log.info("skipped $broadcast update");
 				}
 				if (afterFn) {
 					afterFn(data);
@@ -90,7 +76,7 @@
 				id : id
 			}, function successFn() {
 				if (updateFn) {
-					$log.info("do ($broadcast) update '" + updateFn + "'");
+					// $log.info("do ($broadcast) update '" + updateFn + "'");
 					$scope.$broadcast(updateFn);
 				}
 				if (afterFn) {
@@ -104,17 +90,10 @@
 
 	module.controller('LandingPageCtrl', [ '$location', '$log', '$scope', //
 	function LandingPageCtrlFn($location, $log, $scope) {
-
 		// auto-redirect to current timesheet IF not admin
 		if (!$scope.isAdmin) {
 			$location.path('/timesheet').search('id', 'current');
 		}
-
-	} ]);
-
-	module.controller('HistoryPageCtrl', [ '$log', '$scope', //
-	function HistoryPageCtrlFn($log, $scope) {
-		// $log.info('HistoryPageCtrl init', $scope);
 	} ]);
 
 	module.controller('UserPageCtrl', [ '$log', '$scope', //
