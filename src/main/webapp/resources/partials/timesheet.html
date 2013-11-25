@@ -6,8 +6,8 @@
 				Time Sheets
 				<div class="pull-right">
 					<div class="btn-group">
-						<button type="button" id="new" class="btn btn-primary btn-sm" ng-click="set();">Create</button>
-						<button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown">
+						<button type="button" id="new" class="btn btn-primary btn-sm" ng-click="set();" ng-disabled="!workerExists">Create</button>
+						<button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" ng-disabled="!workerExists">
 							<span class="caret"></span> <span class="sr-only">Toggle Create Dropdown</span> &nbsp;
 						</button>
 						<ul class="dropdown-menu" role="menu">
@@ -18,20 +18,15 @@
 							<li><a ng-click="setWeekOther();">Other...</a></li>
 						</ul>
 					</div>
-					<div class="col-sm-2">
-					</div>
 				</div>
 			</h4>
 		</div>
 		<div class="panel-body" ng-hide="isAdmin">
 			<ul>
-				<li ng-repeat="timeSheet in timeSheetsList" ng-init="worker=workersMap[timeSheet.workerId]">
-					<a ng-click="set(timeSheet)">{{timeSheet.year}},
-						week {{timeSheet.week}} - {{timeSheet.startDate}}</a>
-					<span ng-show="timeSheet.status=='UNSUBMITTED'" class="label label-warning">Not Submitted</span>
-					<span ng-show="timeSheet.status=='SUBMITTED'" class="label label-info">Submitted</span>
-					<span ng-show="timeSheet.status=='APPROVED'" class="label label-success">Approved</span>
-				</li>
+				<li ng-repeat="timeSheet in timeSheetsList" ng-init="worker=workersMap[timeSheet.workerId]"><a ng-click="set(timeSheet)">{{timeSheet.year}},
+						week {{timeSheet.week}} - {{timeSheet.startDate}}</a> <span ng-show="timeSheet.status=='UNSUBMITTED'" class="label label-warning">Not
+						Submitted</span> <span ng-show="timeSheet.status=='SUBMITTED'" class="label label-info">Submitted</span> <span
+					ng-show="timeSheet.status=='APPROVED'" class="label label-success">Approved</span></li>
 			</ul>
 		</div>
 		<div class="panel-body" ng-show="isAdmin">
@@ -41,21 +36,20 @@
 					<ul>
 						<li ng-repeat="timeSheet in timeSheetList | orderBy:'startDate':1 ">
 							<button type="button" id="delete-{{timeSheet.id}}" class="btn btn-sm btn-default" ng-click="remove(timeSheet);" ng-show="debug">Delete</button>
-							<a ng-click="set(timeSheet)">{{timeSheet.printableTimeSheetString}}</a>
-							<span ng-show="timeSheet.flagged" class="label label-danger"><span class="glyphicon glyphicon-flag"></span>&nbsp;</span>
-							<span ng-show="timeSheet.status=='UNSUBMITTED'" class="label label-warning">Not Submitted</span>
-							<span ng-show="timeSheet.status=='SUBMITTED'" class="label label-info">Submitted</span>
-							<span ng-show="timeSheet.status=='APPROVED'" class="label label-success">Approved</span>
+							<a ng-click="set(timeSheet)">{{timeSheet.printableTimeSheetString}}</a> <span ng-show="timeSheet.flagged" class="label label-danger"><span
+								class="glyphicon glyphicon-flag"></span>&nbsp;</span> <span ng-show="timeSheet.status=='UNSUBMITTED'" class="label label-warning">Not
+								Submitted</span> <span ng-show="timeSheet.status=='SUBMITTED'" class="label label-info">Submitted</span> <span
+							ng-show="timeSheet.status=='APPROVED'" class="label label-success">Approved</span>
 						</li>
 					</ul>
 				</li>
 			</ul>
 		</div>
 	</div>
-	
+
 	<div class="alert alert-warning alert-dismissable" ng-show="edit && (currentTimeSheet.currentTimeSheet === false)">
-	  	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-	  	<strong>Warning!</strong> You are editing an old time sheet.  <a href="#/timesheet?id=current">Click here</a> for the current timesheet.
+		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		<strong>Warning!</strong> You are editing an old time sheet. <a href="#/timesheet?id=current">Click here</a> for the current timesheet.
 	</div>
 
 	<form role="form" name="createTimeSheetForm">
@@ -69,33 +63,29 @@
 				</h4>
 				<div class="row">
 					<div class="col-sm-12">
-						<small><span class="text-muted">As of {{currentTimeSheet.updateTimestamp}}</span></small>
-						
-						<label class="label label-success" title="A submitted time card can still be updated by clicking the 'Update' button below."
-						ng-show="currentTimeSheet.status!='UNSUBMITTED'">Submitted <span class="glyphicon glyphicon-ok"></span></label>
-						
+						<small><span class="text-muted">As of {{currentTimeSheet.updateTimestamp}}</span></small> <label class="label label-success"
+							title="A submitted time card can still be updated by clicking the 'Update' button below."
+							ng-show="currentTimeSheet.status!='UNSUBMITTED'">Submitted <span class="glyphicon glyphicon-ok"></span></label>
+
 						<div class="btn-group btn-group-sm pull-right">
-							<a type="button" class="btn btn-default" ng-disabled="!currentTimeSheet.previousTimeSheetId" ng-href="#/timesheet?id={{currentTimeSheet.previousTimeSheetId}}">Previous</a>
-							<a type="button" class="btn btn-default" ng-hide="!currentTimeSheet.nextTimeSheetId" ng-href="#/timesheet?id={{currentTimeSheet.nextTimeSheetId}}">Next</a>
-							
-							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"
-								ng-show="!currentTimeSheet.nextTimeSheetId">
+							<a type="button" class="btn btn-default" ng-disabled="!currentTimeSheet.previousTimeSheetId"
+								ng-href="#/timesheet?id={{currentTimeSheet.previousTimeSheetId}}">Previous</a> <a type="button" class="btn btn-default"
+								ng-hide="!currentTimeSheet.nextTimeSheetId" ng-href="#/timesheet?id={{currentTimeSheet.nextTimeSheetId}}">Next</a>
+
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" ng-show="!currentTimeSheet.nextTimeSheetId">
 								Next <span class="caret"></span> <span class="sr-only">Toggle Create Dropdown</span>
 							</button>
 							<ul class="dropdown-menu" role="menu">
 								<li><a ng-click="setWeekNext();">Create Time Sheet for Next Week</a></li>
 								<li><a ng-click="setWeekOther();">Create Time Sheet for Other Date...</a></li>
 							</ul>
-							
-							<a type="button" class="btn"  
-								ng-class="{'btn-danger':currentTimeSheet.flagged, 'btn-default':!(currentTimeSheet.flagged)}" 
+
+							<a type="button" class="btn" ng-class="{'btn-danger':currentTimeSheet.flagged, 'btn-default':!(currentTimeSheet.flagged)}"
 								ng-click="currentTimeSheet.flagged=!(currentTimeSheet.flagged);flag(currentTimeSheet.id,currentTimeSheet.flagged);"
-								ng-show="isAdmin">
-								<span ng-class="{'text-muted':!(currentTimeSheet.flagged)}">
-									<span class="glyphicon glyphicon-flag"></span>&nbsp;
-								</span>
+								ng-show="isAdmin"> <span ng-class="{'text-muted':!(currentTimeSheet.flagged)}"> <span class="glyphicon glyphicon-flag"></span>&nbsp;
+							</span>
 							</a>
-							
+
 						</div>
 					</div>
 				</div>
@@ -155,30 +145,26 @@
 				</div>
 				<div class="form-group row debug" ng-show="debug">
 					<p class="text-warning">Debug Properties</p>
-					<label for="flagged" class="control-label">
-					<input id="flagged" name="flagged" type="checkbox" ng-model="currentTimeSheet.flagged">
-					Flagged
-					</label>
-					<br/>
-					<label for="status"  class="control-label">
-					<select class="input select" id="status" name="status" ng-model="currentTimeSheet.status">
-						<option>UNSUBMITTED</option>
-						<option>SUBMITTED</option>
-						<option>APPROVED</option>
-					</select>
-					Status
+					<label for="flagged" class="control-label"> <input id="flagged" name="flagged" type="checkbox"
+						ng-model="currentTimeSheet.flagged"> Flagged
+					</label> <br /> <label for="status" class="control-label"> <select class="input select" id="status" name="status"
+						ng-model="currentTimeSheet.status">
+							<option>UNSUBMITTED</option>
+							<option>SUBMITTED</option>
+							<option>APPROVED</option>
+					</select> Status
 					</label>
 				</div>
 				<div class="form-group row">
 					<div class="col-sm-offset-2 col-sm-10">
 						<button type="button" id="save" class="btn " ng-class="{'btn-primary': createTimeSheetForm.$valid}"
 							ng-disabled="!(createTimeSheetForm.$valid && createTimeSheetForm.$dirty)" ng-click="save(currentTimeSheet);">
-							<span ng-show="currentTimeSheet.status!='UNSUBMITTED'">Update</span>
-							<span ng-show="currentTimeSheet.status=='UNSUBMITTED'">Save</span>
-							</button>
+							<span ng-show="currentTimeSheet.status!='UNSUBMITTED'">Update</span> <span ng-show="currentTimeSheet.status=='UNSUBMITTED'">Save</span>
+						</button>
 						<span ng-show="currentTimeSheet.status=='UNSUBMITTED'">
-						<button type="button" id="submit" class="btn btn-default" ng-click="submit(currentTimeSheet);" ng-disabled="!isSubmittable(currentTimeSheet);">Submit</button>
-						<p class="text-muted">A time sheet may still be updated after it has been submitted.</p>
+							<button type="button" id="submit" class="btn btn-default" ng-click="submit(currentTimeSheet);"
+								ng-disabled="!isSubmittable(currentTimeSheet);">Submit</button>
+							<p class="text-muted">A time sheet may still be updated after it has been submitted.</p>
 						</span>
 
 					</div>

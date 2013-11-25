@@ -51,14 +51,14 @@
 		});
 	} ]);
 
-	console && console.error("redefining TimeSheetService...");
+	console && console.info("redefining TimeSheetService for Admin...");
 	module.factory('TimeSheetService', [ '$resource',//
 	function AdminTimeSheetService($resource) {
 		return $resource('admin/timesheet/:id/:date', {}, {
 			// methods 'get', 'save', 'remove' provided by default
 			create : {
 				method : 'GET',
-				url : 'timesheet/new'
+				url : 'admin/timesheet/new'
 			},
 			flag : {
 				method : 'POST',
@@ -66,7 +66,7 @@
 					tid : '@id',
 					flagged : '@flagged'
 				},
-				url : 'timesheet/flag/:tid/:flagged'
+				url : 'admin/timesheet/flag/:tid/:flagged'
 			},
 			getAll : {
 				isArray : true,
@@ -75,24 +75,24 @@
 			getAllForClient : {
 				isArray : true,
 				method : 'GET',
-				url : 'timesheet/client/:clientId'
+				url : 'admin/timesheet/client/:clientId'
 			},
 			getAllForWorker : {
 				isArray : true,
 				method : 'GET',
-				url : 'timesheet/worker/:workerId'
+				url : 'admin/timesheet/worker/:workerId'
 			},
 			getCurrent : {
 				method : 'GET',
-				url : 'timesheet/current'
+				url : 'admin/timesheet/current'
 			},
 			getLast : {
 				method : 'GET',
-				url : 'timesheet/last'
+				url : 'admin/timesheet/last'
 			},
 			getNext : {
 				method : 'GET',
-				url : 'timesheet/next'
+				url : 'admin/timesheet/next'
 			},
 			getWeek : {
 				method : 'GET'
@@ -102,7 +102,7 @@
 				params : {
 					tid : '@id'
 				},
-				url : 'timesheet/submit/:tid'
+				url : 'admin/timesheet/submit/:tid'
 			}
 		});
 	} ]);

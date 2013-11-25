@@ -20,9 +20,27 @@ import com.roosterpark.rptime.model.Worker;
 @Named
 public class WorkerService {
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
+	private static WorkerService inst;
 
 	@Inject
 	UserService userService;
+
+	public WorkerService() {
+		inst = this;
+	}
+
+	public static final WorkerService inst() {
+		return inst;
+	}
+
+	public Worker getCurrent() {
+		User user = userService.getCurrentUser();
+		if (user != null) {
+			final String email = user.getEmail();
+			return getByEmail(email);
+		}
+		return null;
+	}
 
 	public Worker getById(Long id) {
 		LOGGER.warn("Getting worker with id={}", id);

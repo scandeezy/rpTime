@@ -45,6 +45,17 @@ String logoutUrl2 = userService2.createLogoutURL(request.getRequestURI());
 						class="glyphicon glyphicon-print"></span></a>
 				</li>
 				<% } %>
+				<li class="dropdown" ng-show="debug">
+					<a class="dropdown-toggle debug" data-toggle="dropdown">Debug <b
+						class="caret"></b></a>
+					<ul class="dropdown-menu debug">
+						<!-- isAdmin is set on MainCtrl's scope -->
+						<li><pre class="debug">isAdmin={{isAdmin}}</pre></li>
+						<li class="divider"></li>
+						<!-- workerExists is inherited from index.jsp -->
+						<li><pre class="debug">workerExists={{workerExists}}</pre></li>
+					</ul>
+				</li>
 			</ul>
 	
 			<ul class="nav navbar-nav navbar-right">

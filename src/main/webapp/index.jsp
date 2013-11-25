@@ -2,6 +2,7 @@
 <%@ page import="com.google.appengine.api.users.User"%>
 <%@ page import="com.google.appengine.api.users.UserService"%>
 <%@ page import="com.google.appengine.api.users.UserServiceFactory"%>
+<%@ page import="com.roosterpark.rptime.service.WorkerService"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 
 <html ng-app="myApp">
@@ -40,8 +41,9 @@ ng-controller="UserPageCtrl"
 <%
 } // (admin == false)
 %>
+ng-init='workerExists=("<%=WorkerService.inst().getCurrent()%>"!="null");'
 >
-		
+
 <%@ include file="/rptime.jsp"%>
 		
 	</div>
