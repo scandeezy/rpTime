@@ -80,9 +80,6 @@
 							</td>
 							<td>{{hours | number:2}}
 								<div class="btn-group btn-group-xs hidden-print pull-right">
-									<a class="btn btn-default" ng-href="#/timesheet?id={{timeSheetId}}">
-										<span class="glyphicon glyphicon-edit"></span>&nbsp;
-									</a>
 									<button class="btn btn-default"
 										ng-class="{'btn-danger':(report.timeSheetMap[timeSheetId].flagged), 'btn-default':!(report.timeSheetMap[timeSheetId].flagged)}"
 										ng-click="report.timeSheetMap[timeSheetId].flagged=!(report.timeSheetMap[timeSheetId].flagged);flag(timeSheetId,(report.timeSheetMap[timeSheetId].flagged));">
