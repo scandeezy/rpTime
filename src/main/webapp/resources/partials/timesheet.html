@@ -93,11 +93,11 @@
 				<div class="form-group">
 					<ul class="list-group">
 						<li ng-repeat="day in currentTimeSheet.days" class="list-group-item row" ng-init="ii=$index">
-							<div class="col-sm-3">
-								<!-- {{day.entries[0].date}}&nbsp; -->
+							<div class="col-sm-4">
+								<small class="text-muted">{{day.entries[0].date}}</small>
 								{{dayOfWeekArr[((currentTimeSheet.startDayOfWeek + ii) % 7)].description}}
 							</div>
-							<div class="col-sm-9">
+							<div class="col-sm-8">
 								<div class="row" ng-repeat="entry in day.entries" ng-controller="TimeSheetDayCtrl" ng-init="eIndex=$index">
 									<div class="col-sm-3">
 										<input type="time" class="form-control input-sm" ng-model="entry.startTime" title="Clock-in Time">
