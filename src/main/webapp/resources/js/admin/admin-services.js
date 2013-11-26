@@ -48,6 +48,14 @@
 	function AdminReportServiceFn($resource) {
 		return $resource('admin/report/:id/:client/:startDate/:endDate', {}, {
 		// methods 'get', 'save', 'remove' provided by default
+			getTimeSheetsPerWorkerByMonthForClientReport : {
+				method : 'GET',
+				url : 'admin/report/timesheets-per-worker-by-month-for-client/:clientId/:date'
+			},
+			getTotalHoursPerWorkerPerMonthReport : {
+				method : 'GET',
+				url : 'admin/report/total-hours-per-worker-per-month/:clientId/:date'
+			}
 		});
 	} ]);
 

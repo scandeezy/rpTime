@@ -23,10 +23,9 @@
 		$scope.selectClient = function selectClientFn(clientId) {
 			var d = $routeParams.date;
 			if (clientId) {
-				$scope.report = AdminReportService.get({
-					id : 'timesheets-per-worker-by-month-for-client',
+				$scope.report = AdminReportService.getTimeSheetsPerWorkerByMonthForClient({
 					client : clientId,
-					startDate : d
+					date : d
 				}, function successFn(data) {
 					$scope.selectedClient = clientId;
 					$location.search('clientId', clientId).search("date", d);
@@ -99,12 +98,13 @@
 
 	} ]);
 
-	module.controller('ReportTotalHoursPerWorkerPerMonthCtrl', [ '$log', '$scope', 'AdminReportService', //
-	function ReportTotalHoursPerWorkerPerMonthCtrlFn($log, $scope, AdminReportService) {
+	module.controller('ReportTotalHoursPerWorkerPerMonthCtrl', [ '$log', '$routeParams', '$scope', 'AdminReportService', //
+	function ReportTotalHoursPerWorkerPerMonthCtrlFn($log, $routeParams, $scope, AdminReportService) {
 		// $log.info('ReportTotalHoursPerWorkerPerMonthCtrl init', $scope);
 		$scope.report = {};
-		AdminReportService.get({
-			id : 'total-hours-per-worker-per-month'
+		var d = $routeParams.date;
+		AdminReportService.getTotalHoursPerWorkerPerMonthReport({
+			date: d
 		}, function successFn(data) {
 			$scope.report = data;
 		});

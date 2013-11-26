@@ -1,5 +1,19 @@
 <div id="total-hours-per-worker-per-month" ng-controller="ReportTotalHoursPerWorkerPerMonthCtrl" class="container">
 
+	<div class="row">
+		<div class="col-sm-12 hidden-print">
+			<form class="form-inline" role="form">
+				<div class="form-group pull-right" ng-show="true && report">
+					<div class="btn-group btn-group-default pull-right">
+						<a type="button" class="btn btn-default" ng-href="#/report/total-hours-per-worker-per-month?date={{report.previousMonthReportDate}}">Previous
+							Month</a> <a type="button" class="btn btn-default"
+							ng-href="#/report/total-hours-per-worker-per-month?date={{report.nextMonthReportDate}}">Next Month</a>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
 	<h2>Total Hours -- All Clients</h2>
 	<h3>{{report.reportDate}}</h3>
 

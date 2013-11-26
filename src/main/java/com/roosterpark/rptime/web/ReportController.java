@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.roosterpark.rptime.model.report.HoursForClientInRange;
 import com.roosterpark.rptime.model.report.TimeSheetsPerWorkerByMonthForClientReport;
+import com.roosterpark.rptime.model.report.TotalHoursPerWorkerPerMonthReport;
 import com.roosterpark.rptime.model.report.WorkersWithFewerThanFortyHoursPerWeekReport;
 import com.roosterpark.rptime.service.ReportService;
 
@@ -37,8 +38,15 @@ public class ReportController {
 	 */
 	@RequestMapping(value = "/total-hours-per-worker-per-month")
 	@ResponseBody
-	public Map<String, Object> getTotalHoursPerWorkerPerMonth() {
-		return reportService.getTotalHoursPerWorkerPerMonthReport();
+	public TotalHoursPerWorkerPerMonthReport getTotalHoursPerWorkerPerMonth() {
+		return reportService.getTotalHoursPerWorkerPerMonthReport(new LocalDate());
+	}
+
+	@RequestMapping(value = "/total-hours-per-worker-per-month/{forMonth}")
+	@ResponseBody
+	public TotalHoursPerWorkerPerMonthReport getTotalHoursPerWorkerPerMonthForMonth(@PathVariable("forMonth") String forMonth) {
+		final LocalDate reportDate = new LocalDate(forMonth);
+		return reportService.getTotalHoursPerWorkerPerMonthReport(reportDate);
 	}
 
 	/**

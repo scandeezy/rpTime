@@ -11,7 +11,6 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.Validate;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
-import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 import org.joda.time.PeriodType;
 import org.slf4j.Logger;
@@ -23,6 +22,7 @@ import com.roosterpark.rptime.model.TimeSheetView;
 import com.roosterpark.rptime.model.Worker;
 import com.roosterpark.rptime.model.report.HoursForClientInRange;
 import com.roosterpark.rptime.model.report.TimeSheetsPerWorkerByMonthForClientReport;
+import com.roosterpark.rptime.model.report.TotalHoursPerWorkerPerMonthReport;
 import com.roosterpark.rptime.model.report.WorkersWithFewerThanFortyHoursPerWeekReport;
 
 /**
@@ -45,17 +45,17 @@ public class ReportService {
 	@Inject
 	WorkerService workerService;
 
-	private static final String DATE_TIME_FORMAT_YEAR_MONTH = "MMMM YYYY";
 	private static final double MILLIS_TO_HOURS = 60.0 * 60.0 * 1000.0;
 
 	protected Map<Long, Double> getWorkerIdToHoursMapForMonth(final List<Worker> workers, final List<TimeSheetView> timeSheets,
 			final LocalDate d) {
 		final Map<Long, Double> result = new LinkedHashMap<Long, Double>();
-		LocalDate date1 = new LocalDate(d.getYear(), d.getMonthOfYear(), 1);
-		LocalDate date2 = new LocalDate(date1.plusMonths(1));
+		final LocalDate date1 = new LocalDate(d.getYear(), d.getMonthOfYear(), 1);
+		final LocalDate date2 = new LocalDate(date1.plusMonths(1));
+		final Interval searchInterval = new Interval(date1.toDateTimeAtStartOfDay(), date2.toDateTimeAtStartOfDay());
 
-		LOGGER.debug("building report for {} workers, {} timeSheets with dates betwen [{},{}]",
-				new Object[] { workers.size(), timeSheets.size(), date1, date2 });
+		LOGGER.debug("building report for {} workers, {} timeSheets with searchInterval={}",
+				new Object[] { workers.size(), timeSheets.size(), searchInterval });
 		for (Worker w : workers) {
 			Long workerId = w.getId();
 			LOGGER.trace("\t found {} timesheets for worker {}", timeSheets.size(), workerId);
@@ -69,12 +69,10 @@ public class ReportService {
 						entries = day.getEntries();
 						LOGGER.trace("\t\t found {} entries for timeSheet {}", entries.size(), t.getId());
 						for (TimeCardLogEntry entry : entries) {
-							LocalDate entryDate = entry.getDate();
-							LOGGER.trace("\t\t\tchecking if {} < {} < {} ", new Object[] { date1, entryDate, date2 });
-							if (date1.isBefore(entryDate) //
-									&& date2.isAfter(entryDate) //
-									&& entry.getStartTime() != null //
-									&& entry.getEndTime() != null) {
+							final LocalDate entryDate = entry.getDate();
+							final boolean overlaps = searchInterval.overlaps(entryDate.toInterval());
+							LOGGER.trace("\t\tcheck if entryDate={} and searchInterval overlaps={}", entryDate, overlaps);
+							if (overlaps && entry.getStartTime() != null && entry.getEndTime() != null) {
 								int start = entry.getStartTime().getMillisOfDay();
 								int end = entry.getEndTime().getMillisOfDay();
 								double entryMillis = (double) (end - start); // millis
@@ -92,18 +90,17 @@ public class ReportService {
 		return result;
 	}
 
-	public Map<String, Object> getTotalHoursPerWorkerPerMonthReport() {
-		final Map<String, Object> map = new LinkedHashMap<String, Object>();
-		final LocalDate d = new LocalDate();
+	public TotalHoursPerWorkerPerMonthReport getTotalHoursPerWorkerPerMonthReport(LocalDate reportDate) {
+		final TotalHoursPerWorkerPerMonthReport report = new TotalHoursPerWorkerPerMonthReport(reportDate);
+
 		final List<Worker> workers = workerService.getAll();
 		final List<TimeSheetView> unfiltered = timeSheetService.getAllAdmin();
 		final List<TimeSheetView> timeSheets = timeSheetService.getReportable(unfiltered);
+		final Map<Long, Double> workerIdToHoursMapForMonth = getWorkerIdToHoursMapForMonth(workers, timeSheets, reportDate);
 
-		map.put("workerList", workers);
-		map.put("workerIdToHoursMap", getWorkerIdToHoursMapForMonth(workers, timeSheets, d));
-		map.put("reportDate", d.toString(DATE_TIME_FORMAT_YEAR_MONTH));
-		map.put("updateDate", new LocalDateTime());
-		return map;
+		report.setWorkerList(workers);
+		report.setWorkerIdToHoursMap(workerIdToHoursMapForMonth);
+		return report;
 	}
 
 	/** url: <code>#/report/timesheets-per-worker-by-month-for-client</code> */
