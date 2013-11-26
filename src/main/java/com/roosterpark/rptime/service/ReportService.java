@@ -22,6 +22,8 @@ import com.roosterpark.rptime.model.TimeSheetDay;
 import com.roosterpark.rptime.model.TimeSheetView;
 import com.roosterpark.rptime.model.Worker;
 import com.roosterpark.rptime.model.report.HoursForClientInRange;
+import com.roosterpark.rptime.model.report.TimeSheetsPerWorkerByMonthForClientReport;
+import com.roosterpark.rptime.model.report.WorkersWithFewerThanFortyHoursPerWeekReport;
 
 /**
  * Business logic to create objects to be reported upon. Typically modeled as {@link Map Maps}.
@@ -43,8 +45,7 @@ public class ReportService {
 	@Inject
 	WorkerService workerService;
 
-	private String yearMonthDateTimeFormatter = "MMMM YYYY";
-
+	private static final String DATE_TIME_FORMAT_YEAR_MONTH = "MMMM YYYY";
 	private static final double MILLIS_TO_HOURS = 60.0 * 60.0 * 1000.0;
 
 	protected Map<Long, Double> getWorkerIdToHoursMapForMonth(final List<Worker> workers, final List<TimeSheetView> timeSheets,
@@ -100,17 +101,17 @@ public class ReportService {
 
 		map.put("workerList", workers);
 		map.put("workerIdToHoursMap", getWorkerIdToHoursMapForMonth(workers, timeSheets, d));
-		map.put("reportDate", d.toString(yearMonthDateTimeFormatter));
+		map.put("reportDate", d.toString(DATE_TIME_FORMAT_YEAR_MONTH));
 		map.put("updateDate", new LocalDateTime());
 		return map;
 	}
 
 	/** url: <code>#/report/timesheets-per-worker-by-month-for-client</code> */
-	public Map<String, Object> getTimeSheetsPerWorkerByMonthForClientReport(final Long clientId, final LocalDate date) {
+	public TimeSheetsPerWorkerByMonthForClientReport getTimeSheetsPerWorkerByMonthForClientReport(final Long clientId, final LocalDate date) {
 		Validate.notNull(clientId);
 		LOGGER.debug("clientId={}, date={}", clientId, date);
 		final Interval searchInterval = getMonthSearchInterval(date);
-		final Map<String, Object> map = new LinkedHashMap<String, Object>();
+		// final Map<String, Object> map = new LinkedHashMap<String, Object>();
 		final Map<Long, Map<LocalDate, Long>> workerToDateToTimeSheetMap = new LinkedHashMap<>();
 		final List<Worker> workers = contractService.getWorkersWithActiveContractsInInterval(clientId, searchInterval);
 		final List<TimeSheetView> unfiltered = timeSheetService.getAllForClientInInterval(clientId, searchInterval);
@@ -154,13 +155,13 @@ public class ReportService {
 			}
 			timeSheetMap.put(timeSheet.getId(), timeSheet);
 		}
-		map.put("reportMap", reportMap);
-		map.put("timeSheetMap", timeSheetMap);
-		map.put("workerToDateToTimeSheetMap", workerToDateToTimeSheetMap);
-		map.put("workerList", workers);
-		map.put("reportDate", new LocalDate().toString(yearMonthDateTimeFormatter));
-		map.put("updateDate", new LocalDateTime());
-		return map;
+
+		final TimeSheetsPerWorkerByMonthForClientReport report = new TimeSheetsPerWorkerByMonthForClientReport(date);
+		report.setReportMap(reportMap);
+		report.setTimeSheetMap(timeSheetMap);
+		report.setWorkerToDateToTimeSheetMap(workerToDateToTimeSheetMap);
+		report.setWorkerList(workers);
+		return report;
 	}
 
 	public Map<Long, Double> getNumberOfHoursForClientInRange(final Long clientId, LocalDate startDate, LocalDate endDate) {
@@ -216,5 +217,11 @@ public class ReportService {
 		final LocalDate startDate = new LocalDate(date.getYear(), date.getMonthOfYear(), 1);
 		final LocalDate endDate = startDate.plusMonths(1);
 		return new Interval(startDate.toDateTimeAtStartOfDay(), endDate.toDateTimeAtStartOfDay());
+	}
+
+	public WorkersWithFewerThanFortyHoursPerWeekReport getWorkersWithFewerThanFortyHoursPerWeekReport(LocalDate date) {
+		WorkersWithFewerThanFortyHoursPerWeekReport report = new WorkersWithFewerThanFortyHoursPerWeekReport(date);
+
+		return report;
 	}
 }

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.roosterpark.rptime.model.report.HoursForClientInRange;
+import com.roosterpark.rptime.model.report.TimeSheetsPerWorkerByMonthForClientReport;
+import com.roosterpark.rptime.model.report.WorkersWithFewerThanFortyHoursPerWeekReport;
 import com.roosterpark.rptime.service.ReportService;
 
 /**
@@ -46,9 +48,16 @@ public class ReportController {
 	 */
 	@RequestMapping(value = "/workers-with-fewer-than-forty-hours-per-week")
 	@ResponseBody
-	public Map<String, Object> getWorkersWithFewerThanFortyHoursPerWeek() {
-		return null;
+	public WorkersWithFewerThanFortyHoursPerWeekReport getWorkersWithFewerThanFortyHoursPerWeek() {
+		return reportService.getWorkersWithFewerThanFortyHoursPerWeekReport(new LocalDate());
 	}
+
+	// @RequestMapping(value = "/workers-with-fewer-than-forty-hours-per-week/{forMonth}")
+	// @ResponseBody
+	// public WorkersWithFewerThanFortyHoursPerWeekReport getWorkersWithFewerThanFortyHoursPerWeek(@PathVariable String forMonth) {
+	// final LocalDate reportDate = new LocalDate(forMonth);
+	// return reportService.getWorkersWithFewerThanFortyHoursPerWeekReport(reportDate);
+	// }
 
 	/**
 	 * Per-client view: Timecards per user
@@ -59,13 +68,18 @@ public class ReportController {
 		return null;
 	}
 
-	/**
-	 * Per-client view: Timecards per user
-	 */
 	@RequestMapping(value = "/timesheets-per-worker-by-month-for-client/{clientId}")
 	@ResponseBody
-	public Map<String, Object> timeSheetsPerWorkerByMonthForClient(@PathVariable Long clientId) {
+	public TimeSheetsPerWorkerByMonthForClientReport timeSheetsPerWorkerByMonthForClient(@PathVariable Long clientId) {
 		return reportService.getTimeSheetsPerWorkerByMonthForClientReport(clientId, new LocalDate());
+	}
+
+	@RequestMapping(value = "/timesheets-per-worker-by-month-for-client/{clientId}/{forMonth}")
+	@ResponseBody
+	public TimeSheetsPerWorkerByMonthForClientReport timeSheetsPerWorkerByMonthForClientMonth(@PathVariable("clientId") Long clientId,
+			@PathVariable("forMonth") String forMonth) {
+		final LocalDate reportDate = new LocalDate(forMonth);
+		return reportService.getTimeSheetsPerWorkerByMonthForClientReport(clientId, reportDate);
 	}
 
 	@RequestMapping(value = "/hours-recorded/{clientId}/{startDate}/{endDate}")
