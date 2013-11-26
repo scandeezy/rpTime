@@ -32,10 +32,10 @@
 	<logger name="org.springframework.data.mongodb" level="DEBUG" />
 	<logger name="org.springframework.http" level="DEBUG" />
 	<logger name="org.springframework.jndi" level="WARN" />
-	<logger name="org.springframework.web" level="DEBUG" />
+	<logger name="org.springframework.web" level="WARN" />
 	<logger name="org.springframework.web.context" level="WARN" />
-	<logger name="org.springframework.web.filter" level="WARN" />
-	<logger name="org.springframework.web.servlet.mvc" level="DEBUG" />
+	<logger name="org.springframework.web.filter" level="TRACE" />
+	<logger name="org.springframework.web.servlet.mvc" level="WARN" />
 	 
 	<root level="DEBUG">
 		<appender-ref ref="STDOUT" />

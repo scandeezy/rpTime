@@ -2,7 +2,7 @@ package com.roosterpark.rptime.config;
 
 import java.util.List;
 
-import javax.inject.Inject;
+import javax.annotation.PostConstruct;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,9 +25,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
-import com.google.appengine.api.users.UserService;
 import com.roosterpark.rptime.model.GitRepositoryState;
-import com.roosterpark.rptime.service.WorkerService;
 
 /**
  * Spring MVC {@link Configuration}. Extends {@link WebMvcConfigurationSupport}, which provides convenient callbacks.
@@ -44,6 +42,11 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 
 	public WebMvcConfiguration() {
 		LOGGER.info("init");
+	}
+
+	@PostConstruct
+	public void postConstruct() {
+		LOGGER.info("post");
 	}
 
 	@Override
@@ -115,13 +118,13 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 		return new GitRepositoryState();
 	}
 
-	@Inject
-	@Bean(name = "workerFilter")
-	public WorkerFilter workerFilter(UserService users, WorkerService workers) {
-		LOGGER.debug("Creating worker filter with services {} and {}", users, workers);
-		WorkerFilter filter = new WorkerFilter();
-		filter.setUserService(users);
-		filter.setWorkerService(workers);
-		return filter;
-	}
+	// @Inject
+	// @Bean(name = "workerFilter")
+	// public WorkerFilter workerFilter(UserService users, WorkerService workers) {
+	// LOGGER.debug("Creating worker filter with services {} and {}", users, workers);
+	// WorkerFilter filter = new WorkerFilter();
+	// filter.setUserService(users);
+	// filter.setWorkerService(workers);
+	// return filter;
+	// }
 }
