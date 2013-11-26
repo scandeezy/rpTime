@@ -111,7 +111,7 @@ public class ReportService {
 		Validate.notNull(clientId);
 		LOGGER.debug("clientId={}, date={}", clientId, date);
 		final Interval searchInterval = getMonthSearchInterval(date);
-		// final Map<String, Object> map = new LinkedHashMap<String, Object>();
+		LOGGER.debug("searchInterval={}", searchInterval);
 		final Map<Long, Map<LocalDate, Long>> workerToDateToTimeSheetMap = new LinkedHashMap<>();
 		final List<Worker> workers = contractService.getWorkersWithActiveContractsInInterval(clientId, searchInterval);
 		final List<TimeSheetView> unfiltered = timeSheetService.getAllForClientInInterval(clientId, searchInterval);
@@ -135,20 +135,25 @@ public class ReportService {
 						dateToTimeSheetMap = new LinkedHashMap<>();
 						workerToDateToTimeSheetMap.put(workerId, dateToTimeSheetMap);
 					}
-					dateToTimeSheetMap.put(entry.getDate(), timeSheet.getId());
 					if (clientId.equals(entry.getClientId())) {
-						if (entry.getStartTime() != null && entry.getEndTime() != null) {
-							final Period p = new Period(entry.getStartTime(), entry.getEndTime(), PeriodType.minutes());
-							final double hours = ((double) p.getMinutes()) / 60.0;
-							final Long key = entry.getWorkerId();
-							Map<LocalDate, Double> workerDateToHoursMap = reportMap.get(key);
-							if (workerDateToHoursMap == null) {
-								workerDateToHoursMap = new LinkedHashMap<LocalDate, Double>();
-								reportMap.put(key, workerDateToHoursMap);
+						final LocalDate entryDate = entry.getDate();
+						final boolean overlaps = searchInterval.overlaps(entryDate.toInterval());
+						LOGGER.trace("check if entryDate={} and searchInterval overlaps={}", entryDate, overlaps);
+						if (overlaps) {
+							dateToTimeSheetMap.put(entryDate, timeSheet.getId());
+							if (entry.getStartTime() != null && entry.getEndTime() != null) {
+								final Period p = new Period(entry.getStartTime(), entry.getEndTime(), PeriodType.minutes());
+								final double hours = ((double) p.getMinutes()) / 60.0;
+								final Long key = entry.getWorkerId();
+								Map<LocalDate, Double> workerDateToHoursMap = reportMap.get(key);
+								if (workerDateToHoursMap == null) {
+									workerDateToHoursMap = new LinkedHashMap<LocalDate, Double>();
+									reportMap.put(key, workerDateToHoursMap);
+								}
+								Double h = (Double) ObjectUtils.defaultIfNull(workerDateToHoursMap.get(entry.getDate()), 0.0);
+								h = h + hours;
+								workerDateToHoursMap.put(entry.getDate(), h);
 							}
-							Double h = (Double) ObjectUtils.defaultIfNull(workerDateToHoursMap.get(entry.getDate()), 0.0);
-							h = h + hours;
-							workerDateToHoursMap.put(entry.getDate(), h);
 						}
 					}
 				}
