@@ -18,20 +18,22 @@
 	'AdminClientService', 'AdminReportService', //
 	function ReportTimeSheetsPerWorkerByMonthForClientCtrlFn($location, $log, $routeParams, $scope, //
 	AdminClientService, AdminReportService) {
-		//$log.info('ReportTimeSheetsPerWorkerByMonthForClientCtrl init', $routeParams, $scope);
+		// $log.info('ReportTimeSheetsPerWorkerByMonthForClientCtrl init', $routeParams, $scope);
 
 		$scope.selectClient = function selectClientFn(clientId) {
+			var d = $routeParams.date;
 			if (clientId) {
 				$scope.report = AdminReportService.get({
 					id : 'timesheets-per-worker-by-month-for-client',
-					client : clientId
+					client : clientId,
+					startDate : d
 				}, function successFn(data) {
 					$scope.selectedClient = clientId;
-					$location.search('clientId', clientId);
+					$location.search('clientId', clientId).search("date", d);
 				});
 			} else {
 				$scope.report = null;
-				$location.search('clientId', null);
+				$location.search('clientId', null).search("date", null);
 			}
 		};
 
