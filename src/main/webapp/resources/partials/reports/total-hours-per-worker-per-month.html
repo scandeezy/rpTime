@@ -11,8 +11,8 @@
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="worker in report.workerList | orderBy:'lastName'">
-				<td><a ng-href="#/worker?id={{worker.id}}">{{worker.lastName}}, {{worker.firstName}}</a></td>
+			<tr ng-repeat="worker in report.workerList | orderBy:'fullNameNormalized'">
+				<td><a ng-href="#/worker?id={{worker.id}}">{{worker.fullName}}</a></td>
 				<td><p class="text-right">{{report.workerIdToHoursMap[worker.id] | number:2}} hours</p></td>
 			</tr>
 		</tbody>

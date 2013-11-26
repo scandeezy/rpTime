@@ -34,7 +34,7 @@
 		<h2><a ng-href="#/client?id={{selectedClient}}">{{clientsMap[selectedClient].name}}</a> {{startDate}} - {{endDate}}</h2>
 
 		<div class="col-sm-offset-1" ng-repeat="(workerId,hours) in report.workerToTotalMap">
-			<a ng-href="#/worker?id={{worker}}">{{workersMap[workerId].firstName}} {{workersMap[workerId].lastName}}</a> : {{hours}}
+			<a ng-href="#/worker?id={{worker}}">{{workersMap[workerId].fullName}}</a> : {{hours}}
                 </div>
                 
                 <div class="col-sm-offset-1" ng-repeat="(workerId,hourList) in report.workerToTimeMap">

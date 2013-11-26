@@ -76,8 +76,8 @@
 					<div class="row" ng-controller="AdminClientRelatedTimeSheetsCtrl">
 						<h5>Time Sheets</h5>
 						<ul>
-							<li ng-repeat="worker in workersList | orderBy:'worker.lastName'" ng-show="showWorker[worker.id]"><a
-								ng-href="#/worker?id={{worker.id}}">{{worker.lastName}}, {{worker.firstName}}</a>
+							<li ng-repeat="worker in workersList | orderBy:'worker.fullNameNormalized'" ng-show="showWorker[worker.id]"><a
+								ng-href="#/worker?id={{worker.id}}">{{worker.fullName}}</a>
 								<ul>
 									<li ng-repeat="timeSheet in myRelatedWorkerIdToTimeSheetsMap[worker.id]"><a ng-href="#/timesheet?id={{timeSheet.id}}">{{timeSheet.printableTimeSheetString}}
 									</a><span ng-show="timeSheet.flagged" class="label label-danger"><span class="glyphicon glyphicon-flag"></span>&nbsp;</span></li>
@@ -88,8 +88,8 @@
 					<div class="row" ng-controller="AdminClientRelatedContractsCtrl">
 						<h5>Contracts</h5>
 						<ul>
-							<li ng-repeat="worker in workersList | orderBy:'worker.lastName'" ng-show="showWorker[worker.id]"><a
-								ng-href="#/worker?id={{worker.id}}">{{worker.lastName}}, {{worker.firstName}}</a>
+							<li ng-repeat="worker in workersList | orderBy:'worker.fullNameNormalized'" ng-show="showWorker[worker.id]"><a
+								ng-href="#/worker?id={{worker.id}}">{{worker.fullName}}</a>
 								<ul>
 									<li ng-repeat="contract in myRelatedWorkerIdToContractsMap[worker.id] | orderBy:'startDate'"><a ng-href="#/contract?id={{contract.id}}">{{contract.startDate}}
 											<span ng-show="contract.endDate"> to {{contract.endDate}}</span>

@@ -12,6 +12,8 @@ import com.googlecode.objectify.annotation.Index;
 public class Worker {
 	public static final String EMAIL_KEY = "email";
 
+	private static final String FULL_NAME_FORMAT = "%s, %s";
+
 	@Id
 	private Long id;
 	@Index
@@ -84,6 +86,14 @@ public class Worker {
 
 	public void setHourly(Boolean hourly) {
 		this.hourly = hourly;
+	}
+
+	public String getFullName() {
+		return String.format(FULL_NAME_FORMAT, StringUtils.trimToEmpty(this.lastName), StringUtils.trimToEmpty(this.firstName));
+	}
+
+	public String getFullNameNormalized() {
+		return StringUtils.lowerCase(getFullName());
 	}
 
 	public String toString() {

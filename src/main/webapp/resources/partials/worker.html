@@ -16,9 +16,9 @@
 			<div class="row">
 				<div class="col-sm-10">
 					<ul>
-						<li ng-repeat="worker in workersList | filter:search:strict | orderBy:'lastName' ">
+						<li ng-repeat="worker in workersList | filter:search:strict | orderBy:'fullNameNormalized' ">
 							<button type="button" id="delete-{{$id}}" class="btn btn-sm btn-default" ng-click="remove(worker);" ng-show="debug">Delete</button>
-							<a ng-href="#/worker?id={{worker.id}}" ng-click="set(worker);"> </span> {{worker.lastName}}, {{worker.firstName}} <span
+							<a ng-href="#/worker?id={{worker.id}}" ng-click="set(worker);"> </span> {{worker.fullName}} <span
 								class="text-muted" ng-show="worker.email">&nbsp;&nbsp;&nbsp; {{worker.email}} </a>
 						</li>
 					</ul>
@@ -33,7 +33,7 @@
 	<form class="form-horizontal" role="form" name="createWorkerForm">
 		<div id="createWorker" class="panel panel-default" ng-show="edit">
 			<div class="panel-heading">
-				<span ng-show="currentWorker.id"><h4>Edit Worker</h4> {{currentWorker.lastName}}, {{currentWorker.firstName}}</span> <span
+				<span ng-show="currentWorker.id"><h4>Edit Worker</h4> {{currentWorker.fullName}}</span> <span
 					ng-hide="currentWorker.id"><h4>Create Worker</h4></span>
 				<p ng-show="!createWorkerForm.$valid" class="text-danger lead">
 					Warning: <span ng-pluralize count="createWorkerForm.$error.required.length"

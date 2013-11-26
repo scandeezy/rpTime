@@ -29,8 +29,8 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="worker in report.workerList | orderBy:'lastName' " ng-controller="ReportTimeSheetsPerWorkerByMonthForClientWorkerCtrl">
-							<td><a ng-href="#/worker?id={{worker.id}}">{{worker.lastName}}, {{worker.firstName}}</a></td>
+						<tr ng-repeat="worker in report.workerList | orderBy:'fullNameNormalized' " ng-controller="ReportTimeSheetsPerWorkerByMonthForClientWorkerCtrl">
+							<td><a ng-href="#/worker?id={{worker.id}}">{{worker.fullName}}</a></td>
 							<td>{{totalDaysCount}} days</td>
 							<td>{{totalHoursSum | number:2}}</td>
 						</tr>
@@ -48,7 +48,7 @@
 
 		<hr class="hidden-print" />
 
-		<div class="col-sm-offset-1 page-break-before" ng-repeat="worker in report.workerList | orderBy:'lastName'" ng-controller="ReportTimeSheetsPerWorkerByMonthForClientWorkerCtrl">
+		<div class="col-sm-offset-1 page-break-before" ng-repeat="worker in report.workerList | orderBy:'fullNameNormalized'" ng-controller="ReportTimeSheetsPerWorkerByMonthForClientWorkerCtrl">
 
 			<span class="visible-print">		
 			<h2>
@@ -58,7 +58,7 @@
 			</span>
 
 			<h4>
-				<a ng-href="#/worker?id={{worker.id}}">{{worker.lastName}},{{worker.firstName}}</a>
+				<a ng-href="#/worker?id={{worker.id}}">{{worker.fullName}}</a>
 			</h4>
 
 			<div class="col-sm-offset-1">
@@ -119,6 +119,7 @@
 selectedClient ={{selectedClient|json}}
 reportMap={{reportMap|json}}
 report.reportMap={{report.reportMap|json}}
+report.workerList={{report.workerList|json}}
 clientsMap={{clientsMap|json}}
 </pre>
 

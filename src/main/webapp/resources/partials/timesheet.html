@@ -31,8 +31,8 @@
 		</div>
 		<div class="panel-body" ng-show="isAdmin">
 			<ul class="list-unstyled">
-				<li ng-repeat="(workerId,timeSheetList) in adminWorkerTimeSheetMap | orderBy:'worker.lastName'" ng-init="worker=workersMap[workerId]">
-					<a ng-href="#/worker?id={{workerId}}">{{worker.lastName}}, {{worker.firstName}} <span class="text-muted">{{worker.email}}</span></a>
+				<li ng-repeat="(workerId,timeSheetList) in adminWorkerTimeSheetMap | orderBy:'worker.fullNameNormalized'" ng-init="worker=workersMap[workerId]">
+					<a ng-href="#/worker?id={{workerId}}">{{worker.fullName}} <span class="text-muted">{{worker.email}}</span></a>
 					<ul>
 						<li ng-repeat="timeSheet in timeSheetList | orderBy:'startDate':1 ">
 							<button type="button" id="delete-{{timeSheet.id}}" class="btn btn-sm btn-default" ng-click="remove(timeSheet);" ng-show="debug">Delete</button>
@@ -57,8 +57,7 @@
 			<div class="panel-heading">
 				<h4>
 					<span ng-show="currentTimeSheet.id">Edit TimeSheet: {{currentTimeSheet.startDate}} <span ng-show="isAdmin">for <a
-							ng-href="#/worker?id={{currentTimeSheet.workerId}}">{{workersMap[currentTimeSheet.workerId].firstName}}
-								{{workersMap[currentTimeSheet.workerId].lastName}}</a></span>
+							ng-href="#/worker?id={{currentTimeSheet.workerId}}">{{workersMap[currentTimeSheet.workerId].fullName}}</a></span>
 					</span>
 				</h4>
 				<div class="row">

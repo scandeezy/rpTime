@@ -134,7 +134,10 @@ public class ContractService {
 		final List<Worker> result = new LinkedList<Worker>();
 		final List<Contract> contracts = getActiveContractsForClientInInterval(clientId, searchInterval);
 		for (Contract c : contracts) {
-			result.add(workerService.getById(c.getWorker()));
+			Worker w = workerService.getById(c.getWorker());
+			if (!result.contains(w)) {
+				result.add(w);
+			}
 		}
 		return result;
 	}
