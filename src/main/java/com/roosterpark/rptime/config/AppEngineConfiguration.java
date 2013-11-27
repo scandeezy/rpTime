@@ -39,13 +39,13 @@ public class AppEngineConfiguration {
 		// https://code.google.com/p/objectify-appengine/source/browse/src/com/googlecode/objectify/impl/translate/opt/joda/JodaTimeTranslators.java?r=2d48a85eae3a679c0dc0d01631de99f3b4775b29
 		JodaTimeTranslators.add(result);
 
-		LOGGER.info("Finding classes with @Entity* annotations in base package '{}' to register on ObjectifyFactory", BASE_PACKAGE);
+		LOGGER.debug("Finding classes with @Entity* annotations in base package '{}' to register on ObjectifyFactory", BASE_PACKAGE);
 		ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
 		scanner.addIncludeFilter(new AnnotationTypeFilter(Entity.class));
 		scanner.addIncludeFilter(new AnnotationTypeFilter(EntitySubclass.class));
 
 		for (BeanDefinition bd : scanner.findCandidateComponents(BASE_PACKAGE)) {
-			LOGGER.debug("Registering @Entity {} with Objectify TranslatorRegistry", bd.getBeanClassName());
+			LOGGER.trace("Registering @Entity {} with Objectify TranslatorRegistry", bd.getBeanClassName());
 			result.register(Class.forName(bd.getBeanClassName()));
 		}
 

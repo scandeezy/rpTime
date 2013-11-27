@@ -29,21 +29,20 @@ public class WorkerFilter implements Filter {
 
 	public static final String WORKER_KEY = "worker";
 
-	@Inject
 	private WorkerService workerService;
-
-	@Inject
 	private UserService userService;
 
 	public WorkerFilter() {
 		LOGGER.debug("init");
 	}
 
+	@Inject
 	public void setUserService(UserService userService) {
 		LOGGER.debug("Setting UserService to {}", userService);
 		this.userService = userService;
 	}
 
+	@Inject
 	public void setWorkerService(WorkerService workerService) {
 		LOGGER.debug("Setting WorkerService to {}", workerService);
 		this.workerService = workerService;

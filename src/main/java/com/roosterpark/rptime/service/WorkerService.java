@@ -43,7 +43,7 @@ public class WorkerService {
 	}
 
 	public Worker getById(Long id) {
-		LOGGER.warn("Getting worker with id={}", id);
+		LOGGER.debug("Getting worker with id={}", id);
 		final Worker result = ofy().load().type(Worker.class).id(id).now();
 		if (result == null) {
 			LOGGER.warn("Warning: no Worker found for id='{}'", id);
@@ -53,7 +53,7 @@ public class WorkerService {
 
 	public Worker getByEmail(final String email) {
 		final String emailLower = StringUtils.lowerCase(email);
-		LOGGER.warn("Getting worker with email={} ", emailLower);
+		LOGGER.debug("Getting worker with email={} ", emailLower);
 		final Worker result = ofy().load().type(Worker.class)//
 				.filter(Worker.EMAIL_KEY, emailLower)//
 				.first()//
@@ -65,7 +65,7 @@ public class WorkerService {
 	}
 
 	public List<Worker> getPage(int count, int offset) {
-		LOGGER.warn("Getting worker page with count " + count + " and offset " + offset);
+		LOGGER.debug("Getting worker page with count " + count + " and offset " + offset);
 		return ofy().load().type(Worker.class).limit(count).offset(offset).list();
 	}
 
@@ -99,7 +99,7 @@ public class WorkerService {
 		if (item.getHourly() == null)
 			item.setHourly(false);
 
-		LOGGER.warn("Saving worker " + item);
+		LOGGER.debug("Saving worker " + item);
 		ofy().save().entity(item).now();
 	}
 
