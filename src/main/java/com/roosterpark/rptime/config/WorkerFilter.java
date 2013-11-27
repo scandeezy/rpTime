@@ -55,15 +55,21 @@ public class WorkerFilter implements Filter {
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain fc) throws IOException, ServletException {
-		if (userService.isUserLoggedIn()) {
-			User user = userService.getCurrentUser();
-			Worker worker = workerService.getByEmail(user.getEmail());
-			request.setAttribute(WORKER_KEY, worker);
-
+		try {
+			if (userService.isUserLoggedIn()) {
+				User user = userService.getCurrentUser();
+				LOGGER.debug("current user '{}' is logged in", user);
+				Worker worker = workerService.getByEmail(user.getEmail());
+				request.setAttribute(WORKER_KEY, worker);
+				LOGGER.debug("set request attribute '{}' to Worker='{}'", WORKER_KEY, worker);
+			} else {
+				LOGGER.debug("User '{}' is not logged in.", userService.getCurrentUser());
+				// throw new UnsupportedOperationException("Not supported yet.");
+			}
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
+		} finally {
 			fc.doFilter(request, response);
-		} else {
-			LOGGER.debug("User '{}' is not logged in.", userService.getCurrentUser());
-			// throw new UnsupportedOperationException("Not supported yet.");
 		}
 	}
 
