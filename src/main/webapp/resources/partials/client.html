@@ -25,7 +25,7 @@
 			<div class="panel-heading">
 				<span ng-show="currentClient.id"><h4>Edit Client</h4>{{currentClient.name}}</span> <span ng-hide="currentClient.id"><h4>Create
 						Client</h4></span>
-				<p ng-show="!createClientForm.$valid" class="text-danger lead">
+				<p ng-show="false && !createClientForm.$valid" class="text-danger lead">
 					Warning: <span ng-pluralize count="createClientForm.$error.required.length"
 						when="{'1': '1 required field is missing.', 'other': '{} required fields are missing.'}"> </span>
 				</p>
@@ -33,7 +33,8 @@
 
 			<div class="panel-body row">
 				<div class="col-sm-7">
-					<div class="form-group" ng-class="{'has-error': createClientForm.name.$error.required}">
+					<div class="form-group">
+					<!-- <div class="form-group" ng-class="{'has-error': createClientForm.name.$error.required}"> -->
 						<label for="name" class="col-sm-4 control-label">Name</label>
 						<div class="col-sm-8">
 							<input type="text" class="form-control" id="name" name="name" ng-model="currentClient.name" placeholder="Enter Name" required
@@ -49,7 +50,8 @@
 							</div>
 						</div>
 					</div>
-					<div class="form-group" ng-class="{'has-error': createClientForm.startDayOfWeek.$error.required}">
+					<div class="form-group">
+					<!-- <div class="form-group" ng-class="{'has-error': createClientForm.startDayOfWeek.$error.required}"> -->
 						<div class="col-sm-offset-4 col-sm-8">
 							<div class="checkbox">
 								<label class="control-label" for="startDayOfWeek">Start Day of Week <select id="startDayOfWeek" name="startDayOfWeek"
