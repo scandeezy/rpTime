@@ -17,7 +17,7 @@ import com.google.appengine.api.users.UserService;
 import com.roosterpark.rptime.exceptions.WorkerNotFoundException;
 import com.roosterpark.rptime.model.Worker;
 
-@Named
+@Named("workerService")
 public class WorkerService {
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 	private static WorkerService inst;

@@ -23,6 +23,10 @@ public class AppEngineConfiguration {
 	Logger LOGGER = LoggerFactory.getLogger(getClass());
 	private static final String BASE_PACKAGE = "com.roosterpark.rptime";
 
+	public AppEngineConfiguration() {
+		LOGGER.trace("init");
+	}
+
 	@Bean
 	public ObjectifyFactory objectifyFactory() throws ClassNotFoundException {
 		LOGGER.debug("init ObjectifyFactory");
@@ -35,7 +39,7 @@ public class AppEngineConfiguration {
 		// https://code.google.com/p/objectify-appengine/source/browse/src/com/googlecode/objectify/impl/translate/opt/joda/JodaTimeTranslators.java?r=2d48a85eae3a679c0dc0d01631de99f3b4775b29
 		JodaTimeTranslators.add(result);
 
-		LOGGER.info("Finding classes with @Entity or @EntitySubclass annotations in {} to register on ObjectifyFactory", BASE_PACKAGE);
+		LOGGER.info("Finding classes with @Entity* annotations in base package '{}' to register on ObjectifyFactory", BASE_PACKAGE);
 		ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
 		scanner.addIncludeFilter(new AnnotationTypeFilter(Entity.class));
 		scanner.addIncludeFilter(new AnnotationTypeFilter(EntitySubclass.class));
@@ -54,7 +58,7 @@ public class AppEngineConfiguration {
 		return DatastoreServiceFactory.getDatastoreService();
 	}
 
-	@Bean
+	@Bean(name = "userService")
 	public UserService userService() {
 		LOGGER.debug("init UserService");
 		return UserServiceFactory.getUserService();
