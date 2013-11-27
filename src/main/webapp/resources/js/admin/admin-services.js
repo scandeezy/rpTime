@@ -26,7 +26,7 @@
 			getAllForClient : {
 				isArray : true,
 				method : 'GET',
-				url : 'contract/client/:clientId'
+				url : 'admin/contract/client/:clientId'
 			}
 		});
 	} ]);
@@ -47,7 +47,7 @@
 	module.factory('AdminReportService', [ '$resource',//
 	function AdminReportServiceFn($resource) {
 		return $resource('admin/report/:id/:client/:startDate/:endDate', {}, {
-		// methods 'get', 'save', 'remove' provided by default
+			// methods 'get', 'save', 'remove' provided by default
 			getTimeSheetsPerWorkerByMonthForClientReport : {
 				method : 'GET',
 				url : 'admin/report/timesheets-per-worker-by-month-for-client/:clientId/:date'
