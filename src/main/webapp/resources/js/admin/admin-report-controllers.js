@@ -23,8 +23,8 @@
 		$scope.selectClient = function selectClientFn(clientId) {
 			var d = $routeParams.date;
 			if (clientId) {
-				$scope.report = AdminReportService.getTimeSheetsPerWorkerByMonthForClient({
-					client : clientId,
+				$scope.report = AdminReportService.getTimeSheetsPerWorkerByMonthForClientReport({
+					clientId : clientId,
 					date : d
 				}, function successFn(data) {
 					$scope.selectedClient = clientId;
