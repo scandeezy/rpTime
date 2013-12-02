@@ -67,7 +67,7 @@
 				</h4>
 				<div class="row">
 					<div class="col-sm-12">
-						<small><span class="text-muted">As of {{currentTimeSheet.updateTimestamp}}</span></small> <label class="label label-success"
+						<small><span class="text-muted">As of {{currentTimeSheet.updateTimestamp|truncatedtimestamp}}</span></small> <label class="label label-success"
 							title="A submitted time card can still be updated by clicking the 'Update' button below."
 							ng-show="currentTimeSheet.status!='UNSUBMITTED'">Submitted <span class="glyphicon glyphicon-ok"></span></label>
 
