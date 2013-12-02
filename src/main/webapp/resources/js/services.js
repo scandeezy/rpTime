@@ -22,10 +22,6 @@
 	function TimeSheetService($resource) {
 		return $resource('timesheet/:id/:date', {}, {
 			// methods 'get', 'save', 'remove' provided by default
-			create : {
-				method : 'GET',
-				url : 'timesheet/new'
-			},
 			flag : {
 				method : 'POST',
 				params : {

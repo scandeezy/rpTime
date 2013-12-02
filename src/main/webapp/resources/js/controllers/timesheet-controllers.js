@@ -85,7 +85,7 @@
 		$scope.set = function setFn(obj) {
 			$log.info("setting ", obj);
 			if (!obj) {
-				var o = TimeSheetService.create();
+				var o = TimeSheetService.getCurrent();
 				var id = o.id;
 				if (id) {
 					$scope.timeSheetsMap[id] = o;

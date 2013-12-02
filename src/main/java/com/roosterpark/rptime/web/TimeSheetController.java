@@ -136,18 +136,11 @@ public class TimeSheetController {
 		return service.getAllForWorker(id);
 	}
 
-	@RequestMapping(value = "/timesheet/current", method = GET)
+	@RequestMapping(value = "/timesheet/current", method = { GET })
 	@ResponseBody
 	public TimeSheetView getCurrent(@ModelAttribute(WORKER_MODEL_ATTRIBUTE_NAME) Worker worker) {
-		LOGGER.debug("ModelAttribute worker={}", worker);
-		final Long id = workerService.getValidatedWorkerId();
-		return service.getCurrentForWorker(id);
-	}
-
-	@RequestMapping(value = "/timesheet/current/worker/{workerId}", method = GET)
-	@ResponseBody
-	public TimeSheetView getCurrentForWorker(final Long workerId) {
-		return service.getCurrentForWorker(workerId);
+		validateWorkerOrThrowWorkerNotFoundException(worker);
+		return getTimeSheetForDate(worker, new LocalDate());
 	}
 
 	@RequestMapping(value = "/timesheet/last", method = { GET })
