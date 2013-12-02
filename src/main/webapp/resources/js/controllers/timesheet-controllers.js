@@ -189,7 +189,7 @@
 			$scope.showButtons = ((e.startTime || e.endTime) && !(e.startTime === e.endTime));
 		}, true);
 
-		$scope.addNewTimeCardLogEntry = function addNewTimeCardLogEntryFn(day) {
+		$scope.addNewTimeSheetLogEntry = function addNewTimeSheetLogEntryFn(day) {
 			var last = day.entries[(day.entries.length - 1)];
 			day.entries.push({
 				'workerId' : last.workerId,
@@ -201,7 +201,7 @@
 			$scope.createTimeSheetForm.$setDirty();
 		};
 
-		$scope.removeTimeCardLogEntry = function removeTimeCardLogEntryFn(entry) {
+		$scope.removeTimeSheetLogEntry = function removeTimeSheetLogEntryFn(entry) {
 			if ($scope.day && $scope.day.entries) {
 				var index = $scope.day.entries.indexOf(entry) || (($scope.day.entries.length) - 1);
 				$scope.day.entries.splice(index, 1);

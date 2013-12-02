@@ -6,16 +6,17 @@
 				Time Sheets
 				<div class="pull-right">
 					<div class="btn-group">
-						<button type="button" id="new" class="btn btn-primary btn-sm" ng-click="set();" ng-disabled="!workerExists">Create</button>
-						<button type="button" class="btn btn-sm btn-primary dropdown-toggle" data-toggle="dropdown" ng-disabled="!workerExists">
+						<button type="button" class="btn btn-primary btn-sm" id="new" ng-click="set();" ng-disabled="!workerExists">Create</button>
+						<button type="button" class="btn btn-sm btn-primary dropdown-toggle" id="toggle-create-dropdown" data-toggle="dropdown"
+							ng-disabled="!workerExists">
 							<span class="caret"></span> <span class="sr-only">Toggle Create Dropdown</span> &nbsp;
 						</button>
 						<ul class="dropdown-menu" role="menu">
-							<li><a ng-click="setWeekLast();">Last Week</a></li>
-							<li><a ng-click="set();">This Week <i>(default)</i></a></li>
-							<li><a ng-click="setWeekNext();">Next Week</a></li>
+							<li><a id="set-week-Last" ng-click="setWeekLast();">Last Week</a></li>
+							<li><a id="set-week-this" ng-click="set();">This Week <i>(default)</i></a></li>
+							<li><a id="set-week-next" ng-click="setWeekNext();">Next Week</a></li>
 							<li class="divider"></li>
-							<li><a ng-click="setWeekOther();">Other...</a></li>
+							<li><a id="set-week-other" ng-click="setWeekOther();">Other...</a></li>
 						</ul>
 					</div>
 				</div>
@@ -23,33 +24,37 @@
 		</div>
 		<div class="panel-body" ng-hide="isAdmin">
 			<ul>
-				<li ng-repeat="timeSheet in timeSheetsList" ng-init="worker=workersMap[timeSheet.workerId]"><a ng-click="set(timeSheet)">{{timeSheet.year}},
-						week {{timeSheet.week}} - {{timeSheet.startDate}}</a> <span ng-show="timeSheet.status=='UNSUBMITTED'" class="label label-warning">Not
-						Submitted</span> <span ng-show="timeSheet.status=='SUBMITTED'" class="label label-info">Submitted</span> <span
-					ng-show="timeSheet.status=='APPROVED'" class="label label-success">Approved</span></li>
+				<li ng-repeat="timeSheet in timeSheetsList" ng-init="worker=workersMap[timeSheet.workerId]"><a
+					id="select-timesheet-{{timeSheet.id}}" ng-click="set(timeSheet)">{{timeSheet.year}}, week {{timeSheet.week}} -
+						{{timeSheet.startDate}}</a> <span ng-show="timeSheet.status=='UNSUBMITTED'" class="label label-warning">Not Submitted</span> <span
+					ng-show="timeSheet.status=='SUBMITTED'" class="label label-info">Submitted</span> <span ng-show="timeSheet.status=='APPROVED'"
+					class="label label-success">Approved</span></li>
 			</ul>
 		</div>
 		<div class="panel-body" ng-show="isAdmin">
 			<ul class="list-unstyled">
-				<li ng-repeat="(workerId,timeSheetList) in adminWorkerTimeSheetMap | orderBy:'worker.fullNameNormalized'" ng-init="worker=workersMap[workerId]">
-					<a ng-href="#/worker?id={{workerId}}">{{worker.fullName}} <span class="text-muted">{{worker.email}}</span></a>
+				<li ng-repeat="(workerId,timeSheetList) in adminWorkerTimeSheetMap | orderBy:'worker.fullNameNormalized'"
+					ng-init="worker=workersMap[workerId]"><a id="select-worker-{{workerId}}" ng-href="#/worker?id={{workerId}}">{{worker.fullName}}
+						<span class="text-muted">{{worker.email}}</span>
+				</a>
 					<ul>
 						<li ng-repeat="timeSheet in timeSheetList | orderBy:'startDate':1 ">
-							<button type="button" id="delete-{{timeSheet.id}}" class="btn btn-sm btn-default" ng-click="remove(timeSheet);" ng-show="debug">Delete</button>
-							<a ng-click="set(timeSheet)">{{timeSheet.printableTimeSheetString}}</a> <span ng-show="timeSheet.flagged" class="label label-danger"><span
-								class="glyphicon glyphicon-flag"></span>&nbsp;</span> <span ng-show="timeSheet.status=='UNSUBMITTED'" class="label label-warning">Not
-								Submitted</span> <span ng-show="timeSheet.status=='SUBMITTED'" class="label label-info">Submitted</span> <span
-							ng-show="timeSheet.status=='APPROVED'" class="label label-success">Approved</span>
+							<button type="button" class="btn btn-sm btn-default" id="delete-{{timeSheet.id}}" ng-click="remove(timeSheet);" ng-show="debug">Delete</button>
+							<a id="select-timesheet-{{timeSheet.id}}" ng-click="set(timeSheet)">{{timeSheet.printableTimeSheetString}}</a> <span
+							ng-show="timeSheet.flagged" class="label label-danger"><span class="glyphicon glyphicon-flag"></span>&nbsp;</span> <span
+							ng-show="timeSheet.status=='UNSUBMITTED'" class="label label-warning">Not Submitted</span> <span
+							ng-show="timeSheet.status=='SUBMITTED'" class="label label-info">Submitted</span> <span ng-show="timeSheet.status=='APPROVED'"
+							class="label label-success">Approved</span>
 						</li>
-					</ul>
-				</li>
+					</ul></li>
 			</ul>
 		</div>
 	</div>
 
 	<div class="alert alert-warning alert-dismissable" ng-show="edit && (currentTimeSheet.currentTimeSheet === false)">
-		<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-		<strong>Warning!</strong> You are editing an old time sheet. <a href="#/timesheet?id=current">Click here</a> for the current timesheet.
+		<button type="button" class="close" id="timesheet-alert-close" data-dismiss="alert" aria-hidden="true">&times;</button>
+		<strong>Warning!</strong> You are editing an old time sheet. <a id="select-timesheet-current" href="#/timesheet?id=current">Click here</a>
+		for the current timesheet.
 	</div>
 
 	<form role="form" name="createTimeSheetForm">
@@ -57,7 +62,7 @@
 			<div class="panel-heading">
 				<h4>
 					<span ng-show="currentTimeSheet.id">Edit TimeSheet: {{currentTimeSheet.startDate}} <span ng-show="isAdmin">for <a
-							ng-href="#/worker?id={{currentTimeSheet.workerId}}">{{workersMap[currentTimeSheet.workerId].fullName}}</a></span>
+							id="select-worker-{{currentTimeSheet.workerId}}" ng-href="#/worker?id={{currentTimeSheet.workerId}}">{{workersMap[currentTimeSheet.workerId].fullName}}</a></span>
 					</span>
 				</h4>
 				<div class="row">
@@ -67,19 +72,21 @@
 							ng-show="currentTimeSheet.status!='UNSUBMITTED'">Submitted <span class="glyphicon glyphicon-ok"></span></label>
 
 						<div class="btn-group btn-group-sm pull-right">
-							<a type="button" class="btn btn-default" ng-disabled="!currentTimeSheet.previousTimeSheetId"
+							<a type="button" class="btn btn-default" id="previous-timesheet" ng-disabled="!currentTimeSheet.previousTimeSheetId"
 								ng-href="#/timesheet?id={{currentTimeSheet.previousTimeSheetId}}">Previous</a> <a type="button" class="btn btn-default"
-								ng-hide="!currentTimeSheet.nextTimeSheetId" ng-href="#/timesheet?id={{currentTimeSheet.nextTimeSheetId}}">Next</a>
+								id="next-timesheet" ng-hide="!currentTimeSheet.nextTimeSheetId" ng-href="#/timesheet?id={{currentTimeSheet.nextTimeSheetId}}">Next</a>
 
-							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" ng-show="!currentTimeSheet.nextTimeSheetId">
+							<button type="button" class="btn btn-default dropdown-toggle" id="toggle-create-dropdown" data-toggle="dropdown"
+								ng-show="!currentTimeSheet.nextTimeSheetId">
 								Next <span class="caret"></span> <span class="sr-only">Toggle Create Dropdown</span>
 							</button>
 							<ul class="dropdown-menu" role="menu">
-								<li><a ng-click="setWeekNext();">Create Time Sheet for Next Week</a></li>
-								<li><a ng-click="setWeekOther();">Create Time Sheet for Other Date...</a></li>
+								<li><a id="create-timesheet-next" ng-click="setWeekNext();">Create Time Sheet for Next Week</a></li>
+								<li><a id="create-timesheet-other" ng-click="setWeekOther();">Create Time Sheet for Other Date...</a></li>
 							</ul>
 
-							<a type="button" class="btn" ng-class="{'btn-danger':currentTimeSheet.flagged, 'btn-default':!(currentTimeSheet.flagged)}"
+							<a type="button" class="btn" id="flag-timesheet"
+								ng-class="{'btn-danger':currentTimeSheet.flagged, 'btn-default':!(currentTimeSheet.flagged)}"
 								ng-click="currentTimeSheet.flagged=!(currentTimeSheet.flagged);flag(currentTimeSheet.id,currentTimeSheet.flagged);"
 								ng-show="isAdmin"> <span ng-class="{'text-muted':!(currentTimeSheet.flagged)}"> <span class="glyphicon glyphicon-flag"></span>&nbsp;
 							</span>
@@ -94,13 +101,12 @@
 					<ul class="list-group">
 						<li ng-repeat="day in currentTimeSheet.days" class="list-group-item row" ng-init="ii=$index">
 							<div class="col-sm-4">
-								<small class="text-muted">{{day.entries[0].date}}</small>
-								{{dayOfWeekArr[((currentTimeSheet.startDayOfWeek + ii) % 7)].description}}
+								<small class="text-muted">{{day.entries[0].date}}</small> {{dayOfWeekArr[((currentTimeSheet.startDayOfWeek + ii) % 7)].description}}
 							</div>
 							<div class="col-sm-8">
 								<div class="row" ng-repeat="entry in day.entries" ng-controller="TimeSheetDayCtrl" ng-init="eIndex=$index">
 									<div class="col-sm-3">
-										<input type="time" class="form-control input-sm" ng-model="entry.startTime" placeholder="HH:MM" title="Clock-in Time">
+										<input type="time" class="form-control input-sm" id="entry-start-time-{{$id}}" ng-model="entry.startTime" placeholder="HH:MM" title="Clock-in Time">
 									</div>
 									<div class="col-sm-3">
 										<input type="time" class="form-control input-sm" ng-model="entry.endTime" placeholder="HH:MM" title="Clock-out Time">
@@ -108,19 +114,21 @@
 
 									<div class="col-sm-6" ng-show="showButtons">
 										<div class="btn-group btn-group-sm">
-											<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="timeSheetLogEntry-clientId-{{ii}}"
-												name="timeSheetLogEntry-clientId-{{ii}}">
-												{{currentAvailableClientsMap[entry.clientId].name}} <span class="caret"></span>
+											<button type="button" class="btn btn-default dropdown-toggle" id="timeSheetLogEntry-clientId-{{$id}}" data-toggle="dropdown"
+												name="timeSheetLogEntry-clientId-{{$id}}" title="Select the client against which to log these hours">
+												<span class="sr-only">Toggle Client Dropdown</span> {{currentAvailableClientsMap[entry.clientId].name}} <span class="caret"></span>
 											</button>
 											<ul class="dropdown-menu">
 												<li>-- Select Client--</li>
-												<li ng-repeat="client in currentTimeSheet.availableClients | orderBy:'name'"><a ng-click="setEntryClientId(client.id);">{{client.name}}</a>
-												</li>
+												<li ng-repeat="client in currentTimeSheet.availableClients | orderBy:'name'"><a id="select-client-{{$id}}"
+													ng-click="setEntryClientId(client.id);">{{client.name}}</a></li>
 											</ul>
-											<button class="btn btn-default" type="button" ng-hide="$first" ng-click="removeTimeCardLogEntry(entry);">
+											<button class="btn btn-default" type="button" id="remove-timesheet-entry-{{$id}}" ng-hide="$first"
+												ng-click="removeTimeSheetLogEntry(entry);" title="Remove this time sheet entry set (from/to)">
 												<span class="glyphicon glyphicon-minus-sign"></span>&nbsp;
 											</button>
-											<button class="btn btn-default" type="button" ng-hide="!$last" ng-click="addNewTimeCardLogEntry(day);">
+											<button class="btn btn-default" type="button" id="add-timesheet-entry-{{$id}}" ng-hide="!$last"
+												ng-click="addNewTimeSheetLogEntry(day);" title="Add another time sheet entry set (from/to)">
 												<span class="glyphicon glyphicon-plus-sign"></span>&nbsp;
 											</button>
 										</div>
@@ -156,12 +164,12 @@
 				</div>
 				<div class="form-group row">
 					<div class="col-sm-offset-2 col-sm-10">
-						<button type="button" id="save" class="btn " ng-class="{'btn-primary': createTimeSheetForm.$valid}"
+						<button type="button" class="btn" id="save" ng-class="{'btn-primary': createTimeSheetForm.$valid}"
 							ng-disabled="!(createTimeSheetForm.$valid && createTimeSheetForm.$dirty)" ng-click="save(currentTimeSheet);">
 							<span ng-show="currentTimeSheet.status!='UNSUBMITTED'">Update</span> <span ng-show="currentTimeSheet.status=='UNSUBMITTED'">Save</span>
 						</button>
 						<span ng-show="currentTimeSheet.status=='UNSUBMITTED'">
-							<button type="button" id="submit" class="btn btn-default" ng-click="submit(currentTimeSheet);"
+							<button type="button" class="btn btn-default" id="submit" ng-click="submit(currentTimeSheet);"
 								ng-disabled="!isSubmittable(currentTimeSheet);">Submit</button>
 							<p class="text-muted">A time sheet may still be updated after it has been submitted.</p>
 						</span>
