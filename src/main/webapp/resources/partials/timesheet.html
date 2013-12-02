@@ -100,10 +100,10 @@
 							<div class="col-sm-8">
 								<div class="row" ng-repeat="entry in day.entries" ng-controller="TimeSheetDayCtrl" ng-init="eIndex=$index">
 									<div class="col-sm-3">
-										<input type="time" class="form-control input-sm" ng-model="entry.startTime" title="Clock-in Time">
+										<input type="time" class="form-control input-sm" ng-model="entry.startTime" placeholder="HH:MM" title="Clock-in Time">
 									</div>
 									<div class="col-sm-3">
-										<input type="time" class="form-control input-sm" ng-model="entry.endTime" title="Clock-out Time">
+										<input type="time" class="form-control input-sm" ng-model="entry.endTime" placeholder="HH:MM" title="Clock-out Time">
 									</div>
 
 									<div class="col-sm-6" ng-show="showButtons">

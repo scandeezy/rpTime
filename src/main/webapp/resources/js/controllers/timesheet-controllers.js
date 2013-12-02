@@ -12,20 +12,18 @@
 		$scope.currentTimeSheet = {};
 		$scope.currentAvailableClientsMap = {};
 
-		$scope.$watch('currentTimeSheet.availableClients',function(list){
+		$scope.$watch('currentTimeSheet.availableClients', function(list) {
 			var map = {};
-			angular.forEach(list,function(obj){
+			angular.forEach(list, function(obj) {
 				map[obj.id] = obj;
 			});
 			$scope.currentAvailableClientsMap = map;
-		},true);
+		}, true);
 
-		//TimeSheetService will be redefined with admin paths in admin-services.js
-		var svc = TimeSheetService;
-
+		// TimeSheetService will be redefined with admin paths in admin-services.js
 		if ($routeParams.id) {
 			var id = $routeParams.id;
-			svc.get({
+			TimeSheetService.get({
 				id : id
 			}, function successFn(data) {
 				$scope.set(data);
@@ -33,7 +31,7 @@
 		}
 
 		function updateTimeSheetsFn() {
-			svc.getAll(function successFn(list) {
+			TimeSheetService.getAll(function successFn(list) {
 				$scope.timeSheetsList = list;
 				$scope.timeSheetsMap = {};
 				$scope.adminWorkerTimeSheetMap = {};
@@ -57,7 +55,7 @@
 
 		$scope.remove = function removeFn(obj) {
 			$scope.doRemove({
-				service : svc,
+				service : TimeSheetService,
 				id : obj.id,
 				map : $scope.timeSheetsMap,
 				afterFn : function doAfterFn() {
@@ -71,12 +69,13 @@
 
 		$scope.save = function saveFn(obj) {
 			$scope.doSave({
-				service : svc,
+				service : TimeSheetService,
 				obj : obj,
 				map : $scope.timeSheetsMap,
-				afterFn : function doAfterFn() {
+				afterFn : function doAfterFn(obj) {
 					// stay in the edit view!
 					// $scope.edit = false;
+					$scope.currentTimeSheet.updateTimestamp = obj.updateTimestamp;
 					$scope.createTimeSheetForm.$setPristine();
 					updateTimeSheetsFn();
 				}
@@ -86,7 +85,7 @@
 		$scope.set = function setFn(obj) {
 			$log.info("setting ", obj);
 			if (!obj) {
-				var o = svc.create();
+				var o = TimeSheetService.create();
 				var id = o.id;
 				if (id) {
 					$scope.timeSheetsMap[id] = o;
@@ -105,7 +104,7 @@
 			var date = new Date();
 			date.setDate(date.getDate() - 7);
 			// TODO FIXME: use relative RESTful URLs (lets date comp happen server side)
-			svc.get({
+			TimeSheetService.get({
 				id : "new",
 				date : date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
 			}, function successFn(data) {
@@ -117,7 +116,7 @@
 			var date = new Date();
 			// TODO FIXME: use relative RESTful URLs (lets date comp happen server side)
 			date.setDate(date.getDate() + 7);
-			svc.get({
+			TimeSheetService.get({
 				id : "new",
 				date : date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
 			}, function successFn(data) {
@@ -128,7 +127,7 @@
 		$scope.setWeekOther = function setWeekOtherFn() {
 			var data = window.showModalDialog("datePickerModal.html");
 			$log.error(data.datePicked);
-			svc.get({
+			TimeSheetService.get({
 				id : "new",
 				date : data.datePicked
 			}, function successFn(data) {
@@ -142,7 +141,7 @@
 			var obj = angular.copy(timeSheet);
 			obj.status = 'SUBMITTED';
 			$scope.doSave({
-				service : svc,
+				service : TimeSheetService,
 				obj : obj,
 				map : $scope.timeSheetsMap,
 				afterFn : function doAfterFn() {
@@ -177,6 +176,16 @@
 		$scope.showButtons = false;
 
 		$scope.$watch('entry', function entry$watchFn(e) {
+			// suppress "hh:mm:ss.nnnn" time formatting
+			if (e.startTime && e.startTime.length > 5) {
+				e.startTime = e.startTime.substr(0, 5);
+			}
+			if (e.endTime && e.endTime.length > 5) {
+				e.endTime = e.endTime.substr(0, 5);
+			}
+			if (e.endTime == e.startTime) {
+				e.endTime = e.startTime = undefined;
+			}
 			$scope.showButtons = ((e.startTime || e.endTime) && !(e.startTime === e.endTime));
 		}, true);
 
