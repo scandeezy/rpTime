@@ -72,8 +72,11 @@
 	function AdminWorkerRelatedTimeSheetsCtrlFn($log, $scope, $timeout, TimeSheetService) {
 		// $log.info("AdminWorkerRelatedTimeSheetsCtrl");
 		$scope.myRelatedTimeSheets = [];
+		
+		var tryXtimes = 20;
 
 		$scope.updateRelatedTimeSheets = function updateRelatedTimeSheetsFn() {
+			tryXtimes = tryXtimes -1;
 			if ($scope.currentWorker && $scope.currentWorker.id) {
 				var wid = $scope.currentWorker.id
 				TimeSheetService.getAllForWorker({
@@ -88,10 +91,11 @@
 					$scope.myRelatedTimeSheets = arr;
 				});
 			} else {
-				$log.info('sleeping 200ms for updateRelatedTimeSheets');
-				$timeout(function my$timeoutAsyncCompensationFn() {
-					$scope.updateRelatedTimeSheets();
-				}, 200);
+				if(tryXtimes > 0){
+					$timeout(function my$timeoutAsyncCompensationFn() {
+						$scope.updateRelatedTimeSheets();
+					}, 200);
+				}
 			}
 		};
 
