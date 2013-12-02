@@ -66,10 +66,10 @@ ng-init='workerExists=("<%=WorkerService.inst().getCurrent()%>"!="null");'
 			<script src="/resources/webjars/jquery/2.0.3/jquery.min.js"></script>
 			<script src="/resources/webjars/jquery-cookie/1.3.1/jquery.cookie.js"></script>
 			<script src="/resources/webjars/bootstrap/3.0.2/js/bootstrap.min.js"></script>
-			<script src="/resources/webjars/angularjs/1.2.1/angular.js"></script>
-			<script src="/resources/webjars/angularjs/1.2.1/angular-animate.js"></script>
-			<script src="/resources/webjars/angularjs/1.2.1/angular-route.js"></script>
-			<script src="/resources/webjars/angularjs/1.2.1/angular-resource.js"></script>
+			<script src="/resources/webjars/angularjs/1.2.3/angular.js"></script>
+			<script src="/resources/webjars/angularjs/1.2.3/angular-animate.js"></script>
+			<script src="/resources/webjars/angularjs/1.2.3/angular-route.js"></script>
+			<script src="/resources/webjars/angularjs/1.2.3/angular-resource.js"></script>
 			<!-- end JS resources manageable by WebJars -->
 			<script src="/resources/js/app.js"></script>
 			<script src="/resources/js/services.js"></script>
