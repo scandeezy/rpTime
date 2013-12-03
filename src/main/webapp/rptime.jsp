@@ -36,11 +36,10 @@
 			<li ng-class="{active : page == '/contract'}"><a href="#/contract" tabindex="-1">Contracts</a></li>
 			<li class="dropdown" ng-class="{active : page == '/report'}"><a class="dropdown-toggle" data-toggle="dropdown">Reports <b
 					class="caret"></b></a>
-				<ul class="dropdown-menu">
-					<li><a href="#/report/total-hours-per-worker-per-month" tabindex="-1">Hours per Worker/Month, all Clients</a></li>
-					<li><a href="#/report/timesheets-per-worker-by-month-for-client" tabindex="-1">Time Sheets per Worker/Month/Client</a></li>
-					<li ng-show="debug"><a href="#/report/total-hours-per-worker-by-range-for-client" tabindex="-1">Time Sheets per
-							Worker/Range/Client</a></li>
+				<ul class="dropdown-menu" ng-controller="AdminReportLinkCtrl">
+					<li ng-repeat="report in reportLinks">
+						<a ng-href="#/report/{{report.link}}" tabindex="-1">{{report.name}}</a>
+					</li>
 				</ul>
 			<li ng-show="page == '/report'"><a id="print" name="print" href="JavaScript:window.print();" title="Print" tabindex="-1"><span
 					class="glyphicon glyphicon-print"></span></a></li>

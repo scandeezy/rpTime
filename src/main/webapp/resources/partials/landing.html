@@ -14,9 +14,10 @@
 				<a href="#/contract">Contracts</a>
 			</li>
 			<li>Reports
-				<ul>
-					<li><a href="#/report/total-hours-per-worker-per-month">Hours per Worker/Month</a></li>
-					<li><a href="#/report/timesheets-per-worker-by-month-for-client">Time Sheets per Worker/Month/Client</a></li>
+				<ul ng-controller="AdminReportLinkCtrl">
+					<li ng-repeat="report in reportLinks">
+						<a ng-href="#/report/{{report.link}}">{{report.name}}</a>
+					</li>
 				</ul>
 			</li>
 		</ul>

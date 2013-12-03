@@ -3,6 +3,20 @@
 	// omit [] to use existing controller: http://stackoverflow.com/a/17289451/237225
 	var module = angular.module('myApp.controllers');
 
+	module.controller('AdminReportLinkCtrl', [ '$scope', // 
+	function AdminReportLinkCtrlFn($scope) {
+		$scope.reportLinks = [ {
+			name : 'Hours per Worker/Month, all Clients',
+			link : 'total-hours-per-worker-per-month'
+		}, {
+			name : 'Time Sheets per Worker/Month/Client',
+			link : 'timesheets-per-worker-by-month-for-client'
+		}
+		// { name:'Time Sheets per Worker/Range/Client',
+		// link : 'total-hours-per-worker-by-range-for-client'},
+		];
+	} ]);
+
 	module.controller('ReportPageCtrl', [ '$log', '$location', '$route', '$routeParams', '$scope', 'TimeSheetService', //
 	function ReportPageCtrlFn($log, $location, $route, $routeParams, $scope, TimeSheetService) {
 		// $log.info('ReportPageCtrl init', [ '$loc', $location, '$route', $route, '$routeParams', $routeParams, $scope ]);
@@ -104,7 +118,7 @@
 		$scope.report = {};
 		var d = $routeParams.date;
 		AdminReportService.getTotalHoursPerWorkerPerMonthReport({
-			date: d
+			date : d
 		}, function successFn(data) {
 			$scope.report = data;
 		});
