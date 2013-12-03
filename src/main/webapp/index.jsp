@@ -24,7 +24,8 @@
 			User user = userService.getCurrentUser();
 			String loginUrl = userService.createLoginURL(request.getRequestURI());
 			String logoutUrl = userService.createLogoutURL(request.getRequestURI());
-						
+			Worker currentWorker = WorkerService.inst().getCurrent();
+			
 			if (userService.isUserLoggedIn()) {
 				String nickname = user.getNickname();
 		%>
@@ -41,7 +42,7 @@ ng-controller="UserPageCtrl"
 <%
 } // (admin == false)
 %>
-ng-init='workerExists=("<%=WorkerService.inst().getCurrent()%>"!="null");'
+ng-init='workerExists=("<%=currentWorker%>"!="null");'
 >
 
 <%@ include file="/rptime.jsp"%>
@@ -61,53 +62,8 @@ ng-init='workerExists=("<%=WorkerService.inst().getCurrent()%>"!="null");'
 		<%
 			}
 		%>
-		<div id="jsScripts">
-			<!-- begin JS resources manageable by WebJars -->
-			<script src="/resources/webjars/jquery/2.0.3/jquery.min.js"></script>
-			<script src="/resources/webjars/jquery-cookie/1.3.1/jquery.cookie.js"></script>
-			<script src="/resources/webjars/bootstrap/3.0.2/js/bootstrap.min.js"></script>
-			<script src="/resources/webjars/angularjs/1.2.3/angular.js"></script>
-			<script src="/resources/webjars/angularjs/1.2.3/angular-animate.js"></script>
-			<script src="/resources/webjars/angularjs/1.2.3/angular-route.js"></script>
-			<script src="/resources/webjars/angularjs/1.2.3/angular-resource.js"></script>
-			<!-- end JS resources manageable by WebJars -->
-			<script src="/resources/js/app.js"></script>
-			<script src="/resources/js/services.js"></script>
-			<script src="/resources/js/controllers.js"></script>
-			<script src="/resources/js/controllers/timesheet-controllers.js"></script>
-			<script src="/resources/js/filters.js"></script>
-			<script src="/resources/js/directives.js"></script>
-    
-			<!-- pre-load templates into angular's $templateCache (see: http://stackoverflow.com/a/12346901/237225) -->
-			<script type="text/ng-template" src="/resources/partials/about.html"></script>
-			<script type="text/ng-template" src="/resources/partials/client.html"></script>
-			<script type="text/ng-template" src="/resources/partials/contract.html"></script>
-			<script type="text/ng-template" src="/resources/partials/history.html"></script>
-			<script type="text/ng-template" src="/resources/partials/landing.html"></script>
-			<script type="text/ng-template" src="/resources/partials/timesheet.html"></script>
-			<script type="text/ng-template" src="/resources/partials/worker.html"></script>
 
-			<%
-	 			if (userService.isUserLoggedIn() && userService.isUserAdmin()) {
-			%> 			
- 			<!-- begin admin-only resources -->
-
-			<script src="/resources/js/admin/admin-services.js"></script>
-			<script src="/resources/js/admin/admin-controllers.js"></script>
-			<script src="/resources/js/admin/admin-client-controllers.js"></script>
-			<script src="/resources/js/admin/admin-contract-controllers.js"></script>
-			<script src="/resources/js/admin/admin-report-controllers.js"></script>
-			<script src="/resources/js/admin/admin-worker-controllers.js"></script>
-			<script type="text/ng-template" src="/resources/partials/reports/list.html"></script>
-			<script type="text/ng-template" src="/resources/partials/reports/timesheets-per-worker-by-month-for-client.html"></script>
-			<script type="text/ng-template" src="/resources/partials/reports/total-hours-per-worker-by-range-for-client.html"></script>
-			<script type="text/ng-template" src="/resources/partials/reports/total-hours-per-worker-per-month.html"></script>
-
- 			<!-- end admin-only resources -->
-			<%
-				}
-			%>
-		</div>
+		<%@ include file="/scripts.jsp"%>
 
 	</div>
 </body>

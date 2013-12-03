@@ -1,7 +1,8 @@
 'use strict';
 (function appJsFn() {
 	// Declare app level module which depends on filters, and services
-	angular.module('myApp', [ 'ngRoute', 'ngAnimate', 'myApp.filters', 'myApp.services', 'myApp.directives', 'myApp.controllers' ])//
+	angular.module('myApp', [ 'ngRoute', 'ngAnimate', 'ngCookies', //
+	'myApp.filters', 'myApp.services', 'myApp.directives', 'myApp.controllers' ])//
 	.config([ '$routeProvider', //
 	function($routeProvider) {
 		console.log('configuring');

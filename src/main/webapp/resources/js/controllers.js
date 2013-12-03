@@ -8,10 +8,10 @@
 		$scope.about = AboutService.get();
 	} ]);
 
-	module.controller('MainCtrl', [ '$log', '$scope', '$location', 'dayOfWeekArr', //
-	function MainCtrlFn($log, $scope, $location, dayOfWeekArr) {
+	module.controller('MainCtrl', [ '$cookies', '$log', '$scope', '$location', 'dayOfWeekArr', //
+	function MainCtrlFn($cookies, $log, $scope, $location, dayOfWeekArr) {
 		$scope.dayOfWeekArr = dayOfWeekArr;
-		$scope.debug = (($.cookie('debug') == 'true') ? true : false);
+		$scope.debug = $cookies.debug;
 
 		$scope.$watch(function locationPathPage$watchFn() {
 			return $location.path();
