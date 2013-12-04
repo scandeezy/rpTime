@@ -18,13 +18,13 @@
 					<ul>
 						<li ng-repeat="worker in workersList | filter:search:strict | orderBy:'fullNameNormalized' ">
 							<button type="button" id="delete-{{$id}}" class="btn btn-sm btn-default" ng-click="remove(worker);" ng-show="debug">Delete</button> <a
-							ng-href="#/worker?id={{worker.id}}" ng-click="set(worker);"> </span> {{worker.fullName}} <span class="text-muted" ng-show="worker.email">&nbsp;&nbsp;&nbsp;
+							id="select-worker-{{$id}}" ng-href="#/worker?id={{worker.id}}" ng-click="set(worker);"> </span> {{worker.fullName}} <span class="text-muted" ng-show="worker.email">&nbsp;&nbsp;&nbsp;
 									{{worker.email}} </a>
 						</li>
 					</ul>
 				</div>
 				<div class="col-sm-2">
-					<input type="text" class="form-control search" ng-model="search.$" placeholder="Search">
+					<input id="search" type="text" class="form-control search" ng-model="search.$" placeholder="Search">
 				</div>
 			</div>
 		</div>
@@ -34,8 +34,8 @@
 			<h4>Unregistered Users</h4>
 		</div>
 		<div class="panel-body">
-			<p class="text-muted small">An "Unregistered User" is someone who has attempted to log in, but does not a have a Worker associated with their
-				email address.</p>
+			<p class="text-muted small">An "Unregistered User" is someone who has attempted to log in, but does not a have a Worker associated
+				with their email address.</p>
 			<div class="row">
 				<ul>
 					<li ng-repeat="unlinkedUser in unlinkedUsersList"><a id="create-for-unlinked-{{$id}}"
@@ -101,7 +101,7 @@
 					<div class="row" ng-controller="AdminWorkerRelatedTimeSheetsCtrl">
 						<h5>Time Sheets</h5>
 						<ul>
-							<li ng-repeat="timeSheet in myRelatedTimeSheets | orderBy:'printableTimeSheetString':1"><a
+							<li ng-repeat="timeSheet in myRelatedTimeSheets | orderBy:'printableTimeSheetString':1"><a id="worker-related-timesheet-{{$id}}"
 								ng-href="#/timesheet?id={{timeSheet.id}}">{{timeSheet.printableTimeSheetString}}</a></li>
 							<p ng-hide="(myRelatedTimeSheets)">No time sheets found.</p>
 						</ul>
@@ -109,13 +109,13 @@
 					<div class="row" ng-controller="AdminWorkerRelatedContractsCtrl">
 						<h5>Contracts</h5>
 						<ul>
-							<li ng-repeat="obj in myRelatedContracts | orderBy:'client.name'"><a ng-href="#/contract?id={{obj.contract.id}}">{{obj.client.name}}:
-									<span ng-show="obj.contract.startDate" class="small"> {{obj.contract.startDate}} <span ng-show="obj.contract.endDate">
-											to {{obj.contract.endDate}}</span>
+							<li ng-repeat="obj in myRelatedContracts | orderBy:'client.name'"><a id="worker-related-contract-{{$id}}"
+								ng-href="#/contract?id={{obj.contract.id}}">{{obj.client.name}}: <span ng-show="obj.contract.startDate" class="small">
+										{{obj.contract.startDate}} <span ng-show="obj.contract.endDate"> to {{obj.contract.endDate}}</span>
 								</span>
 							</a></li>
 							<p ng-hide="(myRelatedContracts)">
-								No contracts found; <a ng-href="#/contract">create one.</a>
+								No contracts found; <a id="go-to-contract-tab" ng-href="#/contract">create one.</a>
 							</p>
 						</ul>
 					</div>
@@ -128,9 +128,6 @@
 		<pre class="debug">edit={{edit}}
 workersList={{workersList | json}}
 currentWorker={{currentWorker | json}}
-<!-- clientsMap={{clientsMap| json}} -->
-<!-- contractsMap={{contractsMap | json}} -->
-unlinkedUsersList={{unlinkedUsersList|json}}
 </pre>
 	</div>
 
