@@ -1,0 +1,19 @@
+<div ng-controller="ErrorPageCtrl">
+
+	<div ng-cloak ng-show="rootError">
+		<h2 class="red">Error.</h2>
+		<p>An error has occurred. Please contact the application administrator with the following information.</p>
+
+		<div class="well">
+			<h4 class="text-danger">Reason</h4>
+			<p class="text-danger">{{rootError.data.reason}}</p>
+			<h4 class="text-danger">Status</h4>
+			<h5 class="text-danger">{{rootError.status}} {{rootError.data.status}}</h5>
+		</div>
+	</div>
+	
+<pre class="debug" ng-cloak ng-show="debug">
+rootError={{rootError|json}}
+</pre>
+	
+</div>

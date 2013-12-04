@@ -18,43 +18,31 @@
 <link rel="stylesheet" type="text/css" media="all" href="/resources/css/app.css">
 </head>
 <body>
-	<div id="mainDiv" ng-controller="MainCtrl as main">
-		<%
-			UserService userService = UserServiceFactory.getUserService();
-			User user = userService.getCurrentUser();
-			String loginUrl = userService.createLoginURL(request.getRequestURI());
-			String logoutUrl = userService.createLogoutURL(request.getRequestURI());
-			Worker currentWorker = WorkerService.inst().getCurrent();
-			
-			if (userService.isUserLoggedIn()) {
-				String nickname = user.getNickname();
-		%>
-		
-	<div id="rpTimeWrapperDiv"  
-<%
-if (userService.isUserAdmin()) {
-%>
-ng-controller="AdminPageCtrl"
-<%
-} else { // (admin == false)
-%>
-ng-controller="UserPageCtrl"
-<%
-} // (admin == false)
-%>
-ng-init='workerExists=("<%=currentWorker%>"!="null");'
->
+	<%
+		UserService userService = UserServiceFactory.getUserService();
+		User user = userService.getCurrentUser();
+		String loginUrl = userService.createLoginURL(request.getRequestURI());
+		String logoutUrl = userService.createLogoutURL(request.getRequestURI());
 
-<%@ include file="/rptime.jsp"%>
-		
-	</div>
+		if (userService.isUserLoggedIn()) {
+			String nickname = user.getNickname();
+	%>
+	<div id="mainDiv" ng-controller="MainCtrl as main" ng-init='workerExists=("<%=WorkerService.inst().getCurrent()%>"!="null");'>
+
+		<div id="rpTimeWrapperDiv" <%if (userService.isUserAdmin()) {%> ng-controller="AdminPageCtrl" <%} else {%> ng-controller="UserPageCtrl"
+			<%}%>>
+
+			<%@ include file="/rptime.jsp"%>
+
+		</div>
+
 		<%
 			} else {
 		%>
 		<div class="container">
 			<div class="row">
 				<form class="form-signin ">
-					<h2 class="form-signin-heading">Please sign in</h2>					
+					<h2 class="form-signin-heading">Please sign in</h2>
 					<a class="btn btn-primary" href="<%=loginUrl%>">Sign in</a>
 				</form>
 			</div>

@@ -34,6 +34,7 @@ public class WorkerService {
 	}
 
 	public Worker getCurrent() {
+		LOGGER.debug("getCurrent[Worker]().-- probably called by JSP");
 		User user = userService.getCurrentUser();
 		if (user != null) {
 			final String email = user.getEmail();

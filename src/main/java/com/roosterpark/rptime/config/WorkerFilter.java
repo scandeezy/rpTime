@@ -67,10 +67,10 @@ public class WorkerFilter implements Filter {
 				// throw new UnsupportedOperationException("Not supported yet.");
 			}
 		} catch (Exception e) {
-			LOGGER.error(e.getMessage(), e);
-		} finally {
-			fc.doFilter(request, response);
-		}
+			LOGGER.warn("Suppressed error:" + e.getMessage(), e);
+		} // finally {
+		fc.doFilter(request, response);
+		// }
 	}
 
 	@Override

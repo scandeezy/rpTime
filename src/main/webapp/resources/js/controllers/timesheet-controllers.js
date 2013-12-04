@@ -20,6 +20,15 @@
 			$scope.currentAvailableClientsMap = map;
 		}, true);
 
+		$scope.errorHandlerTimeSheetGetterFn = function errorHandlerFnFn(errorObj) {
+			if (errorObj && errorObj.data && errorObj.data.timestamp) {
+				$scope.setError(errorObj);
+				$location.path('/error');
+			} else {
+				$log.error("Error: not sure what to do with this object:", errorObj);
+			}
+		};
+
 		// TimeSheetService will be redefined with admin paths in admin-services.js
 		if ($routeParams.id) {
 			var id = $routeParams.id;
@@ -27,7 +36,7 @@
 				id : id
 			}, function successFn(data) {
 				$scope.set(data);
-			});
+			}, $scope.errorHandlerTimeSheetGetterFn);
 		}
 
 		function updateTimeSheetsFn() {
@@ -46,7 +55,7 @@
 						$scope.adminWorkerTimeSheetMap[sheet.workerId].push(sheet);
 					}
 				}
-			});
+			}, $scope.errorHandlerTimeSheetGetterFn);
 		}
 
 		$scope.isSubmittable = function isSubmittableFn(timeSheet) {
@@ -109,7 +118,7 @@
 				date : date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
 			}, function successFn(data) {
 				$scope.set(data);
-			});
+			}, $scope.errorHandlerTimeSheetGetterFn);
 		};
 
 		$scope.setWeekNext = function setWeekNextFn() {
@@ -121,7 +130,7 @@
 				date : date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
 			}, function successFn(data) {
 				$scope.set(data);
-			});
+			}, $scope.errorHandlerTimeSheetGetterFn);
 		};
 
 		$scope.setWeekOther = function setWeekOtherFn() {
@@ -132,7 +141,7 @@
 				date : data.datePicked
 			}, function successFn(data) {
 				$scope.set(data);
-			});
+			}, $scope.errorHandlerTimeSheetGetterFn);
 		};
 
 		$scope.submit = function submitFn(timeSheet) {

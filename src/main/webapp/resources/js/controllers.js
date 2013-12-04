@@ -8,8 +8,13 @@
 		$scope.about = AboutService.get();
 	} ]);
 
-	module.controller('MainCtrl', [ '$cookies', '$log', '$scope', '$location', 'dayOfWeekArr', //
-	function MainCtrlFn($cookies, $log, $scope, $location, dayOfWeekArr) {
+	module.controller('ErrorPageCtrl', [ '$log', '$rootScope', function ErrorPageCtrlFn($log, $rootScope) {
+		$log.info("ErrorPageCtrl");
+		// uses $rootScope.rootError
+	} ]);
+
+	module.controller('MainCtrl', [ '$cookies', '$log', '$rootScope', '$scope', '$location', 'dayOfWeekArr', //
+	function MainCtrlFn($cookies, $log, $rootScope, $scope, $location, dayOfWeekArr) {
 		$scope.dayOfWeekArr = dayOfWeekArr;
 		$scope.debug = $cookies.debug;
 
@@ -23,6 +28,10 @@
 
 		$scope.setAdmin = function(bool) {
 			$scope.isAdmin = bool; // true if Admin, false if User
+		};
+
+		$scope.setError = function setErrorFn(errorObj) {
+			$rootScope.rootError = errorObj;
 		};
 
 		$scope.doSave = function doSaveFn(args) {
@@ -91,8 +100,24 @@
 	module.controller('LandingPageCtrl', [ '$location', '$log', '$scope', //
 	function LandingPageCtrlFn($location, $log, $scope) {
 		// auto-redirect to current timesheet IF not admin
-		if (!$scope.isAdmin) {
+		$log.info("(Landing) $scope.workerExists", $scope.workerExists);
+		// workerExists is initialized on the parent (MainCtrl) scope
+		if ($scope.isAdmin) {
+			// all good!
+		} else if (!$scope.isAdmin && $scope.workerExists) {
+			$log.info("redirecting to '/timesheet?id=current' view...");
 			$location.path('/timesheet').search('id', 'current');
+		} else {
+			$log.error("redirecting to '/error' view...");
+			//hardcode test
+			$scope.setError({
+				data:{
+					reason : "No Worker found for your email.  To resolve, contact an administrator to create a Worker with this email to link it to a user.",
+					status : 'FORBIDDEN'
+				},
+				status: 403
+			});
+			$location.path('/error');
 		}
 	} ]);
 

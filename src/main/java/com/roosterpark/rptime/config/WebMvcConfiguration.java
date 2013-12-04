@@ -11,6 +11,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
@@ -24,7 +25,8 @@ import com.fasterxml.jackson.datatype.joda.JodaModule;
  * Spring MVC {@link Configuration}. Extends {@link WebMvcConfigurationSupport}, which provides convenient callbacks.
  */
 @Configuration
-@ComponentScan(basePackages = { "com.roosterpark.rptime.web" }, includeFilters = @ComponentScan.Filter({ Controller.class }))
+@ComponentScan(basePackages = { "com.roosterpark.rptime.web" }, includeFilters = @ComponentScan.Filter({ ControllerAdvice.class,
+		Controller.class }))
 public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 
 	private static final Integer DEFAULT_CACHE_EXPIRY_PERIOD = new Integer(60 * 60 * 24 * 30); // 1 month
@@ -65,7 +67,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 	public void addViewControllers(ViewControllerRegistry registry) {
 		registry.addViewController("/").setViewName("index.jsp");
 		// registry.addViewController("/login"); //TODO
-		// registry.addViewController("/error"); //TODO
+		// registry.addViewController("/error").setViewName("error.jsp"); // TODO
 	}
 
 	//

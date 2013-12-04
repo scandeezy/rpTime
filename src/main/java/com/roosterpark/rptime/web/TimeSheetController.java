@@ -130,7 +130,7 @@ public class TimeSheetController {
 
 	@RequestMapping(value = "/timesheet", method = GET)
 	@ResponseBody
-	public List<TimeSheetView> getAll(@ModelAttribute(WORKER_MODEL_ATTRIBUTE_NAME) Worker worker) {
+	public List<TimeSheetView> getAll(@ModelAttribute(WORKER_MODEL_ATTRIBUTE_NAME) Worker worker) throws WorkerNotFoundException {
 		LOGGER.debug("ModelAttribute worker={}", worker);
 		final Long id = workerService.getValidatedWorker().getId();
 		return service.getAllForWorker(id);
@@ -138,7 +138,7 @@ public class TimeSheetController {
 
 	@RequestMapping(value = "/timesheet/current", method = { GET })
 	@ResponseBody
-	public TimeSheetView getCurrent(@ModelAttribute(WORKER_MODEL_ATTRIBUTE_NAME) Worker worker) {
+	public TimeSheetView getCurrent(@ModelAttribute(WORKER_MODEL_ATTRIBUTE_NAME) Worker worker) throws WorkerNotFoundException {
 		validateWorkerOrThrowWorkerNotFoundException(worker);
 		return getTimeSheetForDate(worker, new LocalDate());
 	}
