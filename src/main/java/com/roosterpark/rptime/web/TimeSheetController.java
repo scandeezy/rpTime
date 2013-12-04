@@ -212,7 +212,7 @@ public class TimeSheetController {
 	 */
 	private void validateWorkerOrThrowWorkerNotFoundException(final Worker worker) throws WorkerNotFoundException {
 		if (worker == null) {
-			throw new WorkerNotFoundException("Worker required for this operation", userService.getCurrentUser());
+			throw new WorkerNotFoundException("Worker required for this operation.", workerService);
 		}
 	}
 

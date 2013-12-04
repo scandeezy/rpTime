@@ -7,7 +7,6 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 import java.util.List;
 import java.util.SortedMap;
-import java.util.TreeMap;
 
 import javax.inject.Inject;
 
@@ -44,12 +43,7 @@ public class WorkerController {
 	@RequestMapping(value = "/admin/worker/idmap", method = GET)
 	@ResponseBody
 	public SortedMap<Long, Worker> getMap() {
-		final List<Worker> list = service.getAll();
-		final SortedMap<Long, Worker> map = new TreeMap<Long, Worker>();
-		for (Worker obj : list) {
-			map.put(obj.getId(), obj);
-		}
-		return map;
+		return service.getMap();
 	}
 
 	@RequestMapping(value = "/admin/worker/{id}", method = GET)

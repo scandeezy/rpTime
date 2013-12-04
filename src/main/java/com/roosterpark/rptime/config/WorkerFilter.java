@@ -59,7 +59,7 @@ public class WorkerFilter implements Filter {
 			if (userService.isUserLoggedIn()) {
 				User user = userService.getCurrentUser();
 				LOGGER.debug("current user '{}' is logged in", user);
-				Worker worker = workerService.getByEmail(user.getEmail());
+				Worker worker = workerService.getByUser(user);
 				request.setAttribute(WORKER_KEY, worker);
 				LOGGER.debug("set request attribute '{}' to Worker='{}'", WORKER_KEY, worker);
 			} else {

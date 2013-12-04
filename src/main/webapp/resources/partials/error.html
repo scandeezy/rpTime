@@ -6,14 +6,16 @@
 
 		<div class="well">
 			<h4 class="text-danger">Reason</h4>
-			<p class="text-danger">{{rootError.data.reason}}</p>
-			<h4 class="text-danger">Status</h4>
-			<h5 class="text-danger">{{rootError.status}} {{rootError.data.status}}</h5>
+			<p class="text-danger">{{rootError.data.exception.message}}</p>
+			<h4>Resolution</h4>
+			<p>{{rootError.data.exception.resolution}}</p>
+			<h4>Status</h4>
+			<h5>{{rootError.status}} {{rootError.data.status}}</h5>
 		</div>
 	</div>
-	
-<pre class="debug" ng-cloak ng-show="debug">
+
+	<pre class="debug" ng-cloak ng-show="debug">
 rootError={{rootError|json}}
 </pre>
-	
+
 </div>

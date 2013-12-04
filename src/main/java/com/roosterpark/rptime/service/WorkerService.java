@@ -3,6 +3,8 @@ package com.roosterpark.rptime.service;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import java.util.List;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -24,6 +26,8 @@ public class WorkerService {
 
 	@Inject
 	UserService userService;
+	@Inject
+	UnlinkedUserService unlinkedUserService;
 
 	public WorkerService() {
 		inst = this;
@@ -43,6 +47,15 @@ public class WorkerService {
 		return null;
 	}
 
+	public SortedMap<Long, Worker> getMap() {
+		final List<Worker> list = getAll();
+		final SortedMap<Long, Worker> map = new TreeMap<Long, Worker>();
+		for (Worker obj : list) {
+			map.put(obj.getId(), obj);
+		}
+		return map;
+	}
+
 	public Worker getById(Long id) {
 		LOGGER.debug("Getting worker with id={}", id);
 		final Worker result = ofy().load().type(Worker.class).id(id).now();
@@ -52,6 +65,10 @@ public class WorkerService {
 		return result;
 	}
 
+	/**
+	 * @deprecated use {@link #getByUser(User)} instead.
+	 */
+	@Deprecated
 	public Worker getByEmail(final String email) {
 		final String emailLower = StringUtils.lowerCase(email);
 		LOGGER.debug("Getting worker with email={} ", emailLower);
@@ -71,11 +88,6 @@ public class WorkerService {
 	}
 
 	public List<Worker> getAll() {
-		// TODO: separate the business logic of the service from the DAO
-		// TODO: Cache better so we don't have to do this. Costly!
-		ofy().clear();
-		// ^ Argh
-
 		return ofy().load().type(Worker.class).list();
 	}
 
@@ -105,10 +117,19 @@ public class WorkerService {
 	}
 
 	public Worker getByUser(User user) {
+		Worker result = null;
 		if (user != null) {
-			return getByEmail(user.getEmail());
+			final String emailLower = StringUtils.lowerCase(user.getEmail());
+			LOGGER.debug("Getting worker with email={} ", emailLower);
+			result = ofy().load().type(Worker.class)//
+					.filter(Worker.EMAIL_KEY, emailLower)//
+					.first()//
+					.now();
 		}
-		return null;
+		if (result == null) {
+			LOGGER.warn("Warning: no Worker found for user='{}'", user);
+		}
+		return result;
 	}
 
 	public void delete(Long id) {
@@ -154,8 +175,7 @@ public class WorkerService {
 				} else if (userService.isUserAdmin()) {
 					return null;
 				}
-				throw new WorkerNotFoundException("No Worker found for email '" + email + "' for user '" + user.toString()
-						+ "'.  To resolve, create a Worker with this email to link it to a user.", user);
+				throw new WorkerNotFoundException("Unable to get validated Worker.", user, this);
 			}
 			throw new IllegalArgumentException("Someone is logged in, but it's not a user.");
 		}
@@ -167,8 +187,16 @@ public class WorkerService {
 		if (w != null) {
 			return w.getId();
 		} else {
-			throw new WorkerNotFoundException("No Worker found.  Unknown error occurred.", userService.getCurrentUser());
+			throw new WorkerNotFoundException("Unable to get validate Worker ID.", this);
 		}
+	}
+
+	public final UserService getUserService() {
+		return this.userService;
+	}
+
+	public final UnlinkedUserService getUnlinkedUserService() {
+		return this.unlinkedUserService;
 	}
 
 }
