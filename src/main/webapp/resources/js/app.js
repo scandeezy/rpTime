@@ -19,8 +19,7 @@
 		})//
 		.when('/contract', {
 			controller : 'AdminContractCtrl',
-			templateUrl : 'resources/partials/contract.html',
-			reloadOnSearch : false
+			templateUrl : 'resources/partials/contract.html'
 		})//
 		.when('/error', {
 			templateUrl : 'resources/partials/error.html'

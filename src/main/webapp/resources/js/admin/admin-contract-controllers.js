@@ -3,9 +3,11 @@
 	// omit [] to use existing controller: http://stackoverflow.com/a/17289451/237225
 	var module = angular.module('myApp.controllers');
 
-	module.controller('AdminContractCtrl', [ '$location', '$log', '$rootScope', '$routeParams', '$scope', 'AdminContractService', //
-	function AdminContractCtrlFn($location, $log, $rootScope, $routeParams, $scope, AdminContractService) {
+	module.controller('AdminContractCtrl', [ '$cookies', '$location', '$log', '$rootScope', '$routeParams', '$scope',//
+	'AdminContractService', //
+	function AdminContractCtrlFn($cookies, $location, $log, $rootScope, $routeParams, $scope, AdminContractService) {
 		// $log.info('AdminContractCtrl init', $scope);
+		$scope.showExpiredContractsModel = true && angular.equals($cookies.showExpiredContracts,'true') ;
 		$scope.edit = false;
 		$scope.currentContract = {};
 
@@ -60,6 +62,12 @@
 			$scope.edit = false;
 			$location.search('id', null);
 		};
+
+		$scope.$watch('showExpiredContractsModel', function showExpiredContractsModel$watchFn(val) {
+			if (!angular.equals(val, undefined)) {
+				$cookies.showExpiredContracts = ""+val;
+			}
+		});
 
 	} ]);
 

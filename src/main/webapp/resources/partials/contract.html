@@ -1,50 +1,65 @@
 <!-- current $scope is AdminContractCtrl -->
 <div>
+
 	<div id="contracts" class="panel panel-default" ng-hide="edit">
 		<div class="panel-heading">
 			<h4>Contracts</h4>
 		</div>
 		<div class="panel-body">
 			<div ng-show="clientsList.length > 0">
-				<div class="btn-group btn-group-sm">
-					<button type="button" class="btn btn-primary" ng-click="set();">New</button>
-					<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
-						<span class="caret"></span> <span class="sr-only">Toggle Create Dropdown</span> &nbsp;
-					</button>
-					<ul class="dropdown-menu" role="menu">
-						<li ng-repeat="client in clientsList | orderBy:'name'"><a ng-click="newForClient(client);">New Contract for <i>{{client.name}}</i></a></li>
-					</ul>
-				</div>
+				<form class="form-horizontal" role="form">
+					<div class="form-group">
+						<div class="col-sm-3">
+
+							<div class="btn-group btn-group-sm">
+								<button type="button" class="btn btn-primary" ng-click="set();">New</button>
+								<button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+									<span class="caret"></span> <span class="sr-only">Toggle Create Dropdown</span> &nbsp;
+								</button>
+								<ul class="dropdown-menu" role="menu">
+									<li ng-repeat="client in clientsList | orderBy:'name'"><a ng-click="newForClient(client);">New Contract for <i>{{client.name}}</i></a></li>
+								</ul>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="checkbox">
+								<label for="showExpiredContracts"> <input id="showExpiredContracts" type="checkbox" ng-model="showExpiredContractsModel">
+									Show expired contracts
+								</label>
+							</div>
+						</div>
+					</div>
+				</form>
 				<ul>
-					<li ng-repeat="client in clientsList | orderBy:'name'" id="{{client.name}}">
-						{{client.name}}
+					<li ng-repeat="client in clientsList | orderBy:'name'" id="{{client.name}}">{{client.name}}
 						<ul>
-							<li ng-repeat="contract in contractsList | orderBy:'workersMap[contract.worker].fullNameNormalized' " 
-							id="{{client.name}}-{{workersMap[contract.worker].fullName}}" ng-show="contract.client==client.id"><span
+							<li ng-repeat="contract in contractsList | orderBy:'workersMap[contract.worker].fullNameNormalized' "
+								id="{{client.name}}-{{workersMap[contract.worker].fullName}}"
+								ng-show="((contract.client==client.id) &&(!contract.expired || (contract.expired && showExpiredContractsModel)))"><span
 								class="btn-group btn-group-sm">
 									<button type="button" id="delete-{{$id}}" class="btn debug" ng-click="remove(contract);" ng-show="debug">Delete</button> <a
 									id="edit-{{$id}}" ng-click="set(contract);">
-							</span> {{workersMap[contract.worker].fullName}} <span 
-								ng-show="contract.startDate">- {{contract.startDate}} <span ng-show="contract.endDate">to
-										{{contract.endDate}}</span></span> </a></li>
+							</span> {{workersMap[contract.worker].fullName}} <span ng-show="contract.startDate">- {{contract.startDate}} <span
+									ng-show="contract.endDate">to {{contract.endDate}}</span></span> </a> <span ng-show="contract.expired"> <span
+									class="label label-danger">expired</span>
+							</span></li>
 						</ul>
 					</li>
 				</ul>
 			</div>
 			<div ng-hide="clientsList.length > 0">
 				<p class="text-warning">
-					No clients found.  Please create a client on the <a href="#/client">clients page</a>.
+					No clients found. Please create a client on the <a href="#/client">clients page</a>.
 				</p>
 			</div>
 		</div>
 	</div>
-	
+
 	<form class="form-horizontal" role="form" name="createContractForm">
 		<div id="createContract" class="panel panel-default" ng-show="edit">
 			<div class="panel-heading">
 				<span ng-show="currentContract.id"><h4>Edit Contract</h4> {{clientsMap[currentContract.client].name}},
-					{{workersMap[currentContract.worker].fullName}} </span> <span ng-hide="currentContract.id"><h4>Create
-						Contract</h4></span>
+					{{workersMap[currentContract.worker].fullName}} </span> <span ng-hide="currentContract.id"><h4>Create Contract</h4></span>
 				<p ng-hide="true" class="text-danger lead">
 					Warning: <span ng-pluralize count="createContractForm.$error.required.length"
 						when="{'1': '1 required field is missing.', 'other': '{} required fields are missing.'}"> </span>

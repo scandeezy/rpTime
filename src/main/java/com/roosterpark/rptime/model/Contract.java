@@ -20,14 +20,14 @@ public class Contract {
 	private Long worker;
 	@Index
 	private Long client;
-        @Index
-        private Boolean onSite;
+	@Index
+	private Boolean onSite;
 	@Index
 	private LocalDate startDate;
 	@Index
 	private LocalDate endDate;
 	private Integer startDayOfWeek;
-        private Boolean lunchRequired;
+	private Boolean lunchRequired;
 
 	public Contract() {
 
@@ -56,14 +56,14 @@ public class Contract {
 	public void setClient(Long client) {
 		this.client = client;
 	}
-        
-        public Boolean getOnSite() {
-                return this.onSite;
-        }
-        
-        public void setOnSite(Boolean onSite) {
-                this.onSite = onSite;
-        }
+
+	public Boolean getOnSite() {
+		return this.onSite;
+	}
+
+	public void setOnSite(Boolean onSite) {
+		this.onSite = onSite;
+	}
 
 	public LocalDate getStartDate() {
 		return startDate;
@@ -88,14 +88,22 @@ public class Contract {
 	public void setStartDayOfWeek(Integer startDayOfWeek) {
 		this.startDayOfWeek = startDayOfWeek;
 	}
-        
-        public Boolean getLunchRequired() {
-                return this.lunchRequired;
-        }
-        
-        public void setLunchRequired(Boolean lunchRequired) {
-                this.lunchRequired = lunchRequired;
-        }
+
+	public Boolean getLunchRequired() {
+		return this.lunchRequired;
+	}
+
+	public void setLunchRequired(Boolean lunchRequired) {
+		this.lunchRequired = lunchRequired;
+	}
+
+	public Boolean getExpired() {
+		Boolean result = Boolean.FALSE;
+		if (this.endDate != null) {
+			result = this.endDate.isBefore(new LocalDate());
+		}
+		return result;
+	}
 
 	@Override
 	public String toString() {
@@ -105,6 +113,9 @@ public class Contract {
 				.add("client", this.client)//
 				.add("startDate", this.startDate)//
 				.add("endDate", this.endDate)//
+				.add("lunchRequired", this.lunchRequired)//
+				.add("expired", getExpired())//
 				.toString();
 	}
+
 }
