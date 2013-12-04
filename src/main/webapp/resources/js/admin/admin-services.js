@@ -31,19 +31,6 @@
 		});
 	} ]);
 
-	module.factory('AdminWorkerService', [ '$resource',//
-	function AdminWorkerServiceFn($resource) {
-		return $resource('admin/worker/:id', {}, {
-			// methods 'get', 'save', 'remove' provided by default
-			getAll : {
-				method : 'GET',
-				params : {
-					id : 'idmap'
-				}
-			}
-		});
-	} ]);
-
 	module.factory('AdminReportService', [ '$resource',//
 	function AdminReportServiceFn($resource) {
 		return $resource('admin/report/:id/:client/:startDate/:endDate', {}, {
@@ -112,6 +99,30 @@
 				},
 				url : 'admin/timesheet/submit/:tid'
 			}
+		});
+	} ]);
+
+	module.factory('AdminWorkerService', [ '$resource',//
+	function AdminWorkerServiceFn($resource) {
+		return $resource('admin/worker/:id', {}, {
+			// methods 'get', 'save', 'remove' provided by default
+			getAll : {
+				method : 'GET',
+				params : {
+					id : 'idmap'
+				}
+			}
+		});
+	} ]);
+
+	module.factory('AdminUnlinkedUserService', [ '$resource',//
+	function AdminUnlinkedUserServiceFn($resource) {
+		return $resource('admin/unlinkeduser', {}, {
+			// methods 'get', 'save', 'remove' provided by default
+			getAll : {
+				isArray : true,
+				method : 'GET'
+			},
 		});
 	} ]);
 

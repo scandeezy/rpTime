@@ -5,7 +5,6 @@
 
 	module.controller('AdminWorkerCtrl', [ '$location', '$log', '$rootScope', '$routeParams', '$scope', 'AdminWorkerService', //
 	function AdminWorkerCtrlFn($location, $log, $rootScope, $routeParams, $scope, AdminWorkerService) {
-		// $log.info('AdminWorkerCtrl init', $scope);
 		$scope.edit = false;
 		if ($routeParams.id) {
 			var id = $routeParams.id;
@@ -17,6 +16,12 @@
 				$scope.edit = true;
 			});
 		}
+		
+		$scope.createFromUnlinked = function createFromUnlinkedFn(user){
+			if(user && user.email){
+				$scope.set({email : user.email});
+			}
+		};
 
 		$scope.newRandom = function newRandomFn() {
 			var randomNum = Math.floor(Math.random() * 900) + 100;
@@ -46,9 +51,7 @@
 				map : $rootScope.workersMap,
 				// updateFnName : 'updateWorkers', //trust client-side: server side has delay.
 				afterFn : function doAfterFn(savedObj) {
-					$log.info("workersMap keys before=" + Object.keys($rootScope.workersMap).length);
 					// $rootScope.workersMap[savedObj.id] = savedObj;
-					// $log.info("workersMap keys after="+Object.keys($rootScope.workersMap).length);
 					$scope.edit = false;
 				}
 			});
@@ -72,11 +75,11 @@
 	function AdminWorkerRelatedTimeSheetsCtrlFn($log, $scope, $timeout, TimeSheetService) {
 		// $log.info("AdminWorkerRelatedTimeSheetsCtrl");
 		$scope.myRelatedTimeSheets = [];
-		
+
 		var tryXtimes = 20;
 
 		$scope.updateRelatedTimeSheets = function updateRelatedTimeSheetsFn() {
-			tryXtimes = tryXtimes -1;
+			tryXtimes = tryXtimes - 1;
 			if ($scope.currentWorker && $scope.currentWorker.id) {
 				var wid = $scope.currentWorker.id
 				TimeSheetService.getAllForWorker({
@@ -91,7 +94,7 @@
 					$scope.myRelatedTimeSheets = arr;
 				});
 			} else {
-				if(tryXtimes > 0){
+				if (tryXtimes > 0) {
 					$timeout(function my$timeoutAsyncCompensationFn() {
 						$scope.updateRelatedTimeSheets();
 					}, 200);

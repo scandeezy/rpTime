@@ -29,6 +29,21 @@
 			</div>
 		</div>
 	</div>
+	<div id="unlinked" class="panel panel-default" ng-show="unlinkedUsersList && !edit">
+		<div class="panel-heading">
+			<h4>Unlinked Users</h4>
+		</div>
+		<div class="panel-body">
+			<p class="text-muted small">An "Unlinked User" is someone who has attempted to log in, but does not a have a Worker associated with their
+				email address.</p>
+			<div class="row">
+				<ul>
+					<li ng-repeat="unlinkedUser in unlinkedUsersList"><a id="create-for-unlinked-{{$id}}"
+						ng-click="createFromUnlinked(unlinkedUser.user)">Create Worker for "{{unlinkedUser.user.email}}"</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
 
 	<form class="form-horizontal" role="form" name="createWorkerForm">
 		<div id="createWorker" class="panel panel-default" ng-show="edit">
@@ -99,7 +114,9 @@
 											to {{obj.contract.endDate}}</span>
 								</span>
 							</a></li>
-							<p ng-hide="(myRelatedContracts)">No contracts found; <a ng-href="#/contract">create one.</a></p>
+							<p ng-hide="(myRelatedContracts)">
+								No contracts found; <a ng-href="#/contract">create one.</a>
+							</p>
 						</ul>
 					</div>
 				</div>
@@ -109,10 +126,11 @@
 
 	<div ng-cloak ng-show="debug" class="debug">
 		<pre class="debug">edit={{edit}}
-workers={{workers | json}}
+workersList={{workersList | json}}
 currentWorker={{currentWorker | json}}
-clientsMap={{clientsMap| json}}
-contractsMap={{contractsMap | json}}
+<!-- clientsMap={{clientsMap| json}} -->
+<!-- contractsMap={{contractsMap | json}} -->
+unlinkedUsersList={{unlinkedUsersList|json}}
 </pre>
 	</div>
 

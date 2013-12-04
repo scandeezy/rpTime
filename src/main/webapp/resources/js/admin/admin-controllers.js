@@ -4,8 +4,8 @@
 	var module = angular.module('myApp.controllers');
 
 	module.controller('AdminPageCtrl', [ // 
-	'$log', '$rootScope', '$scope', 'AdminClientService', 'AdminWorkerService', 'AdminContractService', 'TimeSheetService',//
-	function AdminPageCtrlFn($log, $rootScope, $scope, AdminClientService, AdminWorkerService, AdminContractService, TimeSheetService) {
+	'$log', '$rootScope', '$scope', 'AdminClientService', 'AdminContractService', 'AdminWorkerService', 'AdminUnlinkedUserService', 'TimeSheetService',//
+	function AdminPageCtrlFn($log, $rootScope, $scope, AdminClientService, AdminContractService, AdminWorkerService, AdminUnlinkedUserService, TimeSheetService) {
 		// $log.info('AdminPageCtrl init', $scope);
 		$scope.setAdmin(true); // inherited fn from UserNavCtrl
 		$rootScope.clientsMap = {};
@@ -14,6 +14,7 @@
 		$rootScope.contractsList = [];
 		$rootScope.workersMap = {};
 		$rootScope.workersList = []; // lists allow filters: http://stackoverflow.com/a/14789258/237225
+		$rootScope.unlinkedUsersList = [];
 
 		function updateClientsFn() {
 			AdminClientService.getAll(function successCGetAllFn(map) {
@@ -30,6 +31,9 @@
 		function updateWorkersFn() {
 			AdminWorkerService.getAll(function successWGetAllFn(data) {
 				$rootScope.workersMap = data;
+			});
+			AdminUnlinkedUserService.getAll(function successFn(arr){
+				$rootScope.unlinkedUsersList = arr;	
 			});
 		}
 
