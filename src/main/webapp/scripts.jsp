@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ page import="com.google.appengine.api.users.UserService"%>
+<%@ page import="com.google.appengine.api.users.UserServiceFactory"%>
 <%
 	UserService userServiceScr = UserServiceFactory.getUserService();
 	boolean showAdminOnly = userServiceScr.isUserLoggedIn() && userServiceScr.isUserAdmin();
