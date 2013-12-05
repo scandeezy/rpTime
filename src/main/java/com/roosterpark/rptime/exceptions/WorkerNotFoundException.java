@@ -12,7 +12,7 @@ import com.roosterpark.rptime.service.WorkerService;
  * 
  * @author jjzabkar
  */
-public class WorkerNotFoundException extends RuntimeException {
+public class WorkerNotFoundException extends RuntimeException implements ResolvableException {
 
 	private static final long serialVersionUID = -2507463245207144544L;
 	private static final String RESOLUTION = "To resolve, an administrator must create a Worker whose email links to User '%s'.";
