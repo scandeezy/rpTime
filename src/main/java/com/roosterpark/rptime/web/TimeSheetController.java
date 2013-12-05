@@ -130,7 +130,7 @@ public class TimeSheetController {
 	 * @throws WorkerNotFoundException
 	 *             if {@code worker} is null
 	 */
-	private void validateWorkerOrThrowWorkerNotFoundException(final Worker worker) throws WorkerNotFoundException {
+	public void validateWorkerOrThrowWorkerNotFoundException(final Worker worker) throws WorkerNotFoundException {
 		if (worker == null) {
 			throw new WorkerNotFoundException("Worker required for this operation.", workerService);
 		}

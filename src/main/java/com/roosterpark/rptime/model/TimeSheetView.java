@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.Validate;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
@@ -41,6 +42,7 @@ public class TimeSheetView extends TimeSheet {
 
 	public TimeSheetView(final TimeSheet sheet, final List<TimeSheetDay> days, final TimeSheetDao dao, final ClientService clientService) {
 		this();
+		Validate.notNull(sheet.getStartDate(), "startDate required");
 
 		this.setAdminNote(sheet.getAdminNote());
 		this.setClientIds(sheet.getClientIds());

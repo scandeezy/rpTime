@@ -13,6 +13,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.Validate;
+import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -49,6 +50,8 @@ public class AdminTimeSheetController {
 	private static final String WORKER_ID_PARAMETER_NAME = "workerId";
 
 	@Inject
+	TimeSheetController timeSheetControllerDelegate;
+	@Inject
 	TimeSheetService service;
 	@Inject
 	UserService userService;
@@ -63,7 +66,7 @@ public class AdminTimeSheetController {
 	 */
 	@ModelAttribute(WORKER_MODEL_ATTRIBUTE_NAME)
 	public Worker initWorkerBeforeInvokingHandlerMethod(HttpServletRequest request) {
-		return (Worker) request.getAttribute(WORKER_MODEL_ATTRIBUTE_NAME);
+		return timeSheetControllerDelegate.initWorkerBeforeInvokingHandlerMethod(request);
 	}
 
 	@RequestMapping(value = "{id}", method = DELETE)
@@ -101,9 +104,22 @@ public class AdminTimeSheetController {
 	@RequestMapping(value = "new", method = GET)
 	@ResponseBody
 	public TimeSheetView getNew(@ModelAttribute(WORKER_MODEL_ATTRIBUTE_NAME) Worker worker) {
-		throw new IllegalArgumentException("IllegalArgumentException TBD");
-		// validateWorkerOrThrowWorkerNotFoundException(worker);
-		// return getTimeSheetForDate(worker, new LocalDate());
+		timeSheetControllerDelegate.validateWorkerOrThrowWorkerNotFoundException(worker);
+		return service.getForWorkerDate(worker.getId(), new LocalDate());
+	}
+
+	@RequestMapping(value = "status/worker/{workerId}", method = GET)
+	@ResponseBody
+	public List<TimeSheet> getStatusPerWorkerDate(@PathVariable("workerId") Long workerId) {
+		return service.getStatusPerWorker(workerId);
+	}
+
+	@RequestMapping(value = "worker/{workerId}/date/{date}", method = GET)
+	@ResponseBody
+	public TimeSheetView getWorkerIdDate(@PathVariable("workerId") Long workerId, @PathVariable("date") String dateString) {
+		final LocalDate date = new LocalDate(dateString);
+		LOGGER.debug("workerId={}, date={}", workerId, date);
+		return service.getForWorkerDate(workerId, date);
 	}
 
 	@RequestMapping(method = POST)

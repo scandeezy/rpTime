@@ -1,5 +1,5 @@
 package com.roosterpark.rptime.model;
 
 public enum TimeSheetStatus {
-	UNSUBMITTED, SUBMITTED, APPROVED
+	NOT_CREATED, UNSUBMITTED, SUBMITTED, APPROVED
 }
