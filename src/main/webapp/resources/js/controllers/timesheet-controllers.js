@@ -134,7 +134,8 @@
 		};
 
 		$scope.setWeekOther = function setWeekOtherFn() {
-			var data = window.showModalDialog("datePickerModal.html");
+			//TODO FIXME: replace with $modal service
+			var data = window.showModalDialog("resources/partials/datePickerModal.html");
 			$log.error(data.datePicked);
 			TimeSheetService.get({
 				id : "new",

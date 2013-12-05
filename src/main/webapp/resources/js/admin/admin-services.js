@@ -51,10 +51,6 @@
 	function AdminTimeSheetService($resource) {
 		return $resource('admin/timesheet/:id/:date', {}, {
 			// methods 'get', 'save', 'remove' provided by default
-			create : {
-				method : 'GET',
-				url : 'admin/timesheet/new'
-			},
 			flag : {
 				method : 'POST',
 				params : {
@@ -77,6 +73,10 @@
 				method : 'GET',
 				url : 'admin/timesheet/worker/:workerId'
 			},
+			getForWorkerIdDate : {
+				method : 'GET',
+				url : 'admin/timesheet/worker/:workerId/date/:date'
+			},
 			getCurrent : {
 				method : 'GET',
 				url : 'admin/timesheet/current'
@@ -88,6 +88,15 @@
 			getNext : {
 				method : 'GET',
 				url : 'admin/timesheet/next'
+			},
+			getNew : {
+				method : 'GET',
+				url : 'admin/timesheet/new'
+			},
+			getStatusForWorkerId : {
+				isArray : true,
+				method : 'GET',
+				url : 'admin/timesheet/status/worker/:workerId'
 			},
 			getWeek : {
 				method : 'GET'

@@ -4,9 +4,9 @@
 	var module = angular.module('myApp.controllers');
 
 	module.controller('AdminPageCtrl', [ // 
-	'$log', '$rootScope', '$scope', 'AdminClientService',//
+	'$location', '$log', '$rootScope', '$scope', 'AdminClientService',//
 	'AdminContractService', 'AdminWorkerService', 'AdminUnlinkedUserService', 'TimeSheetService',//
-	function AdminPageCtrlFn($log, $rootScope, $scope,// 
+	function AdminPageCtrlFn($location, $log, $rootScope, $scope,// 
 	AdminClientService, AdminContractService, AdminWorkerService, AdminUnlinkedUserService, TimeSheetService) {
 		// $log.info('AdminPageCtrl init', $scope);
 		$scope.setAdmin(true); // inherited fn from UserNavCtrl
@@ -82,6 +82,16 @@
 			});
 		};
 
+		$scope.getTimeSheetForWorkerDate = function getTimeSheetForWorkerDateFn(parms, closeModalFn) {
+			if (!(parms && parms.workerId && parms.date)) {
+				throw new Error("required: 'workerId' and 'date'");
+			}
+			TimeSheetService.getForWorkerIdDate(parms, function successFn(data) {
+				closeModalFn();
+				$location.path('timesheet').search('id', data.id);
+			});
+		};
+
 		updateClientsFn();
 		updateContractsFn();
 		updateWorkersFn();
@@ -89,27 +99,73 @@
 		$log.info('AdminPageCtrl init complete');
 	} ]);
 
-	module.controller('ModalDemoCtrl', [ '$log', '$scope',//
-	function ModalDemoCtrlFn($log, $scope) {
-		$scope.items = [ 'item1', 'item2', 'item3' ];
-		$scope.jqueryModalElementHandle = $('#myModal');
+	module.controller('WorkerWeekSelectionModalCtrl', [ //
+			'$log',
+			'$scope',
+			'TimeSheetService',
+			function WorkerWeekSelectionModalCtrlFn($log, $scope, TimeSheetService) {
+				$scope.timeSheetStatusList = [];
+				$scope.timeSheetStatusIsOk = false;
+				var defaultStatus = 'Choose the week by date.';
+				$scope.status = defaultStatus;
 
-		$scope.close = function closeFn() {
-			$scope.closeModal = true;
-		};
+				$scope.$watch('currentWorker.id', function currentWorkerId$watchFn(id) {
+					if (id) {
+						TimeSheetService.getStatusForWorkerId({
+							workerId : id
+						}, function successFn(list) {
+							$scope.timeSheetStatusList = list;
+						});
+					}
+				});
 
-		$scope.open = function openFn() {
-			$log.info('ModalDemoCtrl [myModal] open()...');
-			$scope.closeModal = false;
-			$scope.jqueryModalElementHandle
-			// $('#myModal')
-			.modal({
-				show : true
-			})
-		};
+				$scope.$watch('modalSelection', function modalSelection$watchFn(modalDate) {
+					$scope.printableTimeSheetString = false;
+					var found = null;
+					if (modalDate && $scope.timeSheetStatusList) {
+						var firstDate = $scope.timeSheetStatusList[0].startDate;
+						angular.forEach($scope.timeSheetStatusList, function(timeSheet) {
+							var tsDate = timeSheet.startDate;
+							if (!found) {
+								if (tsDate >= modalDate && firstDate <= modalDate) {
+									found = timeSheet;
+									return;
+								}
+							}
+						});
+						if (found) {
+							if (angular.equals(found.status, "NOT_CREATED") && found.printableTimeSheetString) {
+								$scope.status = '';
+								$scope.printableTimeSheetString = found.printableTimeSheetString;
+							} else {
+								$scope.status = 'A time sheet for <i>' + found.printableTimeSheetString
+										+ '</i> already exists.  Choose another date.';
+							}
+							return;
+						}
+					}
+					$scope.status = defaultStatus;
+				});
 
-		$log.info('ModalDemoCtrl init complete');
+				$scope.close = function closeFn() {
+					$('#workerWeekSelectionModal').modal('hide');
+				};
 
-	} ]);
+				$scope.select = function selectFn(date) {
+					if (date && $scope.printableTimeSheetString) {
+						var parms = {
+							workerId : $scope.currentWorker.id,
+							date : date
+						};
+						$scope.getTimeSheetForWorkerDate(parms, $scope.close);
+					}
+				};
+
+				$scope.open = function openFn() {
+					$scope.modalSelection = null;
+					$('#workerWeekSelectionModal').modal('show');
+				};
+
+			} ]);
 
 })();

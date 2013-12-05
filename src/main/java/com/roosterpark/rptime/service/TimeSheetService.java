@@ -1,5 +1,6 @@
 package com.roosterpark.rptime.service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -8,7 +9,6 @@ import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.persistence.EntityNotFoundException;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.Validate;
@@ -19,12 +19,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.appengine.api.users.UserService;
+import com.roosterpark.rptime.exceptions.ContractNotFoundException;
 import com.roosterpark.rptime.model.Contract;
 import com.roosterpark.rptime.model.TimeCardLogEntry;
 import com.roosterpark.rptime.model.TimeSheet;
 import com.roosterpark.rptime.model.TimeSheetDay;
 import com.roosterpark.rptime.model.TimeSheetStatus;
 import com.roosterpark.rptime.model.TimeSheetView;
+import com.roosterpark.rptime.model.Worker;
 import com.roosterpark.rptime.service.dao.TimeSheetDao;
 import com.roosterpark.rptime.service.dao.TimeSheetDayDao;
 
@@ -58,41 +60,37 @@ public class TimeSheetService {
 	}
 
 	/**
+	 * Get the {@link TimeSheetView} for the {@code workerId} and (normalized) {@code date}.
+	 * 
 	 * @param workerId
 	 * @param date
 	 *            - the date whose week to query against
 	 * @return the {@link TimeSheetView} for the week containing {@code date}. If it exists, it returns the persisted one; else it is
 	 *         created.
 	 */
-	public TimeSheetView getForWorkerDate(Long workerId, LocalDate date) {
-		date = adjustDate(date, DateTimeConstants.SUNDAY);
+	public TimeSheetView getForWorkerDate(final Long workerId, final LocalDate date) {
 		Validate.noNullElements(new Object[] { workerId, date }, "Required: workerId and date");
-		TimeSheet exists = timeSheetDao.getByWorkerWeekYear(workerId, date.getWeekOfWeekyear(), date.getYear());
+		final LocalDate normalizedDate = normalizeStartDate(date);
+		TimeSheet exists = timeSheetDao.getByWorkerWeekYear(workerId, normalizedDate.getWeekOfWeekyear(), normalizedDate.getYear());
+		LOGGER.debug("checking if exists:{}, workerId={}, normalizedDate={}", exists != null, workerId, normalizedDate);
 		TimeSheetView result;
 		if (exists != null) {
 			result = convert(exists);
 		} else {
-			result = createForWorkerDate(workerId, date);
+			result = createForWorkerDate(workerId, normalizedDate);
 		}
 		return result;
 	}
 
 	protected TimeSheetView createForWorkerDate(final Long workerId, final LocalDate date) {
 		Validate.noNullElements(new Object[] { workerId, date }, "Required: workerId and date");
-
-		TimeSheet exists = timeSheetDao.getByWorkerWeekYear(workerId, date.getWeekOfWeekyear(), date.getYear());
-		if (exists != null) {
-			LOGGER.info("TimeSheet already exists for date {}; returning {}", date, exists.getId());
-			return convert(exists);
-		}
-		final Interval interval = new Interval(date.toDateTimeAtStartOfDay(), date.plusDays(DateTimeConstants.DAYS_PER_WEEK - 1)
-				.toDateTimeAtStartOfDay());
+		final LocalDate normalizedDate = normalizeStartDate(date);
+		final Interval interval = normalizeInterval(normalizedDate);
 		LOGGER.debug("creating new TimeSheet for worker={}, interval={}", workerId, interval);
 		List<Contract> contracts = contractService.getActiveContractsForWorker(workerId, interval);
 
 		if (CollectionUtils.isEmpty(contracts)) {
-			throw new EntityNotFoundException("No active Contracts found for Worker id='" + workerId + "' and date '" + date
-					+ "'.  Solution: for Worker, create Contract on the /contracts page with beginDate < " + date + "< endDate.");
+			throw new ContractNotFoundException(workerId, normalizedDate);
 		}
 
 		boolean lunchRequired = DEFAULT_LUNCH_REQUIRED;
@@ -108,36 +106,29 @@ public class TimeSheetService {
 			clientIds.add(contract.getClient());
 		}
 
-		// Normalized/Hardcoded because of our current data layer.
-		final LocalDate contractDate = adjustDate(date, DateTimeConstants.SUNDAY);
-
-		// Long defaultClientId = clientIds.get(0);
 		final List<Long> logIds = new LinkedList<>();
 		final List<TimeSheetDay> entries = new LinkedList<>();
+		LocalDate currentDate = normalizedDate;
 		for (int i = 0; i < DateTimeConstants.DAYS_PER_WEEK; i++) {
 			TimeSheetDay day = new TimeSheetDay();
-			int dayOfWeek = contractDate.plusDays(i).getDayOfWeek();
-
-			boolean weekend = (dayOfWeek == DateTimeConstants.SATURDAY || dayOfWeek == DateTimeConstants.SUNDAY);
-			LOGGER.debug("Saturday is {}, Sunday is {}", DateTimeConstants.SATURDAY, DateTimeConstants.SUNDAY);
-			LOGGER.debug("Day {} is weekend {}", dayOfWeek, weekend);
-			if (weekend) {
-				TimeCardLogEntry entry = new TimeCardLogEntry(workerId, defaultClientId, contractDate.plusDays(i), 12, 12);
+			if (isWeekend(currentDate)) {
+				TimeCardLogEntry entry = new TimeCardLogEntry(workerId, defaultClientId, currentDate, 12, 12);
 				day.addEntry(entry);
 			} else if (!lunchRequired) {
-				TimeCardLogEntry entry = new TimeCardLogEntry(workerId, defaultClientId, contractDate.plusDays(i));
+				TimeCardLogEntry entry = new TimeCardLogEntry(workerId, defaultClientId, currentDate);
 				day.addEntry(entry);
 			} else {
-				TimeCardLogEntry entry1 = new TimeCardLogEntry(workerId, defaultClientId, contractDate.plusDays(i), 8, 12);
-				TimeCardLogEntry entry2 = new TimeCardLogEntry(workerId, defaultClientId, contractDate.plusDays(i), 13, 17);
+				TimeCardLogEntry entry1 = new TimeCardLogEntry(workerId, defaultClientId, currentDate, 8, 12);
+				TimeCardLogEntry entry2 = new TimeCardLogEntry(workerId, defaultClientId, currentDate, 13, 17);
 				day.addEntry(entry1);
 				day.addEntry(entry2);
 			}
 			day = timeSheetDayDao.set(day);
 			entries.add(day);
 			logIds.add(day.getId());
+			currentDate = currentDate.plusDays(1);
 		}
-		TimeSheet result = new TimeSheet(workerId, clientIds, contractDate, logIds);
+		TimeSheet result = new TimeSheet(workerId, clientIds, normalizedDate, logIds);
 
 		result = timeSheetDao.set(result, null);
 
@@ -170,20 +161,33 @@ public class TimeSheetService {
 		return new TimeSheetView(sheet, days, timeSheetDao, clientService);
 	}
 
-	private LocalDate adjustDate(LocalDate date, Integer dayOfWeek) {
+	private Interval normalizeInterval(final LocalDate normalizedDate) {
+		Validate.notNull(normalizedDate, "non-null date required");
+		Validate.isTrue(normalizedDate.getDayOfWeek() == DateTimeConstants.SUNDAY, "normalized date required");
+		return new Interval(normalizedDate.toDateTimeAtStartOfDay(), normalizedDate.plusDays(DateTimeConstants.DAYS_PER_WEEK - 1)
+				.toDateTimeAtStartOfDay());
+	}
+
+	public LocalDate normalizeStartDate(final LocalDate date) {
+		Validate.notNull(date, "date required");
+		return normalizeStartDate(date, DateTimeConstants.SUNDAY);
+	}
+
+	@Deprecated
+	private LocalDate normalizeStartDate(final LocalDate date, final Integer dayOfWeek) {
 		int currentDayOfWeek = date.dayOfWeek().get();
-		LOGGER.debug("Current day of week {} and needed day of week {}", currentDayOfWeek, dayOfWeek);
+		LOGGER.trace("Current day of week {} and needed day of week {}", currentDayOfWeek, dayOfWeek);
 		if (currentDayOfWeek == dayOfWeek) {
 			return date;
 		}
 		LocalDate returnDate = date.withDayOfWeek(dayOfWeek);
 		// Edge condition
-		if (dayOfWeek == DateTimeConstants.SUNDAY) {
-			int week = date.getWeekOfWeekyear();
-			LOGGER.debug("Current week {} and desired week {}", week, week - 1);
-			returnDate = returnDate.withWeekOfWeekyear(week - 1);
-		}
-		LOGGER.debug("The adjusted return date is {}", returnDate);
+		// if (dayOfWeek == DateTimeConstants.SUNDAY) {
+		// int week = date.getWeekOfWeekyear();
+		// LOGGER.debug("Current week {} and desired week {}", week, week - 1);
+		// returnDate = returnDate.withWeekOfWeekyear(week - 1);
+		// }
+		LOGGER.trace("The normalized return date is {}", returnDate);
 		return returnDate;
 	}
 
@@ -202,7 +206,7 @@ public class TimeSheetService {
 	}
 
 	public List<TimeSheetView> getAllForClientWeek(final Long clientId, final LocalDate date) {
-		final LocalDate adjustedDate = adjustDate(date, DateTimeConstants.SUNDAY);
+		final LocalDate adjustedDate = normalizeStartDate(date, DateTimeConstants.SUNDAY);
 		final List<TimeSheet> timeSheets = timeSheetDao.getAllForClientWeekYear(clientId, adjustedDate.getWeekOfWeekyear(),
 				adjustedDate.getYear());
 		return convert(timeSheets);
@@ -319,6 +323,49 @@ public class TimeSheetService {
 		TimeSheet c = timeSheetDao.getById(id);
 		c.setFlagged(flagged);
 		timeSheetDao.set(c, null);
+	}
+
+	/**
+	 * Find {@link TimeSheet TimeSheets} per {@link Worker}, filling in missing {@link TimeSheetStatus} as needed.
+	 * 
+	 * @return a {@link List<TimeSheet>} of 52 {@link TimeSheet TimeSheets}; 26 weeks prior to {@code date} and 26 after.
+	 */
+	public List<TimeSheet> getStatusPerWorker(final Long workerId) {
+		LocalDate startDate = normalizeStartDate(new LocalDate()).minusWeeks(26);
+		final List<TimeSheet> result = new ArrayList<>(52);
+		final List<TimeSheet> workerTimeSheets = timeSheetDao.getAllByWorker(workerId);
+		LOGGER.debug("found {} workerTimeSheets for workerId={}", workerTimeSheets.size(), workerId);
+
+		for (int i = 0; i < 52; i++) {
+			startDate = startDate.plusWeeks(1);
+			LOGGER.debug("\ti={}, startDate={}, endDate={}", i, startDate, startDate.plusDays(7));
+			// check if already exists
+			TimeSheet exists = null;
+			for (TimeSheet wts : workerTimeSheets) {
+				LOGGER.debug("\t\tcheck if {}=={}", wts.getStartDate(), startDate);
+				if (wts.getStartDate().equals(startDate)) {
+					LOGGER.debug("found! wts={}", wts);
+					exists = wts;
+					break;
+				}
+			}
+			if (exists != null) {
+				result.add(exists);
+				workerTimeSheets.remove(exists);
+			} else {
+				TimeSheet t = new TimeSheet(workerId, null, startDate);
+				t.setStatus(TimeSheetStatus.NOT_CREATED);
+				LOGGER.debug("not found: created t={}", t);
+				result.add(t);
+			}
+		}
+
+		return result;
+	}
+
+	private boolean isWeekend(LocalDate currentDate) {
+		final int dow = currentDate.getDayOfWeek();
+		return dow == DateTimeConstants.SATURDAY || dow == DateTimeConstants.SUNDAY;
 	}
 
 }
