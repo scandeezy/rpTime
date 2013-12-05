@@ -104,7 +104,9 @@ public class TimeSheet implements Comparable<TimeSheet> {
 
 	public void setClientIds(Collection<Long> clientIds) {
 		this.clientIds.clear();
-		this.clientIds.addAll(clientIds);
+		if (clientIds != null) {
+			this.clientIds.addAll(clientIds);
+		}
 	}
 
 	public Integer getWeek() {
@@ -153,7 +155,9 @@ public class TimeSheet implements Comparable<TimeSheet> {
 
 	public void setTimeCardIds(List<Long> timeCardIds) {
 		this.timeCardIds.clear();
-		this.timeCardIds.addAll(timeCardIds);
+		if (timeCardIds != null) {
+			this.timeCardIds.addAll(timeCardIds);
+		}
 	}
 
 	public String getNote() {
