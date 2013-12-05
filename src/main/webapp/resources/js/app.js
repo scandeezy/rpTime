@@ -1,7 +1,7 @@
 'use strict';
 (function appJsFn() {
 	// Declare app level module which depends on filters, and services
-	angular.module('myApp', [ 'ngRoute', 'ngAnimate', 'ngCookies', //
+	angular.module('myApp', [ 'ngRoute', 'ngAnimate', 'ngCookies', 'ngSanitize', //
 	'myApp.filters', 'myApp.services', 'myApp.directives', 'myApp.controllers' ])//
 	.config([ '$routeProvider', //
 	function($routeProvider) {
@@ -43,8 +43,7 @@
 		})//
 		.when('/worker', {
 			controller : 'AdminWorkerCtrl',
-			templateUrl : 'resources/partials/worker.html',
-			reloadOnSearch : false
+			templateUrl : 'resources/partials/worker.html'
 		})//
 		.otherwise({
 			redirectTo : '/'
