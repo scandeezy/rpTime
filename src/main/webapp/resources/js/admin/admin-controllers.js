@@ -4,8 +4,10 @@
 	var module = angular.module('myApp.controllers');
 
 	module.controller('AdminPageCtrl', [ // 
-	'$log', '$rootScope', '$scope', 'AdminClientService', 'AdminContractService', 'AdminWorkerService', 'AdminUnlinkedUserService', 'TimeSheetService',//
-	function AdminPageCtrlFn($log, $rootScope, $scope, AdminClientService, AdminContractService, AdminWorkerService, AdminUnlinkedUserService, TimeSheetService) {
+	'$log', '$rootScope', '$scope', 'AdminClientService',//
+	'AdminContractService', 'AdminWorkerService', 'AdminUnlinkedUserService', 'TimeSheetService',//
+	function AdminPageCtrlFn($log, $rootScope, $scope,// 
+	AdminClientService, AdminContractService, AdminWorkerService, AdminUnlinkedUserService, TimeSheetService) {
 		// $log.info('AdminPageCtrl init', $scope);
 		$scope.setAdmin(true); // inherited fn from UserNavCtrl
 		$rootScope.clientsMap = {};
@@ -32,8 +34,8 @@
 			AdminWorkerService.getAll(function successWGetAllFn(data) {
 				$rootScope.workersMap = data;
 			});
-			AdminUnlinkedUserService.getAll(function successFn(arr){
-				$rootScope.unlinkedUsersList = arr;	
+			AdminUnlinkedUserService.getAll(function successFn(arr) {
+				$rootScope.unlinkedUsersList = arr;
 			});
 		}
 
@@ -85,6 +87,29 @@
 		updateWorkersFn();
 
 		$log.info('AdminPageCtrl init complete');
+	} ]);
+
+	module.controller('ModalDemoCtrl', [ '$log', '$scope',//
+	function ModalDemoCtrlFn($log, $scope) {
+		$scope.items = [ 'item1', 'item2', 'item3' ];
+		$scope.jqueryModalElementHandle = $('#myModal');
+
+		$scope.close = function closeFn() {
+			$scope.closeModal = true;
+		};
+
+		$scope.open = function openFn() {
+			$log.info('ModalDemoCtrl [myModal] open()...');
+			$scope.closeModal = false;
+			$scope.jqueryModalElementHandle
+			// $('#myModal')
+			.modal({
+				show : true
+			})
+		};
+
+		$log.info('ModalDemoCtrl init complete');
+
 	} ]);
 
 })();

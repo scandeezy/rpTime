@@ -18,8 +18,8 @@
 					<ul>
 						<li ng-repeat="worker in workersList | filter:search:strict | orderBy:'fullNameNormalized' ">
 							<button type="button" id="delete-{{$id}}" class="btn btn-sm btn-default" ng-click="remove(worker);" ng-show="debug">Delete</button> <a
-							id="select-worker-{{$id}}" ng-href="#/worker?id={{worker.id}}" ng-click="set(worker);"> </span> {{worker.fullName}} <span class="text-muted" ng-show="worker.email">&nbsp;&nbsp;&nbsp;
-									{{worker.email}} </a>
+							id="select-worker-{{$id}}" ng-href="#/worker?id={{worker.id}}" ng-click="set(worker);"> </span> {{worker.fullName}} <span
+								class="text-muted" ng-show="worker.email">&nbsp;&nbsp;&nbsp; {{worker.email}} </a>
 						</li>
 					</ul>
 				</div>
@@ -100,6 +100,28 @@
 				<div class="col-sm-5" ng-show="currentWorker.id">
 					<div class="row" ng-controller="AdminWorkerRelatedTimeSheetsCtrl">
 						<h5>Time Sheets</h5>
+
+						<div ng-controller="ModalDemoCtrl" ng-show="debug" class="debug">
+							<button type="button" class="btn btn-default btn-sm" ng-click="open();">Create</button>
+							<div class="debug">Selection from a modal: {{ selected }}</div>
+
+							<div class="modal" id="myModal" ng-hide="closeModal">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+											<h4 class="modal-title">Modal title</h4>
+										</div>
+										<div class="modal-body">Content for the dialog / modal goes here.</div>
+										<div class="modal-footer">
+											<a ng-click="close();" data-dismiss="modal" class="btn">Close</a> <a ng-click="close();" data-dismiss="modal"
+												class="btn btn-primary">Save changes</a>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+
 						<ul>
 							<li ng-repeat="timeSheet in myRelatedTimeSheets | orderBy:'printableTimeSheetString':1"><a id="worker-related-timesheet-{{$id}}"
 								ng-href="#/timesheet?id={{timeSheet.id}}">{{timeSheet.printableTimeSheetString}}</a></li>
