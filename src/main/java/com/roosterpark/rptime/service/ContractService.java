@@ -57,19 +57,7 @@ public class ContractService {
 		}
 		final List<Contract> contracts = getContractsForWorker(workerId);
 		LOGGER.debug("found {} contracts for worker {}.  Determine which are active.", CollectionUtils.size(contracts), workerId);
-		final List<Contract> active = new LinkedList<Contract>();
-		for (Contract contract : contracts) {
-			Interval contractInterval = getIntervalForContract(contract);
-			if (searchInterval.overlaps(contractInterval)) {
-				LOGGER.debug("active contract found:  searchInterval '{}' overlaps contract interval '{}'.", searchInterval,
-						contractInterval);
-				active.add(contract);
-			} else {
-				LOGGER.debug("inactive contract found; date mismatch.  searchInterval '{}' does not overlap contract interval '{}'.",
-						searchInterval, contractInterval);
-			}
-		}
-		return active;
+		return getActiveContractsInSearchInterval(contracts, searchInterval);
 	}
 
 	public List<Contract> getContractsForClient(Long client) {
@@ -84,6 +72,11 @@ public class ContractService {
 	public List<Contract> getActiveContractsForClientInInterval(final Long clientId, final Interval searchInterval) {
 		Validate.noNullElements(new Object[] { clientId, searchInterval });
 		final List<Contract> contracts = getContractsForClient(clientId);
+		return getActiveContractsInSearchInterval(contracts, searchInterval);
+	}
+
+	public List<Contract> getActiveContractsInSearchInterval(final List<Contract> contracts, final Interval searchInterval) {
+		Validate.notNull(searchInterval, "search interval required");
 		final List<Contract> active = new LinkedList<Contract>();
 		LOGGER.debug("searchInterval={}", searchInterval);
 
@@ -92,7 +85,7 @@ public class ContractService {
 			final LocalDate contractStartDate = contract.getStartDate();
 			final LocalDate contractEndDate = contract.getEndDate();
 
-			LOGGER.debug("\tcheck if searchInterval contains {} or {}", contractStartDate, contractEndDate);
+			LOGGER.trace("\tcheck if searchInterval contains {} or {}", contractStartDate, contractEndDate);
 			boolean startDateOk = searchInterval.contains(contractStartDate.toDate().getTime());
 			if (searchInterval.isAfter(contractStartDate.toDateTimeAtStartOfDay())) {
 				startDateOk = true;
@@ -104,6 +97,7 @@ public class ContractService {
 				endDateOk = contractInterval.overlaps(searchInterval);
 			}
 
+			LOGGER.trace("\tstartDateOk={} && endDateOk={}", startDateOk, endDateOk);
 			if (startDateOk && endDateOk) {
 				active.add(contract);
 			}
@@ -118,10 +112,6 @@ public class ContractService {
 	}
 
 	public List<Contract> getAll() {
-		// TODO: Cache better so we don't have to do this. Costly!
-		ofy().clear();
-		// ^ Argh
-
 		return ofy().load().type(Contract.class).list();
 	}
 
