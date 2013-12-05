@@ -1,15 +1,22 @@
-<div id="modal-instance-content" class="modal">
-	<div class="modal-header">
-		<h3>I'm a modal!</h3>
-	</div>
-	<div class="modal-body">
-		<ul>
-			<li ng-repeat="item in items"><a ng-click="selected.item = item">{{ item }}</a></li>
-		</ul>
-		Selected: <b>{{ selected.item }}</b>
-	</div>
-	<div class="modal-footer">
-		<button class="btn btn-primary" ng-click="ok()">OK</button>
-		<button class="btn btn-warning" ng-click="cancel()">Cancel</button>
+<div class="modal" id="weekSelectionModal" ng-controller="WeekSelectionModalCtrl">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+				<h4 class="modal-title">
+					Create Time Sheet<span ng-show="currentWorker.lastName"> for {{currentWorker.firstName}} {{currentWorker.lastName}}</span>
+				</h4>
+			</div>
+			<div class="modal-body">
+				<input id="modalSelection" name="modalSelection" type="date" ng-model="modalSelection" placeholder="yyyy-mm-dd">
+				<p>
+					<br /> Choose the week by date.
+				</p>
+			</div>
+			<div class="modal-footer">
+				<a ng-click="selectModalWeekDate(modalSelection);closeModal('#weekSelectionModal');" class="btn btn-primary" ng-show="modalSelection">Use Week of
+					{{modalSelection}}</a> <a ng-click="closeModal('#weekSelectionModal');" data-dismiss="modal" class="btn btn-default">Close</a>
+			</div>
+		</div>
 	</div>
 </div>

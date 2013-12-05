@@ -16,7 +16,7 @@
 							<li><a id="set-week-this" ng-click="set();">This Week <i>(default)</i></a></li>
 							<li><a id="set-week-next" ng-click="setWeekNext();">Next Week</a></li>
 							<li class="divider"></li>
-							<li><a id="set-week-other" ng-click="setWeekOther();">Other...</a></li>
+							<li><a id="set-week-other" ng-click="openModal('#weekSelectionModal');">Other...</a></li>
 						</ul>
 					</div>
 				</div>
@@ -67,8 +67,8 @@
 				</h4>
 				<div class="row">
 					<div class="col-sm-12">
-						<small><span class="text-muted">As of {{currentTimeSheet.updateTimestamp|truncatedtimestamp}}</span></small> <label class="label label-success"
-							title="A submitted time card can still be updated by clicking the 'Update' button below."
+						<small><span class="text-muted">As of {{currentTimeSheet.updateTimestamp|truncatedtimestamp}}</span></small> <label
+							class="label label-success" title="A submitted time card can still be updated by clicking the 'Update' button below."
 							ng-show="currentTimeSheet.status!='UNSUBMITTED'">Submitted <span class="glyphicon glyphicon-ok"></span></label>
 
 						<div class="btn-group btn-group-sm pull-right">
@@ -106,10 +106,12 @@
 							<div class="col-sm-8">
 								<div class="row" ng-repeat="entry in day.entries" ng-controller="TimeSheetDayCtrl" ng-init="eIndex=$index">
 									<div class="col-sm-3">
-										<input type="time" class="form-control input-sm" id="entry-start-time-{{$id}}" ng-model="entry.startTime" placeholder="HH:MM" title="Clock-in Time">
+										<input type="time" class="form-control input-sm" id="entry-start-time-{{$id}}" ng-model="entry.startTime" placeholder="HH:MM"
+											title="Clock-in Time">
 									</div>
 									<div class="col-sm-3">
-										<input type="time" class="form-control input-sm" id="entry-end-time-{{$id}}" ng-model="entry.endTime" placeholder="HH:MM" title="Clock-out Time">
+										<input type="time" class="form-control input-sm" id="entry-end-time-{{$id}}" ng-model="entry.endTime" placeholder="HH:MM"
+											title="Clock-out Time">
 									</div>
 
 									<div class="col-sm-6" ng-show="showButtons">
@@ -188,6 +190,8 @@ createTimeSheetForm.$valid   ={{createTimeSheetForm.$valid}}
 </pre>
 
 	</form>
+
+	<div ng-include="'resources/partials/datePickerModal.html'">
 
 	<div class="well" ng-cloak ng-show="debug">
 		<pre class="debug">

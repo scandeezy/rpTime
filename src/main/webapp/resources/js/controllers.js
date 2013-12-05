@@ -93,8 +93,21 @@
 				}
 			});
 		};
+		
+		$scope.closeModal = function closeModalFn(id){
+			id && $(id).modal('hide');
+		};
 
+		$scope.openModal = function openModalFn(id){
+			id && $(id).modal('show');
+		}
+				
 		$log.info('MainCtrl init complete');
+	} ]);
+	
+	module.controller('WeekSelectionModalCtrl', [ '$log', '$scope', //
+   	function WeekSelectionModalCtrl( $log, $scope) {
+	
 	} ]);
 
 	module.controller('LandingPageCtrl', [ '$location', '$log', '$scope', //

@@ -90,6 +90,10 @@
 				}
 			});
 		};
+		
+		$scope.selectModalWeekDate = function selectModalWeekDateFn(date){
+			$scope.setWeekOther(date);
+		};
 
 		$scope.set = function setFn(obj) {
 			$log.info("setting ", obj);
@@ -133,13 +137,16 @@
 			}, $scope.errorHandlerTimeSheetGetterFn);
 		};
 
-		$scope.setWeekOther = function setWeekOtherFn() {
-			//TODO FIXME: replace with $modal service
-			var data = window.showModalDialog("resources/partials/datePickerModal.html");
-			$log.error(data.datePicked);
+		$scope.setWeekOther = function setWeekOtherFn(date) {
+//			//TODO FIXME: replace with $modal service
+//			var data = window.showModalDialog("resources/partials/datePickerModal.html");
+//			
+//			$('#weekSelectionModal').modal('show');
+//			
+//			$log.error(data.datePicked);
 			TimeSheetService.get({
 				id : "new",
-				date : data.datePicked
+				date : date
 			}, function successFn(data) {
 				$scope.set(data);
 			}, $scope.errorHandlerTimeSheetGetterFn);

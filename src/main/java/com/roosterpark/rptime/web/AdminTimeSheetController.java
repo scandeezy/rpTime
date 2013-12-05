@@ -108,6 +108,14 @@ public class AdminTimeSheetController {
 		return service.getForWorkerDate(worker.getId(), new LocalDate());
 	}
 
+	@RequestMapping(value = "new/{date}", method = GET)
+	@ResponseBody
+	public TimeSheetView getNewDate(@ModelAttribute(WORKER_MODEL_ATTRIBUTE_NAME) Worker worker, @PathVariable("date") String dateString) {
+		timeSheetControllerDelegate.validateWorkerOrThrowWorkerNotFoundException(worker);
+		final LocalDate date = new LocalDate(dateString);
+		return service.getForWorkerDate(worker.getId(), date);
+	}
+
 	@RequestMapping(value = "status/worker/{workerId}", method = GET)
 	@ResponseBody
 	public List<TimeSheet> getStatusPerWorkerDate(@PathVariable("workerId") Long workerId) {
