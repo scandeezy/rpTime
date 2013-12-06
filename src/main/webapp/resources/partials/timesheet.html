@@ -24,7 +24,7 @@
 		</div>
 		<div class="panel-body" ng-hide="isAdmin">
 			<ul>
-				<li ng-repeat="timeSheet in timeSheetsList" ng-init="worker=workersMap[timeSheet.workerId]"><a
+				<li ng-repeat="timeSheet in timeSheetsList | orderBy:'startDate':1 " ng-init="worker=workersMap[timeSheet.workerId]"><a
 					id="select-timesheet-{{timeSheet.id}}" ng-click="set(timeSheet)">{{timeSheet.year}}, week {{timeSheet.week}} -
 						{{timeSheet.startDate}}</a> <span ng-show="timeSheet.status=='UNSUBMITTED'" class="label label-warning">Not Submitted</span> <span
 					ng-show="timeSheet.status=='SUBMITTED'" class="label label-info">Submitted</span> <span ng-show="timeSheet.status=='APPROVED'"
