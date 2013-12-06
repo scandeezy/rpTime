@@ -25,7 +25,7 @@
 			<%
 				if (!userService2.isUserAdmin()) {
 			%>
-			<li ng-class="{active : page == '/timesheet'}"><a href="#/timesheet" tabindex="-1">Time Sheets</a></li>
+			<li ng-show="workerExists" ng-class="{active : page == '/timesheet'}"><a href="#/timesheet" tabindex="-1">Time Sheets</a></li>
 			<%
 				} else {
 			%>
