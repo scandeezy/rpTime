@@ -8,7 +8,6 @@
 		$scope.edit = false;
 		if ($routeParams.id) {
 			var id = $routeParams.id;
-			$log.info('getting id', id);
 			AdminWorkerService.get({
 				id : id
 			}, function successFn(data) {
@@ -73,7 +72,6 @@
 
 	module.controller('AdminWorkerRelatedTimeSheetsCtrl', [ '$log', '$scope', '$timeout', 'TimeSheetService', //
 	function AdminWorkerRelatedTimeSheetsCtrlFn($log, $scope, $timeout, TimeSheetService) {
-		// $log.info("AdminWorkerRelatedTimeSheetsCtrl");
 		$scope.myRelatedTimeSheets = [];
 
 		var tryXtimes = 20;

@@ -96,7 +96,7 @@
 		};
 
 		$scope.set = function setFn(obj) {
-			$log.info("setting ", obj);
+			// $log.info("setting ", obj);
 			if (!obj) {
 				var o = TimeSheetService.getCurrent();
 				var id = o.id;
@@ -183,7 +183,7 @@
 
 		updateTimeSheetsFn();
 
-		$log.info('TimeSheetPageCtrl init', $scope);
+		// $log.info('TimeSheetPageCtrl init', $scope);
 
 	} ]);
 

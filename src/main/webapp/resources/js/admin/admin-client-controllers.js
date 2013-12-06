@@ -5,11 +5,9 @@
 
 	module.controller('AdminClientCtrl', [ '$location', '$log', '$rootScope', '$routeParams', '$scope', 'AdminClientService', //
 	function AdminClientCtrlFn($location, $log, $rootScope, $routeParams, $scope, AdminClientService) {
-		// $log.info('AdminClientCtrl init', $scope, $location, $routeParams);
 		$scope.edit = false;
 		if ($routeParams.id) {
 			var id = $routeParams.id;
-			$log.info('getting id', id);
 			AdminClientService.get({
 				id : id
 			}, function successFn(data) {
@@ -64,7 +62,7 @@
 
 		$scope.$watch('currentClient', function currentClient$watchFn(client) {
 			if (client && client.id) {
-				$log.info('get TimeSheets for client=', client);
+				// $log.info('get TimeSheets for client=', client);
 				TimeSheetService.getAllForClient({
 					clientId : client.id,
 				}, function successFn(list) {
@@ -94,7 +92,7 @@
 
 		$scope.$watch('currentClient', function currentClient$watchFn(client) {
 			if (client && client.id) {
-				$log.info('get Contracts for client=', client);
+				// $log.info('get Contracts for client=', client);
 				AdminContractService.getAllForClient({
 					clientId : client.id,
 				}, function successFn(list) {

@@ -8,7 +8,6 @@
 	'AdminContractService', 'AdminWorkerService', 'AdminUnlinkedUserService', 'TimeSheetService',//
 	function AdminPageCtrlFn($location, $log, $rootScope, $scope,// 
 	AdminClientService, AdminContractService, AdminWorkerService, AdminUnlinkedUserService, TimeSheetService) {
-		// $log.info('AdminPageCtrl init', $scope);
 		$scope.setAdmin(true); // inherited fn from UserNavCtrl
 		$rootScope.clientsMap = {};
 		$rootScope.clientsList = [];
@@ -96,7 +95,7 @@
 		updateContractsFn();
 		updateWorkersFn();
 
-		$log.info('AdminPageCtrl init complete');
+		// $log.info('AdminPageCtrl init complete');
 	} ]);
 
 	module.controller('WorkerWeekSelectionModalCtrl', [ //

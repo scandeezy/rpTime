@@ -114,7 +114,6 @@
 
 	module.controller('ReportTotalHoursPerWorkerPerMonthCtrl', [ '$log', '$routeParams', '$scope', 'AdminReportService', //
 	function ReportTotalHoursPerWorkerPerMonthCtrlFn($log, $routeParams, $scope, AdminReportService) {
-		// $log.info('ReportTotalHoursPerWorkerPerMonthCtrl init', $scope);
 		$scope.report = {};
 		var d = $routeParams.date;
 		AdminReportService.getTotalHoursPerWorkerPerMonthReport({
@@ -126,9 +125,7 @@
 		$scope.totalHours = 0;
 		$scope.$watch('report.workerIdToHoursMap', function(map) {
 			var totHrs = 0;
-			$log.info('foreach on ', map);
 			angular.forEach(map, function(val, key) {
-				$log.info(key, val);
 				totHrs = totHrs + val;
 			});
 			$scope.totalHours = totHrs;

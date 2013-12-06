@@ -6,14 +6,12 @@
 	module.controller('AdminContractCtrl', [ '$cookies', '$location', '$log', '$rootScope', '$routeParams', '$scope',//
 	'AdminContractService', //
 	function AdminContractCtrlFn($cookies, $location, $log, $rootScope, $routeParams, $scope, AdminContractService) {
-		// $log.info('AdminContractCtrl init', $scope);
 		$scope.showExpiredContractsModel = true && angular.equals($cookies.showExpiredContracts,'true') ;
 		$scope.edit = false;
 		$scope.currentContract = {};
 
 		if ($routeParams.id) {
 			var id = $routeParams.id;
-			$log.info('getting id', id);
 			AdminContractService.get({
 				id : id
 			}, function successFn(data) {

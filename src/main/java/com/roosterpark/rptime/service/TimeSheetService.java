@@ -33,6 +33,7 @@ import com.roosterpark.rptime.service.dao.TimeSheetDayDao;
 @Named
 public class TimeSheetService {
 	private static final boolean DEFAULT_LUNCH_REQUIRED = false;
+	private static final int DEFAULT_START_DAY_OF_WEEK = DateTimeConstants.SUNDAY;
 
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
@@ -163,14 +164,14 @@ public class TimeSheetService {
 
 	private Interval normalizeInterval(final LocalDate normalizedDate) {
 		Validate.notNull(normalizedDate, "non-null date required");
-		Validate.isTrue(normalizedDate.getDayOfWeek() == DateTimeConstants.SUNDAY, "normalized date required");
+		Validate.isTrue(normalizedDate.getDayOfWeek() == DEFAULT_START_DAY_OF_WEEK, "normalized date required");
 		return new Interval(normalizedDate.toDateTimeAtStartOfDay(), normalizedDate.plusDays(DateTimeConstants.DAYS_PER_WEEK - 1)
 				.toDateTimeAtStartOfDay());
 	}
 
 	public LocalDate normalizeStartDate(final LocalDate date) {
 		Validate.notNull(date, "date required");
-		return normalizeStartDate(date, DateTimeConstants.SUNDAY);
+		return normalizeStartDate(date, DEFAULT_START_DAY_OF_WEEK);
 	}
 
 	@Deprecated
@@ -180,9 +181,9 @@ public class TimeSheetService {
 		if (currentDayOfWeek == dayOfWeek) {
 			return date;
 		}
-		LocalDate returnDate = date.withDayOfWeek(dayOfWeek);
+		final LocalDate returnDate = date.minusDays(currentDayOfWeek);
 		// Edge condition
-		// if (dayOfWeek == DateTimeConstants.SUNDAY) {
+		// if (dayOfWeek == DEFAULT_START_DAY_OF_WEEK) {
 		// int week = date.getWeekOfWeekyear();
 		// LOGGER.debug("Current week {} and desired week {}", week, week - 1);
 		// returnDate = returnDate.withWeekOfWeekyear(week - 1);
@@ -206,7 +207,7 @@ public class TimeSheetService {
 	}
 
 	public List<TimeSheetView> getAllForClientWeek(final Long clientId, final LocalDate date) {
-		final LocalDate adjustedDate = normalizeStartDate(date, DateTimeConstants.SUNDAY);
+		final LocalDate adjustedDate = normalizeStartDate(date);
 		final List<TimeSheet> timeSheets = timeSheetDao.getAllForClientWeekYear(clientId, adjustedDate.getWeekOfWeekyear(),
 				adjustedDate.getYear());
 		return convert(timeSheets);

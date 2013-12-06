@@ -45,7 +45,6 @@
 				throw new Error("missing required args");
 			}
 
-			// $log.info("dosave:", [ svc, obj, updateFn, map ]);
 			svc.save(obj, function saveSuccessFn(data) {
 				saveOrUpdateSuccessFn(data, map, updateFn, afterFn);
 			});
@@ -54,10 +53,7 @@
 				$log.info("saved data id=", data.id);
 				map[data.id] = data;
 				if (updateFn) {
-					// $log.info("do ($broadcast) update '" + updateFn + "'");
 					$scope.$broadcast(updateFn);
-				} else {
-					// $log.info("skipped $broadcast update");
 				}
 				if (afterFn) {
 					afterFn(data);
@@ -102,7 +98,7 @@
 			id && $(id).modal('show');
 		}
 				
-		$log.info('MainCtrl init complete');
+		// $log.info('MainCtrl init complete');
 	} ]);
 	
 	module.controller('WeekSelectionModalCtrl', [ '$log', '$scope', //
@@ -113,7 +109,6 @@
 	module.controller('LandingPageCtrl', [ '$location', '$log', '$scope', //
 	function LandingPageCtrlFn($location, $log, $scope) {
 		// auto-redirect to current timesheet IF not admin
-		$log.info("(Landing) $scope.workerExists", $scope.workerExists);
 		// workerExists is initialized on the parent (MainCtrl) scope
 		if ($scope.isAdmin) {
 			// all good!
@@ -136,7 +131,6 @@
 
 	module.controller('UserPageCtrl', [ '$log', '$scope', //
 	function UserPageCtrlFn($log, $scope) {
-		// $log.info('UserPageCtrl init', $scope);
 		$scope.setAdmin(false); // inherited fn from UserNavCtrl
 	} ]);
 
