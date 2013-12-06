@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.google.appengine.api.users.UserService;
+import com.roosterpark.rptime.exceptions.WorkerNotFoundException;
 import com.roosterpark.rptime.model.TimeSheet;
 import com.roosterpark.rptime.model.TimeSheetView;
 import com.roosterpark.rptime.model.Worker;
@@ -95,6 +96,12 @@ public class AdminTimeSheetController {
 		return service.getAllForWorker(workerId);
 	}
 
+	@RequestMapping(value = "current", method = GET)
+	@ResponseBody
+	public TimeSheetView getCurrent(@ModelAttribute(WORKER_MODEL_ATTRIBUTE_NAME) Worker worker) throws WorkerNotFoundException {
+		return timeSheetControllerDelegate.getCurrent(worker);
+	}
+
 	@RequestMapping(value = "{id}", method = GET)
 	@ResponseBody
 	public TimeSheetView getId(@PathVariable Long id) {
@@ -111,9 +118,7 @@ public class AdminTimeSheetController {
 	@RequestMapping(value = "new/{date}", method = GET)
 	@ResponseBody
 	public TimeSheetView getNewDate(@ModelAttribute(WORKER_MODEL_ATTRIBUTE_NAME) Worker worker, @PathVariable("date") String dateString) {
-		timeSheetControllerDelegate.validateWorkerOrThrowWorkerNotFoundException(worker);
-		final LocalDate date = new LocalDate(dateString);
-		return service.getForWorkerDate(worker.getId(), date);
+		return timeSheetControllerDelegate.getNewDate(dateString, worker);
 	}
 
 	@RequestMapping(value = "status/worker/{workerId}", method = GET)
