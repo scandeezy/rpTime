@@ -1,14 +1,13 @@
 'use strict';
 (function appJsFn() {
-	// Declare app level module which depends on filters, and services
 	angular.module('myApp', [ 'ngRoute', 'ngAnimate', 'ngCookies', 'ngSanitize', //
 	'myApp.filters', 'myApp.services', 'myApp.directives', 'myApp.controllers' ])//
 	.config([ '$routeProvider', //
 	function($routeProvider) {
 		console.log('configuring');
 		$routeProvider.when('/', {
-			controller : 'LandingPageCtrl',
-			templateUrl : 'resources/partials/landing.html'
+			controller : 'TimeSheetPageCtrl',
+			templateUrl : 'resources/partials/timesheet.html'
 		})//
 		.when('/about', {
 			templateUrl : 'resources/partials/about.html'
