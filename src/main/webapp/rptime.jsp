@@ -57,7 +57,7 @@
 		</ul>
 
 		<ul class="nav navbar-nav navbar-right">
-			<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown"><%=user2.getNickname()%><b class="caret"></b></a>
+			<li class="dropdown"><a id="signOut" class="dropdown-toggle" data-toggle="dropdown"><%=user2.getNickname()%><b class="caret"></b></a>
 				<ul class="dropdown-menu">
 					<%
 						if (userService2.isUserAdmin()) {
