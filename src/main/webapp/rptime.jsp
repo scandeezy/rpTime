@@ -82,5 +82,5 @@
 </div>
 
 <p class="text-warning hidden-print" ng-show="isAdmin">
-	<span class="label label-warning">Warning</span> You are signed in as an administrator.
+	<span id="adminWarning" class="label label-warning">Warning</span> You are signed in as an administrator.
 </p>
