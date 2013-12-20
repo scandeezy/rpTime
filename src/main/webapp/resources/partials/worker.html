@@ -37,7 +37,7 @@
 			<p class="text-muted small">An "Unregistered User" is someone who has attempted to log in, but does not a have a Worker associated
 				with their email address.</p>
 			<div class="row">
-				<ul>
+				<ul id="unregisteredUserList">
 					<li ng-repeat="unlinkedUser in unlinkedUsersList"><a id="create-for-unlinked-{{$id}}"
 						ng-click="createFromUnlinked(unlinkedUser.user)">Create Worker for "{{unlinkedUser.user.email}}"</a></li>
 				</ul>
