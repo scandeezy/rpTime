@@ -15,7 +15,7 @@
 		<div class="panel-body">
 			<div class="row">
 				<div class="col-sm-10">
-					<ul>
+					<ul id="workerList">
 						<li ng-repeat="worker in workersList | filter:search:strict | orderBy:'fullNameNormalized' ">
 							<button type="button" id="delete-{{$id}}" class="btn btn-sm btn-default" ng-click="remove(worker);" ng-show="debug">Delete</button> <a
 							id="select-worker-{{$id}}" ng-href="#/worker?id={{worker.id}}" ng-click="set(worker);"> </span> {{worker.fullName}} <span
