@@ -23,7 +23,7 @@
 			</h4>
 		</div>
 		<div class="panel-body" ng-hide="isAdmin">
-			<ul>
+			<ul id="userTimeSheetList">
 				<li ng-repeat="timeSheet in timeSheetsList | orderBy:'startDate':1 " ng-init="worker=workersMap[timeSheet.workerId]"><a
 					id="select-timesheet-{{timeSheet.id}}" ng-click="set(timeSheet)">{{timeSheet.year}}, week {{timeSheet.week}} -
 						{{timeSheet.startDate}}</a>
@@ -38,15 +38,14 @@
 					ng-init="worker=workersMap[workerId]"><a id="select-worker-{{workerId}}" ng-href="#/worker?id={{workerId}}">{{worker.fullName}}
 						<span class="text-muted">{{worker.email}}</span>
 				</a>
-					<ul>
+					<ul id="adminTimeSheetList">
 						<li ng-repeat="timeSheet in timeSheetList | orderBy:'startDate':1 ">
 							<button type="button" class="btn btn-sm btn-default" id="delete-{{timeSheet.id}}" ng-click="remove(timeSheet);" ng-show="debug">Delete</button>
 							<a id="select-timesheet-{{timeSheet.id}}" ng-click="set(timeSheet)">{{timeSheet.printableTimeSheetString}}</a>
                             <span id="timeSheetFlagged" ng-show="timeSheet.flagged" class="label label-danger"><span class="glyphicon glyphicon-flag"></span>&nbsp;</span>
                             <span id="timeSheetUnsubmitted" ng-show="timeSheet.status=='UNSUBMITTED'" class="label label-warning">Not Submitted</span>
                             <span id="timeSheetSubmitted" ng-show="timeSheet.status=='SUBMITTED'" class="label label-info">Submitted</span>
-                            <span id="timeSheetApproved" ng-show="timeSheet.status=='APPROVED'"
-							class="label label-success">Approved</span>
+                            <span id="timeSheetApproved" ng-show="timeSheet.status=='APPROVED'" class="label label-success">Approved</span>
 						</li>
 					</ul></li>
 			</ul>
