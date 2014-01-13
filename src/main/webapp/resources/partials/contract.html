@@ -40,8 +40,8 @@
 									<button type="button" id="delete-{{$id}}" class="btn debug" ng-click="remove(contract);" ng-show="debug">Delete</button> <a
 									id="edit-{{$id}}" ng-click="set(contract);">
 							</span> {{workersMap[contract.worker].fullName}} <span ng-show="contract.startDate">- {{contract.startDate}} <span
-									ng-show="contract.endDate">to {{contract.endDate}}</span></span> </a> <span ng-show="contract.expired"> <span
-									class="label label-danger">expired</span>
+									ng-show="contract.endDate">to {{contract.endDate}}</span></span> </a> <span ng-show="contract.expired">
+                                    <span id="expired" class="label label-danger">expired</span>
 							</span></li>
 						</ul>
 					</li>
