@@ -26,7 +26,7 @@
 
 		<div id="reportSummary">
 			<h2>
-				<a ng-href="#/client?id={{selectedClient}}">{{clientsMap[selectedClient].name}}</a> Time Sheets
+				<a id="client-{{selectedClient}}" ng-href="#/client?id={{selectedClient}}">{{clientsMap[selectedClient].name}}</a> Time Sheets
 			</h2>
 			<h3>{{report.reportDate}}</h3>
 			<div>
