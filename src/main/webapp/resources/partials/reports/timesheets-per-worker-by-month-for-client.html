@@ -41,9 +41,9 @@
 					</thead>
 					<tbody>
 						<tr ng-repeat="worker in report.workerList | orderBy:'fullNameNormalized' " ng-controller="ReportTimeSheetsPerWorkerByMonthForClientWorkerCtrl">
-							<td><a ng-href="#/worker?id={{worker.id}}">{{worker.fullName}}</a></td>
-							<td>{{totalDaysCount}} days</td>
-							<td>{{totalHoursSum | number:2}}</td>
+							<td><a id="worker-{{worker.id}}" ng-href="#/worker?id={{worker.id}}">{{worker.fullName}}</a></td>
+							<td id="days-{{worker.id}}">{{totalDaysCount}} days</td>
+							<td id="hours-{{worker.id}}">{{totalHoursSum | number:2}}</td>
 						</tr>
 					</tbody>
 					<tfoot>
