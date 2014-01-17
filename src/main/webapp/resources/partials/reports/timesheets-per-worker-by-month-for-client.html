@@ -69,11 +69,11 @@
 			</span>
 
 			<h4>
-				<a ng-href="#/worker?id={{worker.id}}">{{worker.fullName}}</a>
+				<a id="workerSheets-{{worker.id}}" ng-href="#/worker?id={{worker.id}}">{{worker.fullName}}</a>
 			</h4>
 
 			<div class="col-sm-offset-1">
-				<table class="table table-condensed table-striped table-hover" ng-show="rmap">
+				<table id="workerSheetsTable-{{worker.id}}" class="table table-condensed table-striped table-hover" ng-show="rmap">
 					<thead>
 						<tr>
 							<th>Date</th>
@@ -83,13 +83,13 @@
 					</thead>
 					<tbody>
 						<tr ng-repeat="(date,hours) in report.reportMap[worker.id]" ng-show="hours > 0" ng-init="timeSheetId=getTimeSheetLinkForDate(worker.id,date);">
-							<td><a ng-href="#/timesheet?id={{timeSheetId}}">{{date}}</a></td>
+							<td><a id="timeSheet-{{timeSheetId}}" ng-href="#/timesheet?id={{timeSheetId}}">{{date}}</a></td>
 							<td ng-show="debug" class="debug">
 								<small>
 								timeSheetId={{timeSheetId}}<br/>
 								</small>
 							</td>
-							<td>{{hours | number:2}}
+							<td id="hours-{{timeSheetId}}">{{hours | number:2}}
 								<div class="btn-group btn-group-xs hidden-print pull-right">
 									<button class="btn btn-default"
 										ng-class="{'btn-danger':(report.timeSheetMap[timeSheetId].flagged), 'btn-default':!(report.timeSheetMap[timeSheetId].flagged)}"
@@ -103,9 +103,9 @@
 					</tbody>
 					<tfoot>
 						<tr class="text-muted">
-							<td>{{totalDaysCount}} days</td>
+							<td id="totalDays">{{totalDaysCount}} days</td>
 							<td ng-show="debug" class="debug">Debug</td>
-							<td>{{totalHoursSum | number:2}}</td>
+							<td id="totalHours">{{totalHoursSum | number:2}}</td>
 						</tr>
 					</tfoot>
 				</table>
