@@ -59,7 +59,7 @@
 
 		<hr class="hidden-print" />
 
-		<div class="col-sm-offset-1 page-break-before" ng-repeat="worker in report.workerList | orderBy:'fullNameNormalized'" ng-controller="ReportTimeSheetsPerWorkerByMonthForClientWorkerCtrl">
+		<div id="workerTableDiv" class="col-sm-offset-1 page-break-before" ng-repeat="worker in report.workerList | orderBy:'fullNameNormalized'" ng-controller="ReportTimeSheetsPerWorkerByMonthForClientWorkerCtrl">
 
 			<span class="visible-print">		
 			<h2>
