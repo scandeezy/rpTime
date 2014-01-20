@@ -27,7 +27,7 @@ import com.roosterpark.rptime.service.WorkerService;
 public class WorkerFilter implements Filter {
 	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
 
-	public static final String WORKER_KEY = "worker";
+	public static final String WORKER_MODEL_ATTRIBUTE_NAME = "worker";
 
 	private WorkerService workerService;
 	private UserService userService;
@@ -60,8 +60,8 @@ public class WorkerFilter implements Filter {
 				User user = userService.getCurrentUser();
 				LOGGER.debug("current user '{}' is logged in", user);
 				Worker worker = workerService.getByUser(user);
-				request.setAttribute(WORKER_KEY, worker);
-				LOGGER.debug("set request attribute '{}' to Worker='{}'", WORKER_KEY, worker);
+				request.setAttribute(WORKER_MODEL_ATTRIBUTE_NAME, worker);
+				LOGGER.debug("set request attribute '{}' to Worker='{}'", WORKER_MODEL_ATTRIBUTE_NAME, worker);
 			} else {
 				LOGGER.debug("User '{}' is not logged in.", userService.getCurrentUser());
 				// throw new UnsupportedOperationException("Not supported yet.");

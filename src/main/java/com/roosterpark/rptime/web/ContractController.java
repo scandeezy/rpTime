@@ -1,9 +1,11 @@
 package com.roosterpark.rptime.web;
 
+import static com.roosterpark.rptime.config.WorkerFilter.WORKER_MODEL_ATTRIBUTE_NAME;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static com.roosterpark.rptime.service.WorkerService.validateWorkerOrThrowWorkerNotFoundException;
 
 import java.util.List;
 import java.util.SortedMap;
@@ -21,7 +23,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.roosterpark.rptime.model.Contract;
+import com.roosterpark.rptime.model.Worker;
 import com.roosterpark.rptime.service.ContractService;
+import com.roosterpark.rptime.service.WorkerService;
+import javax.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 /**
  * {@link Controller} responsible for {@link Contract}-related MVC endpoints.
@@ -33,10 +41,34 @@ import com.roosterpark.rptime.service.ContractService;
  */
 @Controller
 public class ContractController {
+	private static final Logger LOGGER = LoggerFactory.getLogger(ContractController.class);
 
 	@Inject
 	ContractService service;
+    @Inject
+    WorkerService workerService;
 
+	/**
+	 * Method interceptor that sets the {@code worker} {@link ModelAttribute} <i>prior</i> to invoking the {@link RequestMapping} handler
+	 * methods.
+	 * 
+	 * @return the {@link Worker} attribute attached to the {@code HttpServletRequest request} by {@code WorkerFilter}.
+	 */
+	@ModelAttribute(WORKER_MODEL_ATTRIBUTE_NAME)
+	public Worker initWorkerBeforeInvokingHandlerMethod(HttpServletRequest request) {
+		return (Worker) request.getAttribute(WORKER_MODEL_ATTRIBUTE_NAME);
+	}
+    
+    @RequestMapping(value = "/contract/current", method = GET)
+    @ResponseBody
+    public List<Contract> getContracts(@ModelAttribute(WORKER_MODEL_ATTRIBUTE_NAME) Worker worker) {
+        LOGGER.info("Worker for contracts is {}", worker);
+        validateWorkerOrThrowWorkerNotFoundException(worker, workerService);
+        List<Contract> contracts = service.getActiveContractsForWorker(worker.getId(), null);
+        
+        return contracts;
+    }
+    
 	@RequestMapping(value = "/admin/contract/worker/{workerId}/active", method = GET)
 	@ResponseBody
 	public List<Contract> getActiveByWorker(@PathVariable Long workerId) {

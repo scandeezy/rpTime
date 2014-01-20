@@ -102,7 +102,7 @@ public class TimeSheetService {
 
 		LOGGER.debug("defaultClientId={}, lunchRequired={}", defaultClientId, lunchRequired);
 
-		Set<Long> clientIds = new HashSet<Long>();
+		Set<Long> clientIds = new HashSet<>();
 		for (Contract contract : contracts) {
 			clientIds.add(contract.getClient());
 		}
@@ -284,7 +284,7 @@ public class TimeSheetService {
 	 * @return the filtered {@link List} of "reportable" (i.e., not-{@link TimeSheetStatus.UNSUBMITTED UNSUBMITTED}) {@link TimeSheetView}s.
 	 */
 	public List<TimeSheetView> getReportable(final List<TimeSheetView> input) {
-		List<TimeSheetView> output = new LinkedList<TimeSheetView>();
+		List<TimeSheetView> output = new LinkedList<>();
 		for (TimeSheetView tsv : input) {
 			if (!tsv.getStatus().equals(TimeSheetStatus.UNSUBMITTED)) {
 				output.add(tsv);
@@ -329,6 +329,7 @@ public class TimeSheetService {
 	/**
 	 * Find {@link TimeSheet TimeSheets} per {@link Worker}, filling in missing {@link TimeSheetStatus} as needed.
 	 * 
+     * @param workerId The id of the worker.
 	 * @return a {@link List<TimeSheet>} of 52 {@link TimeSheet TimeSheets}; 26 weeks prior to {@code date} and 26 after.
 	 */
 	public List<TimeSheet> getStatusPerWorker(final Long workerId) {
@@ -352,7 +353,6 @@ public class TimeSheetService {
 			}
 			if (exists != null) {
 				result.add(exists);
-				workerTimeSheets.remove(exists);
 			} else {
 				TimeSheet t = new TimeSheet(workerId, null, startDate);
 				t.setStatus(TimeSheetStatus.NOT_CREATED);
@@ -368,5 +368,4 @@ public class TimeSheetService {
 		final int dow = currentDate.getDayOfWeek();
 		return dow == DateTimeConstants.SATURDAY || dow == DateTimeConstants.SUNDAY;
 	}
-
 }

@@ -47,7 +47,7 @@
 	} ]);
 
 	console && console.info("redefining TimeSheetService for Admin...");
-	module.factory('TimeSheetService', [ '$resource',//
+	module.factory('AdminTimeSheetService', [ '$resource',//
 	function AdminTimeSheetService($resource) {
 		return $resource('admin/timesheet/:id/:date', {}, {
 			// methods 'get', 'save', 'remove' provided by default

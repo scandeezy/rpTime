@@ -6,6 +6,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 import static org.springframework.web.bind.annotation.RequestMethod.PUT;
+import static com.roosterpark.rptime.service.WorkerService.validateWorkerOrThrowWorkerNotFoundException;
 
 import java.util.List;
 
@@ -24,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.google.appengine.api.users.UserService;
 import com.roosterpark.rptime.exceptions.WorkerNotFoundException;
 import com.roosterpark.rptime.model.TimeSheet;
 import com.roosterpark.rptime.model.TimeSheetView;
@@ -54,10 +54,8 @@ public class AdminTimeSheetController {
 	TimeSheetController timeSheetControllerDelegate;
 	@Inject
 	TimeSheetService service;
-	@Inject
-	UserService userService;
-	@Inject
-	WorkerService workerService;
+    @Inject
+    WorkerService workerService;
 
 	/**
 	 * Method interceptor that sets the {@code worker} {@link ModelAttribute} <i>prior</i> to invoking the {@link RequestMapping} handler
@@ -79,7 +77,9 @@ public class AdminTimeSheetController {
 	@RequestMapping(method = GET)
 	@ResponseBody
 	public List<TimeSheetView> getAll() {
-		return service.getAllAdmin();
+        List<TimeSheetView> sheets = service.getAllAdmin();
+        LOGGER.debug("Found {} sheets.", sheets.size());
+		return sheets;
 	}
 
 	@RequestMapping(value = "client/{clientId}", method = GET)
@@ -111,7 +111,7 @@ public class AdminTimeSheetController {
 	@RequestMapping(value = "new", method = GET)
 	@ResponseBody
 	public TimeSheetView getNew(@ModelAttribute(WORKER_MODEL_ATTRIBUTE_NAME) Worker worker) {
-		timeSheetControllerDelegate.validateWorkerOrThrowWorkerNotFoundException(worker);
+		validateWorkerOrThrowWorkerNotFoundException(worker, workerService);
 		return service.getForWorkerDate(worker.getId(), new LocalDate());
 	}
 

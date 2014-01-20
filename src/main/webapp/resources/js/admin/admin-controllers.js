@@ -5,9 +5,9 @@
 
 	module.controller('AdminPageCtrl', [ // 
 	'$location', '$log', '$rootScope', '$scope', 'AdminClientService',//
-	'AdminContractService', 'AdminWorkerService', 'AdminUnlinkedUserService', 'TimeSheetService',//
+	'AdminContractService', 'AdminWorkerService', 'AdminUnlinkedUserService', 'AdminTimeSheetService',//
 	function AdminPageCtrlFn($location, $log, $rootScope, $scope,// 
-	AdminClientService, AdminContractService, AdminWorkerService, AdminUnlinkedUserService, TimeSheetService) {
+	AdminClientService, AdminContractService, AdminWorkerService, AdminUnlinkedUserService, AdminTimeSheetService) {
 		$scope.setAdmin(true); // inherited fn from UserNavCtrl
 		$rootScope.clientsMap = {};
 		$rootScope.clientsList = [];
@@ -73,7 +73,7 @@
 		}, true);
 
 		$scope.flag = function flagFn(id, flagged) {
-			TimeSheetService.flag({
+			AdminTimeSheetService.flag({
 				id : id,
 				flagged : flagged
 			}, function successFn() {
@@ -85,9 +85,9 @@
 			if (!(parms && parms.workerId && parms.date)) {
 				throw new Error("required: 'workerId' and 'date'");
 			}
-			TimeSheetService.getForWorkerIdDate(parms, function successFn(data) {
+			AdminTimeSheetService.getForWorkerIdDate(parms, function successFn(data) {
 				closeModalFn();
-				$location.path('timesheet').search('id', data.id);
+				$location.path('timesheetadmin').search('id', data.id);
 			});
 		};
 
@@ -101,8 +101,8 @@
 	module.controller('WorkerWeekSelectionModalCtrl', [ //
 			'$log',
 			'$scope',
-			'TimeSheetService',
-			function WorkerWeekSelectionModalCtrlFn($log, $scope, TimeSheetService) {
+			'AdminTimeSheetService',
+			function WorkerWeekSelectionModalCtrlFn($log, $scope, AdminTimeSheetService) {
 				$scope.timeSheetStatusList = [];
 				$scope.timeSheetStatusIsOk = false;
 				var defaultStatus = 'Choose the week by date.';
@@ -110,9 +110,11 @@
 
 				$scope.$watch('currentWorker.id', function currentWorkerId$watchFn(id) {
 					if (id) {
-						TimeSheetService.getStatusForWorkerId({
+                        $log.debug("About to update statuses for id ", id);
+						AdminTimeSheetService.getStatusForWorkerId({
 							workerId : id
 						}, function successFn(list) {
+                            $log.info("Successfully pulled down latest timesheetstatuslist. ", list.length);
 							$scope.timeSheetStatusList = list;
 						});
 					}
@@ -122,6 +124,7 @@
 					$scope.printableTimeSheetString = false;
 					var found = null;
 					if (modalDate && $scope.timeSheetStatusList) {
+                        $log.info("element 0 of timeSheetStatusList is ", $scope.timeSheetStatusList[0]);
 						var firstDate = $scope.timeSheetStatusList[0].startDate;
 						angular.forEach($scope.timeSheetStatusList, function(timeSheet) {
 							var tsDate = timeSheet.startDate;

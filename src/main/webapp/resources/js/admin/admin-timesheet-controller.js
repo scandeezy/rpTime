@@ -3,18 +3,14 @@
 	// omit [] to use existing controller: http://stackoverflow.com/a/17289451/237225
 	var module = angular.module('myApp.controllers');
 
-	module.controller('TimeSheetPageCtrl', [ '$location', '$log', '$routeParams', '$cookies', '$scope', 'TimeSheetService', 'ContractService',//
-	function TimeSheetPageCtrlFn($location, $log, $routeParams, $cookies, $scope, TimeSheetService, ContractService) {
+	module.controller('TimeSheetAdminPageCtrl', [ '$location', '$log', '$routeParams', '$scope', 'AdminTimeSheetService', //
+	function TimeSheetAdminPageCtrlFn($location, $log, $routeParams, $scope, TimeSheetService) {
 		$scope.edit = false;
+		$scope.adminWorkerTimeSheetMap = {};
 		$scope.timeSheetsMap = {};
 		$scope.timeSheetsList = [];
 		$scope.currentTimeSheet = {};
 		$scope.currentAvailableClientsMap = {};
-        
-        // If there are no search params...
-        if(Object.keys($location.search()).length == 0) {
-            $location.path('/timesheet').search('id', 'current');
-        }
 
 		$scope.$watch('currentTimeSheet.availableClients', function(list) {
 			var map = {};
@@ -33,6 +29,7 @@
 			}
 		};
 
+		// TimeSheetService will be redefined with admin paths in admin-services.js
 		if ($routeParams.id) {
 			var id = $routeParams.id;
 			TimeSheetService.get({
@@ -42,24 +39,20 @@
 			}, $scope.errorHandlerTimeSheetGetterFn);
 		}
 
-        function setContractsFn() {
-            $log.info("Getting contracts for current user.");
-            ContractService.getCurrent(function successFn(list) {
-                $log.info("Setting contracts to ", list);
-                $scope.contractsList = list;
-                $scope.createSheet = list.length == 0 ? false : true;
-            });
-            $log.info("Contracts set.");
-        }
-
 		function updateTimeSheetsFn() {
 			TimeSheetService.getAll(function successFn(list) {
 				$scope.timeSheetsList = list;
 				$scope.timeSheetsMap = {};
+				$scope.adminWorkerTimeSheetMap = {};
 				for ( var s in list) {
 					var sheet = list[s];
 					if (sheet.id != undefined) {
 						$scope.timeSheetsMap[sheet.id] = sheet;
+						var aWTSMList = $scope.adminWorkerTimeSheetMap[sheet.workerId];
+						if (!aWTSMList) {
+							aWTSMList = $scope.adminWorkerTimeSheetMap[sheet.workerId] = [];
+						}
+						$scope.adminWorkerTimeSheetMap[sheet.workerId].push(sheet);
 					}
 				}
 			}, $scope.errorHandlerTimeSheetGetterFn);
@@ -67,7 +60,7 @@
 
 		$scope.isSubmittable = function isSubmittableFn(timeSheet) {
 			return timeSheet.status === 'UNSUBMITTED';
-		};
+		}
 
 		$scope.remove = function removeFn(obj) {
 			$scope.doRemove({
@@ -76,6 +69,7 @@
 				map : $scope.timeSheetsMap,
 				afterFn : function doAfterFn() {
 					delete $scope.timeSheetsMap[obj.id];
+					var aWTSMList = $scope.adminWorkerTimeSheetMap[obj.workerId];
 					var index = aWTSMList.indexOf(obj) || ((aWTSMList.length) - 1);
 					aWTSMList.splice(index, 1);
 				}
@@ -105,14 +99,6 @@
 			// $log.info("setting ", obj);
 			if (!obj) {
 				var o = TimeSheetService.getCurrent();
-                if (!o) {
-                    $log.debug("something bad happened and we should shun our user.");
-                } else {
-                    $log.debug("All clear.");
-                    $log.debug(o);
-                    $log.debug("Status ", o.status);
-                    return;
-                }
 				var id = o.id;
 				if (id) {
 					$scope.timeSheetsMap[id] = o;
@@ -152,12 +138,6 @@
 		};
 
 		$scope.setWeekOther = function setWeekOtherFn(date) {
-//			//TODO FIXME: replace with $modal service
-//			var data = window.showModalDialog("resources/partials/datePickerModal.html");
-//			
-//			$('#weekSelectionModal').modal('show');
-//			
-//			$log.error(data.datePicked);
 			TimeSheetService.get({
 				id : "new",
 				date : date
@@ -196,52 +176,8 @@
 		$scope.$on('updateTimeSheets', updateTimeSheetsFn);
 
 		updateTimeSheetsFn();
-        setContractsFn();
-	} ]);
 
-	module.controller('TimeSheetDayCtrl', [ '$log', '$scope',//
-	function TimeSheetDayCtrlFn($log, $scope) {
-
-		$scope.showButtons = false;
-
-		$scope.$watch('entry', function entry$watchFn(e) {
-			// suppress "hh:mm:ss.nnnn" time formatting
-			if (e.startTime && e.startTime.length > 5) {
-				e.startTime = e.startTime.substr(0, 5);
-			}
-			if (e.endTime && e.endTime.length > 5) {
-				e.endTime = e.endTime.substr(0, 5);
-			}
-			if (e.endTime === e.startTime) {
-				e.endTime = e.startTime = undefined;
-			}
-			$scope.showButtons = ((e.startTime || e.endTime) && !(e.startTime === e.endTime));
-		}, true);
-
-		$scope.addNewTimeSheetLogEntry = function addNewTimeSheetLogEntryFn(day) {
-			var last = day.entries[(day.entries.length - 1)];
-			day.entries.push({
-				'workerId' : last.workerId,
-				'clientId' : last.clientId,
-				'date' : last.date,
-				'startTime' : last.endTime,
-				'endTime' : null
-			});
-			$scope.createTimeSheetForm.$setDirty();
-		};
-
-		$scope.removeTimeSheetLogEntry = function removeTimeSheetLogEntryFn(entry) {
-			if ($scope.day && $scope.day.entries) {
-				var index = $scope.day.entries.indexOf(entry) || (($scope.day.entries.length) - 1);
-				$scope.day.entries.splice(index, 1);
-			}
-			$scope.createTimeSheetForm.$setDirty();
-		};
-
-		$scope.setEntryClientId = function setEntryClientIdFn(id) {
-			$scope.entry.clientId = id;
-			$scope.createTimeSheetForm.$setDirty();
-		};
+		// $log.info('TimeSheetPageCtrl init', $scope);
 
 	} ]);
 })();

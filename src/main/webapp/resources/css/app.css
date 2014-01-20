@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /* app css stylesheet */
 .menu {
 	list-style: none;
@@ -122,8 +123,6 @@
 .view-rptime.ng-leave.ng-leave-active {
 	left: -100%;
 }
-
-@charset "UTF-8";
 
 .animated {
 	-webkit-animation-duration: 0.5s;

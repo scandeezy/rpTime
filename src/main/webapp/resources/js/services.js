@@ -18,6 +18,18 @@
 		});
 	} ]);
 
+    module.factory('ContractService', ['$resource',//
+        function ContractServiceFn($resource) {
+            return $resource('contract/:id', {}, {
+                getCurrent : {
+                    method : 'GET',
+                    isArray : true,
+                    url : 'contract/current'
+                }
+            });
+        }
+    ]);
+
 	module.factory('TimeSheetService', [ '$resource',//
 	function TimeSheetService($resource) {
 		return $resource('timesheet/:id/:date', {}, {

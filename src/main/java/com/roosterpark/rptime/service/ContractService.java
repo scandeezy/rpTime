@@ -57,6 +57,9 @@ public class ContractService {
 		}
 		final List<Contract> contracts = getContractsForWorker(workerId);
 		LOGGER.debug("found {} contracts for worker {}.  Determine which are active.", CollectionUtils.size(contracts), workerId);
+        if(searchInterval == null)
+            searchInterval = new Interval(System.currentTimeMillis()-1, System.currentTimeMillis());
+        
 		return getActiveContractsInSearchInterval(contracts, searchInterval);
 	}
 

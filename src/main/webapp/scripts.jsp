@@ -40,11 +40,13 @@
 	%>
 	<!-- begin admin-only resources -->
 
+    <script src="/resources/js/admin/admin-app.js"></script>
 	<script src="/resources/js/admin/admin-services.js"></script>
 	<script src="/resources/js/admin/admin-controllers.js"></script>
 	<script src="/resources/js/admin/admin-client-controllers.js"></script>
 	<script src="/resources/js/admin/admin-contract-controllers.js"></script>
 	<script src="/resources/js/admin/admin-report-controllers.js"></script>
+    <script src="/resources/js/admin/admin-timesheet-controller.js"></script>
 	<script src="/resources/js/admin/admin-worker-controllers.js"></script>
 	<script type="text/ng-template" src="/resources/partials/reports/list.html"></script>
 	<script type="text/ng-template" src="/resources/partials/reports/timesheets-per-worker-by-month-for-client.html"></script>

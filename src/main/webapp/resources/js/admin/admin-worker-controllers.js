@@ -70,8 +70,8 @@
 
 	} ]);
 
-	module.controller('AdminWorkerRelatedTimeSheetsCtrl', [ '$log', '$scope', '$timeout', 'TimeSheetService', //
-	function AdminWorkerRelatedTimeSheetsCtrlFn($log, $scope, $timeout, TimeSheetService) {
+	module.controller('AdminWorkerRelatedTimeSheetsCtrl', [ '$log', '$scope', '$timeout', 'AdminTimeSheetService', //
+	function AdminWorkerRelatedTimeSheetsCtrlFn($log, $scope, $timeout, AdminTimeSheetService) {
 		$scope.myRelatedTimeSheets = [];
 
 		var tryXtimes = 20;
@@ -79,8 +79,9 @@
 		$scope.updateRelatedTimeSheets = function updateRelatedTimeSheetsFn() {
 			tryXtimes = tryXtimes - 1;
 			if ($scope.currentWorker && $scope.currentWorker.id) {
-				var wid = $scope.currentWorker.id
-				TimeSheetService.getAllForWorker({
+				var wid = $scope.currentWorker.id;
+                $log.debug("Getting all for worker ", wid);
+				AdminTimeSheetService.getAllForWorker({
 					workerId : wid
 				}, function successFn(timeSheetsList) {
 					var arr = [];

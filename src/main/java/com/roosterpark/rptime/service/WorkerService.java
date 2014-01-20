@@ -21,7 +21,7 @@ import com.roosterpark.rptime.model.Worker;
 
 @Named("workerService")
 public class WorkerService {
-	private final Logger LOGGER = LoggerFactory.getLogger(getClass());
+	private static final Logger LOGGER = LoggerFactory.getLogger(WorkerService.class);
 	private static WorkerService inst;
 
 	@Inject
@@ -128,7 +128,9 @@ public class WorkerService {
 		}
 		if (result == null) {
 			LOGGER.warn("Warning: no Worker found for user='{}'", user);
-		}
+		} else {
+            LOGGER.info("Worker has id {}", result.getId());
+        }
 		return result;
 	}
 
@@ -199,4 +201,20 @@ public class WorkerService {
 		return this.unlinkedUserService;
 	}
 
+	/**
+	 * Validate a {@link Worker} is present.
+	 * 
+	 * @throws WorkerNotFoundException
+	 *             if {@code worker} is null
+	 */
+	public static void validateWorkerOrThrowWorkerNotFoundException(final Worker worker, final WorkerService service) throws WorkerNotFoundException {
+        LOGGER.debug("Validating worker {}", worker);
+		if (worker == null) {
+            LOGGER.error("Worker is null.");
+			throw new WorkerNotFoundException("Worker required for this operation.", service);
+		} else if(worker.getId() == null) {
+            LOGGER.error("Worker id is null");
+            throw new WorkerNotFoundException("Worker id is null.", service);
+        }
+	}
 }

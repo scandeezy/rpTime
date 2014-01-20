@@ -23,14 +23,17 @@
 	<div class="collapse navbar-collapse navbar-ex1-collapse">
 		<ul class="nav navbar-nav">
 			<%
-				if (!userService2.isUserAdmin()) {
-			%>
-			<li ng-show="workerExists" ng-class="{active : page == '/timesheet'}"><a href="#/timesheet" tabindex="-1">Time Sheets</a></li>
-			<%
-				} else {
+				if (userService2.isUserAdmin()) {
 			%>
 			<li ng-class="{active : page == '/landing'}"><a href="#/landing" tabindex="-1">Home</a></li>
-			<li ng-class="{active : page == '/timesheet'}"><a href="#/timesheet" tabindex="-1">Time Sheets</a></li>
+            <%
+                }
+            %>
+			<li ng-show="workerExists" ng-class="{active : page == '/timesheet'}"><a href="#/timesheet?listView" tabindex="-1">My Time Sheets</a></li>
+			<%
+				if (userService2.isUserAdmin()) {
+			%>
+			<li ng-class="{active : page == '/timesheetadmin'}"><a href="#/timesheetadmin" tabindex="-1">Time Sheets Admin</a></li>
 			<li ng-class="{active : page == '/worker'}"><a href="#/worker" tabindex="-1">Workers</a></li>
 			<li ng-class="{active : page == '/client'}"><a href="#/client" tabindex="-1">Clients</a></li>
 			<li ng-class="{active : page == '/contract'}"><a href="#/contract" tabindex="-1">Contracts</a></li>

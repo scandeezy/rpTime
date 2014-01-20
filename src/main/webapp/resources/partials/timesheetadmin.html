@@ -1,4 +1,4 @@
-<!-- $scope is on TimeSheetPageCtrl -->
+<!-- $scope is on TimeSheetAdminPageCtrl -->
 <div id="timesheets" class="container">
 	<div class="panel panel-default" ng-hide="edit">
 		<div class="panel-heading">
@@ -6,9 +6,9 @@
 				Time Sheets
 				<div class="pull-right">
 					<div class="btn-group">
-						<button type="button" class="btn btn-primary btn-sm" id="new" ng-click="set();" ng-disabled="!createSheet">Create</button>
+						<button type="button" class="btn btn-primary btn-sm" id="new" ng-click="set();" ng-disabled="!workerExists">Create</button>
 						<button type="button" class="btn btn-sm btn-primary dropdown-toggle" id="toggle-create-dropdown" data-toggle="dropdown"
-							ng-disabled="!createSheet">
+							ng-disabled="!workerExists">
 							<span class="caret"></span> <span class="sr-only">Toggle Create Dropdown</span> &nbsp;
 						</button>
 						<ul class="dropdown-menu" role="menu">
@@ -22,20 +22,22 @@
 				</div>
 			</h4>
 		</div>
-		<div class="panel-body">
-            <div ng-hide="createSheet">
-                <p>You have no active contracts.  <br/>This prevents you from creating new time sheets.</p>
-            </div>
-            <div ng-hide="timeSheetsList.length > 0">
-                <p>You have no contracts in our history.</p>
-            </div>
-			<ul id="userTimeSheetList">
-				<li ng-repeat="timeSheet in timeSheetsList | orderBy:'startDate':1 " ng-init="worker=workersMap[timeSheet.workerId]"><a
-					id="select-timesheet-{{timeSheet.id}}" ng-click="set(timeSheet)">{{timeSheet.year}}, week {{timeSheet.week}} -
-						{{timeSheet.startDate}}</a>
-                    <span id="timeSheetUnsubmitted" ng-show="timeSheet.status=='UNSUBMITTED'" class="label label-warning">Not Submitted</span>
-                    <span id="timeSheetSubmitted" ng-show="timeSheet.status=='SUBMITTED'" class="label label-info">Submitted</span>
-                    <span id="timeSheetApproved" ng-show="timeSheet.status=='APPROVED'" class="label label-success">Approved</span></li>
+		<div class="panel-body" ng-show="isAdmin">
+			<ul class="list-unstyled">
+				<li ng-repeat="(workerId,timeSheetList) in adminWorkerTimeSheetMap | orderBy:'worker.fullNameNormalized'"
+					ng-init="worker=workersMap[workerId]"><a id="select-worker-{{workerId}}" ng-href="#/worker?id={{workerId}}">{{worker.fullName}}
+						<span class="text-muted">{{worker.email}}</span>
+				</a>
+					<ul id="adminTimeSheetList">
+						<li ng-repeat="timeSheet in timeSheetList | orderBy:'startDate':1 ">
+							<button type="button" class="btn btn-sm btn-default" id="delete-{{timeSheet.id}}" ng-click="remove(timeSheet);" ng-show="debug">Delete</button>
+							<a id="select-timesheet-{{timeSheet.id}}" ng-click="set(timeSheet)">{{timeSheet.printableTimeSheetString}}</a>
+                            <span id="timeSheetFlagged" ng-show="timeSheet.flagged" class="label label-danger"><span class="glyphicon glyphicon-flag"></span>&nbsp;</span>
+                            <span id="timeSheetUnsubmitted" ng-show="timeSheet.status=='UNSUBMITTED'" class="label label-warning">Not Submitted</span>
+                            <span id="timeSheetSubmitted" ng-show="timeSheet.status=='SUBMITTED'" class="label label-info">Submitted</span>
+                            <span id="timeSheetApproved" ng-show="timeSheet.status=='APPROVED'" class="label label-success">Approved</span>
+						</li>
+					</ul></li>
 			</ul>
 		</div>
 	</div>
@@ -50,7 +52,9 @@
 		<div id="createTimeSheet" class="panel panel-default" ng-show="edit">
 			<div class="panel-heading">
 				<h4>
-					<span ng-show="currentTimeSheet.id">Edit TimeSheet: {{currentTimeSheet.startDate}}</span>
+					<span ng-show="currentTimeSheet.id">Edit TimeSheet: {{currentTimeSheet.startDate}} <span ng-show="isAdmin">for <a
+							id="select-worker-{{currentTimeSheet.workerId}}" ng-href="#/worker?id={{currentTimeSheet.workerId}}">{{workersMap[currentTimeSheet.workerId].fullName}}</a></span>
+					</span>
 				</h4>
 				<div class="row">
 					<div class="col-sm-12">
@@ -71,6 +75,14 @@
 								<li><a id="create-timesheet-next" ng-click="setWeekNext();">Create Time Sheet for Next Week</a></li>
 								<li><a id="create-timesheet-other" ng-click="setWeekOther();">Create Time Sheet for Other Date...</a></li>
 							</ul>
+
+							<a type="button" class="btn" id="flag-timesheet"
+								ng-class="{'btn-danger':currentTimeSheet.flagged, 'btn-default':!(currentTimeSheet.flagged)}"
+								ng-click="currentTimeSheet.flagged=!(currentTimeSheet.flagged);flag(currentTimeSheet.id,currentTimeSheet.flagged);"
+								ng-show="isAdmin"> <span ng-class="{'text-muted':!(currentTimeSheet.flagged)}"> <span class="glyphicon glyphicon-flag"></span>&nbsp;
+							</span>
+							</a>
+
 						</div>
 					</div>
 				</div>
@@ -125,6 +137,12 @@
 						<textarea class="form-control" id="note" name="note" rows="2" ng-model="currentTimeSheet.note"></textarea>
 					</div>
 				</div>
+				<div class="form-group row well" ng-show="isAdmin">
+					<label for="adminNote" class="col-sm-2 control-label">Admin-only Notes</label>
+					<div class="col-sm-6">
+						<textarea class="form-control" id="adminNote" name="adminNote" rows="2" ng-model="currentTimeSheet.adminNote"></textarea>
+					</div>
+				</div>
 				<div class="form-group row debug" ng-show="debug">
 					<p class="text-warning">Debug Properties</p>
 					<label for="flagged" class="control-label"> <input id="flagged" name="flagged" type="checkbox"
@@ -155,16 +173,27 @@
 		</div>
 
 		<pre ng-show="debug" class="debug">
-            createTimeSheetForm.$dirty   ={{createTimeSheetForm.$dirty}}
+createTimeSheetForm.$dirty   ={{createTimeSheetForm.$dirty}}
 
-            createTimeSheetForm.$pristine={{createTimeSheetForm.$pristine}}
+createTimeSheetForm.$pristine={{createTimeSheetForm.$pristine}}
 
-            createTimeSheetForm.$valid   ={{createTimeSheetForm.$valid}}
-        </pre>
+createTimeSheetForm.$valid   ={{createTimeSheetForm.$valid}}
+</pre>
 
 	</form>
 
 	<div ng-include="'resources/partials/datePickerModal.html'">
+
+	<div class="well" ng-cloak ng-show="debug">
+		<pre class="debug">
+isAdmin={{isAdmin}}
+<input type="checkbox" ng-model="showCurrentTimeSheet" ng-init="showCurrentTimeSheet=true">currentTimeSheet=<span
+				ng-show="showCurrentTimeSheet">{{currentTimeSheet | json}}</span>
+<input type="checkbox" ng-model="showTimeSheetsMap" ng-init="showTimeSheetsMap=false">timeSheetsMap=<span
+				ng-show="showTimeSheetsMap">{{timeSheetsMap | json}}</span>
+<input type="checkbox" ng-model="showWorkersMap" ng-init="showWorkersMap=true">workersMap=<span ng-show="showWorkersMap">{{workersMap | json}}</span>
+</pre>
+	</div>
 </div>
 
 </div>
