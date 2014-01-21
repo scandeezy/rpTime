@@ -94,18 +94,18 @@ public class TimeSheetService {
 			throw new ContractNotFoundException(workerId, normalizedDate);
 		}
 
-		boolean lunchRequired = DEFAULT_LUNCH_REQUIRED;
 		final Long defaultClientId = contracts.get(0).getClient();
-		if (CollectionUtils.size(contracts) == 1) {
-			lunchRequired = contracts.get(0).getLunchRequired();
-		}
 
-		LOGGER.debug("defaultClientId={}, lunchRequired={}", defaultClientId, lunchRequired);
-
+		boolean lunchRequired = DEFAULT_LUNCH_REQUIRED;
 		Set<Long> clientIds = new HashSet<>();
 		for (Contract contract : contracts) {
 			clientIds.add(contract.getClient());
+            if(contract.getLunchRequired()) {
+                lunchRequired = true;
+            }
 		}
+        
+		LOGGER.debug("defaultClientId={}, lunchRequired={}", defaultClientId, lunchRequired);
 
 		final List<Long> logIds = new LinkedList<>();
 		final List<TimeSheetDay> entries = new LinkedList<>();
