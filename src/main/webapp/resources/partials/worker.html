@@ -101,7 +101,7 @@
 					<div class="row" ng-controller="AdminWorkerRelatedTimeSheetsCtrl">
 						<div ng-controller="WorkerWeekSelectionModalCtrl">
 							<h5>
-								Time Sheets &nbsp;<a id="openModal" ng-hide="myRelatedContracts.length < 1" ng-click="open();">(Create)</a>
+								Time Sheets &nbsp;<a id="openModal" ng-hide="!hasActiveContract" ng-click="open();">(Create)</a>
 							</h5>
 
 							<div class="modal" id="workerWeekSelectionModal">

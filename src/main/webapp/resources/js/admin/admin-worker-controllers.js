@@ -113,6 +113,7 @@
 	function AdminWorkerRelatedContractsCtrl($log, $rootScope, $scope, $timeout) {
 
 		$scope.myRelatedContracts = [];
+        $scope.hasActiveContract = false;
 
 		$scope.updateRelatedContracts = function updateRelatedContractsFn() {
 			if ($scope.currentWorker && $rootScope.contractsMap.$resolved && $rootScope.clientsMap.$resolved) {
@@ -124,6 +125,10 @@
 							contract : contract,
 							client : $rootScope.clientsMap[contract.client]
 						});
+                        
+                        if(!contract.expired) {
+                            $scope.hasActiveContract = true;
+                        }
 					}
 				});
 				$scope.myRelatedContracts = arr;
