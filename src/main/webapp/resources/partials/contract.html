@@ -7,10 +7,50 @@
 		</div>
 		<div class="panel-body">
 			<div ng-show="clientsList.length > 0">
+                <div class="row">
+                    <div class="col-sm-2">
+                        <select class="form-control" id="client" name="client" ng-model="searchFilterDrop.$"
+                            ng-options="client.id as client.name for (clientid,client) in clientsMap" required>
+                            <option value="">-- Client Filter --</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="checkbox">
+                            <label for="showExpiredContracts"> <input id="showExpiredContracts" type="checkbox" ng-model="showExpiredContractsModel">
+                                Show expired contracts
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-sm-2">
+                        <input id="clientsearch" type="text" class="form-control search" ng-model="search.$" placeholder="Search by Client">
+                    </div>
+                </div>
+                <ul>
+                    <li ng-repeat="client in clientsList | filter:searchFilterDrop:strict | filter:search:strict | orderBy:'name'" id="{{client.name}}">{{client.name}}
+                        <ul>
+                            <li ng-repeat="contract in contractsList | orderBy:'workersMap[contract.worker].fullNameNormalized' "
+                                id="{{client.name}}-{{workersMap[contract.worker].fullName}}"
+                                ng-show="((contract.client==client.id) &&(!contract.expired || (contract.expired && showExpiredContractsModel)))"><span
+                                class="btn-group btn-group-sm">
+                                    <button type="button" id="delete-{{$id}}" class="btn debug" ng-click="remove(contract);" ng-show="debug">Delete</button> <a
+                                    id="edit-{{$id}}" ng-click="set(contract);">
+                            </span> {{workersMap[contract.worker].fullName}} <span ng-show="contract.startDate">- {{contract.startDate}} <span
+                                    ng-show="contract.endDate">to {{contract.endDate}}</span></span> </a> <span ng-show="contract.expired">
+                                    <span id="expired" class="label label-danger">expired</span>
+                            </span></li>
+                        </ul>
+                    </li>
+                </ul>
+			</div>
+			<div ng-hide="clientsList.length > 0">
+				<p class="text-warning">
+					No clients found. Please create a client on the <a href="#/client">clients page</a>.
+				</p>
+			</div>
+			<div ng-show="clientsList.length > 0">
 				<form class="form-horizontal" role="form">
 					<div class="form-group">
 						<div class="col-sm-3">
-
 							<div class="btn-group btn-group-sm">
 								<button id="new" type="button" class="btn btn-primary" ng-click="set();">New</button>
 								<button id="dropdown" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
@@ -21,37 +61,9 @@
 								</ul>
 							</div>
 						</div>
-						<div class="col-sm-6">
-							<div class="checkbox">
-								<label for="showExpiredContracts"> <input id="showExpiredContracts" type="checkbox" ng-model="showExpiredContractsModel">
-									Show expired contracts
-								</label>
-							</div>
-						</div>
-					</div>
-				</form>
-				<ul>
-					<li ng-repeat="client in clientsList | orderBy:'name'" id="{{client.name}}">{{client.name}}
-						<ul>
-							<li ng-repeat="contract in contractsList | orderBy:'workersMap[contract.worker].fullNameNormalized' "
-								id="{{client.name}}-{{workersMap[contract.worker].fullName}}"
-								ng-show="((contract.client==client.id) &&(!contract.expired || (contract.expired && showExpiredContractsModel)))"><span
-								class="btn-group btn-group-sm">
-									<button type="button" id="delete-{{$id}}" class="btn debug" ng-click="remove(contract);" ng-show="debug">Delete</button> <a
-									id="edit-{{$id}}" ng-click="set(contract);">
-							</span> {{workersMap[contract.worker].fullName}} <span ng-show="contract.startDate">- {{contract.startDate}} <span
-									ng-show="contract.endDate">to {{contract.endDate}}</span></span> </a> <span ng-show="contract.expired">
-                                    <span id="expired" class="label label-danger">expired</span>
-							</span></li>
-						</ul>
-					</li>
-				</ul>
-			</div>
-			<div ng-hide="clientsList.length > 0">
-				<p class="text-warning">
-					No clients found. Please create a client on the <a href="#/client">clients page</a>.
-				</p>
-			</div>
+                    </div>
+                </form>
+            </div>
 		</div>
 	</div>
 
