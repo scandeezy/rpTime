@@ -97,11 +97,11 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-sm-5" ng-show="currentWorker.id">
+				<div class="col-sm-5" ng-show="currentWorker.id"  ng-controller="AdminWorkerRelatedContractsCtrl">
 					<div class="row" ng-controller="AdminWorkerRelatedTimeSheetsCtrl">
 						<div ng-controller="WorkerWeekSelectionModalCtrl">
 							<h5>
-								Time Sheets &nbsp;<a id="openModal" ng-click="open();">(Create)</a>
+								Time Sheets &nbsp;<a id="openModal" ng-hide="myRelatedContracts.length < 1" ng-click="open();">(Create)</a>
 							</h5>
 
 							<div class="modal" id="workerWeekSelectionModal">
@@ -133,7 +133,7 @@
 							<p ng-hide="(myRelatedTimeSheets)">No time sheets found.</p>
 						</ul>
 					</div>
-					<div class="row" ng-controller="AdminWorkerRelatedContractsCtrl">
+					<div class="row">
 						<h5>Contracts</h5>
 						<ul>
 							<li ng-repeat="obj in myRelatedContracts | orderBy:'client.name'"><a id="worker-related-contract-{{$id}}"
