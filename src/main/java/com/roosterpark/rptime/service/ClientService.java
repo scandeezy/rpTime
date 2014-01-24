@@ -32,6 +32,8 @@ public class ClientService {
 
 	private Client ptoClient;
 
+    public ClientService() {}
+    
 	@Inject
 	public void setPtoClientId(PaidTimeOffService ptoService) {
 		ptoClient = ptoService.getPtoClient();

@@ -57,6 +57,8 @@ public class AdminTimeSheetController {
     @Inject
     WorkerService workerService;
 
+    public AdminTimeSheetController(){}
+    
 	/**
 	 * Method interceptor that sets the {@code worker} {@link ModelAttribute} <i>prior</i> to invoking the {@link RequestMapping} handler
 	 * methods.

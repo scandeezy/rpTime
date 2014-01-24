@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import com.google.appengine.api.users.UserService;
 import com.roosterpark.rptime.model.GitRepositoryState;
 import com.roosterpark.rptime.service.WorkerService;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 
 @Configuration
-@Import(AppEngineConfiguration.class)
+@Import({AppEngineConfiguration.class})
+@EnableAspectJAutoProxy(proxyTargetClass = true)
 @PropertySource("classpath:git.properties")
 @ComponentScan(basePackages = { "com.roosterpark.rptime" }, excludeFilters = @ComponentScan.Filter({ ControllerAdvice.class,
 		Configuration.class, Controller.class }))

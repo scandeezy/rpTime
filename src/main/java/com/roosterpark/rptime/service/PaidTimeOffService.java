@@ -19,7 +19,7 @@ import com.roosterpark.rptime.model.Client;
  * @author jjzabkar
  */
 @Named
-public class PaidTimeOffService implements Serializable {
+public class PaidTimeOffService {
 
 	private static final long serialVersionUID = 7015834490721L;
 
@@ -29,12 +29,14 @@ public class PaidTimeOffService implements Serializable {
 
 	private Client ptoClient;
 
+    public PaidTimeOffService() {}
+    
 	/**
 	 * @param ofactory
 	 *            - required to ensure proper startup ordering. Objectify registers the DAOs.
 	 */
 	@Inject
-	public PaidTimeOffService(ObjectifyFactory ofactory) {
+	public void setObjectifyFactory(ObjectifyFactory ofactory) {
 		this.ofy = ofactory;
 	}
 

@@ -34,6 +34,8 @@ public class WorkerController {
 	@Inject
 	WorkerService service;
 
+    public WorkerController(){}
+    
 	@RequestMapping(value = "/admin/worker", method = GET)
 	@ResponseBody
 	public List<Worker> getAll() {
