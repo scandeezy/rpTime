@@ -33,6 +33,8 @@ import com.roosterpark.rptime.model.TimeSheetDay;
 import com.roosterpark.rptime.model.TimeSheetView;
 import com.roosterpark.rptime.service.dao.TimeSheetDao;
 import com.roosterpark.rptime.service.dao.TimeSheetDayDao;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -40,6 +42,8 @@ import com.roosterpark.rptime.service.dao.TimeSheetDayDao;
  */
 @RunWith(PowerMockRunner.class)
 public class TimeSheetServiceTest extends BasicRptimeUnitTest {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(TimeSheetServiceTest.class);
 	private static final Long ID_1 = 1L;
 	private static final Long WORKER_ID = 123L;
 	private static final LocalDate TEST_DATE = new LocalDate(2013, 12, 1); // Dec 1, 2013 is Sunday
@@ -134,9 +138,10 @@ public class TimeSheetServiceTest extends BasicRptimeUnitTest {
 	public void testNormalizeStartDate() {
 		LocalDate day = new LocalDate(TEST_DATE);
 		for (int i = 0; i < 365; i++) {
+            LOGGER.trace("Rectifying date for day {}", day);
 			day = service.normalizeStartDate(day);
 			assertEquals(DateTimeConstants.SUNDAY, day.getDayOfWeek());
-			day = day.plusDays(1);
+			day = day.plusDays(i);
 		}
 	}
 

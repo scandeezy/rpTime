@@ -73,15 +73,34 @@ public class TimeSheetView extends TimeSheet {
 
 		if (sheet.getStartDate() != null) {
 			LocalDate prev = sheet.getStartDate().minusWeeks(1);
+            LocalDate currentDate = new LocalDate();
 			LocalDate next = sheet.getStartDate().plusWeeks(1);
-			TimeSheet t = dao.getByWorkerWeekYear(getWorkerId(), prev.getWeekOfWeekyear(), prev.getYear());
+			
+            TimeSheet t = dao.getByWorkerWeekYear(getWorkerId(), prev.getWeekOfWeekyear(), prev.getYear());
 			if (t != null) {
 				this.setPreviousTimeSheetId(t.getId());
 			}
-			t = dao.getByWorkerWeekYear(getWorkerId(), next.getWeekOfWeekyear(), next.getYear());
+			
+            t = dao.getByWorkerWeekYear(getWorkerId(), next.getWeekOfWeekyear(), next.getYear());
 			if (t != null) {
 				this.setNextTimeSheetId(t.getId());
-			} else {
+			}
+            
+            // TODO Move this logic.
+//            TimeSheetDay day = days.get(0);
+//            TimeCardLogEntry entry = day.getEntries().get(0);
+//            int week = entry.getDate().getWeekOfWeekyear();
+//            int year = entry.getDate().getYear();
+            // Hack for -1 because of iso compat with JODA
+            int week = currentDate.getWeekOfWeekyear()-1;
+            int year = currentDate.getYear();
+            if(week == 0) {
+                week = 52;
+                year = year - 1;
+            }
+            t = dao.getByWorkerWeekYear(getWorkerId(), week, year);
+            if (t != null && t.getId() == sheet.getId()) {
+                LOGGER.debug("Setting current to true for week {} and year {}", week, year);
 				this.setCurrentTimeSheet(true);
 			}
 		}

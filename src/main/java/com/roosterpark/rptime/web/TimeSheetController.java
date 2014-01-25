@@ -126,6 +126,7 @@ public class TimeSheetController {
 
 	// TODO Jackson doesn't like using the Joda Constructor.
 	private TimeSheetView getTimeSheetForDate(final Worker worker, final LocalDate date) {
+        LOGGER.debug("Finding timesheet for date {}", date);
 		return service.getForWorkerDate(worker.getId(), date);
 	}
 }

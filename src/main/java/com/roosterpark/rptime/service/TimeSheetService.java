@@ -181,13 +181,14 @@ public class TimeSheetService {
 		if (currentDayOfWeek == dayOfWeek) {
 			return date;
 		}
-		final LocalDate returnDate = date.minusDays(currentDayOfWeek);
-		// Edge condition
-		// if (dayOfWeek == DEFAULT_START_DAY_OF_WEEK) {
-		// int week = date.getWeekOfWeekyear();
-		// LOGGER.debug("Current week {} and desired week {}", week, week - 1);
-		// returnDate = returnDate.withWeekOfWeekyear(week - 1);
-		// }
+        int week = date.getWeekOfWeekyear();
+        LOGGER.trace("Current week before correction is {}", week);
+        LocalDate returnDate;
+        if(dayOfWeek == DateTimeConstants.SUNDAY) {
+            returnDate = date.minusDays(currentDayOfWeek);
+        } else {
+            returnDate = date.plusDays(dayOfWeek - currentDayOfWeek);
+        }
 		LOGGER.trace("The normalized return date is {}", returnDate);
 		return returnDate;
 	}

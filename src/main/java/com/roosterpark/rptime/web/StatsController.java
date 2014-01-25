@@ -17,7 +17,7 @@ public class StatsController {
     @Inject
     ControllerCounter counter;
     
-	@RequestMapping(value = "/stats/service", method = GET)
+	@RequestMapping(value = "/admin/stats/service", method = GET)
 	@ResponseBody
 	public Map<String, AtomicInteger> getServiceCount() {
         return counter.getServiceCalls();
