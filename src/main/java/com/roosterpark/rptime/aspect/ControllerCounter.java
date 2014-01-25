@@ -36,13 +36,9 @@ public class ControllerCounter {
     
     @Before("inServiceLayer()")
     public void countServiceCall(JoinPoint jp) {
-//        LOGGER.error("Executing service call, {}", jp);
-//        LOGGER.error("Kind {}", jp.getKind());
-//        LOGGER.error("Signature {}", jp.getSignature());
-//        LOGGER.error("SourceLocation {}",jp.getSourceLocation());
-//        LOGGER.error("Short String {}", jp.toShortString());
         String key = jp.getSignature().toShortString();
-        LOGGER.error("Name {}", key);
+        LOGGER.debug("Name {}", key);
+        // TODO replace map with memcache (distributed, might be a performance hit)
         if(!serviceCalls.containsKey(key)) {
             serviceCalls.put(key, new AtomicInteger());
         }
@@ -51,7 +47,7 @@ public class ControllerCounter {
     
     @Before("inWebLayer()")
     public void countWebCall(JoinPoint jp) {
-        LOGGER.error("Executing web call, {}", jp);
+        LOGGER.debug("Executing web call, {}", jp);
     }
     
     public Map<String, AtomicInteger> getServiceCalls() {
