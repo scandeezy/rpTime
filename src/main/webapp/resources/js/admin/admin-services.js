@@ -37,9 +37,7 @@
 			// methods 'get', 'save', 'remove' provided by default
             getServices : {
                 method : 'GET',
-                params : {
-                    id : 'service'
-                }
+                url : 'admin/stats/service'
             }
 		});
 	} ]);

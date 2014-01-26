@@ -44,13 +44,13 @@
 		}
 
         function setContractsFn() {
-            $log.info("Getting contracts for current user.");
+//            $log.info("Getting contracts for current user.");
             ContractService.getCurrent(function successFn(list) {
-                $log.info("Setting contracts to ", list);
+//                $log.info("Setting contracts to ", list);
                 $scope.contractsList = list;
                 $scope.createSheet = list.length == 0 ? false : true;
             });
-            $log.info("Contracts set.");
+//            $log.info("Contracts set.");
         }
 
 		function updateTimeSheetsFn() {
@@ -138,17 +138,17 @@
 		};
 
 		$scope.setWeekNext = function setWeekNextFn(date) {
-            $log.debug("date is ", date);
+//            $log.debug("date is ", date);
             if(!date) {
                 date = new Date();
             } else {
                 date = new Date(date);
             }
             
-            $log.debug("date is now ", date);
+//            $log.debug("date is now ", date);
 			// TODO FIXME: use relative RESTful URLs (lets date comp happen server side)
 			date.setDate(date.getDate() + 8);
-            $log.debug("date sent is ", date);
+//            $log.debug("date sent is ", date);
 			TimeSheetService.get({
 				id : "new",
 				date : date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()

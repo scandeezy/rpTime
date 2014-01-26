@@ -46,7 +46,7 @@
 			templateUrl : 'resources/partials/worker.html'
 		})//
         .when('/stats', {
-            controller : 'StatsCtrl',
+            controller : 'AdminStatsPageCtrl',
             templateUrl : 'resources/partials/stats.html'
         })
 		.otherwise({
