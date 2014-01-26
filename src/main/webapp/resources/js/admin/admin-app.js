@@ -45,6 +45,10 @@
 			controller : 'AdminWorkerCtrl',
 			templateUrl : 'resources/partials/worker.html'
 		})//
+        .when('/stats', {
+            controller : 'StatsCtrl',
+            templateUrl : 'resources/partials/stats.html'
+        })
 		.otherwise({
 			redirectTo : '/landing'
 		});

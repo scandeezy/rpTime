@@ -31,6 +31,19 @@
 		});
 	} ]);
 
+	module.factory('AdminStatsService', [ '$resource',//
+	function AdminStatsServiceFn($resource) {
+		return $resource('admin/stats/:type/:subtype', {}, {
+			// methods 'get', 'save', 'remove' provided by default
+            getServices : {
+                method : 'GET',
+                params : {
+                    id : 'service'
+                }
+            }
+		});
+	} ]);
+
 	module.factory('AdminReportService', [ '$resource',//
 	function AdminReportServiceFn($resource) {
 		return $resource('admin/report/:id/:client/:startDate/:endDate', {}, {

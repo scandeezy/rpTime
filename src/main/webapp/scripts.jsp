@@ -34,6 +34,7 @@
 	<script type="text/ng-template" src="/resources/partials/landing.html"></script>
 	<script type="text/ng-template" src="/resources/partials/timesheet.html"></script>
 	<script type="text/ng-template" src="/resources/partials/worker.html"></script>
+    <script type="text/ng-template" src="/resources/partials/stats.html"></script>
 
 	<%
 		if (showAdminOnly) {
@@ -48,6 +49,7 @@
 	<script src="/resources/js/admin/admin-report-controllers.js"></script>
     <script src="/resources/js/admin/admin-timesheet-controller.js"></script>
 	<script src="/resources/js/admin/admin-worker-controllers.js"></script>
+	<script src="/resources/js/admin/admin-stats-controllers.js"></script>
 	<script type="text/ng-template" src="/resources/partials/reports/list.html"></script>
 	<script type="text/ng-template" src="/resources/partials/reports/timesheets-per-worker-by-month-for-client.html"></script>
 	<script type="text/ng-template" src="/resources/partials/reports/total-hours-per-worker-by-range-for-client.html"></script>

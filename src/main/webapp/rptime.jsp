@@ -46,6 +46,7 @@
 				</ul>
 			<li ng-show="page == '/report'"><a id="print" name="print" href="JavaScript:window.print();" title="Print" tabindex="-1"><span
 					class="glyphicon glyphicon-print"></span></a></li>
+            <li ng-class="{active : page == '/stats'}"><a href="#/stats" tabindex="-1">Stats</a></li>
 			<%
 				}
 			%>
@@ -56,7 +57,8 @@
 					<li class="divider"></li>
 					<!-- workerExists is inherited from index.jsp -->
 					<li><pre class="debug">workerExists={{workerExists}}</pre></li>
-				</ul></li>
+				</ul>
+            </li>
 		</ul>
 
 		<ul class="nav navbar-nav navbar-right">
