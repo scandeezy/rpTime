@@ -5,7 +5,8 @@
 
 	module.controller('TimeSheetPageCtrl', [ '$location', '$log', '$routeParams', '$cookies', '$scope', 'TimeSheetService', 'ContractService',//
 	function TimeSheetPageCtrlFn($location, $log, $routeParams, $cookies, $scope, TimeSheetService, ContractService) {
-		$scope.edit = false;
+        var id = $location.search().id;
+		$scope.edit = id ? true : false;
 		$scope.timeSheetsMap = {};
 		$scope.timeSheetsList = [];
 		$scope.currentTimeSheet = {};
@@ -66,7 +67,9 @@
 		}
 
 		$scope.isSubmittable = function isSubmittableFn(timeSheet) {
-			return timeSheet.status === 'UNSUBMITTED';
+//			return timeSheet.status === 'UNSUBMITTED';
+            // Hardcoding since we've commented out save.
+            return true;
 		};
 
 		$scope.remove = function removeFn(obj) {
@@ -92,6 +95,11 @@
 					// $scope.edit = false;
 					$scope.currentTimeSheet.updateTimestamp = obj.updateTimestamp;
 					$scope.createTimeSheetForm.$setPristine();
+                    $scope.success = true;
+                    // Smooth scroll up
+                    $('html,body').animate({
+                      scrollTop: 0
+                    }, 1000);
 					updateTimeSheetsFn();
 				}
 			});
@@ -104,27 +112,17 @@
 		$scope.set = function setFn(obj) {
 			// $log.info("setting ", obj);
 			if (!obj) {
-				var o = TimeSheetService.getCurrent();
-                if (!o) {
-                    $log.debug("something bad happened and we should shun our user.");
-                } else {
-                    $log.debug("All clear.");
-                    $log.debug(o);
-                    $log.debug("Status ", o.status);
-                    return;
-                }
-				var id = o.id;
-				if (id) {
-					$scope.timeSheetsMap[id] = o;
-				}
-				$scope.currentTimeSheet = o;
+				TimeSheetService.getCurrent({}, function successFn(data) {
+                    $scope.currentTimeSheet = data;
+                    var id = data.id;
+                    $scope.timeSheetsMap[id] = data;
+                    $location.search('listView',null).search('id', $scope.currentTimeSheet.id);
+                });
 			} else {
 				$scope.timeSheetsMap[obj.id] = obj;
 				$scope.currentTimeSheet = angular.copy(obj, {});
+                $location.search('listView',null).search('id', $scope.currentTimeSheet.id);
 			}
-			$scope.edit = true;
-			$location.search('id', $scope.currentTimeSheet.id);
-			// $scope.createTimeSheetForm.$setPristine();
 		};
 
 		$scope.setWeekLast = function setWeekLastFn() {
@@ -139,10 +137,18 @@
 			}, $scope.errorHandlerTimeSheetGetterFn);
 		};
 
-		$scope.setWeekNext = function setWeekNextFn() {
-			var date = new Date();
+		$scope.setWeekNext = function setWeekNextFn(date) {
+            $log.debug("date is ", date);
+            if(!date) {
+                date = new Date();
+            } else {
+                date = new Date(date);
+            }
+            
+            $log.debug("date is now ", date);
 			// TODO FIXME: use relative RESTful URLs (lets date comp happen server side)
-			date.setDate(date.getDate() + 7);
+			date.setDate(date.getDate() + 8);
+            $log.debug("date sent is ", date);
 			TimeSheetService.get({
 				id : "new",
 				date : date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate()
@@ -178,6 +184,7 @@
 				afterFn : function doAfterFn() {
 					updateTimeSheetsFn();
 					$scope.edit = false;
+                    $location.search('id', null).search('listView');
 				}
 			});
 		};

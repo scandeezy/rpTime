@@ -126,10 +126,12 @@
 					if (modalDate && $scope.timeSheetStatusList) {
                         $log.info("element 0 of timeSheetStatusList is ", $scope.timeSheetStatusList[0]);
 						var firstDate = $scope.timeSheetStatusList[0].startDate;
+                        var searchDate = formatDate(modalDate);
 						angular.forEach($scope.timeSheetStatusList, function(timeSheet) {
 							var tsDate = timeSheet.startDate;
 							if (!found) {
-								if (tsDate >= modalDate && firstDate <= modalDate) {
+								if (tsDate >= searchDate && firstDate <= searchDate) {
+                                    $log.debug("tsDate is ", tsDate, ", modalDate is ", searchDate, ", firstDate is ", firstDate);
 									found = timeSheet;
 									return;
 								}
@@ -148,6 +150,29 @@
 					}
 					$scope.status = defaultStatus;
 				});
+                
+                function formatDate(modalDate) {
+                    $log.debug("Pre date is ", modalDate);
+                    modalDate = new Date(modalDate);
+                    var dateMonth = modalDate.getDate();
+                    var dateWeek = modalDate.getDay();
+                    var setDate = dateMonth - dateWeek;
+                    modalDate.setUTCDate(setDate);
+                    $log.debug("Date after set ", modalDate);
+                    var searchDate = modalDate.getFullYear() + "-";
+                    if(modalDate.getMonth() > 9) {
+                        searchDate = searchDate + (modalDate.getMonth() + 1) + "-";
+                    } else {
+                        searchDate = searchDate + "0" + (modalDate.getMonth() + 1) + "-";
+                    }
+                    if(modalDate.getDate() > 9) {
+                        searchDate = searchDate + modalDate.getDate();
+                    } else {
+                        searchDate = searchDate + "0" + modalDate.getDate();
+                    }
+                    
+                    return searchDate;
+                }
 
 				$scope.close = function closeFn() {
 					$('#workerWeekSelectionModal').modal('hide');

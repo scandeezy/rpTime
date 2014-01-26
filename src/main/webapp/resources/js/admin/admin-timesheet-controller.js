@@ -59,7 +59,8 @@
 		}
 
 		$scope.isSubmittable = function isSubmittableFn(timeSheet) {
-			return timeSheet.status === 'UNSUBMITTED';
+//			return timeSheet.status === 'UNSUBMITTED';
+            return true;
 		}
 
 		$scope.remove = function removeFn(obj) {
@@ -158,6 +159,7 @@
 				afterFn : function doAfterFn() {
 					updateTimeSheetsFn();
 					$scope.edit = false;
+                    $location.search('id',null);
 				}
 			});
 		};

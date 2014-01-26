@@ -42,9 +42,14 @@
 
 	<div class="alert alert-warning alert-dismissable" ng-show="edit && (currentTimeSheet.currentTimeSheet === false)">
 		<button type="button" class="close" id="timesheet-alert-close" data-dismiss="alert" aria-hidden="true">&times;</button>
-		<strong>Warning!</strong> You are editing an old time sheet. <a id="select-timesheet-current" href="#/timesheet?id=current">Click here</a>
+		<strong>Warning!</strong> This time sheet is not the current week. <a id="select-timesheet-current" href="#/timesheet?id=current">Click here</a>
 		for the current timesheet.
 	</div>
+    
+    <div class="alert alert-success alert-dismissable" ng-show="success">
+        <button type="button" class="close" id="timesheet-success-close" data-dismiss="alert" aria-hidden="true">&times;</button>
+        <strong>Success!</strong> The action was successful.
+    </div>
 
 	<form role="form" name="createTimeSheetForm">
 		<div id="createTimeSheet" class="panel panel-default" ng-show="edit">
@@ -68,8 +73,8 @@
 								Next <span class="caret"></span> <span class="sr-only">Toggle Create Dropdown</span>
 							</button>
 							<ul class="dropdown-menu" role="menu">
-								<li><a id="create-timesheet-next" ng-click="setWeekNext();">Create Time Sheet for Next Week</a></li>
-								<li><a id="create-timesheet-other" ng-click="setWeekOther();">Create Time Sheet for Other Date...</a></li>
+								<li><a id="create-timesheet-next" ng-click="setWeekNext(currentTimeSheet.startDate);">Create Time Sheet for Next Week</a></li>
+								<li><a id="create-timesheet-other" ng-click="openModal('#weekSelectionModal');">Create Time Sheet for Other Date...</a></li>
 							</ul>
 						</div>
 					</div>
@@ -139,12 +144,16 @@
 				</div>
 				<div class="form-group row">
 					<div class="col-sm-offset-2 col-sm-10">
+                        <!--
+                        Hiding per request from Scott
 						<button type="button" class="btn" id="save" ng-class="{'btn-primary': createTimeSheetForm.$valid}"
 							ng-disabled="!(createTimeSheetForm.$valid && createTimeSheetForm.$dirty)" ng-click="save(currentTimeSheet);">
 							<span ng-show="currentTimeSheet.status!='UNSUBMITTED'">Update</span> <span ng-show="currentTimeSheet.status=='UNSUBMITTED'">Save</span>
 						</button>
 						<span ng-show="currentTimeSheet.status=='UNSUBMITTED'">
-							<button type="button" class="btn btn-default" id="submit" ng-click="submit(currentTimeSheet);"
+                        -->
+						<span>
+							<button type="button" class="btn btn-default btn-primary" id="submit" ng-click="submit(currentTimeSheet);"
 								ng-disabled="!isSubmittable(currentTimeSheet);">Submit</button>
 							<p class="text-muted">A time sheet may still be updated after it has been submitted.</p>
 						</span>

@@ -54,7 +54,11 @@
 			$scope.edit = true;
 			$location.search('id', $scope.currentContract.id);
 			$scope.createContractForm.$setPristine();
-            window.scrollTo(0,0);
+            
+            // Scroll to top
+            $('html,body').animate({
+              scrollTop: 0
+            }, 1000);
 		};
 
 		$scope.unset = function unsetFn() {
