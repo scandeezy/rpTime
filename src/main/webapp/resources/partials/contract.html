@@ -70,8 +70,8 @@
 	<form class="form-horizontal" role="form" name="createContractForm">
 		<div id="createContract" class="panel panel-default" ng-show="edit">
 			<div class="panel-heading">
-				<span ng-show="currentContract.id"><h4>Edit Contract</h4> {{clientsMap[currentContract.client].name}},
-					{{workersMap[currentContract.worker].fullName}} </span> <span ng-hide="currentContract.id"><h4>Create Contract</h4></span>
+				<div ng-show="currentContract.id"><h4>Edit Contract</h4> {{clientsMap[currentContract.client].name}},
+					{{workersMap[currentContract.worker].fullName}} </div> <div ng-hide="currentContract.id"><h4>Create Contract</h4></div>
 				<p ng-hide="true" class="text-danger lead">
 					Warning: <span ng-pluralize count="createContractForm.$error.required.length"
 						when="{'1': '1 required field is missing.', 'other': '{} required fields are missing.'}"> </span>
