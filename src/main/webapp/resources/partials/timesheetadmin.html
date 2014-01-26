@@ -6,12 +6,34 @@
 				Time Sheets
 			</h4>
 		</div>
-		<div class="panel-body" ng-show="isAdmin">
+		<div class="panel-body">
+<!--            <div class="col-sm-2">
+                <select class="form-control" id="client" name="client" ng-model="searchClientDrop.$"
+                    ng-options="client.id as client.name for (clientid,client) in clientsMap" required>
+                    <option value="">-- Client Select --</option>
+                </select>
+            </div>
+            <div class="col-sm-2">
+                <select class="form-control" id="worker" name="worker" ng-model="searchWorkerDrop.$"
+                    ng-options="worker.id as worker.fullName for (workerid,worker) in workersMap" required>
+                    <option value="">-- Worker Select --</option>
+                </select>
+            </div>
+            <div class="col-sm-8"></div>-->
+<!--        
+            <div class="col-sm-2">
+                <select class="form-control" id="week" name="client" ng-model="searchWeekDrop.$"
+                    ng-options="client.id as client.name for (clientid,client) in clientsMap" required>
+                    <option value="">-- Week Select --</option>
+                </select>
+            </div>-->
 			<ul class="list-unstyled">
 				<li ng-repeat="(workerId,timeSheetList) in adminWorkerTimeSheetMap | orderBy:'worker.fullNameNormalized'"
-					ng-init="worker=workersMap[workerId]"><a id="select-worker-{{workerId}}" ng-href="#/worker?id={{workerId}}">{{worker.fullName}}
+					ng-init="worker=workersMap[workerId]">
+                    <a id="select-worker-{{workerId}}" ng-href="#/worker?id={{workerId}}">
+                        {{worker.fullName}}
 						<span class="text-muted">{{worker.email}}</span>
-				</a>
+                    </a>
 					<ul id="adminTimeSheetList">
 						<li ng-repeat="timeSheet in timeSheetList | orderBy:'startDate':1 ">
 							<button type="button" class="btn btn-sm btn-default" id="delete-{{timeSheet.id}}" ng-click="remove(timeSheet);" ng-show="debug">Delete</button>
@@ -21,7 +43,8 @@
                             <span id="timeSheetSubmitted" ng-show="timeSheet.status=='SUBMITTED'" class="label label-info">Submitted</span>
                             <span id="timeSheetApproved" ng-show="timeSheet.status=='APPROVED'" class="label label-success">Approved</span>
 						</li>
-					</ul></li>
+					</ul>
+                </li>
 			</ul>
 		</div>
 	</div>
