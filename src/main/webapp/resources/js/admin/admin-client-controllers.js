@@ -54,16 +54,16 @@
 
 	} ]);
 
-	module.controller('AdminClientRelatedTimeSheetsCtrl', [ '$log', '$rootScope', '$routeParams', '$scope', 'TimeSheetService', //
-	function AdminClientRelatedTimeSheetsCtrlFn($log, $rootScope, $routeParams, $scope, TimeSheetService) {
+	module.controller('AdminClientRelatedTimeSheetsCtrl', [ '$log', '$rootScope', '$routeParams', '$scope', 'AdminTimeSheetService', //
+	function AdminClientRelatedTimeSheetsCtrlFn($log, $rootScope, $routeParams, $scope, AdminTimeSheetService) {
 
 		$scope.showWorker = {};
 		$scope.myRelatedWorkerIdToTimeSheetsMap = {}; // workerId to timeSheet obj
 
 		$scope.$watch('currentClient', function currentClient$watchFn(client) {
 			if (client && client.id) {
-				// $log.info('get TimeSheets for client=', client);
-				TimeSheetService.getAllForClient({
+//				 $log.info('get TimeSheets for client=', client);
+				AdminTimeSheetService.getAllForClient({
 					clientId : client.id,
 				}, function successFn(list) {
 					var workersMap = {};
@@ -92,7 +92,7 @@
 
 		$scope.$watch('currentClient', function currentClient$watchFn(client) {
 			if (client && client.id) {
-				// $log.info('get Contracts for client=', client);
+//				 $log.info('get Contracts for client=', client);
 				AdminContractService.getAllForClient({
 					clientId : client.id,
 				}, function successFn(list) {
