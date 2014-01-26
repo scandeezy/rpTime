@@ -129,7 +129,7 @@
 
 						<ul>
 							<li ng-repeat="timeSheet in myRelatedTimeSheets | orderBy:'printableTimeSheetString':1"><a id="worker-related-timesheet-{{$id}}"
-								ng-href="#/timesheet?id={{timeSheet.id}}">{{timeSheet.printableTimeSheetString}}</a></li>
+								ng-href="#/timesheetadmin?id={{timeSheet.id}}">{{timeSheet.printableTimeSheetString}}</a></li>
 							<p ng-hide="(myRelatedTimeSheets)">No time sheets found.</p>
 						</ul>
 					</div>

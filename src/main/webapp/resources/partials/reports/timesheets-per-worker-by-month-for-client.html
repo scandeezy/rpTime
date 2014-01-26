@@ -83,7 +83,7 @@
 					</thead>
 					<tbody>
 						<tr ng-repeat="(date,hours) in report.reportMap[worker.id]" ng-show="hours > 0" ng-init="timeSheetId=getTimeSheetLinkForDate(worker.id,date);">
-							<td><a id="timeSheet-{{timeSheetId}}" ng-href="#/timesheet?id={{timeSheetId}}">{{date}}</a></td>
+							<td><a id="timeSheet-{{timeSheetId}}" ng-href="#/timesheetadmin?id={{timeSheetId}}">{{date}}</a></td>
 							<td ng-show="debug" class="debug">
 								<small>
 								timeSheetId={{timeSheetId}}<br/>
