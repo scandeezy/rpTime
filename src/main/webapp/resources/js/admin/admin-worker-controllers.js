@@ -70,14 +70,11 @@
 
 	} ]);
 
-	module.controller('AdminWorkerRelatedTimeSheetsCtrl', [ '$log', '$scope', '$timeout', 'AdminTimeSheetService', //
-	function AdminWorkerRelatedTimeSheetsCtrlFn($log, $scope, $timeout, AdminTimeSheetService) {
+	module.controller('AdminWorkerRelatedTimeSheetsCtrl', [ '$log', '$scope', 'AdminTimeSheetService', //
+	function AdminWorkerRelatedTimeSheetsCtrlFn($log, $scope, AdminTimeSheetService) {
 		$scope.myRelatedTimeSheets = [];
 
-		var tryXtimes = 20;
-
 		$scope.updateRelatedTimeSheets = function updateRelatedTimeSheetsFn() {
-			tryXtimes = tryXtimes - 1;
 			if ($scope.currentWorker && $scope.currentWorker.id) {
 				var wid = $scope.currentWorker.id;
                 $log.debug("Getting all for worker ", wid);
@@ -92,25 +89,17 @@
 					});
 					$scope.myRelatedTimeSheets = arr;
 				});
-			} else {
-				if (tryXtimes > 0) {
-					$timeout(function my$timeoutAsyncCompensationFn() {
-						$scope.updateRelatedTimeSheets();
-					}, 200);
-				}
 			}
 		};
 
 		$scope.$watch('currentWorker', function currentWorker$watchFn(obj) {
-			if (obj) {
-				$scope.updateRelatedTimeSheets();
-			}
+			obj && $scope.updateRelatedTimeSheets();
 		});
 
 	} ]);
 
-	module.controller('AdminWorkerRelatedContractsCtrl', [ '$log', '$rootScope', '$scope', '$timeout', //
-	function AdminWorkerRelatedContractsCtrl($log, $rootScope, $scope, $timeout) {
+	module.controller('AdminWorkerRelatedContractsCtrl', [ '$log', '$rootScope', '$scope', //
+	function AdminWorkerRelatedContractsCtrl($log, $rootScope, $scope) {
 
 		$scope.myRelatedContracts = [];
         $scope.hasActiveContract = false;
@@ -132,18 +121,19 @@
 					}
 				});
 				$scope.myRelatedContracts = arr;
-			} else {
-				$log.info('sleeping 200ms for updateRelatedContracts');
-				$timeout(function my$timeoutAsyncCompensationFn() {
-					$scope.updateRelatedContracts();
-				}, 200);
 			}
 		};
-
+		
+		$rootScope.$watch('clientsMap.$resolved', function rootScopeClientsMap$watchFn(obj) {
+			obj && $scope.updateRelatedContracts();
+		});
+		
+		$rootScope.$watch('contractsMap.$resolved', function rootScopeContractsMap$watchFn(obj) {
+			obj && $scope.updateRelatedContracts();
+		});
+		
 		$scope.$watch('currentWorker', function currentWorker$watchFn(obj) {
-			if (obj) {
-				$scope.updateRelatedContracts();
-			}
+			obj && $scope.updateRelatedContracts();
 		});
 
 	} ]);
