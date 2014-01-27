@@ -26,16 +26,6 @@
 	<script src="/resources/js/filters.js"></script>
 	<script src="/resources/js/directives.js"></script>
 
-	<!-- pre-load templates into angular's $templateCache (see: http://stackoverflow.com/a/12346901/237225) -->
-	<script type="text/ng-template" src="/resources/partials/about.html"></script>
-	<script type="text/ng-template" src="/resources/partials/client.html"></script>
-	<script type="text/ng-template" src="/resources/partials/contract.html"></script>
-	<script type="text/ng-template" src="/resources/partials/history.html"></script>
-	<script type="text/ng-template" src="/resources/partials/landing.html"></script>
-	<script type="text/ng-template" src="/resources/partials/timesheet.html"></script>
-	<script type="text/ng-template" src="/resources/partials/worker.html"></script>
-    <script type="text/ng-template" src="/resources/partials/stats.html"></script>
-
 	<%
 		if (showAdminOnly) {
 	%>
@@ -50,10 +40,6 @@
     <script src="/resources/js/admin/admin-timesheet-controller.js"></script>
 	<script src="/resources/js/admin/admin-worker-controllers.js"></script>
 	<script src="/resources/js/admin/admin-stats-controller.js"></script>
-	<script type="text/ng-template" src="/resources/partials/reports/list.html"></script>
-	<script type="text/ng-template" src="/resources/partials/reports/timesheets-per-worker-by-month-for-client.html"></script>
-	<script type="text/ng-template" src="/resources/partials/reports/total-hours-per-worker-by-range-for-client.html"></script>
-	<script type="text/ng-template" src="/resources/partials/reports/total-hours-per-worker-per-month.html"></script>
 
 	<!-- end admin-only resources -->
 	<%
