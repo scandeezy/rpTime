@@ -23,7 +23,7 @@
 <link rel="stylesheet" type="text/css" media="all" href="/resources/webjars/bootstrap/3.0.2/css/bootstrap-theme.min.css">
 <link rel="stylesheet" type="text/css" media="all" href="/resources/css/app.css">
 <%
-	if (userService.isUserAdmin()) {
+	if (user != null && userService.isUserAdmin()) {
 %>
 <!-- pre-load admin templates into angular's $templateCache (see: http://stackoverflow.com/a/12346901/237225) -->
 <script type="text/ng-template" src="/resources/partials/about.html"></script>
@@ -46,7 +46,7 @@
 </head>
 <body>
 	<%
-		if (userService.isUserLoggedIn()) {
+		if (user != null && userService.isUserLoggedIn()) {
 			String nickname = user.getNickname();
 	%>
 	<div id="mainDiv" ng-controller="MainCtrl as main" ng-init='workerExists=("<%=WorkerService.inst().getCurrent()%>"!="null");'>
