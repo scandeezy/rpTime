@@ -49,7 +49,7 @@
 		</div>
 	</div>
 
-	<div class="alert alert-warning alert-dismissable" ng-show="edit && (currentTimeSheet.currentTimeSheet === false)">
+	<div id="timeSheetWarning" class="alert alert-warning alert-dismissable" ng-show="edit && (currentTimeSheet.currentTimeSheet === false)">
 		<button type="button" class="close" id="timesheet-alert-close" data-dismiss="alert" aria-hidden="true">&times;</button>
 		<strong>Warning!</strong> You are editing an old time sheet. <a id="select-timesheet-current" href="#/timesheet?id=current">Click here</a>
 		for the current timesheet.
