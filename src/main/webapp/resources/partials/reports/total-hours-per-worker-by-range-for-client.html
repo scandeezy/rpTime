@@ -1,9 +1,9 @@
-<div id="total-hours-per-worker-by-range-for-client" ng-controller="ReportTimeSheetsPerWorkerByRangeForClientCtrl" class="container">
+<div id="total-hours-per-worker-by-range-for-client" ng-controller="ReportTimeSheetsPerWorkerByRangeForClientCtrl" class="container-fluid">
 
+	<h2 class="hidden-print" ng-hide="selectedClient">Time Sheets Per Worker, By Range, For Client</h2>
 	<form class="form-inline hidden-print" role="form">
 		<div class="row">
-			<h2 ng-hide="selectedClient">Time Sheets Per Worker, By Range, For Client</h2>
-			<div class="col-sm-3">
+			<div class="col-xs-3">
 				<label for="client">Client
 					<select class="form-control" id="client" name="client" ng-model="selectedClient"
 						ng-options="client.id as client.name for (clientid,client) in clientsMap"
@@ -12,17 +12,17 @@
 					</select>
 				</label>
 			</div>
-            <div class="col-sm-3">
+            <div class="col-xs-3">
                 <label for="startDate">Start Date
                 	<input type="date" id="startDate" name="startDate" class="form-control" ng-model="startDate" />
                 </label>
             </div>
-            <div class="col-sm-3">
+            <div class="col-xs-3">
                 <label for="startDate">End Date
                 	<input type="date" id="endDate" name="endDate" class="form-control" ng-model="endDate" />
                 </label>
             </div>
-            <div class="col-sm-3">
+            <div class="col-xs-3">
             	<button type="button" id="create" name="create"
                     class="btn btn-primary btn-sm" 
                     ng-click="generateReport(selectedClient, startDate, endDate)">Create</button>
@@ -33,11 +33,11 @@
 	<div ng-show="report">
 		<h2><a ng-href="#/client?id={{selectedClient}}">{{clientsMap[selectedClient].name}}</a> {{startDate}} - {{endDate}}</h2>
 
-		<div class="col-sm-offset-1" ng-repeat="(workerId,hours) in report.workerToTotalMap">
+		<div class="col-xs-offset-1" ng-repeat="(workerId,hours) in report.workerToTotalMap">
 			<a ng-href="#/worker?id={{worker}}">{{workersMap[workerId].fullName}}</a> : {{hours}}
                 </div>
                 
-                <div class="col-sm-offset-1" ng-repeat="(workerId,hourList) in report.workerToTimeMap">
+                <div class="col-xs-offset-1" ng-repeat="(workerId,hourList) in report.workerToTimeMap">
                         <table class="table table-condensed table-striped table-hover" ng-show="hourList">
                                 <thead>
                                         <tr>

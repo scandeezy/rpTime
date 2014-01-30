@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ page import="com.google.appengine.api.users.User"%>
 <%@ page import="com.google.appengine.api.users.UserService"%>
@@ -11,7 +12,7 @@
 		String loginUrl = userService.createLoginURL(request.getRequestURI());
 		String logoutUrl = userService.createLogoutURL(request.getRequestURI());
 	%>
-<html ng-app="myApp">
+<html ng-app="myApp" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
