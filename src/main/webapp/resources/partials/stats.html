@@ -1,8 +1,17 @@
 <div id="stats" class="container">
-    <div class="">
-        <div class="row" ng-repeat="(methodName,callCount) in callList">
-            <div class="col-sm-4">{{methodName}}</div>
-            <div class="col-sm-2">{{callCount}}</div>
-        </div>
-    </div>
+	<table id="statstable" class="table table-condensed table-striped table-hover">
+		<thead>
+			<tr>
+				<th>Method</th>
+				<th>Count</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="(methodName,callCount) in callList | orderBy:'methodName'">
+				<td>{{methodName}}</td>
+				<td>{{callCount}}</td>
+			</tr>
+		</tbody>
+
+	</table>
 </div>
