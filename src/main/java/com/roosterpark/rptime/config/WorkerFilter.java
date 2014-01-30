@@ -67,7 +67,7 @@ public class WorkerFilter implements Filter {
 				// throw new UnsupportedOperationException("Not supported yet.");
 			}
 		} catch (Exception e) {
-			LOGGER.warn("Suppressed error:" + e.getMessage(), e);
+			LOGGER.warn("Suppressed error:" + e.getMessage());
 		} // finally {
 		fc.doFilter(request, response);
 		// }
