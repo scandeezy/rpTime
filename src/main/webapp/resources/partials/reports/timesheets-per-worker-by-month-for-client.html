@@ -2,7 +2,7 @@
 
 	<div class="row" class="hidden-print">
 		<h2 ng-hide="selectedClient">Time Sheets Per Worker, By Month, For Client</h2>
-		<div class="col-sm-12 hidden-print">
+		<div class="col-xs-12 hidden-print">
 			<form class="form-inline" role="form">
 				<div class="form-group">
 					<select class="form-control hidden-print" id="client" name="client" ng-model="selectedClient"
@@ -13,15 +13,16 @@
 				<div class="form-group pull-right" ng-show="true && report">
 					<div class="btn-group btn-group-default pull-right">
 						<a id="previousMonth" type="button" class="btn btn-default"
-							ng-href="#/report/timesheets-per-worker-by-month-for-client?clientId={{selectedClient}}&amp;date={{report.previousMonthReportDate}}">Previous Month</a>
-						<a id="nextMonth" type="button" class="btn btn-default"
-							ng-href="#/report/timesheets-per-worker-by-month-for-client?clientId={{selectedClient}}&amp;date={{report.nextMonthReportDate}}">Next Month</a>
+							ng-href="#/report/timesheets-per-worker-by-month-for-client?clientId={{selectedClient}}&amp;date={{report.previousMonthReportDate}}">Previous
+							Month</a> <a id="nextMonth" type="button" class="btn btn-default"
+							ng-href="#/report/timesheets-per-worker-by-month-for-client?clientId={{selectedClient}}&amp;date={{report.nextMonthReportDate}}">Next
+							Month</a>
 					</div>
 				</div>
 			</form>
 		</div>
 	</div>
-	
+
 	<div ng-show="selectedClient">
 
 		<div id="reportSummary">
@@ -40,7 +41,8 @@
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="worker in report.workerList | orderBy:'fullNameNormalized' " ng-controller="ReportTimeSheetsPerWorkerByMonthForClientWorkerCtrl">
+						<tr ng-repeat="worker in report.workerList | orderBy:'fullNameNormalized' "
+							ng-controller="ReportTimeSheetsPerWorkerByMonthForClientWorkerCtrl">
 							<td><a id="worker-{{worker.id}}" ng-href="#/worker?id={{worker.id}}">{{worker.fullName}}</a></td>
 							<td id="days-{{worker.id}}">{{totalDaysCount}} days</td>
 							<td id="hours-{{worker.id}}">{{totalHoursSum | number:2}}</td>
@@ -59,36 +61,32 @@
 
 		<hr class="hidden-print" />
 
-		<div id="workerTableDiv" class="col-sm-offset-1 page-break-before" ng-repeat="worker in report.workerList | orderBy:'fullNameNormalized'" ng-controller="ReportTimeSheetsPerWorkerByMonthForClientWorkerCtrl">
+		<div id="workerTableDiv" class="col-xs-offset-1 page-break-before" ng-repeat="worker in report.workerList | orderBy:'fullNameNormalized'"
+			ng-controller="ReportTimeSheetsPerWorkerByMonthForClientWorkerCtrl">
 
-			<span class="visible-print">		
-			<h2>
-				<a ng-href="#/client?id={{selectedClient}}">{{clientsMap[selectedClient].name}}</a> Time Sheets
-			</h2>
-			<h3>{{report.reportDate}}</h3>
+			<span class="visible-print">
+				<h2>
+					<a ng-href="#/client?id={{selectedClient}}">{{clientsMap[selectedClient].name}}</a> Time Sheets
+				</h2>
+				<h3>{{report.reportDate}}</h3>
 			</span>
 
 			<h4>
 				<a id="workerSheets-{{worker.id}}" ng-href="#/worker?id={{worker.id}}">{{worker.fullName}}</a>
 			</h4>
 
-			<div class="col-sm-offset-1">
+			<div class="col-xs-offset-1">
 				<table id="workerSheetsTable-{{worker.id}}" class="table table-condensed table-striped table-hover" ng-show="rmap">
 					<thead>
 						<tr>
 							<th>Date</th>
-							<th ng-show="debug" class="debug">Debug</th>
 							<th>Hours</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr ng-repeat="(date,hours) in report.reportMap[worker.id]" ng-show="hours > 0" ng-init="timeSheetId=getTimeSheetLinkForDate(worker.id,date);">
+						<tr ng-repeat="(date,hours) in report.reportMap[worker.id]" ng-show="hours > 0"
+							ng-init="timeSheetId=getTimeSheetLinkForDate(worker.id,date);">
 							<td><a id="timeSheet-{{timeSheetId}}" ng-href="#/timesheetadmin?id={{timeSheetId}}">{{date}}</a></td>
-							<td ng-show="debug" class="debug">
-								<small>
-								timeSheetId={{timeSheetId}}<br/>
-								</small>
-							</td>
 							<td id="hours-{{timeSheetId}}">{{hours | number:2}}
 								<div class="btn-group btn-group-xs hidden-print pull-right">
 									<button id="flagButton-{{timeSheetId}}" class="btn btn-default"
@@ -104,7 +102,6 @@
 					<tfoot>
 						<tr class="text-muted">
 							<td id="totalDays">{{totalDaysCount}} days</td>
-							<td ng-show="debug" class="debug">Debug</td>
 							<td id="totalHours">{{totalHoursSum | number:2}}</td>
 						</tr>
 					</tfoot>
@@ -112,11 +109,11 @@
 
 				<p ng-hide="rmap" class="text-muted">No hours logged.</p>
 			</div>
-			
+
 			<div class="visible-print">
 				<p>This report is as of {{report.updateDate}}.</p>
 			</div>
-			
+
 		</div>
 
 		<hr class="hidden-print" />
