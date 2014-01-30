@@ -9,14 +9,14 @@
 <div id="jsScripts">
 	<!-- begin JS resources manageable by WebJars -->
 	<script src="/resources/webjars/jquery/2.0.3/jquery.min.js"></script>
-	<script src="/resources/webjars/bootstrap/3.0.3/js/bootstrap.min.js"></script>
-	<script src="/resources/webjars/angularjs/1.2.9/angular.js"></script>
-	<!-- <script src="/resources/webjars/angularjs/1.2.9/angular.min.js"></script> -->
+	<script src="/resources/webjars/bootstrap/3.0.2/js/bootstrap.min.js"></script>
+	<!-- <script src="/resources/webjars/angularjs/1.2.9/angular.js"></script> -->
+	<script src="/resources/webjars/angularjs/1.2.9/angular.min.js"></script>
 	<script src="/resources/webjars/angularjs/1.2.9/angular-animate.min.js"></script>
 	<script src="/resources/webjars/angularjs/1.2.9/angular-cookies.min.js"></script>
 	<script src="/resources/webjars/angularjs/1.2.9/angular-route.min.js"></script>
-	<script src="/resources/webjars/angularjs/1.2.9/angular-resource.js"></script>
-	<!-- <script src="/resources/webjars/angularjs/1.2.9/angular-resource.min.js"></script> -->
+	<!-- <script src="/resources/webjars/angularjs/1.2.9/angular-resource.js"></script> -->
+	<script src="/resources/webjars/angularjs/1.2.9/angular-resource.min.js"></script>
 	<script src="/resources/webjars/angularjs/1.2.9/angular-sanitize.min.js"></script>
 	<!-- end JS resources manageable by WebJars -->
 	<script src="/resources/js/app.js"></script>
