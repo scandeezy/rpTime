@@ -16,9 +16,12 @@ import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
+import com.roosterpark.rptime.config.CacheConfiguration;
 import com.roosterpark.rptime.model.Client;
 import com.roosterpark.rptime.model.Contract;
 import com.roosterpark.rptime.model.Worker;
@@ -38,17 +41,22 @@ public class ContractService {
 		return ofy().load().type(Contract.class).filter(Contract.WORKER_KEY, worker).list();
 	}
 
+	@Cacheable(value = CacheConfiguration.CONTRACT_SERVICE_GET_ACTIVE_CONTRACTS_FOR_WORKER_CACHE_NAME, key = "#workerId")
+	public List<Contract> getActiveContractsForWorkerId(final Long workerId) throws EntityNotFoundException {
+		return this.getActiveContractsForWorkerInterval(workerId, new Interval(new LocalDate()));
+	}
+
 	/**
-	 * {@link Contract Contracts} with {@code date} between {@code startDate} and {@code endDate}.
+	 * {@link Contract Contracts} in the given {@code searchInterval}.
 	 * 
 	 * @param workerId
 	 * @param searchInterval
 	 *            - the {@link Interval} to compare to the {@link Contract Contract's} start/end date interval.
-	 * @return the {@link List} of active {@link Contract Contracts}.
+	 * @return the {@link List} of active {@link Contract Contracts} in the {@code searchInterval}.
 	 * @throws EntityNotFoundException
 	 *             if no {@link Worker} found for {@code workerId}.
 	 */
-	public List<Contract> getActiveContractsForWorker(Long workerId, Interval searchInterval) throws EntityNotFoundException {
+	public List<Contract> getActiveContractsForWorkerInterval(final Long workerId, Interval searchInterval) throws EntityNotFoundException {
 		Worker w = workerService.getById(workerId);
 		if (w == null) {
 			User u = userService.getCurrentUser();
@@ -57,13 +65,13 @@ public class ContractService {
 		}
 		final List<Contract> contracts = getContractsForWorker(workerId);
 		LOGGER.debug("found {} contracts for worker {}.  Determine which are active.", CollectionUtils.size(contracts), workerId);
-        if(searchInterval == null)
-            searchInterval = new Interval(System.currentTimeMillis()-1, System.currentTimeMillis());
-        
+		if (searchInterval == null)
+			searchInterval = new Interval(System.currentTimeMillis() - 1, System.currentTimeMillis());
+
 		return getActiveContractsInSearchInterval(contracts, searchInterval);
 	}
 
-	public List<Contract> getContractsForClient(Long client) {
+	public List<Contract> getContractsForClientId(final Long client) {
 		return ofy().load().type(Contract.class).filter(Contract.CLIENT_KEY, client).list();
 	}
 
@@ -74,7 +82,7 @@ public class ContractService {
 
 	public List<Contract> getActiveContractsForClientInInterval(final Long clientId, final Interval searchInterval) {
 		Validate.noNullElements(new Object[] { clientId, searchInterval });
-		final List<Contract> contracts = getContractsForClient(clientId);
+		final List<Contract> contracts = getContractsForClientId(clientId);
 		return getActiveContractsInSearchInterval(contracts, searchInterval);
 	}
 
@@ -135,6 +143,7 @@ public class ContractService {
 		return result;
 	}
 
+	@CacheEvict(value = { CacheConfiguration.CONTRACT_SERVICE_GET_ACTIVE_CONTRACTS_FOR_WORKER_CACHE_NAME }, allEntries = true)
 	public void set(Contract item) {
 		if (null == item.getWorker())
 			throw new IllegalArgumentException("Worker ID required.");

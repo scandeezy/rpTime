@@ -32,8 +32,9 @@ public class ClientService {
 
 	private Client ptoClient;
 
-    public ClientService() {}
-    
+	public ClientService() {
+	}
+
 	@Inject
 	public void setPtoClientId(PaidTimeOffService ptoService) {
 		ptoClient = ptoService.getPtoClient();
@@ -95,11 +96,13 @@ public class ClientService {
 	 *            - the {@link TimeSheetDay} whose {@code clientIds} to inspect.
 	 * @return
 	 */
+	// @Cacheable(value = CacheConfiguration.CLIENT_SERVICE_GET_AVAILABLE_FOR_WORKER_INTERVAL_DAYS_CACHE_NAME, key =
+	// "#p0.concat('-').concat(#p1).concat('-').concat(#p3)")
 	public Set<Client> getAvailableForWorkerIntervalDays(final Long workerId, final Interval searchInterval, final List<TimeSheetDay> days) {
 		LOGGER.debug("searching for available with worker={},searchInterval={},days={}", new Object[] { workerId, searchInterval, days });
 		final List<Long> ids = new LinkedList<>();
 
-		final List<Contract> contracts = contractService.getActiveContractsForWorker(workerId, searchInterval);
+		final List<Contract> contracts = contractService.getActiveContractsForWorkerInterval(workerId, searchInterval);
 		for (Contract contract : contracts) {
 			ids.add(contract.getClient());
 		}
@@ -119,6 +122,7 @@ public class ClientService {
 	 *            - the {@link TimeSheetDay} whose {@code clientIds} to inspect.
 	 * @return
 	 */
+	// @Cacheable(value = CacheConfiguration.CLIENT_SERVICE_GET_AVAILABLE_FOR_WORKER_INTERVAL_DAYS_CACHE_NAME, key = "#days.id")
 	public Set<Long> getSelectedIdsForTimeSheetDays(final List<TimeSheetDay> days) {
 		final Set<Long> result = new HashSet<>();
 		for (TimeSheetDay day : days) {

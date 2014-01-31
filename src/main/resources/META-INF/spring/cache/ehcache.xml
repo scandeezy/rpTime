@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd" updateCheck="false">
+	<diskStore path="java.io.tmpdir" />
+
+	<defaultCache eternal="false" maxElementsInMemory="1000" timeToLiveSeconds="500" overflowToDisk="false" diskPersistent="false"
+		memoryStoreEvictionPolicy="LRU" />
+
+	<!-- example: -->
+	<!-- <cache name="message" maxElementsInMemory="100" eternal="false" timeToIdleSeconds="120" timeToLiveSeconds="120" overflowToDisk="true" maxElementsOnDisk="10000000" 
+		diskPersistent="false" diskExpiryThreadIntervalSeconds="120" memoryStoreEvictionPolicy="LRU" /> -->
+
+	<cache name="clientService.getAvailableForWorkerIntervalDays.cache" eternal="false" timeToLiveSeconds="10" maxElementsInMemory="1000" diskPersistent="false" />
+	<cache name="clientService.getSelectedIdsForTimeSheetDays.cache" eternal="false" timeToLiveSeconds="10" maxElementsInMemory="1000" diskPersistent="false" />
+
+	<cache name="contractService.getActiveContractsForWorker.cache" eternal="false" timeToLiveSeconds="10" maxElementsInMemory="1000" diskPersistent="false" />
+
+	<cache name="workerService.getAll.cache" eternal="false" timeToLiveSeconds="120" maxElementsInMemory="1000" diskPersistent="false" />
+	<cache name="workerService.getById.cache" eternal="false" timeToLiveSeconds="120" maxElementsInMemory="1000" diskPersistent="false" />
+	<cache name="workerService.getByUser.cache" eternal="false" timeToLiveSeconds="120" maxElementsInMemory="1000" diskPersistent="false" />
+
+</ehcache>

@@ -13,9 +13,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
+import com.roosterpark.rptime.config.CacheConfiguration;
 import com.roosterpark.rptime.exceptions.WorkerNotFoundException;
 import com.roosterpark.rptime.model.Worker;
 
@@ -56,8 +59,9 @@ public class WorkerService {
 		return map;
 	}
 
+	@Cacheable(value = CacheConfiguration.WORKER_SERVICE_GET_BY_ID_CACHE_NAME, key = "#id")
 	public Worker getById(Long id) {
-		LOGGER.debug("Getting worker with id={}", id);
+		LOGGER.trace("Getting worker with id={}", id);
 		final Worker result = ofy().load().type(Worker.class).id(id).now();
 		if (result == null) {
 			LOGGER.warn("Warning: no Worker found for id='{}'", id);
@@ -87,10 +91,15 @@ public class WorkerService {
 		return ofy().load().type(Worker.class).limit(count).offset(offset).list();
 	}
 
+	@Cacheable(value = CacheConfiguration.WORKER_SERVICE_GET_ALL_CACHE_NAME)
 	public List<Worker> getAll() {
 		return ofy().load().type(Worker.class).list();
 	}
 
+	@CacheEvict(value = { CacheConfiguration.WORKER_SERVICE_GET_ALL_CACHE_NAME, //
+			CacheConfiguration.WORKER_SERVICE_GET_BY_ID_CACHE_NAME,//
+			CacheConfiguration.WORKER_SERVICE_GET_BY_USER_CACHE_NAME //
+	}, allEntries = true)
 	public void set(Worker item) {
 		if (StringUtils.isEmpty(item.getEmail()))
 			throw new IllegalArgumentException("Email required.");
@@ -116,11 +125,12 @@ public class WorkerService {
 		ofy().save().entity(item).now();
 	}
 
+	@Cacheable(value = CacheConfiguration.WORKER_SERVICE_GET_BY_USER_CACHE_NAME, key = "#user.userId")
 	public Worker getByUser(User user) {
 		Worker result = null;
 		if (user != null) {
 			final String emailLower = StringUtils.lowerCase(user.getEmail());
-			LOGGER.debug("Getting worker with email={} ", emailLower);
+			LOGGER.trace("Getting worker with email={} ", emailLower);
 			result = ofy().load().type(Worker.class)//
 					.filter(Worker.EMAIL_KEY, emailLower)//
 					.first()//
@@ -129,8 +139,8 @@ public class WorkerService {
 		if (result == null) {
 			LOGGER.warn("Warning: no Worker found for user='{}'", user);
 		} else {
-            LOGGER.info("Worker has id {}", result.getId());
-        }
+			LOGGER.info("Worker has id {}", result.getId());
+		}
 		return result;
 	}
 
@@ -207,14 +217,15 @@ public class WorkerService {
 	 * @throws WorkerNotFoundException
 	 *             if {@code worker} is null
 	 */
-	public static void validateWorkerOrThrowWorkerNotFoundException(final Worker worker, final WorkerService service) throws WorkerNotFoundException {
-        LOGGER.debug("Validating worker {}", worker);
+	public static void validateWorkerOrThrowWorkerNotFoundException(final Worker worker, final WorkerService service)
+			throws WorkerNotFoundException {
+		LOGGER.debug("Validating worker {}", worker);
 		if (worker == null) {
-            LOGGER.error("Worker is null.");
+			LOGGER.error("Worker is null.");
 			throw new WorkerNotFoundException("Worker required for this operation.", service);
-		} else if(worker.getId() == null) {
-            LOGGER.error("Worker id is null");
-            throw new WorkerNotFoundException("Worker id is null.", service);
-        }
+		} else if (worker.getId() == null) {
+			LOGGER.error("Worker id is null");
+			throw new WorkerNotFoundException("Worker id is null.", service);
+		}
 	}
 }

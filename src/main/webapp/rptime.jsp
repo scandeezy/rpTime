@@ -44,9 +44,9 @@
 						<a ng-href="#/report/{{report.link}}" tabindex="-1">{{report.name}}</a>
 					</li>
 				</ul>
+            <li ng-class="{active : page == '/stats'}"><a href="#/stats" tabindex="-1">Stats</a></li>
 			<li ng-show="page == '/report'"><a id="print" name="print" href="JavaScript:window.print();" title="Print" tabindex="-1"><span
 					class="glyphicon glyphicon-print"></span></a></li>
-            <li ng-class="{active : page == '/stats'}"><a href="#/stats" tabindex="-1">Stats</a></li>
 			<%
 				}
 			%>

@@ -1,21 +1,24 @@
 package com.roosterpark.rptime.web;
 
 import static com.roosterpark.rptime.config.WorkerFilter.WORKER_MODEL_ATTRIBUTE_NAME;
+import static com.roosterpark.rptime.service.WorkerService.validateWorkerOrThrowWorkerNotFoundException;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
-import static com.roosterpark.rptime.service.WorkerService.validateWorkerOrThrowWorkerNotFoundException;
 
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 
-import org.joda.time.Interval;
 import org.joda.time.LocalDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,10 +29,6 @@ import com.roosterpark.rptime.model.Contract;
 import com.roosterpark.rptime.model.Worker;
 import com.roosterpark.rptime.service.ContractService;
 import com.roosterpark.rptime.service.WorkerService;
-import javax.servlet.http.HttpServletRequest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.web.bind.annotation.ModelAttribute;
 
 /**
  * {@link Controller} responsible for {@link Contract}-related MVC endpoints.
@@ -45,8 +44,8 @@ public class ContractController {
 
 	@Inject
 	ContractService service;
-    @Inject
-    WorkerService workerService;
+	@Inject
+	WorkerService workerService;
 
 	/**
 	 * Method interceptor that sets the {@code worker} {@link ModelAttribute} <i>prior</i> to invoking the {@link RequestMapping} handler
@@ -58,21 +57,21 @@ public class ContractController {
 	public Worker initWorkerBeforeInvokingHandlerMethod(HttpServletRequest request) {
 		return (Worker) request.getAttribute(WORKER_MODEL_ATTRIBUTE_NAME);
 	}
-    
-    @RequestMapping(value = "/contract/current", method = GET)
-    @ResponseBody
-    public List<Contract> getContracts(@ModelAttribute(WORKER_MODEL_ATTRIBUTE_NAME) Worker worker) {
-        LOGGER.info("Worker for contracts is {}", worker);
-        validateWorkerOrThrowWorkerNotFoundException(worker, workerService);
-        List<Contract> contracts = service.getActiveContractsForWorker(worker.getId(), null);
-        
-        return contracts;
-    }
-    
+
+	@RequestMapping(value = "/contract/current", method = GET)
+	@ResponseBody
+	public List<Contract> getContracts(@ModelAttribute(WORKER_MODEL_ATTRIBUTE_NAME) Worker worker) {
+		LOGGER.info("Worker for contracts is {}", worker);
+		validateWorkerOrThrowWorkerNotFoundException(worker, workerService);
+		List<Contract> contracts = service.getActiveContractsForWorkerInterval(worker.getId(), null);
+
+		return contracts;
+	}
+
 	@RequestMapping(value = "/admin/contract/worker/{workerId}/active", method = GET)
 	@ResponseBody
 	public List<Contract> getActiveByWorker(@PathVariable Long workerId) {
-		return service.getActiveContractsForWorker(workerId, new Interval(new LocalDate()));
+		return service.getActiveContractsForWorkerId(workerId);
 	}
 
 	@RequestMapping(value = "/admin/contract/worker/{workerId}", method = GET)
@@ -90,7 +89,7 @@ public class ContractController {
 	@RequestMapping(value = "/admin/contract/client/{clientId}", method = GET)
 	@ResponseBody
 	public List<Contract> getAllByClient(@PathVariable Long clientId) {
-		return service.getContractsForClient(clientId);
+		return service.getContractsForClientId(clientId);
 	}
 
 	@RequestMapping(value = "/admin/contract/{id}", method = GET)

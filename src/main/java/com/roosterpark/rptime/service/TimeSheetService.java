@@ -88,7 +88,7 @@ public class TimeSheetService {
 		final LocalDate normalizedDate = normalizeStartDate(date);
 		final Interval interval = normalizeInterval(normalizedDate);
 		LOGGER.debug("creating new TimeSheet for worker={}, interval={}", workerId, interval);
-		List<Contract> contracts = contractService.getActiveContractsForWorker(workerId, interval);
+		List<Contract> contracts = contractService.getActiveContractsForWorkerInterval(workerId, interval);
 
 		if (CollectionUtils.isEmpty(contracts)) {
 			throw new ContractNotFoundException(workerId, normalizedDate);

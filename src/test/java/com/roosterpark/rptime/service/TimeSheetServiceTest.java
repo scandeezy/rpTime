@@ -114,7 +114,7 @@ public class TimeSheetServiceTest extends BasicRptimeUnitTest {
 		when(mockTimeSheetDao.getById(ID_1)).thenReturn(mockTimeSheet);
 		// mockTimeSheetDao.s
 		when(mockTimeSheetDao.set(any(TimeSheet.class), anyListOf(TimeSheetDay.class))).thenReturn(mockTimeSheet);
-		when(mockContractService.getActiveContractsForWorker(any(Long.class), any(Interval.class))).thenReturn(mockContractList);
+		when(mockContractService.getActiveContractsForWorkerInterval(any(Long.class), any(Interval.class))).thenReturn(mockContractList);
 		when(mockTimeSheetDayDao.set(any(TimeSheetDay.class))).thenReturn(mockTimeSheetDay);
 		// when(mockTimeSheetDayDao.set(any(TimeSheetDay.class),null)).thenReturn(mockTimeSheetDay);
 		when(mockTimeSheetDayDao.getEntries(anyListOf(Long.class))).thenReturn(mockTimeSheetDayList);
