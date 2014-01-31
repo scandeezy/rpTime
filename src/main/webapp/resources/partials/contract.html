@@ -4,6 +4,11 @@
 	<div id="contracts" class="panel panel-default" ng-hide="edit">
 		<div class="panel-heading">
 			<h4>Contracts</h4>
+			<span class="pull-right">
+				<span class="btn-group">
+					<button type="button" id="testNewRandom" class="btn btn-xs btn-warning" ng-click="newRandom();" ng-hide="!debug">New Random</button>
+				</span>
+			</span>
 		</div>
 		<div class="panel-body">
 			<div ng-show="clientsList.length > 0">

@@ -29,7 +29,7 @@
 				lastName : 'last-' + randomNum,
 				email : 'email-' + randomNum + '@test.com'
 			};
-			$scope.set(r);
+			$scope.save(r);
 		}
 
 		$scope.remove = function removeFn(obj) {

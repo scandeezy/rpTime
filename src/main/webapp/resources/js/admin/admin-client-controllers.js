@@ -15,6 +15,16 @@
 				$scope.edit = true;
 			});
 		}
+		
+		$scope.newRandom = function newRandomFn() {
+			var randomNum = Math.floor(Math.random() * 900) + 100;
+			var r = {
+				name : 'test-client-' + randomNum,
+				lunchRequired: false,
+				startDayOfWeek : 0
+			};
+			$scope.save(r);
+		}
 
 		$scope.remove = function removeFn(obj) {
 			$scope.doRemove({
