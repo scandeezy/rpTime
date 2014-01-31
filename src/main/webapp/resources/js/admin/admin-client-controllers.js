@@ -15,16 +15,16 @@
 				$scope.edit = true;
 			});
 		}
-		
+
 		$scope.newRandom = function newRandomFn() {
 			var randomNum = Math.floor(Math.random() * 900) + 100;
 			var r = {
 				name : 'test-client-' + randomNum,
-				lunchRequired: false,
+				lunchRequired : false,
 				startDayOfWeek : 0
 			};
 			$scope.save(r);
-		}
+		};
 
 		$scope.remove = function removeFn(obj) {
 			$scope.doRemove({
@@ -72,7 +72,7 @@
 
 		$scope.$watch('currentClient', function currentClient$watchFn(client) {
 			if (client && client.id) {
-//				 $log.info('get TimeSheets for client=', client);
+				// $log.info('get TimeSheets for client=', client);
 				AdminTimeSheetService.getAllForClient({
 					clientId : client.id,
 				}, function successFn(list) {
@@ -102,7 +102,7 @@
 
 		$scope.$watch('currentClient', function currentClient$watchFn(client) {
 			if (client && client.id) {
-//				 $log.info('get Contracts for client=', client);
+				// $log.info('get Contracts for client=', client);
 				AdminContractService.getAllForClient({
 					clientId : client.id,
 				}, function successFn(list) {

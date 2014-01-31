@@ -15,10 +15,12 @@
 				$scope.edit = true;
 			});
 		}
-		
-		$scope.createFromUnlinked = function createFromUnlinkedFn(user){
-			if(user && user.email){
-				$scope.set({email : user.email});
+
+		$scope.createFromUnlinked = function createFromUnlinkedFn(user) {
+			if (user && user.email) {
+				$scope.set({
+					email : user.email
+				});
 			}
 		};
 
@@ -30,7 +32,7 @@
 				email : 'email-' + randomNum + '@test.com'
 			};
 			$scope.save(r);
-		}
+		};
 
 		$scope.remove = function removeFn(obj) {
 			$scope.doRemove({
@@ -77,7 +79,7 @@
 		$scope.updateRelatedTimeSheets = function updateRelatedTimeSheetsFn() {
 			if ($scope.currentWorker && $scope.currentWorker.id) {
 				var wid = $scope.currentWorker.id;
-                $log.debug("Getting all for worker ", wid);
+				$log.debug("Getting all for worker ", wid);
 				AdminTimeSheetService.getAllForWorker({
 					workerId : wid
 				}, function successFn(timeSheetsList) {
@@ -102,7 +104,7 @@
 	function AdminWorkerRelatedContractsCtrl($log, $rootScope, $scope) {
 
 		$scope.myRelatedContracts = [];
-        $scope.hasActiveContract = false;
+		$scope.hasActiveContract = false;
 
 		$scope.updateRelatedContracts = function updateRelatedContractsFn() {
 			if ($scope.currentWorker && $rootScope.contractsMap.$resolved && $rootScope.clientsMap.$resolved) {
@@ -114,24 +116,24 @@
 							contract : contract,
 							client : $rootScope.clientsMap[contract.client]
 						});
-                        
-                        if(!contract.expired) {
-                            $scope.hasActiveContract = true;
-                        }
+
+						if (!contract.expired) {
+							$scope.hasActiveContract = true;
+						}
 					}
 				});
 				$scope.myRelatedContracts = arr;
 			}
 		};
-		
+
 		$rootScope.$watch('clientsMap.$resolved', function rootScopeClientsMap$watchFn(obj) {
 			obj && $scope.updateRelatedContracts();
 		});
-		
+
 		$rootScope.$watch('contractsMap.$resolved', function rootScopeContractsMap$watchFn(obj) {
 			obj && $scope.updateRelatedContracts();
 		});
-		
+
 		$scope.$watch('currentWorker', function currentWorker$watchFn(obj) {
 			obj && $scope.updateRelatedContracts();
 		});

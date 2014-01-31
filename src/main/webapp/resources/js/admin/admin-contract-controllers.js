@@ -6,7 +6,7 @@
 	module.controller('AdminContractCtrl', [ '$cookies', '$location', '$log', '$rootScope', '$routeParams', '$scope',//
 	'AdminContractService', 'AdminWorkerService', //
 	function AdminContractCtrlFn($cookies, $location, $log, $rootScope, $routeParams, $scope, AdminContractService, AdminWorkerService) {
-		$scope.showExpiredContractsModel = true && angular.equals($cookies.showExpiredContracts,'true') ;
+		$scope.showExpiredContractsModel = true && angular.equals($cookies.showExpiredContracts, 'true');
 		$scope.edit = false;
 		$scope.currentContract = {};
 
@@ -25,25 +25,24 @@
 				client : client.id
 			});
 		}
-		
+
 		$scope.newRandom = function newRandomFn() {
 			var randomNum = Math.floor(Math.random() * 900) + 100;
 			var worker = $rootScope.workersList[(randomNum % $rootScope.workersList.length)];
 			randomNum = Math.floor(Math.random() * 900) + 100;
 			var client = $rootScope.clientsList[(randomNum % $rootScope.clientsList.length)];
-			
+
 			var r = {
 				worker : worker.id,
 				client : client.id,
-				onSite: true,
+				onSite : true,
 				startDate : '2013-01-01',
 				startDayOfWeek : client.startDayOfWeek,
 				endDate : '2015-12-31',
 				lunchRequired : false,
 			};
 			$scope.save(r);
-		}
-
+		};
 
 		$scope.remove = function removeFn(obj) {
 			$scope.doRemove({
@@ -73,11 +72,11 @@
 			$scope.edit = true;
 			$location.search('id', $scope.currentContract.id);
 			$scope.createContractForm.$setPristine();
-            
-            // Scroll to top
-            $('html,body').animate({
-              scrollTop: 0
-            }, 1000);
+
+			// Scroll to top
+			$('html,body').animate({
+				scrollTop : 0
+			}, 1000);
 		};
 
 		$scope.unset = function unsetFn() {
@@ -87,7 +86,7 @@
 
 		$scope.$watch('showExpiredContractsModel', function showExpiredContractsModel$watchFn(val) {
 			if (!angular.equals(val, undefined)) {
-				$cookies.showExpiredContracts = ""+val;
+				$cookies.showExpiredContracts = "" + val;
 			}
 		});
 
