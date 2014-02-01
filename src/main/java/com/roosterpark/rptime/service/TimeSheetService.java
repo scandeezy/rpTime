@@ -100,11 +100,11 @@ public class TimeSheetService {
 		Set<Long> clientIds = new HashSet<>();
 		for (Contract contract : contracts) {
 			clientIds.add(contract.getClient());
-            if(contract.getLunchRequired()) {
-                lunchRequired = true;
-            }
+			if (contract.getLunchRequired()) {
+				lunchRequired = true;
+			}
 		}
-        
+
 		LOGGER.debug("defaultClientId={}, lunchRequired={}", defaultClientId, lunchRequired);
 
 		final List<Long> logIds = new LinkedList<>();
@@ -150,7 +150,11 @@ public class TimeSheetService {
 	private List<TimeSheetView> convert(List<TimeSheet> sheets) {
 		List<TimeSheetView> views = new LinkedList<>();
 		for (TimeSheet sheet : sheets) {
-			views.add(convert(sheet));
+			try {
+				views.add(convert(sheet));
+			} catch (Exception e) {
+				LOGGER.warn("error converting TimeSheet id=" + sheet.getId() + ":" + e.getMessage());
+			}
 		}
 
 		return views;
@@ -181,14 +185,14 @@ public class TimeSheetService {
 		if (currentDayOfWeek == dayOfWeek) {
 			return date;
 		}
-        int week = date.getWeekOfWeekyear();
-        LOGGER.trace("Current week before correction is {}", week);
-        LocalDate returnDate;
-        if(dayOfWeek == DateTimeConstants.SUNDAY) {
-            returnDate = date.minusDays(currentDayOfWeek);
-        } else {
-            returnDate = date.plusDays(dayOfWeek - currentDayOfWeek);
-        }
+		int week = date.getWeekOfWeekyear();
+		LOGGER.trace("Current week before correction is {}", week);
+		LocalDate returnDate;
+		if (dayOfWeek == DateTimeConstants.SUNDAY) {
+			returnDate = date.minusDays(currentDayOfWeek);
+		} else {
+			returnDate = date.plusDays(dayOfWeek - currentDayOfWeek);
+		}
 		LOGGER.trace("The normalized return date is {}", returnDate);
 		return returnDate;
 	}
@@ -279,6 +283,46 @@ public class TimeSheetService {
 		return sum;
 	}
 
+	public Map<Long, List<TimeCardLogEntry>> getLogsForClientOverRange(Long clientId, LocalDate start, LocalDate end) {
+		return timeSheetDayDao.getForClientOverRange(clientId, start, end);
+	}
+
+	/**
+	 * @return a "random" {@link TimeSheet}, retrieved by selecting (1) a random {@link Worker} and (2) a related random {@link Contract}
+	 *         which determines the date.
+	 */
+	public TimeSheetView getRandom() {
+		final List<Worker> workers = workerService.getAll();
+		Validate.isTrue(workers.size() > 0);
+		Worker randomWorker = null;
+		List<Contract> contracts = null;
+		int workersSize = workers.size();
+		int randomWorkerNum = (int) Math.floor(Math.random() * ((double) workersSize));
+
+		while (randomWorker == null && CollectionUtils.isEmpty(contracts)) {
+			LOGGER.trace("create a random timesheet...");
+			randomWorkerNum = (randomWorkerNum + 1) % workersSize;
+			randomWorker = workers.get(randomWorkerNum);
+			LOGGER.trace("...with with worker[{}/{}]={}", randomWorkerNum, workersSize, randomWorker);
+			Long workerId = randomWorker.getId();
+			contracts = contractService.getContractsForWorker(workerId);
+			if (CollectionUtils.isNotEmpty(contracts)) {
+				int contractsSize = contracts.size();
+				int randomContract = (int) Math.floor(Math.random() * contractsSize);
+				Contract contract = contracts.get(randomContract);
+				LOGGER.trace("...with contract[{}/{}]={}", randomContract, contractsSize, contract);
+				final LocalDate randomDate = normalizeStartDate(contract.getStartDate().plusDays((int) (Math.random() * 720.0)));
+				LOGGER.trace("...for normalized date={}", randomDate);
+				TimeSheetView w = getForWorkerDate(workerId, randomDate);
+				w.setStartDate(randomDate);
+				LOGGER.trace("submitting timesheet={}", w);
+				submit(w.getId());
+				return w;
+			}
+		}
+		return null;
+	}
+
 	/**
 	 * @param input
 	 *            - the {@link List} to filter
@@ -317,10 +361,6 @@ public class TimeSheetService {
 		timeSheetDao.set(c, null);
 	}
 
-	public Map<Long, List<TimeCardLogEntry>> getLogsForClientOverRange(Long clientId, LocalDate start, LocalDate end) {
-		return timeSheetDayDao.getForClientOverRange(clientId, start, end);
-	}
-
 	public void flag(final Long id, final Boolean flagged) {
 		TimeSheet c = timeSheetDao.getById(id);
 		c.setFlagged(flagged);
@@ -330,7 +370,8 @@ public class TimeSheetService {
 	/**
 	 * Find {@link TimeSheet TimeSheets} per {@link Worker}, filling in missing {@link TimeSheetStatus} as needed.
 	 * 
-     * @param workerId The id of the worker.
+	 * @param workerId
+	 *            The id of the worker.
 	 * @return a {@link List<TimeSheet>} of 52 {@link TimeSheet TimeSheets}; 26 weeks prior to {@code date} and 26 after.
 	 */
 	public List<TimeSheet> getStatusPerWorker(final Long workerId) {
@@ -369,4 +410,5 @@ public class TimeSheetService {
 		final int dow = currentDate.getDayOfWeek();
 		return dow == DateTimeConstants.SATURDAY || dow == DateTimeConstants.SUNDAY;
 	}
+
 }

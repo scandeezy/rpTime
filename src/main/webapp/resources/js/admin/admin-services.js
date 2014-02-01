@@ -72,7 +72,8 @@
 			},
 			getAll : {
 				isArray : true,
-				method : 'GET'
+				method : 'GET',
+				url : 'admin/timesheet'
 			},
 			getAllForClient : {
 				isArray : true,
@@ -103,6 +104,10 @@
 			getNew : {
 				method : 'GET',
 				url : 'admin/timesheet/new'
+			},
+			getRandom : {
+				method : 'GET',
+				url : 'admin/timesheet/random'
 			},
 			getStatusForWorkerId : {
 				isArray : true,

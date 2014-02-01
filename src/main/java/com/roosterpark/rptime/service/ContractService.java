@@ -89,6 +89,9 @@ public class ContractService {
 	public List<Contract> getActiveContractsInSearchInterval(final List<Contract> contracts, final Interval searchInterval) {
 		Validate.notNull(searchInterval, "search interval required");
 		final List<Contract> active = new LinkedList<Contract>();
+		if (CollectionUtils.isEmpty(contracts)) {
+			return active;// empty
+		}
 		LOGGER.debug("searchInterval={}", searchInterval);
 
 		for (Contract contract : contracts) {

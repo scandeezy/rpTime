@@ -47,7 +47,7 @@ public class ControllerCounter {
     
     @Before("inWebLayer()")
     public void countWebCall(JoinPoint jp) {
-        LOGGER.debug("Executing web call, {}", jp);
+        LOGGER.trace("Executing web call, {}", jp);
     }
     
     public Map<String, AtomicInteger> getServiceCalls() {

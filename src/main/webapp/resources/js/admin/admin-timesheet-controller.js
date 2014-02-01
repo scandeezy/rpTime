@@ -61,7 +61,15 @@
 		$scope.isSubmittable = function isSubmittableFn(timeSheet) {
 //			return timeSheet.status === 'UNSUBMITTED';
             return true;
-		}
+		};
+		
+		$scope.newRandom = function newRandomFn() {
+			$log.info('get new random timesheet');
+			var timesheet = TimeSheetService.getRandom();
+			$log.info('got timesheet',timesheet);
+			updateTimeSheetsFn();
+			$log.info('did update');
+		};
 
 		$scope.remove = function removeFn(obj) {
 			$scope.doRemove({
