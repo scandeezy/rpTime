@@ -1,15 +1,16 @@
 package com.roosterpark.rptime.web;
 
-import static com.roosterpark.rptime.config.WorkerFilter.WORKER_MODEL_ATTRIBUTE_NAME;
-import static com.roosterpark.rptime.service.WorkerService.validateWorkerOrThrowWorkerNotFoundException;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
+import static com.roosterpark.rptime.config.WorkerFilter.WORKER_MODEL_ATTRIBUTE_NAME;
+import static com.roosterpark.rptime.service.WorkerService.validateWorkerOrThrowWorkerNotFoundException;
 
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.Validate;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,12 +43,11 @@ public class TimeSheetController {
 	TimeSheetService service;
 	@Inject
 	WorkerService workerService;
-	@Inject
-	ContractService contractService;
+    @Inject
+    ContractService contractService;
 
-	public TimeSheetController() {
-	}
-
+    public TimeSheetController(){}
+    
 	/**
 	 * Method interceptor that sets the {@code worker} {@link ModelAttribute} <i>prior</i> to invoking the {@link RequestMapping} handler
 	 * methods.
@@ -64,8 +64,8 @@ public class TimeSheetController {
 	public List<TimeSheetView> getAll(@ModelAttribute(WORKER_MODEL_ATTRIBUTE_NAME) Worker worker) throws WorkerNotFoundException {
 		LOGGER.debug("ModelAttribute worker={}", worker);
 		final Long id = workerService.getValidatedWorker().getId();
-		List<TimeSheetView> sheets = service.getAllForWorker(id);
-		LOGGER.debug("Found {} sheets.", sheets.size());
+        List<TimeSheetView> sheets = service.getAllForWorker(id);
+        LOGGER.debug("Found {} sheets.", sheets.size());
 		return sheets;
 	}
 
@@ -117,7 +117,7 @@ public class TimeSheetController {
 		validateWorkerOrThrowWorkerNotFoundException(worker, workerService);
 		final Long workerId = worker.getId();
 		LOGGER.debug("saving TimeSheetView {}", item);
-		// Validate.isTrue(workerId.equals(item.getWorkerId()));
+		Validate.isTrue(workerId.equals(item.getWorkerId()));
 		TimeSheetView view = service.set(item);
 		return view;
 	}
@@ -126,7 +126,7 @@ public class TimeSheetController {
 
 	// TODO Jackson doesn't like using the Joda Constructor.
 	private TimeSheetView getTimeSheetForDate(final Worker worker, final LocalDate date) {
-		LOGGER.debug("Finding timesheet for date {}", date);
+        LOGGER.debug("Finding timesheet for date {}", date);
 		return service.getForWorkerDate(worker.getId(), date);
 	}
 }
