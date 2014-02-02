@@ -1,5 +1,7 @@
 package com.roosterpark.rptime.service;
 
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import static com.googlecode.objectify.ObjectifyService.ofy;
 
 import java.util.List;
@@ -58,10 +60,21 @@ public class WorkerService {
 
 	public Worker getById(Long id) {
 		LOGGER.debug("Getting worker with id={}", id);
-		final Worker result = ofy().load().type(Worker.class).id(id).now();
-		if (result == null) {
-			LOGGER.warn("Warning: no Worker found for id='{}'", id);
-		}
+        MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
+        Worker result = (Worker)syncCache.get(id);
+        if(result == null) {
+            LOGGER.debug("Cache miss.");
+            result = ofy().load().type(Worker.class).id(id).now();
+            
+            if(result != null) {
+                LOGGER.debug("Storing back in cache.");
+                syncCache.put(id, result);
+            } else {
+                LOGGER.warn("Warning: no Worker found for id='{}'", id);
+            }
+        } else {
+            LOGGER.debug("Found in cache.");
+        }
 		return result;
 	}
 
@@ -119,12 +132,21 @@ public class WorkerService {
 	public Worker getByUser(User user) {
 		Worker result = null;
 		if (user != null) {
+            MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
 			final String emailLower = StringUtils.lowerCase(user.getEmail());
 			LOGGER.debug("Getting worker with email={} ", emailLower);
-			result = ofy().load().type(Worker.class)//
-					.filter(Worker.EMAIL_KEY, emailLower)//
-					.first()//
-					.now();
+            result = (Worker) syncCache.get(emailLower);
+            if(result == null) {
+                LOGGER.debug("Cache miss...");
+                result = ofy().load().type(Worker.class)//
+                        .filter(Worker.EMAIL_KEY, emailLower)//
+                        .first()//
+                        .now();
+                LOGGER.debug("Adding after lookup {}", result);
+                syncCache.put(emailLower, result);
+            } else {
+                LOGGER.debug("Found in cache.");
+            }
 		}
 		if (result == null) {
 			LOGGER.warn("Warning: no Worker found for user='{}'", user);
