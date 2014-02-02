@@ -27,7 +27,7 @@
                 <p>You have no active contracts.  <br/>This prevents you from creating new time sheets.</p>
             </div>
             <div ng-hide="timeSheetsList.length > 0">
-                <p>You have no contracts in our history.</p>
+                <p>You have no time sheets in our history.</p>
             </div>
 			<ul id="userTimeSheetList">
 				<li ng-repeat="timeSheet in timeSheetsList | orderBy:'startDate':1 " ng-init="worker=workersMap[timeSheet.workerId]"><a
