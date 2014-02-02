@@ -127,6 +127,11 @@ public class WorkerService {
 
 		LOGGER.debug("Saving worker " + item);
 		ofy().save().entity(item).now();
+        MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
+        // Clear existing entries
+        final String emailLower = StringUtils.lowerCase(item.getEmail());
+        syncCache.delete(emailLower);
+        syncCache.delete(item.getId());
 	}
 
 	public Worker getByUser(User user) {
