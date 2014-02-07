@@ -14,7 +14,7 @@
 			<div ng-show="clientsList.length > 0">
                 <div class="row">
                     <div class="col-sm-2">
-                        <select class="form-control" id="client" name="client" ng-model="searchFilterDrop.$"
+                        <select class="form-control" id="clientFilter" name="client" ng-model="searchFilterDrop.$"
                             ng-options="client.id as client.name for (clientid,client) in clientsMap" required>
                             <option value="">-- Client Filter --</option>
                         </select>
