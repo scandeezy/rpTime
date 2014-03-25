@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+  <cron>
+    <url>/notify/weekly</url>
+    <description>Send any notifications bound to a week</description>
+    <schedule>every 1 minutes</schedule>
+  </cron>
+</cronentries>
